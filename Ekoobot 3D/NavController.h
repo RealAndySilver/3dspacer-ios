@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface NavController : UINavigationController
-
+@property(nonatomic)BOOL orient;
+-(void)setInterfaceOrientation:(BOOL)orientation;
 @end

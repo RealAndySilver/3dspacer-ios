@@ -14,6 +14,7 @@
 #import "Espacio3D.h"
 #import "LoadingView.h"
 #import <CoreLocation/CoreLocation.h>
+#import "NavController.h"
 
 
 @interface Espacio3DVC : UIViewController<CLLocationManagerDelegate,UIAlertViewDelegate>{

@@ -75,6 +75,7 @@
 		7574E8231602A16E00974D7B /* updateBox.png in Resources */ = {isa = PBXBuildFile; fileRef = 7574E8221602A16E00974D7B /* updateBox.png */; };
 		7574E8251602BBFB00974D7B /* icono.png in Resources */ = {isa = PBXBuildFile; fileRef = 7574E8241602BBFB00974D7B /* icono.png */; };
 		7574E8271602BC1000974D7B /* iconoSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = 7574E8261602BC1000974D7B /* iconoSmall.png */; };
+		757D4DA31612491800F31913 /* NavController.m in Sources */ = {isa = PBXBuildFile; fileRef = 757D4DA21612491800F31913 /* NavController.m */; };
 		7589C5A915A4CF2E000C99AF /* ProjectDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7589C5A815A4CF2E000C99AF /* ProjectDownloader.m */; };
 		7589C5AE15A4FC6F000C99AF /* ProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7589C5AD15A4FC6F000C99AF /* ProgressView.m */; };
 		75B5B65515D0B193003509E1 /* ekoologo.png in Resources */ = {isa = PBXBuildFile; fileRef = 75B5B65415D0B193003509E1 /* ekoologo.png */; };
@@ -200,6 +201,8 @@
 		7574E8221602A16E00974D7B /* updateBox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = updateBox.png; sourceTree = "<group>"; };
 		7574E8241602BBFB00974D7B /* icono.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icono.png; sourceTree = "<group>"; };
 		7574E8261602BC1000974D7B /* iconoSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iconoSmall.png; sourceTree = "<group>"; };
+		757D4DA11612491800F31913 /* NavController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavController.h; sourceTree = "<group>"; };
+		757D4DA21612491800F31913 /* NavController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavController.m; sourceTree = "<group>"; };
 		7589C5A715A4CF2E000C99AF /* ProjectDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectDownloader.h; sourceTree = "<group>"; };
 		7589C5A815A4CF2E000C99AF /* ProjectDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectDownloader.m; sourceTree = "<group>"; };
 		7589C5AC15A4FC6F000C99AF /* ProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressView.h; sourceTree = "<group>"; };
@@ -426,6 +429,8 @@
 			children = (
 				37E98A48153E0D70001B9BFE /* AppDelegate.h */,
 				37E98A49153E0D70001B9BFE /* AppDelegate.m */,
+				757D4DA11612491800F31913 /* NavController.h */,
+				757D4DA21612491800F31913 /* NavController.m */,
 			);
 			name = AppDelegate;
 			sourceTree = "<group>";
@@ -701,6 +706,7 @@
 				7515C67015E54D3600DFE029 /* FileSaver.m in Sources */,
 				75D49A8215ED2FF000A4F6BA /* IAmCoder.m in Sources */,
 				75E69F74160404F3005907F6 /* EraseViewController.m in Sources */,
+				757D4DA31612491800F31913 /* NavController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

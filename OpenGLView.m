@@ -500,6 +500,13 @@ const GLubyte IndicesBottom[] = {
         UIView *whiteView=[[UIView alloc]initWithFrame:CGRectMake(0, 25, 10, 25)];
         whiteView.backgroundColor=[UIColor whiteColor];
         [brujula addSubview:whiteView];
+        [brujula.layer setBorderWidth:3];
+        [brujula.layer setBorderColor:[UIColor clearColor].CGColor];
+        brujula.layer.shouldRasterize = YES;
+        brujula.layer.shadowOffset = CGSizeMake(0, -1);
+        brujula.layer.shadowOpacity = 1;
+        brujula.layer.shadowColor = [UIColor blackColor].CGColor;
+        
         int type = [[UIDevice currentDevice] orientation];
 
         if(type ==3){

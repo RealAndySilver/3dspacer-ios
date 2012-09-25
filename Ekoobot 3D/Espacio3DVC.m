@@ -22,6 +22,8 @@
     [self.navigationController.view addSubview:loading];
     //[loading setViewAlphaToOne:@""];
     //NSLog(@"El Array Epacial %@",arregloEspacial);
+    NavController *navController = (NavController *)self.navigationController;
+    [navController setInterfaceOrientation:NO];
 }
 
 - (void)viewDidUnload
@@ -123,11 +125,16 @@
     return jpegFilePath;
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
-    NSLog(@"Autorotate");
+    NSLog(@"Autorotate 2");
+    return NO;
+}
+-(BOOL)shouldAutorotate{
+    NSLog(@"Autorotate 1");
     return NO;
 }
 -(NSUInteger)supportedInterfaceOrientations{
-    return 0;
+    NSLog(@"mmmm");
+    return 3;
 }
 
 -(void)threadParaViewInferior{

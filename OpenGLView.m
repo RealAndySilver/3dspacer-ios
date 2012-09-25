@@ -530,7 +530,7 @@ const GLubyte IndicesBottom[] = {
         maxZoomIn=8;
     }
     //Brújula gráfica
-    //[self addSubview:brujula];
+    [self addSubview:brujula];
     return self;
 }
 -(void)cambiarToquePorMotion:(UIButton*)button{

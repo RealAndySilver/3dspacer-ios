@@ -1,0 +1,23 @@
+//
+//  Caras.h
+//  Ekoobot 3D
+//
+//  Created by Andres David Carreño on 6/22/12.
+//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface Caras : NSObject{
+    NSString *idCaras;
+    NSString *atras;
+    NSString *frente;
+    NSString *derecha;
+    NSString *izquierda;
+    NSString *arriba;
+    NSString *abajo;
+}
+
+@property(nonatomic,retain)NSString *atras,*frente,*derecha,*izquierda,*arriba,*abajo,*idCaras,*nombreCara;
+-(id)initWithDictionary:(NSDictionary*)dictionary;
+@end

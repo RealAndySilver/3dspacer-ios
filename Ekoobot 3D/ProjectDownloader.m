@@ -375,7 +375,7 @@ float cuenta=0;
         if (imagen) {
             
             [data2 writeToFile:jpegFilePath atomically:YES];
-            NSLog(@"Si hubo imagen");
+            NSLog(@"Si hubo imagen Shi Sheñó");
             return 0;
         }
         

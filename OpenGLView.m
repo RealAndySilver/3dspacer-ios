@@ -343,6 +343,7 @@ const GLubyte IndicesBottom[] = {
     modelView = [CC3GLMatrix matrix];
     [modelView populateFromTranslation:CC3VectorMake(0, 0, 0)];
     [modelView scaleBy:CC3VectorMake(20, 20, 20)];
+    
     glUniformMatrix4fv(_modelViewUniform, 1, 0, modelView.glMatrix);
     // 1
     glViewport(0, 0, self.frame.size.width, self.frame.size.height);

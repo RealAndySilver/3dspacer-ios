@@ -223,7 +223,7 @@ float cuenta=0;
                             for (int o=0; o<arrayCaras.count; o++) {
                                 Caras *caras=[arrayCaras objectAtIndex:o];
                                 if (contadorError==0) {
-                                    contadorError+=[self downloadImageWithURLString:caras.arriba ID:espacio3D.idEspacio andName:@"caraArriba"];
+                                    contadorError+=[self downloadImageWithURLString:caras.arriba ID:caras.idArriba andName:@"caraArriba"];
                                 }
                                 else{
                                     [self llamarAlertaDeError];
@@ -232,17 +232,7 @@ float cuenta=0;
                                 
                                 [self regresarCuentaConNumero:contarInterno sender:sender];
                                 if (contadorError==0) {
-                                    contadorError+=[self downloadImageWithURLString:caras.abajo ID:espacio3D.idEspacio andName:@"caraAbajo"];
-                                }
-                                else{
-                                    [self llamarAlertaDeError];
-                                    return;
-                                }
-                                
-                                [self regresarCuentaConNumero:contarInterno sender:sender];
-                                
-                                if (contadorError==0) {
-                                    contadorError+=[self downloadImageWithURLString:caras.izquierda ID:espacio3D.idEspacio andName:@"caraIzquierda"];
+                                    contadorError+=[self downloadImageWithURLString:caras.abajo ID:caras.idAbajo andName:@"caraAbajo"];
                                 }
                                 else{
                                     [self llamarAlertaDeError];
@@ -252,7 +242,7 @@ float cuenta=0;
                                 [self regresarCuentaConNumero:contarInterno sender:sender];
                                 
                                 if (contadorError==0) {
-                                    contadorError+=[self downloadImageWithURLString:caras.derecha ID:espacio3D.idEspacio andName:@"caraDerecha"];
+                                    contadorError+=[self downloadImageWithURLString:caras.izquierda ID:caras.idIzquierda andName:@"caraIzquierda"];
                                 }
                                 else{
                                     [self llamarAlertaDeError];
@@ -262,7 +252,17 @@ float cuenta=0;
                                 [self regresarCuentaConNumero:contarInterno sender:sender];
                                 
                                 if (contadorError==0) {
-                                    contadorError+=[self downloadImageWithURLString:caras.frente ID:espacio3D.idEspacio andName:@"caraFrente"];
+                                    contadorError+=[self downloadImageWithURLString:caras.derecha ID:caras.idDerecha andName:@"caraDerecha"];
+                                }
+                                else{
+                                    [self llamarAlertaDeError];
+                                    return;
+                                }
+                                
+                                [self regresarCuentaConNumero:contarInterno sender:sender];
+                                
+                                if (contadorError==0) {
+                                    contadorError+=[self downloadImageWithURLString:caras.frente ID:caras.idFrente andName:@"caraFrente"];
                                 }
                                 else{
                                     [self llamarAlertaDeError];
@@ -271,7 +271,7 @@ float cuenta=0;
                                 
                                 [self regresarCuentaConNumero:contarInterno sender:sender];
                                 if (contadorError==0) {
-                                    contadorError+=[self downloadImageWithURLString:caras.atras ID:espacio3D.idEspacio andName:@"caraAtras"];
+                                    contadorError+=[self downloadImageWithURLString:caras.atras ID:caras.idAtras andName:@"caraAtras"];
                                 }
                                 else{
                                     [self llamarAlertaDeError];
@@ -375,7 +375,7 @@ float cuenta=0;
         if (imagen) {
             
             [data2 writeToFile:jpegFilePath atomically:YES];
-            NSLog(@"Si hubo imagen Shi Sheñó");
+            NSLog(@"Si hubo imagen");
             return 0;
         }
         

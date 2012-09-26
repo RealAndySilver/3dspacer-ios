@@ -16,8 +16,13 @@
     NSString *izquierda;
     NSString *arriba;
     NSString *abajo;
+    
+    
+    
 }
 
 @property(nonatomic,retain)NSString *atras,*frente,*derecha,*izquierda,*arriba,*abajo,*idCaras,*nombreCara;
+@property(nonatomic,retain)NSString *idAtras,*idFrente,*idDerecha,*idIzquierda,*idArriba,*idAbajo;
+
 -(id)initWithDictionary:(NSDictionary*)dictionary;
 @end

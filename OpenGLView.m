@@ -8,10 +8,11 @@
 
 #import "OpenGLView.h"
 #import "CC3GLMatrix.h"
+#import "Espacio3DVC.h"
 
 @implementation OpenGLView
 @synthesize leftRotated;
-@synthesize _backTexture,_frontTexture,_leftTexture,_rightTexture,_topTexture,_bottomTexture,_context,headingValue;
+@synthesize _backTexture,_frontTexture,_leftTexture,_rightTexture,_topTexture,_bottomTexture,_context,headingValue,theContext;
 #pragma mark Indices y Vertices
 typedef struct {
     float Position[3];
@@ -33,12 +34,12 @@ const Vertex Vertices[] = {
     {{CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE}, {1, 1, 1, 1}, {0, TEX_COORD_MAX}},
     {{CUBE_SIZE, CUBE_SIZE, -CUBE_SIZE}, {1, 1, 1, 1}, {0, 0}},
     // Right
-    {{-CUBE_SIZE, -CUBE_SIZE, CUBE_SIZE}, {1, 1, 1, 1}, {TEX_COORD_MAX, 0}}, 
+    {{-CUBE_SIZE, -CUBE_SIZE, CUBE_SIZE}, {1, 1, 1, 1}, {TEX_COORD_MAX, 0}},
     {{-CUBE_SIZE, CUBE_SIZE, CUBE_SIZE}, {1, 1, 1, 1}, {TEX_COORD_MAX, TEX_COORD_MAX}},
     {{-CUBE_SIZE, CUBE_SIZE, -CUBE_SIZE}, {1, 1, 1, 1}, {0, TEX_COORD_MAX}},
     {{-CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE}, {1, 1, 1, 1}, {0, 0}},
     // Left
-    {{CUBE_SIZE, CUBE_SIZE, -CUBE_SIZE}, {1, 1, 1, 1}, {TEX_COORD_MAX, 0}}, 
+    {{CUBE_SIZE, CUBE_SIZE, -CUBE_SIZE}, {1, 1, 1, 1}, {TEX_COORD_MAX, 0}},
     {{CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE}, {1, 1, 1, 1}, {TEX_COORD_MAX, TEX_COORD_MAX}},
     {{CUBE_SIZE, -CUBE_SIZE, CUBE_SIZE}, {1, 1, 1, 1}, {0, TEX_COORD_MAX}},
     {{CUBE_SIZE, CUBE_SIZE, CUBE_SIZE}, {1, 1, 1, 1}, {0, 0}},
@@ -96,7 +97,7 @@ const GLubyte IndicesBack[] = {
 };
 //Right
 const Vertex VerticesRight[] = {
-    {{-CUBE_SIZE, -CUBE_SIZE, CUBE_SIZE}, {1, 1, 1, 1}, {TEX_COORD_MAX, 0}}, 
+    {{-CUBE_SIZE, -CUBE_SIZE, CUBE_SIZE}, {1, 1, 1, 1}, {TEX_COORD_MAX, 0}},
     {{-CUBE_SIZE, CUBE_SIZE, CUBE_SIZE}, {1, 1, 1, 1}, {TEX_COORD_MAX, TEX_COORD_MAX}},
     {{-CUBE_SIZE, CUBE_SIZE, -CUBE_SIZE}, {1, 1, 1, 1}, {0, TEX_COORD_MAX}},
     {{-CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE}, {1, 1, 1, 1}, {0, 0}}
@@ -106,7 +107,7 @@ const GLubyte IndicesRight[] = {
 };
 //Left
 const Vertex VerticesLeft[] = {
-    {{CUBE_SIZE, CUBE_SIZE, -CUBE_SIZE}, {1, 1, 1, 1}, {TEX_COORD_MAX, 0}}, 
+    {{CUBE_SIZE, CUBE_SIZE, -CUBE_SIZE}, {1, 1, 1, 1}, {TEX_COORD_MAX, 0}},
     {{CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE}, {1, 1, 1, 1}, {TEX_COORD_MAX, TEX_COORD_MAX}},
     {{CUBE_SIZE, -CUBE_SIZE, CUBE_SIZE}, {1, 1, 1, 1}, {0, TEX_COORD_MAX}},
     {{CUBE_SIZE, CUBE_SIZE, CUBE_SIZE}, {1, 1, 1, 1}, {0, 0}}
@@ -143,7 +144,7 @@ const GLubyte IndicesBottom[] = {
     _eaglLayer = (CAEAGLLayer*) self.layer;
     _eaglLayer.opaque = YES;
 }
--(void)setupContext{   
+-(void)setupContext{
     EAGLRenderingAPI api = kEAGLRenderingAPIOpenGLES2;
     _context = [[EAGLContext alloc] initWithAPI:api];
     if (!_context) {
@@ -157,8 +158,8 @@ const GLubyte IndicesBottom[] = {
 }
 -(void)setupRenderBuffer{
     glGenRenderbuffers(1, &_colorRenderBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, _colorRenderBuffer);        
-    [_context renderbufferStorage:GL_RENDERBUFFER fromDrawable:_eaglLayer]; 
+    glBindRenderbuffer(GL_RENDERBUFFER, _colorRenderBuffer);
+    [_context renderbufferStorage:GL_RENDERBUFFER fromDrawable:_eaglLayer];
 }
 -(void)setupDepthBuffer{
     glGenRenderbuffers(1, &_depthRenderBuffer);
@@ -168,7 +169,7 @@ const GLubyte IndicesBottom[] = {
 -(void)setupFrameBuffer{
     GLuint framebuffer;
     glGenFramebuffers(1, &framebuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);   
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _colorRenderBuffer);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthRenderBuffer);
 }
@@ -184,7 +185,7 @@ const GLubyte IndicesBottom[] = {
     // 2
     GLuint shaderHandle = glCreateShader(shaderType);
     // 3
-    const char * shaderStringUTF8 = [shaderString UTF8String];    
+    const char * shaderStringUTF8 = [shaderString UTF8String];
     int shaderStringLength = [shaderString length];
     glShaderSource(shaderHandle, 1, &shaderStringUTF8, &shaderStringLength);
     // 4
@@ -285,15 +286,15 @@ const GLubyte IndicesBottom[] = {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(IndicesBottom), IndicesBottom, GL_STATIC_DRAW);
 }
 -(void)render:(CADisplayLink*)displayLink{
-
+    
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     glClearColor(0, 0, 0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     projection = [CC3GLMatrix matrix];
-
-        
+    
+    
     
     float h = 4.0f * self.frame.size.height / self.frame.size.width;
     if (nearValue<maxZoomOut) {
@@ -343,6 +344,7 @@ const GLubyte IndicesBottom[] = {
     modelView = [CC3GLMatrix matrix];
     [modelView populateFromTranslation:CC3VectorMake(0, 0, 0)];
     [modelView scaleBy:CC3VectorMake(20, 20, 20)];
+    
     glUniformMatrix4fv(_modelViewUniform, 1, 0, modelView.glMatrix);
     // 1
     glViewport(0, 0, self.frame.size.width, self.frame.size.height);
@@ -352,7 +354,7 @@ const GLubyte IndicesBottom[] = {
     glVertexAttribPointer(_positionSlot, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
     glVertexAttribPointer(_colorSlot, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) (sizeof(float) * 3));
     glVertexAttribPointer(_texCoordSlot, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) (sizeof(float) * 7));
-    //glActiveTexture(GL_TEXTURE0); 
+    //glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _frontTexture);
     //glUniform1i(_textureUniform, 0);
     // 3 - Back
@@ -457,9 +459,9 @@ const GLubyte IndicesBottom[] = {
     // 4
     GLuint texName;
     /*glGenTextures(1, &texName);
-    glBindTexture(GL_TEXTURE_2D, texName);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, spriteData);*/
+     glBindTexture(GL_TEXTURE_2D, texName);
+     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, spriteData);*/
     glGenTextures(1, &texName);
     glBindTexture(GL_TEXTURE_2D, texName);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -468,17 +470,17 @@ const GLubyte IndicesBottom[] = {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, spriteData);
     //glDeleteTextures(1, &texName);
-    free(spriteData);        
+    free(spriteData);
     return texName;
 }
--(id)initWithFrame:(CGRect)frame andFaces:(Caras*)face{
+-(id)initWithFrame:(CGRect)frame andFaces:(Caras*)face andContext:(id)context{
     self = [super initWithFrame:frame];
-    if (self) {        
-        [self setupLayer];        
-        [self setupContext];    
+    if (self) {
+        [self setupLayer];
+        [self setupContext];
         [self setupDepthBuffer];
-        [self setupRenderBuffer];        
-        [self setupFrameBuffer];     
+        [self setupRenderBuffer];
+        [self setupFrameBuffer];
         [self compileShaders];
         [self setupVBOs];
         [self setupDisplayLink];
@@ -492,16 +494,25 @@ const GLubyte IndicesBottom[] = {
         _leftTexture = [self setupTexture:face.izquierda];
         _topTexture = [self setupTexture:face.arriba];
         _bottomTexture = [self setupTexture:face.abajo];
-
+        
+        Espacio3DVC *nvc=context;
+        
         brujula=[[UIView alloc]init];
-        brujula.frame=CGRectMake(0, 0, 10, 50);
-        brujula.center=CGPointMake(970, 80);
+        brujula.frame=CGRectMake(0, 0, 3, 20);
+        brujula.center=CGPointMake(30,15);
         brujula.backgroundColor=[UIColor redColor];
-        UIView *whiteView=[[UIView alloc]initWithFrame:CGRectMake(0, 25, 10, 25)];
+        UIView *whiteView=[[UIView alloc]initWithFrame:CGRectMake(0, brujula.frame.size.height/2, brujula.frame.size.width, brujula.frame.size.height/2)];
         whiteView.backgroundColor=[UIColor whiteColor];
         [brujula addSubview:whiteView];
+        [brujula.layer setBorderWidth:3];
+        [brujula.layer setBorderColor:[UIColor clearColor].CGColor];
+        brujula.layer.shouldRasterize = YES;
+        brujula.layer.shadowOffset = CGSizeMake(0, -1);
+        brujula.layer.shadowOpacity = 1;
+        brujula.layer.shadowColor = [UIColor blackColor].CGColor;
+        
         int type = [[UIDevice currentDevice] orientation];
-
+        
         if(type ==3){
             leftRotated=NO;
         }
@@ -510,7 +521,7 @@ const GLubyte IndicesBottom[] = {
         }
         _motionManager = [[CMMotionManager alloc] init];
         _motionManager.showsDeviceMovementDisplay = YES;
-
+        
         //[_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
         _hasAccelerometer = _motionManager.deviceMotionAvailable;
         if (_hasAccelerometer)
@@ -521,16 +532,19 @@ const GLubyte IndicesBottom[] = {
         [_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
         isTouchEnabled=NO;
         dxActualCamara = 90;
-        UIPinchGestureRecognizer *twoFingerPinch = 
+        UIPinchGestureRecognizer *twoFingerPinch =
         [[[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(twoFingerPinch:)] autorelease];
         [self addGestureRecognizer:twoFingerPinch];
         nearValue=2;
         divisor=10;
         maxZoomOut=2;
         maxZoomIn=8;
+        //Brújula gráfica
+        //[nvc.lowerView addSubview:brujula];
+        NSLog(@"el view es %@",context);
+        zoomFlag =YES;
     }
-    //Brújula gráfica
-    //[self addSubview:brujula];
+    
     return self;
 }
 -(void)cambiarToquePorMotion:(UIButton*)button{
@@ -556,6 +570,7 @@ const GLubyte IndicesBottom[] = {
     glDeleteTextures(1, &_rightTexture);
 }
 - (void)dealloc{
+    brujula=nil;
     [displayLink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     //[displayLink invalidate];
     displayLink=nil;
@@ -579,16 +594,20 @@ const GLubyte IndicesBottom[] = {
 - (float)radiansToDegrees:(float)number{
     return  number * 57.295780;
 }
+
 #pragma mark -
 #pragma mark Toques
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     UITouch *touch = [touches anyObject];
     startPoint = [touch locationInView:touchesReceiverOpenGLView];
+    oldPoint = startPoint;
+    startTime = CACurrentMediaTime();
+    imageViewTouched = YES;
 }
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event;{
     if (isTouchEnabled) {
-    UITouch *touch = [touches anyObject];
-    CGPoint point = [touch locationInView:touchesReceiverOpenGLView];
+        UITouch *touch = [touches anyObject];
+        CGPoint point = [touch locationInView:touchesReceiverOpenGLView];
         if (!leftRotated) {
             dy = point.y - startPoint.y;
             dx = point.x - startPoint.x;
@@ -621,12 +640,71 @@ const GLubyte IndicesBottom[] = {
             swingTransform = CGAffineTransformRotate(swingTransform,DegreesToRadians(dyActualCamara));
             brujula.transform = swingTransform;
         }
+        oldPoint = point;
     }
 }
+
+
+
 -(void)twoFingerPinch:(UIPinchGestureRecognizer *)recognizer {
     nearValue += (1)*(logf(recognizer.scale) * 10.0f);
     float newValue=(nearValue-2)/(maxZoomIn-maxZoomOut);
     divisor=10+(27*newValue);
     recognizer.scale=1;
+    if (nearValue==maxZoomOut) {
+        zoomFlag=YES;
+    }
+    else if(nearValue==maxZoomIn){
+        zoomFlag=NO;
+    }
+}
+-(void)zoom{
+    /*if (nearValue<maxZoomIn) {
+     zoomTimer=[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(zoomIn) userInfo:nil repeats:YES];
+     }
+     else {
+     zoomTimer=[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(zoomOut) userInfo:nil repeats:YES];
+     }*/
+    if (zoomFlag){
+        [self zoomIn];
+        zoomFlag=NO;
+        //[NSObject cancelPreviousPerformRequestsWithTarget:self];
+        return;
+    }
+    else {
+        [self zoomOut];
+        zoomFlag=YES;
+        //[NSObject cancelPreviousPerformRequestsWithTarget:self];
+        return;
+    }
+}
+-(void)zoomIn{
+    if (nearValue<maxZoomIn) {
+        nearValue+=0.020;
+        [self performSelectorInBackground:@selector(zoomIn) withObject:nil];
+    }
+    else{
+        nearValue=maxZoomIn;
+    }
+    
+    float newValue=(nearValue-2)/(maxZoomIn-maxZoomOut);
+    divisor=10+(27*newValue);
+}
+-(void)zoomOut{
+    if (nearValue>maxZoomOut) {
+        nearValue-=0.020;
+        //[self performSelector:@selector(zoomOut) withObject:nil afterDelay:1/200];
+        [self performSelectorInBackground:@selector(zoomOut) withObject:nil];
+        
+    }
+    else{
+        nearValue=maxZoomOut;
+        //[zoomTimer invalidate];
+    }
+    /*while (nearValue>maxZoomOut) {
+     nearValue-=0.1;
+     }*/
+    float newValue=(nearValue-2)/(maxZoomIn-maxZoomOut);
+    divisor=10+(27*newValue);
 }
 @end

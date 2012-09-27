@@ -46,6 +46,8 @@
 -(void)viewWillAppear:(BOOL)animated{
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationController.navigationBarHidden=NO;
+    NavController *navController = (NavController *)self.navigationController;
+    [navController setInterfaceOrientation:YES];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{

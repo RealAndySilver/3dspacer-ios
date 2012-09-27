@@ -13,7 +13,7 @@
 @end
 
 @implementation Espacio3DVC
-@synthesize espacio3D,arregloEspacial;
+@synthesize espacio3D,arregloEspacial,lowerView;
 
 - (void)viewDidLoad
 {
@@ -22,6 +22,8 @@
     [self.navigationController.view addSubview:loading];
     //[loading setViewAlphaToOne:@""];
     //NSLog(@"El Array Epacial %@",arregloEspacial);
+    NavController *navController = (NavController *)self.navigationController;
+    [navController setInterfaceOrientation:NO];
 }
 
 - (void)viewDidUnload
@@ -61,13 +63,13 @@
     self.navigationItem.title=@"Espacio 3D";
     Caras *face=[espacio3D.arrayCaras objectAtIndex:0];
     [self checkIfDownloadedWithFace:face];
-    face.atras=[self pathForResourceWithName:@"Atras" andFace:face space:espacio3D];
-    face.frente=[self pathForResourceWithName:@"Frente" andFace:face space:espacio3D];
-    face.abajo=[self pathForResourceWithName:@"Abajo" andFace:face space:espacio3D];
-    face.izquierda=[self pathForResourceWithName:@"Izquierda" andFace:face space:espacio3D];
-    face.derecha=[self pathForResourceWithName:@"Derecha" andFace:face space:espacio3D];
-    face.arriba=[self pathForResourceWithName:@"Arriba" andFace:face space:espacio3D];
-    view3D=[[OpenGLView alloc]initWithFrame:glFrame andFaces:face];
+    face.atras=[self pathForResourceWithName:@"Atras" andFace:face ID:face.idAtras];
+    face.frente=[self pathForResourceWithName:@"Frente" andFace:face ID:face.idFrente];
+    face.abajo=[self pathForResourceWithName:@"Abajo" andFace:face ID:face.idAbajo];
+    face.izquierda=[self pathForResourceWithName:@"Izquierda" andFace:face ID:face.idIzquierda];
+    face.derecha=[self pathForResourceWithName:@"Derecha" andFace:face ID:face.idDerecha];
+    face.arriba=[self pathForResourceWithName:@"Arriba" andFace:face ID:face.idArriba];
+    view3D=[[OpenGLView alloc]initWithFrame:glFrame andFaces:face andContext:self];
     [self.view addSubview:view3D];
     [self.view bringSubviewToFront:lowerView];
     rightButton = [[UIBarButtonItem alloc] initWithTitle:@"touch " style:UIBarButtonItemStylePlain target:self action:@selector(navButtonAction:)];
@@ -77,6 +79,13 @@
     [singleTap setNumberOfTapsRequired:1];
     [singleTap setNumberOfTouchesRequired:1];
     [view3D addGestureRecognizer:singleTap];
+    
+    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleView2:)];
+    [doubleTap setNumberOfTapsRequired:2];
+    [doubleTap setNumberOfTouchesRequired:1];
+    //[view3D addGestureRecognizer:doubleTap];
+    
+    //[singleTap requireGestureRecognizerToFail:doubleTap];
 }
 - (void)viewWillAppear:(BOOL)animated{
     [self start];
@@ -97,13 +106,14 @@
 }
 -(void)checkIfDownloadedWithFace:(Caras*)cara{
     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *jpegFilePath = [NSString stringWithFormat:@"%@/caraArriba%@.jpeg",docDir,espacio3D.idEspacio];
     NSMutableArray *array=[[NSMutableArray alloc]initWithObjects:cara.arriba,cara.abajo,cara.izquierda,cara.derecha,cara.frente,cara.atras, nil];
+    NSMutableArray *idarray=[[NSMutableArray alloc]initWithObjects:cara.idArriba,cara.idAbajo,cara.idIzquierda,cara.idDerecha,cara.idFrente,cara.idAtras, nil];
     NSMutableArray *stringArray=[[NSMutableArray alloc]initWithObjects:@"Arriba",@"Abajo",@"Izquierda",@"Derecha",@"Frente",@"Atras", nil];
-    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
-    if (!fileExists) {
-        for (int i=0; i<array.count; i++) {
-            NSString *jpegFilePath2 = [NSString stringWithFormat:@"%@/cara%@%@.jpeg",docDir,[stringArray objectAtIndex:i],espacio3D.idEspacio];
+    for (int i=0; i<array.count; i++) {
+        NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cara%@%@.jpeg",docDir,[stringArray objectAtIndex:i],[idarray objectAtIndex:i]];
+        BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
+        if (!fileExists) {
+            NSString *jpegFilePath2 = [NSString stringWithFormat:@"%@/cara%@%@.jpeg",docDir,[stringArray objectAtIndex:i],[idarray objectAtIndex:i]];
             NSURL *urlImagen=[NSURL URLWithString:[array objectAtIndex:i]];
             NSData *data=[NSData dataWithContentsOfURL:urlImagen];
             UIImageView *proyectoImage = [[UIImageView alloc]init];
@@ -111,23 +121,28 @@
             NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(proyectoImage.image, 1.0f)];
             if (proyectoImage.image) {
                 [data2 writeToFile:jpegFilePath2 atomically:YES];
+                //NSLog(@"jpegFilePath2 %@",jpegFilePath2);
             }
-            //NSLog(@"jpegFilePath2 %@",jpegFilePath2);
         }
         
     }
 }
--(NSString*)pathForResourceWithName:(NSString*)name andFace:(Caras*)cara space:(Espacio3D*)espacio{
+-(NSString*)pathForResourceWithName:(NSString*)name andFace:(Caras*)cara ID:(NSString*)ID{
     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cara%@%@.jpeg",docDir,name,espacio.idEspacio];
+    NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cara%@%@.jpeg",docDir,name,ID];
     return jpegFilePath;
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
-    NSLog(@"Autorotate");
+    NSLog(@"Autorotate 2");
+    return NO;
+}
+-(BOOL)shouldAutorotate{
+    NSLog(@"Autorotate 1");
     return NO;
 }
 -(NSUInteger)supportedInterfaceOrientations{
-    return 0;
+    NSLog(@"mmmm");
+    return 3;
 }
 
 -(void)threadParaViewInferior{
@@ -142,6 +157,7 @@
     alphaView.alpha=0.3;
     alphaView.tag=200;
     [lowerView addSubview:alphaView];
+    [lowerView sendSubviewToBack:alphaView];
     
     tituloEspacio=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 25)];
     tituloEspacio.center=CGPointMake(lowerView.frame.size.width/2, 15);
@@ -188,6 +204,10 @@
         return;
     }
 }
+-(void)toggleView2:(UIButton*)button{
+    NSLog(@"double tap");
+    [view3D zoom];
+}
 -(void)insertarListaDeThumbsEnView:(NSMutableArray*)array{
     int tamano=90;
     int margen=10;
@@ -208,7 +228,7 @@
             back.backgroundColor=[UIColor grayColor];
         }
         UIButton *boton = [[UIButton alloc]init];
-        UIImage *imageButton =[UIImage imageWithContentsOfFile:[self pathForResourceWithName:@"Izquierda" andFace:caras space:espacio]];
+        UIImage *imageButton =[UIImage imageWithContentsOfFile:[self pathForResourceWithName:@"Izquierda" andFace:caras ID:caras.idIzquierda]];
         //NSLog(@"Resource %@ array espacio %@",[self pathForResourceWithName:@"Izquierda" andFace:caras space:espacio],array);
         [boton setImage:imageButton forState:UIControlStateNormal];
         [boton setImage:imageButton forState:UIControlStateHighlighted];
@@ -217,6 +237,15 @@
         [boton addTarget:self action:@selector(spaceSelected:) forControlEvents:UIControlEventTouchUpInside];
         boton.frame=CGRectMake(diferencia/2, diferencia/2,tamano-diferencia, tamano-diferencia);
         [back addSubview:boton];
+        
+        UILabel *spaceName=[[UILabel alloc]initWithFrame:CGRectMake(0, 70, back.frame.size.width, 20)];
+        spaceName.backgroundColor=[UIColor blackColor];
+        spaceName.text=espacio.nombre;
+        spaceName.textColor=[UIColor whiteColor];
+        spaceName.textAlignment=UITextAlignmentCenter;
+        spaceName.font=[UIFont fontWithName:@"Helvetica" size:10];
+        //[back addSubview:spaceName];
+        
         [lowerView addSubview:back];
     }
 }
@@ -279,12 +308,12 @@
 -(void)start3DViewWithFaces:(Caras*)faces andFrame:(CGRect)frame space:(Espacio3D*)space{
     [view3D deleteTextures];
     [self checkIfDownloadedWithFace:faces];
-    faces.atras=[self pathForResourceWithName:@"Atras" andFace:faces space:space];
-    faces.frente=[self pathForResourceWithName:@"Frente" andFace:faces space:space];
-    faces.abajo=[self pathForResourceWithName:@"Abajo" andFace:faces space:space];
-    faces.izquierda=[self pathForResourceWithName:@"Izquierda" andFace:faces space:space];
-    faces.derecha=[self pathForResourceWithName:@"Derecha" andFace:faces space:space];
-    faces.arriba=[self pathForResourceWithName:@"Arriba" andFace:faces space:space];
+    faces.atras=[self pathForResourceWithName:@"Atras" andFace:faces ID:faces.idAtras];
+    faces.frente=[self pathForResourceWithName:@"Frente" andFace:faces ID:faces.idFrente];
+    faces.abajo=[self pathForResourceWithName:@"Abajo" andFace:faces ID:faces.idAbajo];
+    faces.izquierda=[self pathForResourceWithName:@"Izquierda" andFace:faces ID:faces.idIzquierda];
+    faces.derecha=[self pathForResourceWithName:@"Derecha" andFace:faces ID:faces.idDerecha];
+    faces.arriba=[self pathForResourceWithName:@"Arriba" andFace:faces ID:faces.idArriba];
     view3D._topTexture=[view3D setupTexture:faces.arriba];
     view3D._bottomTexture=[view3D setupTexture:faces.abajo];
     view3D._frontTexture=[view3D setupTexture:faces.frente];

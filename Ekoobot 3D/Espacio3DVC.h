@@ -14,6 +14,7 @@
 #import "Espacio3D.h"
 #import "LoadingView.h"
 #import <CoreLocation/CoreLocation.h>
+#import "NavController.h"
 
 
 @interface Espacio3DVC : UIViewController<CLLocationManagerDelegate,UIAlertViewDelegate>{
@@ -34,6 +35,8 @@
 }
 @property (nonatomic,retain)Espacio3D *espacio3D;
 @property (nonatomic,retain)NSMutableArray *arregloEspacial;
+@property (nonatomic,strong)UIView *lowerView;
+
 
 
 @end

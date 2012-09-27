@@ -540,7 +540,7 @@ const GLubyte IndicesBottom[] = {
         maxZoomOut=2;
         maxZoomIn=8;
         //Brújula gráfica
-        //[nvc.lowerView addSubview:brujula];
+        [nvc.lowerView addSubview:brujula];
         NSLog(@"el view es %@",context);
         zoomFlag =YES;
     }

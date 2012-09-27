@@ -83,9 +83,9 @@
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleView2:)];
     [doubleTap setNumberOfTapsRequired:2];
     [doubleTap setNumberOfTouchesRequired:1];
-    //[view3D addGestureRecognizer:doubleTap];
+    [view3D addGestureRecognizer:doubleTap];
     
-    //[singleTap requireGestureRecognizerToFail:doubleTap];
+    [singleTap requireGestureRecognizerToFail:doubleTap];
 }
 - (void)viewWillAppear:(BOOL)animated{
     [self start];
@@ -244,7 +244,7 @@
         spaceName.textColor=[UIColor whiteColor];
         spaceName.textAlignment=UITextAlignmentCenter;
         spaceName.font=[UIFont fontWithName:@"Helvetica" size:10];
-        //[back addSubview:spaceName];
+        [back addSubview:spaceName];
         
         [lowerView addSubview:back];
     }

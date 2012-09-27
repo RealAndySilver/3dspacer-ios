@@ -375,12 +375,12 @@ float cuenta=0;
         if (imagen) {
             
             [data2 writeToFile:jpegFilePath atomically:YES];
-            NSLog(@"Si hubo imagen");
+            //NSLog(@"Si hubo imagen");
             return 0;
         }
         
         else{
-            NSLog(@"NO hubo imagen, no se guardó %@ con ID %@",imageUrl,ID);
+            //NSLog(@"NO hubo imagen, no se guardó %@ con ID %@",imageUrl,ID);
             ServerCommunicator *server=[[ServerCommunicator alloc]init];
             FileSaver *file=[[FileSaver alloc]init];
             NSString *message=[NSString stringWithFormat:@"No se guardó %@ con ID %@",imageUrl,ID];

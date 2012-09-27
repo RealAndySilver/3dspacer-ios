@@ -219,6 +219,7 @@
         <class className="EraseViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EraseViewController.h"/>
             <relationships>
+                <relationship kind="action" name="erase:"/>
                 <relationship kind="outlet" name="eraseButton" candidateClass="UIButton"/>
             </relationships>
         </class>

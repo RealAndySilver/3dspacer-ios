@@ -94,6 +94,15 @@
     
     UIView *brujula;
     
+    NSTimer *zoomTimer;
+    
+    BOOL zoomFlag;
+    
+    
+    CFTimeInterval startTime;
+    CGPoint oldPoint;
+    BOOL imageViewTouched;
+    
 }
 @property(nonatomic)BOOL leftRotated;
 @property(nonatomic)GLuint _backTexture;
@@ -104,8 +113,10 @@
 @property(nonatomic)GLuint _bottomTexture;
 @property(nonatomic, retain)EAGLContext* _context;
 @property(nonatomic)float headingValue;
-- (id)initWithFrame:(CGRect)frame andFaces:(Caras*)face;
+@property(nonatomic,retain)id theContext;
+- (id)initWithFrame:(CGRect)frame andFaces:(Caras*)face andContext:(id)context;
 - (GLuint)setupTexture:(NSString *)fileName;
 -(void)deleteTextures;
 -(void)cambiarToquePorMotion:(UIButton*)button;
+-(void)zoom;
 @end

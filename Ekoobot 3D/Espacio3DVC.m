@@ -13,7 +13,7 @@
 @end
 
 @implementation Espacio3DVC
-@synthesize espacio3D,arregloEspacial;
+@synthesize espacio3D,arregloEspacial,lowerView;
 
 - (void)viewDidLoad
 {
@@ -69,7 +69,7 @@
     face.izquierda=[self pathForResourceWithName:@"Izquierda" andFace:face ID:face.idIzquierda];
     face.derecha=[self pathForResourceWithName:@"Derecha" andFace:face ID:face.idDerecha];
     face.arriba=[self pathForResourceWithName:@"Arriba" andFace:face ID:face.idArriba];
-    view3D=[[OpenGLView alloc]initWithFrame:glFrame andFaces:face];
+    view3D=[[OpenGLView alloc]initWithFrame:glFrame andFaces:face andContext:self];
     [self.view addSubview:view3D];
     [self.view bringSubviewToFront:lowerView];
     rightButton = [[UIBarButtonItem alloc] initWithTitle:@"touch " style:UIBarButtonItemStylePlain target:self action:@selector(navButtonAction:)];
@@ -79,6 +79,13 @@
     [singleTap setNumberOfTapsRequired:1];
     [singleTap setNumberOfTouchesRequired:1];
     [view3D addGestureRecognizer:singleTap];
+    
+    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleView2:)];
+    [doubleTap setNumberOfTapsRequired:2];
+    [doubleTap setNumberOfTouchesRequired:1];
+    //[view3D addGestureRecognizer:doubleTap];
+    
+    //[singleTap requireGestureRecognizerToFail:doubleTap];
 }
 - (void)viewWillAppear:(BOOL)animated{
     [self start];
@@ -150,6 +157,7 @@
     alphaView.alpha=0.3;
     alphaView.tag=200;
     [lowerView addSubview:alphaView];
+    [lowerView sendSubviewToBack:alphaView];
     
     tituloEspacio=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 25)];
     tituloEspacio.center=CGPointMake(lowerView.frame.size.width/2, 15);
@@ -196,6 +204,10 @@
         return;
     }
 }
+-(void)toggleView2:(UIButton*)button{
+    NSLog(@"double tap");
+    [view3D zoom];
+}
 -(void)insertarListaDeThumbsEnView:(NSMutableArray*)array{
     int tamano=90;
     int margen=10;
@@ -225,6 +237,15 @@
         [boton addTarget:self action:@selector(spaceSelected:) forControlEvents:UIControlEventTouchUpInside];
         boton.frame=CGRectMake(diferencia/2, diferencia/2,tamano-diferencia, tamano-diferencia);
         [back addSubview:boton];
+        
+        UILabel *spaceName=[[UILabel alloc]initWithFrame:CGRectMake(0, 70, back.frame.size.width, 20)];
+        spaceName.backgroundColor=[UIColor blackColor];
+        spaceName.text=espacio.nombre;
+        spaceName.textColor=[UIColor whiteColor];
+        spaceName.textAlignment=UITextAlignmentCenter;
+        spaceName.font=[UIFont fontWithName:@"Helvetica" size:10];
+        //[back addSubview:spaceName];
+        
         [lowerView addSubview:back];
     }
 }

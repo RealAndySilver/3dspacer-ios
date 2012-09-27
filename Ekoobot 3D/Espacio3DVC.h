@@ -35,6 +35,8 @@
 }
 @property (nonatomic,retain)Espacio3D *espacio3D;
 @property (nonatomic,retain)NSMutableArray *arregloEspacial;
+@property (nonatomic,strong)UIView *lowerView;
+
 
 
 @end

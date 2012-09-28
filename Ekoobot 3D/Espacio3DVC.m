@@ -13,7 +13,7 @@
 @end
 
 @implementation Espacio3DVC
-@synthesize espacio3D,arregloEspacial,lowerView;
+@synthesize espacio3D,arregloEspacial,compassPlaceholder;
 
 - (void)viewDidLoad
 {
@@ -53,6 +53,25 @@
     lowerView=[[UIView alloc]init];
     lowerView.tag=100;
     lowerView.alpha=0;
+    lowerView.frame=CGRectMake(0, 610, self.view.frame.size.width, 140);
+    lowerView.backgroundColor=[UIColor clearColor];
+    [lowerView setUserInteractionEnabled:YES];
+    
+    
+    compassPlaceholder=[[UIView alloc]init];
+    compassPlaceholder.frame=CGRectMake(lowerView.frame.size.width-120, 45, lowerView.frame.size.height/2, lowerView.frame.size.height/2);
+    compassPlaceholder.backgroundColor=[UIColor whiteColor];
+    compassPlaceholder.layer.cornerRadius=lowerView.frame.size.height/4;
+    compassPlaceholder.layer.masksToBounds=YES;
+    compassPlaceholder.layer.borderColor=[UIColor blackColor].CGColor;
+    compassPlaceholder.layer.borderWidth=2.0;
+    compassPlaceholder.layer.shouldRasterize = YES;
+    compassPlaceholder.layer.shadowOffset = CGSizeMake(0, -1);
+    compassPlaceholder.layer.shadowOpacity = 1;
+    compassPlaceholder.layer.shadowColor = [UIColor blackColor].CGColor;
+    
+    [lowerView addSubview:compassPlaceholder];
+    
     flag=NO;
     glFrame=CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height+50);
     //[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(threadParaViewInferior) userInfo:nil repeats:NO];
@@ -149,15 +168,22 @@
     [self performSelectorInBackground:@selector(viewInferior) withObject:nil];
 }
 -(void)viewInferior{
-    lowerView.frame=CGRectMake(0, 610, self.view.frame.size.width, 140);
-    lowerView.backgroundColor=[UIColor clearColor];
-    [lowerView setUserInteractionEnabled:YES];
+    
     UIView *alphaView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, lowerView.frame.size.width, lowerView.frame.size.height)];
     alphaView.backgroundColor=[UIColor blackColor];
     alphaView.alpha=0.3;
     alphaView.tag=200;
     [lowerView addSubview:alphaView];
     [lowerView sendSubviewToBack:alphaView];
+    
+    lowerScroll=[[UIScrollView alloc]init];
+    lowerScroll.frame=CGRectMake(10, 30, alphaView.frame.size.width-220, 100);
+    lowerScroll.backgroundColor=[UIColor clearColor];
+    [lowerScroll setShowsHorizontalScrollIndicator:NO];
+    //lowerScroll.contentSize=CGSizeMake(lowerScroll.frame.size.width+1, 100);
+    [lowerView addSubview:lowerScroll];
+    
+    
     
     tituloEspacio=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 25)];
     tituloEspacio.center=CGPointMake(lowerView.frame.size.width/2, 15);
@@ -212,12 +238,12 @@
     int tamano=90;
     int margen=10;
     int diferencia=3;
-    int posicion=35;
-    
+    int posicion=5;
+    int total=0;
     for (int i=1; i<arregloEspacial.count+1; i++) {
         Espacio3D *espacio=[array objectAtIndex:i-1];
         Caras *caras=[espacio.arrayCaras objectAtIndex:0];
-        UIView *back=[[UIView alloc]initWithFrame:CGRectMake(((tamano+margen)*(i-1)+15), posicion,tamano, tamano)];
+        UIView *back=[[UIView alloc]initWithFrame:CGRectMake(((tamano+margen)*(i-1)+5), posicion,tamano, tamano)];
         back.tag=i;
         if (espacio3D.nombre==espacio.nombre) {
             back.backgroundColor=[UIColor whiteColor];
@@ -246,8 +272,11 @@
         spaceName.font=[UIFont fontWithName:@"Helvetica" size:10];
         [back addSubview:spaceName];
         
-        [lowerView addSubview:back];
+        //[lowerView addSubview:back];
+        [lowerScroll addSubview:back];
+        total=i;
     }
+    lowerScroll.contentSize=CGSizeMake(total*(tamano+margen)+5, 100);
 }
 -(void)animateViewFadeIn:(UIView*)view{
     [UIView beginAnimations:nil context:NULL];

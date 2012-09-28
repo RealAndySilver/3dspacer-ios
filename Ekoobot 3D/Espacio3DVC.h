@@ -32,10 +32,13 @@
     NSMutableArray *arrayCaras;
     BOOL borderFlag;//para el cambio de color del borde de los thumbs
     int initialTag;
+    UIScrollView *lowerScroll;
+    UIView *compassPlaceholder;
+    
 }
 @property (nonatomic,retain)Espacio3D *espacio3D;
 @property (nonatomic,retain)NSMutableArray *arregloEspacial;
-@property (nonatomic,strong)UIView *lowerView;
+@property (nonatomic,strong)UIView *compassPlaceholder;
 
 
 

@@ -16,8 +16,8 @@
 
 #pragma mark -
 #pragma mark Ciclo de Vida
-#define NOMBREUSER @""
-#define PASSWORD @""
+#define NOMBREUSER @"cata"
+#define PASSWORD @"1234"
 
 - (void)viewDidLoad{
     [super viewDidLoad];

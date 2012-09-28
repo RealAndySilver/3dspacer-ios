@@ -498,8 +498,8 @@ const GLubyte IndicesBottom[] = {
         Espacio3DVC *nvc=context;
         
         brujula=[[UIView alloc]init];
-        brujula.frame=CGRectMake(0, 0, 3, 20);
-        brujula.center=CGPointMake(30,15);
+        brujula.frame=CGRectMake(0, 0, (nvc.compassPlaceholder.frame.size.height-10)*0.15, nvc.compassPlaceholder.frame.size.height-10);
+        brujula.center=CGPointMake(nvc.compassPlaceholder.frame.size.width/2,nvc.compassPlaceholder.frame.size.height/2);
         brujula.backgroundColor=[UIColor redColor];
         UIView *whiteView=[[UIView alloc]initWithFrame:CGRectMake(0, brujula.frame.size.height/2, brujula.frame.size.width, brujula.frame.size.height/2)];
         whiteView.backgroundColor=[UIColor whiteColor];
@@ -540,7 +540,7 @@ const GLubyte IndicesBottom[] = {
         maxZoomOut=2;
         maxZoomIn=8;
         //Brújula gráfica
-        [nvc.lowerView addSubview:brujula];
+        [nvc.compassPlaceholder addSubview:brujula];
         NSLog(@"el view es %@",context);
         zoomFlag =YES;
     }
@@ -619,10 +619,7 @@ const GLubyte IndicesBottom[] = {
             else if (dxActualCamara <= -90) {
                 dxActualCamara = -90;
             }
-            startPoint = point;
-            CGAffineTransform swingTransform = CGAffineTransformIdentity;
-            swingTransform = CGAffineTransformRotate(swingTransform, DegreesToRadians(dyActualCamara));
-            brujula.transform = swingTransform;
+            
         }
         else {
             dy = point.y - startPoint.y;
@@ -635,12 +632,12 @@ const GLubyte IndicesBottom[] = {
             else if (dxActualCamara <= -90) {
                 dxActualCamara = -90;
             }
-            startPoint = point;
-            CGAffineTransform swingTransform = CGAffineTransformIdentity;
-            swingTransform = CGAffineTransformRotate(swingTransform,DegreesToRadians(dyActualCamara));
-            brujula.transform = swingTransform;
         }
         oldPoint = point;
+        startPoint = point;
+        CGAffineTransform swingTransform = CGAffineTransformIdentity;
+        swingTransform = CGAffineTransformRotate(swingTransform, DegreesToRadians(dyActualCamara));
+        brujula.transform = swingTransform;
     }
 }
 

@@ -65,24 +65,24 @@
     OpenGLView *touchesReceiverOpenGLView;
     CGPoint startPoint;
     
-    float dx;
-    float dy;
-    float dxActualCamara;
-    float dyActualCamara;
-    float dzActualCamara;
+    CGFloat dx;
+    CGFloat dy;
+    CGFloat dxActualCamara;
+    CGFloat dyActualCamara;
+    CGFloat dzActualCamara;
     
     UIInterfaceOrientation _orientation;
 	CMMotionManager *_motionManager;
 	BOOL _hasAccelerometer;
     BOOL isTouchEnabled;
     
-    float nearValue;
+    CGFloat nearValue;
 
-    float xx;
-    float yy;
-    float zz;
+    CGFloat xx;
+    CGFloat yy;
+    CGFloat zz;
     
-    float divisor;
+    CGFloat divisor;
     int maxZoomOut;
     int maxZoomIn;
     

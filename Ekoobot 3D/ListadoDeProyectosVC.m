@@ -38,6 +38,8 @@
                                                               action:@selector(customLogoutAlert)];   
     self.navigationItem.rightBarButtonItem = logout;
     [self.navigationItem setHidesBackButton:YES animated:YES];
+    NavController *navController = (NavController *)self.navigationController;
+    [navController setOrientationType:0];
     
 }
 -(void)didReceiveMemoryWarning{

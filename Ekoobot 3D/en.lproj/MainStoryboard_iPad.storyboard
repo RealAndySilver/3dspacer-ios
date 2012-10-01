@@ -83,11 +83,11 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <view contentMode="scaleToFill" id="k3O-lp-gyb">
-                                <rect key="frame" x="521" y="207" width="408" height="206"/>
+                                <rect key="frame" x="308" y="231" width="408" height="206"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="8WU-OP-xb3">
-                                        <rect key="frame" x="284" y="73" width="90" height="67"/>
+                                        <rect key="frame" x="219" y="147" width="90" height="32"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" title="Login">
@@ -102,19 +102,19 @@
                                         </connections>
                                     </button>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" id="bJt-Uf-NgJ">
-                                        <rect key="frame" x="71" y="109" width="210" height="30"/>
+                                        <rect key="frame" x="99" y="109" width="210" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardAppearance="alert" secureTextEntry="YES"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="usuario" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" id="Arg-nN-7O4">
-                                        <rect key="frame" x="71" y="73" width="210" height="30"/>
+                                        <rect key="frame" x="99" y="73" width="210" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardAppearance="alert"/>
                                     </textField>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="white" id="Ufh-VN-5P2">
-                                        <rect key="frame" x="166" y="45" width="20" height="20"/>
+                                        <rect key="frame" x="194" y="45" width="20" height="20"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </activityIndicatorView>
                                 </subviews>
@@ -219,7 +219,6 @@
         <class className="EraseViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EraseViewController.h"/>
             <relationships>
-                <relationship kind="action" name="erase:"/>
                 <relationship kind="outlet" name="eraseButton" candidateClass="UIButton"/>
             </relationships>
         </class>

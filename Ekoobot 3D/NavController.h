@@ -10,5 +10,6 @@
 
 @interface NavController : UINavigationController
 @property(nonatomic)BOOL orient;
+@property(nonatomic)int orientationType;
 -(void)setInterfaceOrientation:(BOOL)orientation;
 @end

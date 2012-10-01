@@ -38,6 +38,8 @@
     passwordTF.text=PASSWORD;
     [self inicializarRootViewControllerConAnimaciones];
     keyboardIsMoved = NO;
+    NavController *navController = (NavController *)self.navigationController;
+    [navController setOrientationType:1];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{

@@ -13,7 +13,7 @@
 @end
 
 @implementation NavController
-@synthesize orient;
+@synthesize orient,orientationType;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -27,6 +27,7 @@
 {
     [super viewDidLoad];
     orient=YES;
+    orientationType=1;//all orientations
 	// Do any additional setup after loading the view.
 }
 
@@ -39,7 +40,12 @@
     return orient;
 }
 -(NSUInteger)supportedInterfaceOrientations{
-    return UIInterfaceOrientationMaskLandscape;
+    if (orientationType==1) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else {
+        return UIInterfaceOrientationMaskLandscape;
+    }
 }
 -(void)setInterfaceOrientation:(BOOL)orientation{
     orient=orientation;

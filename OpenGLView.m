@@ -627,10 +627,10 @@ const GLubyte IndicesBottom[] = {
             dyActualCamara += -dy/divisor;
             dxActualCamara += -dx/divisor;
             if (dxActualCamara >= 90) {
-                dxActualCamara = 90;
+                dxActualCamara = -90;
             }
             else if (dxActualCamara <= -90) {
-                dxActualCamara = -90;
+                dxActualCamara = 90;
             }
         }
         oldPoint = point;

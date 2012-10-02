@@ -105,6 +105,7 @@
     [view3D addGestureRecognizer:doubleTap];
     
     [singleTap requireGestureRecognizerToFail:doubleTap];
+    [self toggleView:nil];
 }
 - (void)viewWillAppear:(BOOL)animated{
     [self start];

@@ -27,16 +27,19 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     self.navigationItem.title = @"Planta Urbana";
+    maximumZoomScale=5.0;
     
     [spinner startAnimating];
     [self loadScrollViewWithMap];
+    
+    zoomCheck=YES;
     // Do any additional setup after loading the view.
 }
 
 - (void)viewDidUnload{
     [super viewDidUnload];
     proyecto=nil;
-    scrollViewMapa=nil;
+    scrollViewUrbanismo=nil;
     imageViewUrbanismo=nil;
     spinner=nil;
     // Release any retained subviews of the main view.
@@ -63,6 +66,10 @@
     NSMutableArray *tempArray=proyecto.arrayItemsUrbanismo;
     ItemUrbanismo *itemUrbanismo=[tempArray objectAtIndex:0];
     NSMutableArray *arrayGrupos=itemUrbanismo.arrayGrupos;
+    scrollViewUrbanismo=[[UIScrollView alloc]init];
+    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
+    [doubleTap setNumberOfTapsRequired:2];
+    [scrollViewUrbanismo addGestureRecognizer:doubleTap];
     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/imagenUrbanismo%@.jpeg",docDir,itemUrbanismo.idUrbanismo];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
@@ -71,50 +78,38 @@
         NSURL *urlImagenUrbanismo=[NSURL URLWithString:itemUrbanismo.imagenUrbanismo];
         NSData *dataImagenUrbanismo=[NSData dataWithContentsOfURL:urlImagenUrbanismo];
         UIImage *imageUrbanismo=[UIImage imageWithData:dataImagenUrbanismo];
+        NSLog(@"width %.0f height %.0f",imageUrbanismo.size.width,imageUrbanismo.size.height);
         NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(imageUrbanismo, 1.0f)];//1.0f = 100% quality
         if (imageUrbanismo) {
             [data2 writeToFile:jpegFilePath atomically:YES];
         }
         imageViewUrbanismo=[[UIImageView alloc]initWithImage:[UIImage imageWithData:data2]];
-        [imageViewUrbanismo setUserInteractionEnabled:YES];
-        UIScrollView *scrollViewUrbanismo=[[UIScrollView alloc]init];
-        scrollViewUrbanismo.frame=CGRectMake(0, 0, self.view.frame.size.height, self.view.frame.size.width);
-        scrollViewUrbanismo.contentSize=CGSizeMake(imageViewUrbanismo.frame.size.width, imageViewUrbanismo.frame.size.height);
-        [self.view addSubview:scrollViewUrbanismo];
-        [scrollViewUrbanismo addSubview:imageViewUrbanismo];
-        [scrollViewUrbanismo setMinimumZoomScale:0.3];
-        [scrollViewUrbanismo setMaximumZoomScale:5.0];
-        [scrollViewUrbanismo setCanCancelContentTouches:NO];
-        scrollViewUrbanismo.clipsToBounds = YES;
-        [scrollViewUrbanismo setDelegate:self];
-        //Crear todos los botones de los items del urbanismo
-        for (int i=0; i<arrayGrupos.count; i++) {
-            Grupo *grupo=[arrayGrupos objectAtIndex:i];
-            [self insertarBotonEn:imageViewUrbanismo enPosicionX:grupo.coordenadaX yPosicionY:grupo.coordenadaY yTag:i titulo:grupo.nombre];
-        }
     }
     
     else{
         //NSLog(@"si existe");
         UIImage *imageUrbanismo=[UIImage imageWithContentsOfFile:jpegFilePath];
-        imageViewUrbanismo=[[UIImageView alloc]initWithImage:imageUrbanismo];
-        [imageViewUrbanismo setUserInteractionEnabled:YES];
-        UIScrollView *scrollViewUrbanismo=[[UIScrollView alloc]init];
-        scrollViewUrbanismo.frame=CGRectMake(0, 0, self.view.frame.size.height, self.view.frame.size.width);
-        scrollViewUrbanismo.contentSize=CGSizeMake(imageViewUrbanismo.frame.size.width, imageViewUrbanismo.frame.size.height+45);
-        [self.view addSubview:scrollViewUrbanismo];
-        [scrollViewUrbanismo addSubview:imageViewUrbanismo];
-        [scrollViewUrbanismo setMinimumZoomScale:0.3];
-        [scrollViewUrbanismo setMaximumZoomScale:5.0];
-        [scrollViewUrbanismo setCanCancelContentTouches:NO];
-        scrollViewUrbanismo.clipsToBounds = YES;
-        [scrollViewUrbanismo setDelegate:self];
-        //Crear todos los botones de los items del urbanismo
-        for (int i=0; i<arrayGrupos.count; i++) {
-            Grupo *grupo=[arrayGrupos objectAtIndex:i];
-            [self insertarBotonEn:imageViewUrbanismo enPosicionX:grupo.coordenadaX yPosicionY:grupo.coordenadaY yTag:i titulo:grupo.nombre];
-        }
+        NSLog(@"width %.0f height %.0f",imageUrbanismo.size.width,imageUrbanismo.size.height);
+        NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(imageUrbanismo, 1.0f)];
+        //imageViewUrbanismo=[[UIImageView alloc]initWithImage:imageUrbanismo];
+        imageViewUrbanismo=[[UIImageView alloc]initWithImage:[UIImage imageWithData:data2]];
     }
+    
+    //Crear todos los botones de los items del urbanismo
+    [imageViewUrbanismo setUserInteractionEnabled:YES];
+    scrollViewUrbanismo.frame=CGRectMake(0, 0, self.view.frame.size.height, self.view.frame.size.width);
+    scrollViewUrbanismo.contentSize=CGSizeMake(imageViewUrbanismo.frame.size.width, imageViewUrbanismo.frame.size.height);
+    [self.view addSubview:scrollViewUrbanismo];
+    [scrollViewUrbanismo addSubview:imageViewUrbanismo];
+    for (int i=0; i<arrayGrupos.count; i++) {
+        Grupo *grupo=[arrayGrupos objectAtIndex:i];
+        [self insertarBotonEn:imageViewUrbanismo enPosicionX:grupo.coordenadaX yPosicionY:grupo.coordenadaY yTag:i titulo:grupo.nombre];
+    }
+    [scrollViewUrbanismo setMinimumZoomScale:0.3];
+    [scrollViewUrbanismo setMaximumZoomScale:maximumZoomScale];
+    [scrollViewUrbanismo setCanCancelContentTouches:NO];
+    scrollViewUrbanismo.clipsToBounds = YES;
+    [scrollViewUrbanismo setDelegate:self];
 }
 
 -(UIView *)viewForZoomingInScrollView:(UIScrollView*)scrollview{
@@ -218,6 +213,34 @@
     [spinner startAnimating];
     spinner.alpha=1.0;
     [self.view bringSubviewToFront:spinner];
+}
+
+
+- (void)handleDoubleTap:(UIGestureRecognizer *)recognizer {
+    NSLog(@"doubletap ");
+    if(zoomCheck){
+        CGPoint Pointview=[recognizer locationInView:scrollViewUrbanismo];
+        CGFloat newZoomscal=3.0;
+        
+        newZoomscal=MIN(newZoomscal, maximumZoomScale);
+        
+        CGSize scrollViewSize=scrollViewUrbanismo.bounds.size;
+        
+        CGFloat w=scrollViewSize.width/newZoomscal;
+        CGFloat h=scrollViewSize.height /newZoomscal;
+        CGFloat x= Pointview.x-(w/2.0);
+        CGFloat y = Pointview.y-(h/2.0);
+        
+        CGRect rectTozoom=CGRectMake(x, y, w, h);
+        [scrollViewUrbanismo zoomToRect:rectTozoom animated:YES];
+        
+        [scrollViewUrbanismo setZoomScale:3.0 animated:YES];
+        zoomCheck=NO;
+    }
+    else{
+        [scrollViewUrbanismo setZoomScale:1.0 animated:YES];
+        zoomCheck=YES;
+    }
 }
 
 @end

@@ -21,12 +21,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Ekoobot 3D/ListadoDeProyectosVC.m"
-         timestampString = "370569922.128972"
+         timestampString = "369363897.123413"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "385"
-         endingLineNumber = "385"
-         landmarkName = "-delayedAction:"
+         startingLineNumber = "383"
+         endingLineNumber = "383"
+         landmarkName = "-irAlSiguienteViewController:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -73,11 +73,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Ekoobot 3D/TiposDePlantasVC.m"
-         timestampString = "370298240.797644"
+         timestampString = "370844880.528666"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "246"
-         endingLineNumber = "246"
+         startingLineNumber = "265"
+         endingLineNumber = "265"
          landmarkName = "-delayedAction:"
          landmarkType = "5">
       </FileBreakpoint>

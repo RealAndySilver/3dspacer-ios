@@ -20,10 +20,12 @@
 
 @interface PlantaUrbanaVC : UIViewController<UIScrollViewDelegate> {
     Proyecto *proyecto;
-    UIScrollView *scrollViewMapa;
+    UIScrollView *scrollViewUrbanismo;
     UIImageView *imageViewUrbanismo;
     IBOutlet UIActivityIndicatorView *spinner;
     MBProgressHUD *hud;
+    BOOL zoomCheck;
+    float maximumZoomScale;
 }
 @property Proyecto *proyecto;
 

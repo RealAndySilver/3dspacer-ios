@@ -57,7 +57,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView1{
     CGRect frame=[[UIScreen mainScreen] applicationFrame];
-    float roundedValue = round(scrollView1.contentOffset.x / frame.size.height);
+    float roundedValue = round(scrollView.contentOffset.x / frame.size.height);
     self.pageCon.currentPage=roundedValue;
 }
 
@@ -121,11 +121,17 @@
 
 - (void)paginaCreadaConPlanta:(Planta*)planta enPosicion:(int)posicion{
     CGRect frame=[[UIScreen mainScreen] applicationFrame];
-    UIView *pagina=[[UIView alloc]init];
+    //UIView *pagina=[[UIView alloc]init];
+    UIScrollView *pagina=[[UIScrollView alloc]init];
     pagina.frame=CGRectMake(frame.size.height*posicion, 0, frame.size.height, frame.size.width);
+    [pagina setContentSize:CGSizeMake(pagina.frame.size.width, pagina.frame.size.height)];
     NSMutableArray *tempArray=planta.arrayEspacios3D;
     UIImageView *imageView=[self insertarImagenPlantaEnPagina:pagina conPlanta:planta];
-    [pagina addSubview:imageView];
+    imageView.tag=posicion+2000;
+    UIScrollView *sv=[[UIScrollView alloc]initWithFrame:CGRectMake(25, 25, pagina.frame.size.width-50, pagina.frame.size.height-100)];
+    [sv addSubview:imageView];
+    sv.clipsToBounds=YES;
+    [pagina addSubview:sv];
     [self labelDeArea:[NSString stringWithFormat:@"Área total: %@", producto.area] eInsertarEnView:imageView];
     
     [imageView setUserInteractionEnabled:YES];
@@ -133,7 +139,20 @@
         Espacio3D *espacio3D=[tempArray objectAtIndex:i];
         [self insertarBotonEn:imageView enPosicionX:espacio3D.coordenadaX yPosicionY:espacio3D.coordenadaY Tag:i yPagina:posicion titulo:espacio3D.nombre];
     }
+    [sv setUserInteractionEnabled:YES];
+    [sv setMinimumZoomScale:1];
+    [sv setMaximumZoomScale:3];
+    [sv setCanCancelContentTouches:NO];
+    sv.clipsToBounds = YES;
+    sv.delegate=self;
     [scrollView addSubview:pagina];
+}
+-(UIView *)viewForZoomingInScrollView:(UIScrollView*)scrollview{
+ return (UIImageView *)[scrollView viewWithTag:self.pageCon.currentPage+2000];
+ }
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollview withView:(UIView *)view atScale:(float)scale{
+    NSLog(@"xxx");
+    //scrollview.minimumZoomScale = scale;
 }
 -(void)labelDeArea:(NSString*)area eInsertarEnView:(UIView*)view{
     UIToolbar *toolBar=[[UIToolbar alloc]initWithFrame:CGRectMake(0, 600, self.view.frame.size.height-50, 50)];
@@ -168,13 +187,13 @@
         if (plantaImage.image) {
             [data2 writeToFile:jpegFilePath atomically:YES];
         }
-        plantaImage.frame = CGRectMake(25, 25, view.frame.size.width-50, view.frame.size.height-100);
+        plantaImage.frame = CGRectMake(0, 0, view.frame.size.width-50, view.frame.size.height-100);
         return plantaImage;
     }
     else {
         NSLog(@"si existe planta img %@",jpegFilePath);
         plantaImage.image = [UIImage imageWithContentsOfFile:jpegFilePath];
-        plantaImage.frame = CGRectMake(25, 25, view.frame.size.width-50, view.frame.size.height-100);
+        plantaImage.frame = CGRectMake(0, 0, view.frame.size.width-50, view.frame.size.height-100);
         return plantaImage;
     }
     return nil;

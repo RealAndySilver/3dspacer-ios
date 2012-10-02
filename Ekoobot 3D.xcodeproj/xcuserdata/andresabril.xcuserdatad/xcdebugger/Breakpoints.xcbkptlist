@@ -47,11 +47,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Ekoobot 3D/TiposDePisosVC.m"
-         timestampString = "369866489.366528"
+         timestampString = "370908914.476719"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "172"
-         endingLineNumber = "172"
+         startingLineNumber = "191"
+         endingLineNumber = "191"
          landmarkName = "-insertarBotonEn:enPosicionX:yPosicionY:Tag:yPagina:titulo:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -60,24 +60,24 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Ekoobot 3D/TiposDePisosVC.m"
-         timestampString = "369866491.786336"
+         timestampString = "370908914.476719"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "173"
-         endingLineNumber = "173"
+         startingLineNumber = "192"
+         endingLineNumber = "192"
          landmarkName = "-insertarBotonEn:enPosicionX:yPosicionY:Tag:yPagina:titulo:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Ekoobot 3D/TiposDePlantasVC.m"
-         timestampString = "370844880.528666"
+         timestampString = "370908045.908047"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "265"
-         endingLineNumber = "265"
+         startingLineNumber = "270"
+         endingLineNumber = "270"
          landmarkName = "-delayedAction:"
          landmarkType = "5">
       </FileBreakpoint>

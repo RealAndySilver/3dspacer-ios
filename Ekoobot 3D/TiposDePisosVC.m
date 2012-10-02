@@ -113,20 +113,39 @@
 }
 -(void)paginaCreadaConTipoPiso:(TipoDePiso*)tipoPiso enPosicion:(int)posicion{
     CGRect frame=[[UIScreen mainScreen] applicationFrame];
-    UIView *pagina=[[UIView alloc]init];
+    UIScrollView *pagina=[[UIScrollView alloc]init];
     pagina.frame=CGRectMake(frame.size.height*posicion, 0, frame.size.height, frame.size.width);
+    [pagina setContentSize:CGSizeMake(pagina.frame.size.width, pagina.frame.size.height)];
     NSMutableArray *tempArray=tipoPiso.arrayProductos;
     UIImageView *imageView=[self insertarImagenProyectoEnPagina:pagina conTipoPiso:tipoPiso];
+    imageView.tag=posicion+2000;
     [pagina addSubview:imageView];
+    UIScrollView *sv=[[UIScrollView alloc]initWithFrame:CGRectMake(25, 25, pagina.frame.size.width-50, pagina.frame.size.height-100)];
+    sv.tag=posicion+3000;
+    [sv addSubview:imageView];
+    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
+    [doubleTap setNumberOfTapsRequired:2];
+    [sv addGestureRecognizer:doubleTap];
+    
+    sv.clipsToBounds=YES;
+    [pagina addSubview:sv];
     [imageView setUserInteractionEnabled:YES];
     for (int i=0; i<tempArray.count; i++) {
         Producto *producto=[tempArray objectAtIndex:i];
         NSLog(@"producto.nombre %@",producto.nombre);
         [self insertarBotonEn:imageView enPosicionX:producto.coordenadaX yPosicionY:producto.coordenadaY Tag:i yPagina:posicion titulo:producto.nombre];
     }
+    [sv setUserInteractionEnabled:YES];
+    [sv setMinimumZoomScale:1];
+    [sv setMaximumZoomScale:3];
+    [sv setCanCancelContentTouches:NO];
+    sv.clipsToBounds = YES;
+    sv.delegate=self;
     [scrollView addSubview:pagina];
 }
-
+-(UIView *)viewForZoomingInScrollView:(UIScrollView*)scrollview{
+    return (UIImageView *)[scrollView viewWithTag:self.pageCon.currentPage+2000];
+}
 -(UIImageView*)insertarImagenProyectoEnPagina:(UIView*)view conTipoPiso:(TipoDePiso*)tipoPiso{
     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/tipoDePiso%@.jpeg",docDir,tipoPiso.idTipoPiso];
@@ -141,7 +160,7 @@
         if (proyectoImage.image) {
             [data2 writeToFile:jpegFilePath atomically:YES];
         }
-        proyectoImage.frame = CGRectMake(25, 25, view.frame.size.width-50, view.frame.size.height-100);
+        proyectoImage.frame = CGRectMake(0, 0, view.frame.size.width-50, view.frame.size.height-100);
         NSLog(@"ancho %f alto %f",proyectoImage.frame.size.width,proyectoImage.frame.size.height);
         return proyectoImage;
     }    
@@ -149,7 +168,7 @@
         //NSLog(@"si existe tipo piso img %@",jpegFilePath);
         UIImageView *proyectoImage = [[UIImageView alloc]init];
         proyectoImage.image = [UIImage imageWithContentsOfFile:jpegFilePath];
-        proyectoImage.frame = CGRectMake(25, 25, view.frame.size.width-50, view.frame.size.height-100);
+        proyectoImage.frame = CGRectMake(0, 0, view.frame.size.width-50, view.frame.size.height-100);
         NSLog(@"ancho %f alto %f",proyectoImage.frame.size.width,proyectoImage.frame.size.height);
         return proyectoImage;
     }
@@ -224,20 +243,33 @@
     tpVC.producto=producto;
     [self.navigationController pushViewController:tpVC animated:YES];
 }
--(void)irAPlantaUrbanaVCConTipoPiso:(TipoDePiso*)tipoPiso{
-    
-}
-
--(void)irAPlanta{
-    /*PlantaUrbanaVC *puVC = [[PlantaUrbanaVC alloc]init];
-    puVC = [self.storyboard instantiateViewControllerWithIdentifier:@"TiposDePisosVC"];
-    //puVC.usuarioActual = usuarioActual;
-    [self.navigationController pushViewController:puVC animated:YES];
-    NSLog(@"Se disparo la funcion de Tipos de Pisos");*/
-}
-
--(void)irATiposDePlantasVC{
-
+#pragma mark - scroll tap
+- (void)handleDoubleTap:(UIGestureRecognizer *)recognizer {
+    NSLog(@"doubletap ");
+    UIScrollView *tempScroll=(UIScrollView *)[scrollView viewWithTag:self.pageCon.currentPage+3000];
+    if(tempScroll.zoomScale>=1.0 && tempScroll.zoomScale<=1.5){
+        CGPoint Pointview=[recognizer locationInView:tempScroll];
+        CGFloat newZoomscal=3.0;
+        
+        newZoomscal=MIN(newZoomscal, 5.0);
+        
+        CGSize scrollViewSize=tempScroll.bounds.size;
+        
+        CGFloat w=scrollViewSize.width/newZoomscal;
+        CGFloat h=scrollViewSize.height/newZoomscal;
+        CGFloat x= Pointview.x-(w/2.0);
+        CGFloat y = Pointview.y-(h/2.0);
+        
+        CGRect rectTozoom=CGRectMake(x, y, w, h);
+        [tempScroll zoomToRect:rectTozoom animated:YES];
+        
+        [tempScroll setZoomScale:3.0 animated:YES];
+        //zoomCheck=NO;
+    }
+    else{
+        [tempScroll setZoomScale:1.0 animated:YES];
+        //     zoomCheck=YES;
+    }
 }
 
 @end

@@ -113,7 +113,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardAppearance="alert"/>
                                     </textField>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="white" id="Ufh-VN-5P2">
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="gray" id="Ufh-VN-5P2">
                                         <rect key="frame" x="194" y="197" width="20" height="20"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </activityIndicatorView>
@@ -230,6 +230,7 @@
         <class className="EraseViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EraseViewController.h"/>
             <relationships>
+                <relationship kind="action" name="erase:"/>
                 <relationship kind="outlet" name="eraseButton" candidateClass="UIButton"/>
             </relationships>
         </class>

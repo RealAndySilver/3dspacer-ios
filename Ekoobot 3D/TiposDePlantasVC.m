@@ -129,7 +129,12 @@
     UIImageView *imageView=[self insertarImagenPlantaEnPagina:pagina conPlanta:planta];
     imageView.tag=posicion+2000;
     UIScrollView *sv=[[UIScrollView alloc]initWithFrame:CGRectMake(25, 25, pagina.frame.size.width-50, pagina.frame.size.height-100)];
+    sv.tag=posicion+3000;
     [sv addSubview:imageView];
+    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
+    [doubleTap setNumberOfTapsRequired:2];
+    [sv addGestureRecognizer:doubleTap];
+
     sv.clipsToBounds=YES;
     [pagina addSubview:sv];
     [self labelDeArea:[NSString stringWithFormat:@"Área total: %@", producto.area] eInsertarEnView:imageView];
@@ -263,6 +268,34 @@
     e3dVC.espacio3D=espacio3D;
     e3dVC.arregloEspacial=tempArray;
     [self.navigationController pushViewController:e3dVC animated:YES];
+}
+#pragma mark - scroll tap
+- (void)handleDoubleTap:(UIGestureRecognizer *)recognizer {
+    NSLog(@"doubletap ");
+    UIScrollView *tempScroll=(UIScrollView *)[scrollView viewWithTag:self.pageCon.currentPage+3000];
+    if(tempScroll.zoomScale>=1.0 && tempScroll.zoomScale<=1.5){
+        CGPoint Pointview=[recognizer locationInView:tempScroll];
+        CGFloat newZoomscal=3.0;
+        
+        newZoomscal=MIN(newZoomscal, 5.0);
+        
+        CGSize scrollViewSize=tempScroll.bounds.size;
+        
+        CGFloat w=scrollViewSize.width/newZoomscal;
+        CGFloat h=scrollViewSize.height/newZoomscal;
+        CGFloat x= Pointview.x-(w/2.0);
+        CGFloat y = Pointview.y-(h/2.0);
+        
+        CGRect rectTozoom=CGRectMake(x, y, w, h);
+        [tempScroll zoomToRect:rectTozoom animated:YES];
+        
+        [tempScroll setZoomScale:3.0 animated:YES];
+        //zoomCheck=NO;
+    }
+    else{
+        [tempScroll setZoomScale:1.0 animated:YES];
+   //     zoomCheck=YES;
+    }
 }
 
 @end

@@ -218,7 +218,7 @@
     [boton addTarget:self action:@selector(irAlSiguienteViewController:) forControlEvents:UIControlEventTouchUpInside];
     int posXint=[posX intValue];
     int posYint=[posY intValue];
-    boton.frame=CGRectMake(posXint-40, posYint-65,65, 65);
+    boton.frame=CGRectMake(posXint-25, posYint-65,50, 50);
     [self agregarLabelAlLadoDelBotonEnView:view enPosicionX:posXint yPosicionY:posYint conTitulo:eltitulo];
     [view addSubview:boton];
     [view bringSubviewToFront:boton];
@@ -226,13 +226,13 @@
 -(void)agregarLabelAlLadoDelBotonEnView:(UIView*)view enPosicionX:(int)posX yPosicionY:(int)posY conTitulo:(NSString*)titulo{
     //Tamaño del texto
     CGFloat constrainedSize = 300.0f;
-    UIFont * font = [UIFont fontWithName:@"Helvetica" size:15];
+    UIFont * font = [UIFont fontWithName:@"Helvetica" size:13];
     CGSize textSize = [titulo sizeWithFont: font
                          constrainedToSize:CGSizeMake(constrainedSize, CGFLOAT_MAX)
                              lineBreakMode:UILineBreakModeWordWrap];    
     
     UIView *container=[[UIView alloc]init];
-    container.frame=CGRectMake(posX+3, posY-55,textSize.width+20, 22);
+    container.frame=CGRectMake(posX+2, posY-58,textSize.width+20, 20);
     container.backgroundColor=[UIColor clearColor];
     [view addSubview:container];
     UIView *lowAlphaView=[[UIView alloc]init];
@@ -242,8 +242,8 @@
     [container addSubview:lowAlphaView];
     
     UILabel *label=[[UILabel alloc]init];
-    label.font=[UIFont fontWithName:@"Helvetica" size:15];
-    label.frame=CGRectMake(10, 0,textSize.width, 22);
+    label.font=[UIFont fontWithName:@"Helvetica" size:13];
+    label.frame=CGRectMake(10, 0,textSize.width, 20);
     label.text=titulo;
     [label setAdjustsFontSizeToFitWidth:YES];
     label.textColor=[UIColor whiteColor];

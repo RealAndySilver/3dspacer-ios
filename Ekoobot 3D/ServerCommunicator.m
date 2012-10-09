@@ -84,7 +84,7 @@
     NSDictionary * dictionary2=[[[[dictionary1 objectForKey:@"SOAP-ENV:Envelope"]objectForKey:@"SOAP-ENV:Body"]objectForKey:@"ns1:getDataResponse"]objectForKey:@"return"];
     resDic=[[NSMutableDictionary alloc]initWithDictionary:dictionary2];
     //NSLog(@"xml %@",resDic);
-    //NSLog(@"xml %@",dictionary1);
+    NSLog(@"xml %@",dictionary1);
 
     
     if ([caller respondsToSelector:@selector(receivedDataFromServer:)]) {

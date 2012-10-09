@@ -80,9 +80,11 @@
 		757BEC14161B89C9002B251A /* loginBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 757BEC13161B89C9002B251A /* loginBtn.png */; };
 		757BEC17161B8A69002B251A /* ekoomediaWterMark.png in Resources */ = {isa = PBXBuildFile; fileRef = 757BEC16161B8A69002B251A /* ekoomediaWterMark.png */; };
 		757D4DA31612491800F31913 /* NavController.m in Sources */ = {isa = PBXBuildFile; fileRef = 757D4DA21612491800F31913 /* NavController.m */; };
+		7589BB36161CF32D0027453E /* botonEntrar.png in Resources */ = {isa = PBXBuildFile; fileRef = 7589BB35161CF32D0027453E /* botonEntrar.png */; };
 		7589C5A915A4CF2E000C99AF /* ProjectDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7589C5A815A4CF2E000C99AF /* ProjectDownloader.m */; };
 		7589C5AE15A4FC6F000C99AF /* ProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7589C5AD15A4FC6F000C99AF /* ProgressView.m */; };
 		75B5B65515D0B193003509E1 /* ekoologo.png in Resources */ = {isa = PBXBuildFile; fileRef = 75B5B65415D0B193003509E1 /* ekoologo.png */; };
+		75C8E937162387280094A609 /* UpdateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 75C8E936162387280094A609 /* UpdateView.m */; };
 		75D49A8215ED2FF000A4F6BA /* IAmCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 75D49A8115ED2FEF00A4F6BA /* IAmCoder.m */; };
 		75D49A8515ED593400A4F6BA /* boton_entrar.png in Resources */ = {isa = PBXBuildFile; fileRef = 75D49A8415ED593400A4F6BA /* boton_entrar.png */; };
 		75D49A8715ED5A3C00A4F6BA /* flechamapa3.png in Resources */ = {isa = PBXBuildFile; fileRef = 75D49A8615ED5A3C00A4F6BA /* flechamapa3.png */; };
@@ -211,11 +213,14 @@
 		757BEC16161B8A69002B251A /* ekoomediaWterMark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ekoomediaWterMark.png; sourceTree = "<group>"; };
 		757D4DA11612491800F31913 /* NavController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavController.h; sourceTree = "<group>"; };
 		757D4DA21612491800F31913 /* NavController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavController.m; sourceTree = "<group>"; };
+		7589BB35161CF32D0027453E /* botonEntrar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = botonEntrar.png; sourceTree = "<group>"; };
 		7589C5A715A4CF2E000C99AF /* ProjectDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectDownloader.h; sourceTree = "<group>"; };
 		7589C5A815A4CF2E000C99AF /* ProjectDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectDownloader.m; sourceTree = "<group>"; };
 		7589C5AC15A4FC6F000C99AF /* ProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressView.h; sourceTree = "<group>"; };
 		7589C5AD15A4FC6F000C99AF /* ProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgressView.m; sourceTree = "<group>"; };
 		75B5B65415D0B193003509E1 /* ekoologo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ekoologo.png; sourceTree = "<group>"; };
+		75C8E935162387280094A609 /* UpdateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateView.h; sourceTree = "<group>"; };
+		75C8E936162387280094A609 /* UpdateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateView.m; sourceTree = "<group>"; };
 		75D49A8015ED2FEF00A4F6BA /* IAmCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAmCoder.h; sourceTree = "<group>"; };
 		75D49A8115ED2FEF00A4F6BA /* IAmCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IAmCoder.m; sourceTree = "<group>"; };
 		75D49A8415ED593400A4F6BA /* boton_entrar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = boton_entrar.png; sourceTree = "<group>"; };
@@ -507,6 +512,7 @@
 				75045BB215D0849200BC7642 /* flecha.png */,
 				37F1EBF41541D65800426C48 /* boton.png */,
 				75D49A8415ED593400A4F6BA /* boton_entrar.png */,
+				7589BB35161CF32D0027453E /* botonEntrar.png */,
 				7574E8221602A16E00974D7B /* updateBox.png */,
 			);
 			name = Resources;
@@ -543,6 +549,8 @@
 				7546A58115AF3A7F000F48E5 /* LoadingView.m */,
 				752DCB0A15A7EB06002B732D /* CustomButton.h */,
 				752DCB0B15A7EB06002B732D /* CustomButton.m */,
+				75C8E935162387280094A609 /* UpdateView.h */,
+				75C8E936162387280094A609 /* UpdateView.m */,
 			);
 			name = Views;
 			path = ..;
@@ -654,6 +662,7 @@
 				757BEC04161B8736002B251A /* logo.png in Resources */,
 				757BEC14161B89C9002B251A /* loginBtn.png in Resources */,
 				757BEC17161B8A69002B251A /* ekoomediaWterMark.png in Resources */,
+				7589BB36161CF32D0027453E /* botonEntrar.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -723,6 +732,7 @@
 				75D49A8215ED2FF000A4F6BA /* IAmCoder.m in Sources */,
 				75E69F74160404F3005907F6 /* EraseViewController.m in Sources */,
 				757D4DA31612491800F31913 /* NavController.m in Sources */,
+				75C8E937162387280094A609 /* UpdateView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

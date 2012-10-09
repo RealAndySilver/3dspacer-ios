@@ -265,7 +265,7 @@
         boton.frame=CGRectMake(diferencia/2, diferencia/2,tamano-diferencia, tamano-diferencia);
         [back addSubview:boton];
         
-        UILabel *spaceName=[[UILabel alloc]initWithFrame:CGRectMake(0, 70, back.frame.size.width, 20)];
+        UILabel *spaceName=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, back.frame.size.width, 20)];
         spaceName.backgroundColor=[UIColor blackColor];
         spaceName.text=espacio.nombre;
         spaceName.textColor=[UIColor whiteColor];

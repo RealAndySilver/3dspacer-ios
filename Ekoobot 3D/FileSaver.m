@@ -65,7 +65,7 @@
 	[self guardar];
 }
 
--(NSString*)getUserWithName:(NSString*)name andPassword:(NSString*)password{
+/*-(NSString*)getUserWithName:(NSString*)name andPassword:(NSString*)password{
     if ([[datos objectForKey:@"nombreLocal"]isEqualToString:name]&&[[datos objectForKey:@"passwordLocal"]isEqualToString:password]) {
         return [datos objectForKey:@"idLocal"];
     }
@@ -78,6 +78,24 @@
     [newData setObject:name forKey:@"nombreLocal"];
     [newData setObject:password forKey:@"passwordLocal"];
     [newData setObject:ID forKey:@"idLocal"];
+	datos = newData;
+	[self guardar];
+}*/
+-(NSString*)getUserWithName:(NSString*)name andPassword:(NSString*)password{
+    if ([[datos objectForKey:name]isEqualToString:name]&&[[datos objectForKey:password]isEqualToString:password]) {
+        NSString *namePass=[NSString stringWithFormat:@"%@%@",name,password];
+        return [datos objectForKey:namePass];
+    }
+    else{
+        return nil;
+    }
+}
+-(void)setUserName:(NSString*)name password:(NSString*)password andId:(NSString*)ID{
+    NSMutableDictionary *newData = [datos mutableCopy];
+    [newData setObject:name forKey:name];
+    [newData setObject:password forKey:password];
+    NSString *namePass=[NSString stringWithFormat:@"%@%@",name,password];
+    [newData setObject:ID forKey:namePass];
 	datos = newData;
 	[self guardar];
 }

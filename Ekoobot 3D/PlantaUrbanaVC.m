@@ -98,7 +98,9 @@
     //Crear todos los botones de los items del urbanismo
     [imageViewUrbanismo setUserInteractionEnabled:YES];
     scrollViewUrbanismo.frame=CGRectMake(0, 0, self.view.frame.size.height, self.view.frame.size.width);
+    scrollViewUrbanismo.center=CGPointMake(self.view.frame.size.height/2, self.view.frame.size.width/2);
     scrollViewUrbanismo.contentSize=CGSizeMake(imageViewUrbanismo.frame.size.width, imageViewUrbanismo.frame.size.height);
+    //[self layoutScrollView];
     [self.view addSubview:scrollViewUrbanismo];
     [scrollViewUrbanismo addSubview:imageViewUrbanismo];
     for (int i=0; i<arrayGrupos.count; i++) {
@@ -111,7 +113,23 @@
     scrollViewUrbanismo.clipsToBounds = YES;
     [scrollViewUrbanismo setDelegate:self];
 }
-
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView
+{
+    UIView *subView = [scrollView.subviews objectAtIndex:0];
+    
+    CGFloat offsetX = (scrollView.bounds.size.width > scrollView.contentSize.width)?
+    (scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5 : 0.0;
+    
+    CGFloat offsetY = (scrollView.bounds.size.height > scrollView.contentSize.height)?
+    (scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5 : 0.0;
+    
+    subView.center = CGPointMake(scrollView.contentSize.width * 0.5 + offsetX,
+                                 scrollView.contentSize.height * 0.5 + offsetY);
+}
+- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view
+{
+    scrollView.contentInset = UIEdgeInsetsZero;
+}
 -(UIView *)viewForZoomingInScrollView:(UIScrollView*)scrollview{
     return imageViewUrbanismo;
 }

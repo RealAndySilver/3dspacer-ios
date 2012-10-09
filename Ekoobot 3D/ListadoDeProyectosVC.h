@@ -18,6 +18,7 @@
 #import "Producto.h"
 #import "FileSaver.h"
 #import "IAmCoder.h"
+#import "UpdateView.h"
 @interface ListadoDeProyectosVC : UIViewController <UIScrollViewDelegate,UIAlertViewDelegate> {
     UIScrollView *scrollView;
     Usuario *usuarioActual;

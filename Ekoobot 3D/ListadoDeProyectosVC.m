@@ -216,13 +216,13 @@
 
 - (void)insertarImagenBotonProyectoEnPagina:(UIView*)view conProyecto:(Proyecto*)proyecto yPosicion:(int)posicion{
     UIButton *boton = [[UIButton alloc]init];
-    UIImage *imageButton = [UIImage imageNamed:@"boton_entrar.png"];
+    UIImage *imageButton = [UIImage imageNamed:@"botonEntrar.png"];
     [boton setImage:imageButton forState:UIControlStateNormal];
     boton.tag=posicion+3000;
     NSLog(@"Boton taggggg %i",boton.tag);
     boton.alpha=0;
     [boton addTarget:self action:@selector(irAlSiguienteViewController:) forControlEvents:UIControlEventTouchUpInside];
-    boton.frame=CGRectMake(700, 535,238, 120);
+    boton.frame=CGRectMake(830, 510,170, 170);
     [view addSubview:boton];
     [view bringSubviewToFront:boton];
 }
@@ -284,7 +284,7 @@
     [view bringSubviewToFront:tituloProyecto];
 }
 
--(void)mostrarLabelDeActualizacionConTag:(int)tag enView:(UIView*)view yProyecto:(Proyecto*)proyecto{
+/*-(void)mostrarLabelDeActualizacionConTag:(int)tag enView:(UIView*)view yProyecto:(Proyecto*)proyecto{
     UIImageView *updateBox=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"updateBox.png"]];
     updateBox.frame=CGRectMake(43, 585, 274, 67);
     updateBox.tag=tag+250;
@@ -372,6 +372,63 @@
         UIImageView *iv = (UIImageView *)[scrollView viewWithTag:[number intValue]+250];
         iv.alpha=1;
 
+    }
+}*/
+-(void)mostrarLabelDeActualizacionConTag:(int)tag enView:(UIView*)view yProyecto:(Proyecto*)proyecto{
+    UpdateView *updateBox=[[UpdateView alloc]initWithFrame:CGRectMake(43, 585, 274, 67)];
+    updateBox.tag=tag+250;
+    [view addSubview:updateBox];
+    NSLog(@"update tag----> %i %@",updateBox.tag,updateBox);
+    FileSaver *file=[[FileSaver alloc]init];
+    NSString *composedTag=[NSString stringWithFormat:@"%i%@",tag,proyecto.idProyecto];
+    if ([file getUpdateFileWithString:composedTag]) {
+        updateBox.updateText.text=[NSString stringWithFormat:@"Actualizado el: %@",[file getUpdateFileWithString:composedTag]];
+        if (![proyecto.actualizado isEqualToString:[file getUpdateFileWithString:composedTag]]) {
+            updateBox.titleText.text=@"Hay una neva versión";
+            updateBox.titleText.textColor=[UIColor redColor];
+            updateBox.titleText.tag=tag+1100;
+            updateBox.container.alpha=1;
+            updateBox.updateText.textColor=[UIColor orangeColor];
+        }
+        else{
+            updateBox.titleText.backgroundColor=[UIColor clearColor];
+            updateBox.titleText.text=@"Tienes la última versión";
+            updateBox.titleText.textColor=[UIColor greenColor];
+            updateBox.titleText.tag=tag+1100;
+            updateBox.updateText.textColor=[UIColor whiteColor];
+            updateBox.container.alpha=0;
+            UIButton *lebuttons = (UIButton *)[view viewWithTag:tag+1000];
+            NSLog(@"Button punto tag %i",lebuttons.tag);
+            lebuttons.alpha=1;
+        }
+    }
+    else{
+        updateBox.container.alpha=0;
+    }
+    [view bringSubviewToFront:updateBox];
+}
+-(void)updateLabelWithTag:(NSNotification*)notification{
+    NSDictionary *dictionary=notification.object;
+    NSNumber *number=[dictionary objectForKey:@"tag"];
+    NSString *ID=[dictionary objectForKey:@"id"];
+    
+    FileSaver *file=[[FileSaver alloc]init];
+    NSString *composedTag=[NSString stringWithFormat:@"%@%@",number,ID];
+    
+    [file getUpdateFileWithString:composedTag];
+    if ([file getUpdateFileWithString:composedTag]) {
+        UpdateView *updateBox = (UpdateView *)[scrollView viewWithTag:[number intValue]+250];
+        NSLog(@"number li tag----> %i %@",updateBox.tag,updateBox.updateText);
+        updateBox.updateText.text=[NSString stringWithFormat:@"Actualizado el: %@",[file getUpdateFileWithString:composedTag]];
+        updateBox.container.alpha=0;
+        updateBox.titleText.textColor=[UIColor whiteColor];
+        UIButton *button = (UIButton *)[scrollView viewWithTag:[number intValue]+1000];
+        button.alpha=1;
+        //NSLog(@"Updated %@ %@",number,[file getUpdateFile:[number intValue]]);
+        
+        [self irAlSiguienteViewController:button];
+        updateBox.titleText.text=[NSString stringWithFormat:@"Tienes la última versión"];
+        updateBox.titleText.textColor=[UIColor greenColor];
     }
 }
 #pragma mark -

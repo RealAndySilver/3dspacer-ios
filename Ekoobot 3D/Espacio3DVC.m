@@ -44,6 +44,10 @@
     tituloEspacio=nil;
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
 }
+-(void)viewWillDisappear:(BOOL)animated{
+    NavController *navController = (NavController *)self.navigationController;
+    [navController setInterfaceOrientation:YES];
+}
 -(void)didReceiveMemoryWarning{
     NSLog(@"Cara Warning %@, %@",espacio3D.nombre,arregloEspacial);
 }

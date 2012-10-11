@@ -206,12 +206,6 @@
         //NSLog(@"imagen width %.1f height %.1f",proyectoImage.frame.size.width,proyectoImage.frame.size.height);
         [view addSubview:proyectoImage];
     }
-    /*NSURL *url =[NSURL URLWithString:proyecto.imagen];
-    NSData *data = [NSData dataWithContentsOfURL:url];
-    UIImageView *proyectoImage = [[UIImageView alloc]init];
-    proyectoImage.image = [UIImage imageWithData:data];
-    proyectoImage.frame = CGRectMake(25, 25, view.frame.size.width-50, view.frame.size.height-100);
-    [view addSubview:proyectoImage];*/
 }
 
 - (void)insertarImagenBotonProyectoEnPagina:(UIView*)view conProyecto:(Proyecto*)proyecto yPosicion:(int)posicion{
@@ -252,12 +246,6 @@
         proyectoImage.frame = CGRectMake(60, 90, 150, 150);
         [view addSubview:proyectoImage];
     }
-    /*NSURL *url =[NSURL URLWithString:proyecto.logo];
-    NSData *data = [NSData dataWithContentsOfURL:url];
-    UIImageView *imageView=[[UIImageView alloc]init];
-    imageView.image=[UIImage imageWithData:data];
-    imageView.frame=CGRectMake(view.frame.size.width-200, 50, 150, 150);
-    [view addSubview:imageView];*/
 }
 
 - (void)insertarLabelProyectoEnPagina:(UIView*)view conProyecto:(Proyecto*)proyecto{
@@ -284,96 +272,6 @@
     [view bringSubviewToFront:tituloProyecto];
 }
 
-/*-(void)mostrarLabelDeActualizacionConTag:(int)tag enView:(UIView*)view yProyecto:(Proyecto*)proyecto{
-    UIImageView *updateBox=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"updateBox.png"]];
-    updateBox.frame=CGRectMake(43, 585, 274, 67);
-    updateBox.tag=tag+250;
-    [view addSubview:updateBox];
-    UILabel *updateText = [[UILabel alloc]initWithFrame:CGRectMake(50, 600, 250, 50)];
-    updateText.tag=tag;
-    updateText.backgroundColor=[UIColor clearColor];
-    updateText.textColor=[UIColor whiteColor];
-    updateText.adjustsFontSizeToFitWidth = YES;
-    updateText.textAlignment=UITextAlignmentCenter;
-    [updateText setFont:[UIFont fontWithName:@"Helvetica" size:12]];
-    updateText.layer.cornerRadius = 10.0;
-    updateText.layer.shadowColor = [[UIColor colorWithWhite:0.1 alpha:1] CGColor];
-    updateText.layer.shadowOffset = CGSizeMake(5.0f,5.0f);
-    updateText.layer.shadowRadius = 5;
-    updateText.layer.shadowOpacity = 1.0;
-    
-
-    FileSaver *file=[[FileSaver alloc]init];
-    NSString *composedTag=[NSString stringWithFormat:@"%i%@",tag,proyecto.idProyecto];
-    if ([file getUpdateFileWithString:composedTag]) {
-        updateText.alpha=1;
-        updateBox.alpha=1;
-        updateText.text=[NSString stringWithFormat:@"Actualizado el: %@",[file getUpdateFileWithString:composedTag]];
-        if (![proyecto.actualizado isEqualToString:[file getUpdateFileWithString:composedTag]]) {
-            UILabel *update2 = [[UILabel alloc]initWithFrame:CGRectMake(75, 590, 200, 30)];
-            update2.backgroundColor=[UIColor clearColor];
-            update2.textColor=[UIColor whiteColor];
-            update2.adjustsFontSizeToFitWidth = YES;
-            update2.text=@"Hay una neva versión";
-            update2.textAlignment=UITextAlignmentCenter;
-            update2.textColor=[UIColor redColor];
-            update2.tag=tag+1100;
-            [update2 setFont:[UIFont fontWithName:@"Helvetica" size:12]];
-            [view addSubview:update2];
-            updateText.textColor=[UIColor orangeColor];
-        }
-        else{
-            UILabel *update2 = [[UILabel alloc]initWithFrame:CGRectMake(75, 590, 200, 30)];
-            update2.backgroundColor=[UIColor clearColor];
-            update2.textColor=[UIColor whiteColor];
-            update2.adjustsFontSizeToFitWidth = YES;
-            update2.text=@"Tienes la última versión";
-            update2.textAlignment=UITextAlignmentCenter;
-            update2.textColor=[UIColor greenColor];
-            update2.tag=tag+1100;
-            [update2 setFont:[UIFont fontWithName:@"Helvetica" size:12]];
-            [view addSubview:update2];
-            
-            UIButton *lebuttons = (UIButton *)[view viewWithTag:tag+1000];
-            NSLog(@"Button punto tag %i",lebuttons.tag);
-            lebuttons.alpha=1;
-            
-        }
-    }
-    else{
-        updateText.alpha=0;
-        updateBox.alpha=0;
-    }
-    [view addSubview:updateText];
-    [view bringSubviewToFront:updateText];
-}
--(void)updateLabelWithTag:(NSNotification*)notification{
-    NSDictionary *dictionary=notification.object;
-    NSNumber *number=[dictionary objectForKey:@"tag"];
-    NSString *ID=[dictionary objectForKey:@"id"];
-
-    FileSaver *file=[[FileSaver alloc]init];
-    NSString *composedTag=[NSString stringWithFormat:@"%@%@",number,ID];
-
-    [file getUpdateFileWithString:composedTag];
-    if ([file getUpdateFileWithString:composedTag]) {
-        UILabel *label = (UILabel *)[scrollView viewWithTag:[number intValue]];
-        label.text=[NSString stringWithFormat:@"Actualizado el: %@",[file getUpdateFileWithString:composedTag]];
-        label.alpha=1;
-        label.textColor=[UIColor whiteColor];
-        UIButton *button = (UIButton *)[scrollView viewWithTag:[number intValue]+1000];
-        button.alpha=1;
-        //NSLog(@"Updated %@ %@",number,[file getUpdateFile:[number intValue]]);
-        
-        UILabel *label2 = (UILabel *)[scrollView viewWithTag:[number intValue]+1100];
-        label2.text=[NSString stringWithFormat:@"Tienes la última versión"];
-        label2.alpha=1;
-        label2.textColor=[UIColor greenColor];
-        UIImageView *iv = (UIImageView *)[scrollView viewWithTag:[number intValue]+250];
-        iv.alpha=1;
-
-    }
-}*/
 -(void)mostrarLabelDeActualizacionConTag:(int)tag enView:(UIView*)view yProyecto:(Proyecto*)proyecto{
     UpdateView *updateBox=[[UpdateView alloc]initWithFrame:CGRectMake(43, 585, 274, 67)];
     updateBox.tag=tag+250;

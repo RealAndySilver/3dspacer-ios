@@ -56,7 +56,7 @@
 }
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView1{
     CGRect frame=[[UIScreen mainScreen] applicationFrame];
-    float roundedValue = round(scrollView1.contentOffset.x / frame.size.height);
+    float roundedValue = round(scrollView.contentOffset.x / frame.size.height);
     self.pageCon.currentPage=roundedValue;
 }
 -(void)customLogoutAlert{

@@ -19,6 +19,7 @@
 #import "FileSaver.h"
 #import "IAmCoder.h"
 #import "UpdateView.h"
+#import "VideoViewController.h"
 @interface ListadoDeProyectosVC : UIViewController <UIScrollViewDelegate,UIAlertViewDelegate> {
     UIScrollView *scrollView;
     Usuario *usuarioActual;

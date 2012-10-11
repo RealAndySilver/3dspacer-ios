@@ -73,7 +73,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView1{
     CGRect frame=[[UIScreen mainScreen] applicationFrame];
-    float roundedValue = round(scrollView1.contentOffset.x / frame.size.height);
+    float roundedValue = round(scrollView.contentOffset.x / frame.size.height);
     if (roundedValue>=0 && roundedValue<=arrayDeTitulos.count-1) {
         self.pageCon.currentPage=roundedValue;
         NSString *key=[NSString stringWithFormat:@"%f",roundedValue];
@@ -146,18 +146,52 @@
 }
 
 - (void)paginaCreadaConObjeto:(Proyecto*)proyecto enPosicion:(int)posicion{
+
+      
     CGRect frame=[[UIScreen mainScreen] applicationFrame];
-    UIView *pagina=[[UIView alloc]init];
-     
-    pagina.frame=CGRectMake(frame.size.height*posicion, 0, frame.size.height, frame.size.width);
+    UIScrollView *scrollPage=[[UIScrollView alloc]init];
+    scrollPage.frame=CGRectMake(0, 0, frame.size.height, frame.size.width);
+    scrollPage.contentSize=CGSizeMake(frame.size.height, frame.size.width*3);
+    scrollPage.userInteractionEnabled=YES;
+    scrollPage.pagingEnabled=YES;
+    scrollPage.showsVerticalScrollIndicator=YES;
+    scrollPage.delegate=self;
+    UIView *pg1=[[UIView alloc]init];
+    pg1.frame=CGRectMake(0, frame.size.width, frame.size.height, frame.size.width);
+    pg1.backgroundColor=[UIColor redColor];
+    [scrollPage addSubview:pg1];
+    UIView *pg2=[[UIView alloc]init];
+    pg2.frame=CGRectMake(0, frame.size.width*2, frame.size.height, frame.size.width);
+    pg2.backgroundColor=[UIColor orangeColor];
     
-    [self insertarImagenProyectoEnPagina:pagina conProyecto:proyecto];
+    UIButton *player = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    player.frame = CGRectMake(0, 0, 512, 288);
+    player.center=CGPointMake(pg2.frame.size.width/2, pg2.frame.size.height/2);
+    [player setTitle:@"Video" forState:UIControlStateNormal];
+    [player addTarget:self action:@selector(gomita) forControlEvents:UIControlEventTouchUpInside];
+    [pg2 addSubview:player];
+
+    [scrollPage addSubview:pg2];
+    UIView *pagina=[[UIView alloc]init];
+    pagina.frame=CGRectMake(frame.size.height*posicion, 0, frame.size.height, frame.size.width);
+    [pagina addSubview:scrollPage];
+    [self insertarImagenProyectoEnPagina:scrollPage conProyecto:proyecto];
     [self insertarImagenBotonProyectoEnPagina:pagina conProyecto:proyecto yPosicion:(int)posicion];
     [self insertarLogoProyectoEnPagina:pagina conProyecto:proyecto];
     [self insertarLabelProyectoEnPagina:pagina conProyecto:proyecto];
     [self mostrarLabelDeActualizacionConTag:posicion+2000 enView:pagina yProyecto:proyecto];
     [self insertarActualizadorEnPagina:pagina yTag:posicion];
     [scrollView addSubview:pagina];
+
+}
+-(void)gomita{
+    VideoViewController *vVC=[[VideoViewController alloc]init];
+    vVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Video"];
+    [vVC setModalPresentationStyle:UIModalPresentationFullScreen];
+    [vVC setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+    NSURL * pathv = [[NSBundle mainBundle]URLForResource:@"video" withExtension:@"mp4"];
+    vVC.videoPath=pathv;
+    [self presentModalViewController:vVC animated:YES];
 }
 -(void)actualizarOdescargar:(UIButton*)button{
     NSString *key=[NSString stringWithFormat:@"%i",button.tag-1000];
@@ -184,7 +218,7 @@
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cover%@%@.jpeg",docDir,proyecto.idProyecto,[IAmCoder encodeURL:proyecto.imagen]];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     UIImageView *proyectoImage = [[UIImageView alloc]init];
-    proyectoImage.layer.cornerRadius=50.0f;
+    proyectoImage.layer.cornerRadius=10.0f;
     proyectoImage.layer.masksToBounds=YES;
     if (!fileExists) {
         //NSLog(@"no existe proj img %@",jpegFilePath);

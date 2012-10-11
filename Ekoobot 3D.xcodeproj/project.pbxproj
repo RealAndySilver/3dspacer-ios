@@ -63,6 +63,10 @@
 		7507BA5D15B6FB1D0072ED48 /* ServerCommunicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7507BA5C15B6FB1D0072ED48 /* ServerCommunicator.m */; };
 		7507BA5E15B6FE880072ED48 /* ServerCommunicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7507BA5C15B6FB1D0072ED48 /* ServerCommunicator.m */; };
 		7507EB2016026BF3005E08FD /* flechamapa.png in Resources */ = {isa = PBXBuildFile; fileRef = 7507EB1F16026BF3005E08FD /* flechamapa.png */; };
+		7510454B16275B5400BA12C6 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7510454A16275B5400BA12C6 /* MediaPlayer.framework */; };
+		75104551162761CD00BA12C6 /* video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 75104550162761CD00BA12C6 /* video.mp4 */; };
+		751045531627644100BA12C6 /* video2.m4v in Resources */ = {isa = PBXBuildFile; fileRef = 751045521627644100BA12C6 /* video2.m4v */; };
+		751045561627726B00BA12C6 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 751045551627726B00BA12C6 /* VideoViewController.m */; };
 		7515C67015E54D3600DFE029 /* FileSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 7515C66F15E54D3600DFE029 /* FileSaver.m */; };
 		7518923C15BE1E76006B51B2 /* MBProgressHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 7518923B15BE1E76006B51B2 /* MBProgressHud.m */; };
 		752DBEA015C6F8500014AD46 /* download.plist in Resources */ = {isa = PBXBuildFile; fileRef = 752DBE9F15C6F8500014AD46 /* download.plist */; };
@@ -190,6 +194,11 @@
 		7507BA5B15B6FB1D0072ED48 /* ServerCommunicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerCommunicator.h; sourceTree = "<group>"; };
 		7507BA5C15B6FB1D0072ED48 /* ServerCommunicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerCommunicator.m; sourceTree = "<group>"; };
 		7507EB1F16026BF3005E08FD /* flechamapa.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flechamapa.png; sourceTree = "<group>"; };
+		7510454A16275B5400BA12C6 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		75104550162761CD00BA12C6 /* video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = video.mp4; path = ../../Downloads/video.mp4; sourceTree = "<group>"; };
+		751045521627644100BA12C6 /* video2.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; name = video2.m4v; path = ../../Desktop/video2.m4v; sourceTree = "<group>"; };
+		751045541627726A00BA12C6 /* VideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoViewController.h; sourceTree = "<group>"; };
+		751045551627726B00BA12C6 /* VideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoViewController.m; sourceTree = "<group>"; };
 		7515C66E15E54D3600DFE029 /* FileSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSaver.h; sourceTree = "<group>"; };
 		7515C66F15E54D3600DFE029 /* FileSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileSaver.m; sourceTree = "<group>"; };
 		7518923A15BE1E76006B51B2 /* MBProgressHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHud.h; sourceTree = "<group>"; };
@@ -238,6 +247,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7510454B16275B5400BA12C6 /* MediaPlayer.framework in Frameworks */,
 				37319373158B864100B49F1E /* CoreLocation.framework in Frameworks */,
 				37319371158B863A00B49F1E /* CoreMotion.framework in Frameworks */,
 				3731936E158B861B00B49F1E /* OpenGLES.framework in Frameworks */,
@@ -348,6 +358,7 @@
 		37E98A38153E0D70001B9BFE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7510454A16275B5400BA12C6 /* MediaPlayer.framework */,
 				37E98A3D153E0D70001B9BFE /* CoreGraphics.framework */,
 				37319372158B864100B49F1E /* CoreLocation.framework */,
 				37319370158B863A00B49F1E /* CoreMotion.framework */,
@@ -474,6 +485,8 @@
 				3791F1FD159395570027D122 /* Espacio3DVC.m */,
 				75E69F72160404F3005907F6 /* EraseViewController.h */,
 				75E69F73160404F3005907F6 /* EraseViewController.m */,
+				751045541627726A00BA12C6 /* VideoViewController.h */,
+				751045551627726B00BA12C6 /* VideoViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -496,6 +509,8 @@
 		37F1EBF71541D65D00426C48 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				751045521627644100BA12C6 /* video2.m4v */,
+				75104550162761CD00BA12C6 /* video.mp4 */,
 				75E69F7516040622005907F6 /* bin.png */,
 				7574E81D16029F7300974D7B /* downloading.jpg */,
 				7574E8201602A12100974D7B /* downloadBtn.png */,
@@ -663,6 +678,8 @@
 				757BEC14161B89C9002B251A /* loginBtn.png in Resources */,
 				757BEC17161B8A69002B251A /* ekoomediaWterMark.png in Resources */,
 				7589BB36161CF32D0027453E /* botonEntrar.png in Resources */,
+				75104551162761CD00BA12C6 /* video.mp4 in Resources */,
+				751045531627644100BA12C6 /* video2.m4v in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -707,7 +724,6 @@
 				37E98A83153E21C0001B9BFE /* Proyecto.m in Sources */,
 				37E98A8C153E27CE001B9BFE /* ComprobarUsuario.m in Sources */,
 				37F553F61540ED8200BB6A90 /* PlantaUrbanaVC.m in Sources */,
-				3766D1151540F33B008B9437 /* TiposDePisosVC.m in Sources */,
 				3731934F158B840E00B49F1E /* CC3Foundation.m in Sources */,
 				37319350158B840E00B49F1E /* CC3GLMatrix.m in Sources */,
 				37319351158B840E00B49F1E /* CC3Kazmath.c in Sources */,
@@ -716,6 +732,7 @@
 				3749926E1591464200686C44 /* TiposDePlantasVC.m in Sources */,
 				3791F1FE159395570027D122 /* Espacio3DVC.m in Sources */,
 				37A49D5D15951E650055FAA5 /* ItemUrbanismo.m in Sources */,
+				3766D1151540F33B008B9437 /* TiposDePisosVC.m in Sources */,
 				37A49D6015951E890055FAA5 /* TipoDePiso.m in Sources */,
 				37A49D6315951EA20055FAA5 /* Producto.m in Sources */,
 				37A49D6615951EB70055FAA5 /* Planta.m in Sources */,
@@ -733,6 +750,7 @@
 				75E69F74160404F3005907F6 /* EraseViewController.m in Sources */,
 				757D4DA31612491800F31913 /* NavController.m in Sources */,
 				75C8E937162387280094A609 /* UpdateView.m in Sources */,
+				751045561627726B00BA12C6 /* VideoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

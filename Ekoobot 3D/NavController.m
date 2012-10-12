@@ -50,4 +50,14 @@
 -(void)setInterfaceOrientation:(BOOL)orientation{
     orient=orientation;
 }
+-(void)forceLandscapeMode{
+    if(UIDeviceOrientationIsPortrait(self.interfaceOrientation)){
+        NSLog(@"dentro del 1er if");
+        if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)])
+        {
+            objc_msgSend([UIDevice currentDevice], @selector(setOrientation:), UIInterfaceOrientationLandscapeLeft );
+            NSLog(@"dentro del 2ndo if");
+        }
+    }
+}
 @end

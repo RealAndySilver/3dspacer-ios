@@ -65,7 +65,6 @@
 		7507EB2016026BF3005E08FD /* flechamapa.png in Resources */ = {isa = PBXBuildFile; fileRef = 7507EB1F16026BF3005E08FD /* flechamapa.png */; };
 		7510454B16275B5400BA12C6 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7510454A16275B5400BA12C6 /* MediaPlayer.framework */; };
 		75104551162761CD00BA12C6 /* video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 75104550162761CD00BA12C6 /* video.mp4 */; };
-		751045531627644100BA12C6 /* video2.m4v in Resources */ = {isa = PBXBuildFile; fileRef = 751045521627644100BA12C6 /* video2.m4v */; };
 		751045561627726B00BA12C6 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 751045551627726B00BA12C6 /* VideoViewController.m */; };
 		7515C67015E54D3600DFE029 /* FileSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 7515C66F15E54D3600DFE029 /* FileSaver.m */; };
 		7518923C15BE1E76006B51B2 /* MBProgressHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 7518923B15BE1E76006B51B2 /* MBProgressHud.m */; };
@@ -196,7 +195,6 @@
 		7507EB1F16026BF3005E08FD /* flechamapa.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flechamapa.png; sourceTree = "<group>"; };
 		7510454A16275B5400BA12C6 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		75104550162761CD00BA12C6 /* video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = video.mp4; path = ../../Downloads/video.mp4; sourceTree = "<group>"; };
-		751045521627644100BA12C6 /* video2.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; name = video2.m4v; path = ../../Desktop/video2.m4v; sourceTree = "<group>"; };
 		751045541627726A00BA12C6 /* VideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoViewController.h; sourceTree = "<group>"; };
 		751045551627726B00BA12C6 /* VideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoViewController.m; sourceTree = "<group>"; };
 		7515C66E15E54D3600DFE029 /* FileSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSaver.h; sourceTree = "<group>"; };
@@ -509,7 +507,6 @@
 		37F1EBF71541D65D00426C48 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				751045521627644100BA12C6 /* video2.m4v */,
 				75104550162761CD00BA12C6 /* video.mp4 */,
 				75E69F7516040622005907F6 /* bin.png */,
 				7574E81D16029F7300974D7B /* downloading.jpg */,
@@ -679,7 +676,6 @@
 				757BEC17161B8A69002B251A /* ekoomediaWterMark.png in Resources */,
 				7589BB36161CF32D0027453E /* botonEntrar.png in Resources */,
 				75104551162761CD00BA12C6 /* video.mp4 in Resources */,
-				751045531627644100BA12C6 /* video2.m4v in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

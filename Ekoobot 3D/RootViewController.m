@@ -154,6 +154,11 @@
 -(void)receivedDataFromServer:(id)sender{
     sc=sender;
     if ([sc.resDic objectForKey:@"usuario"]) {
+        NavController *navController = (NavController *)self.navigationController;
+        [navController setOrientationType:2];
+        [navController forceLandscapeMode];
+        
+        
         Usuario *usuario=[[Usuario alloc]initWithDictionary:[sc.resDic objectForKey:@"usuario"]];
         Usuario *usuarioCopia=[[Usuario alloc]initWithDictionary:[sc.resDic objectForKey:@"usuario"]];
         FileSaver *fileSaver=[[FileSaver alloc]init];
@@ -166,6 +171,7 @@
                          andId:[[sc.resDic objectForKey:@"usuario"]objectForKey:@"id_usuario"]];
         
         [self irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];
+        
     }
     else{
         UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Nombre de usuario o contraseña incorrectos" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
@@ -188,6 +194,10 @@
         NSString *idLocal=[fileSaver getUserWithName:usuarioString andPassword:contrasenaString];
         Usuario *usuario=[[Usuario alloc]initWithDictionary:[fileSaver getDictionary:idLocal]];
         Usuario *usuarioCopia=[[Usuario alloc]initWithDictionary:[fileSaver getDictionary:idLocal]];
+        NavController *navController = (NavController *)self.navigationController;
+        [navController shouldAutorotateToInterfaceOrientation:UIInterfaceOrientationLandscapeLeft];
+        [navController setOrientationType:2];
+        [navController forceLandscapeMode];
 
         [self irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];
     }

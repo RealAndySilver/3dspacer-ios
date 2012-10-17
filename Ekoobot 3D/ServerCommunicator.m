@@ -81,14 +81,22 @@
     NSString *theXML = [[NSString alloc] initWithBytes:[webData mutableBytes] length:[webData length] encoding:NSUTF8StringEncoding];
 
     NSDictionary *dictionary1 = [XMLReader dictionaryForXMLString:theXML error:nil];
-    NSDictionary * dictionary2=[[[[dictionary1 objectForKey:@"SOAP-ENV:Envelope"]objectForKey:@"SOAP-ENV:Body"]objectForKey:@"ns1:getDataResponse"]objectForKey:@"return"];
-    resDic=[[NSMutableDictionary alloc]initWithDictionary:dictionary2];
-    //NSLog(@"xml %@",resDic);
-    NSLog(@"xml %@",dictionary1);
+    
 
     
     if ([caller respondsToSelector:@selector(receivedDataFromServer:)]) {
+        NSDictionary * dictionary2=[[[[dictionary1 objectForKey:@"SOAP-ENV:Envelope"]objectForKey:@"SOAP-ENV:Body"]objectForKey:@"ns1:getDataResponse"]objectForKey:@"return"];
+        resDic=[[NSMutableDictionary alloc]initWithDictionary:dictionary2];
+        //NSLog(@"xml %@",resDic);
+        NSLog(@"xml %@",dictionary1);
         [caller performSelector:@selector(receivedDataFromServer:) withObject:self];
+    }
+    else if ([caller respondsToSelector:@selector(receivedDataFromServerRegister:)]) {
+        NSDictionary * dictionary2=[[[[dictionary1 objectForKey:@"SOAP-ENV:Envelope"]objectForKey:@"SOAP-ENV:Body"]objectForKey:@"ns1:setRegisterResponse"]objectForKey:@"return"];
+        resDic=[[NSMutableDictionary alloc]initWithDictionary:dictionary2];
+        //NSLog(@"xml %@",resDic);
+        NSLog(@"xml %@",dictionary1);
+        [caller performSelector:@selector(receivedDataFromServerRegister:) withObject:self];
     }
 }
 

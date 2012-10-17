@@ -27,7 +27,6 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor=[UIColor blackColor];
-    //NSURL * pathv = [[NSBundle mainBundle]URLForResource:@"video2" withExtension:@"m4v"];
     player = [[MPMoviePlayerController alloc] initWithContentURL:videoPath];
     player.scalingMode = MPMovieScalingModeFill;
     player.movieSourceType = MPMovieSourceTypeFile;

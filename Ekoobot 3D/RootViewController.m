@@ -25,6 +25,32 @@
     passwordTF.delegate=self;
     sc=[[ServerCommunicator alloc]init];    
     sc.caller=self;
+    littleBoxView=[[UIView alloc]initWithFrame:CGRectMake(infoButton.frame.origin.x+40, infoButton.frame.origin.y-90,200, 200)];
+    littleBoxView.backgroundColor=[UIColor underPageBackgroundColor];
+    littleBoxView.layer.cornerRadius=10.0f;
+    littleBoxView.layer.masksToBounds=YES;
+    littleBoxView.alpha=0;
+    littleBoxView.layer.masksToBounds=YES;
+    littleBoxView.layer.shouldRasterize=YES;
+    littleBoxView.layer.shadowOffset=CGSizeMake(0, -1);
+    littleBoxView.layer.shadowColor=[UIColor blackColor].CGColor;
+    littleBoxView.layer.shadowOpacity = 1;
+    littleBoxView.layer.shadowRadius=2;
+    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(10, 50, littleBoxView.frame.size.width-30, littleBoxView.frame.size.height/2)];
+    label.numberOfLines=3;
+    label.textAlignment=UITextAlignmentCenter;
+    label.backgroundColor=[UIColor clearColor];
+    label.textColor=[UIColor whiteColor];
+    label.font=[UIFont fontWithName:@"Helvetica" size:15];
+    label.text=@"Creado por Ekoomedia Ltda. ©2012 Ekoobot 3D.";
+    label.layer.masksToBounds=YES;
+    label.layer.shouldRasterize=YES;
+    label.layer.shadowOffset=CGSizeMake(0, -1);
+    label.layer.shadowColor=[UIColor blackColor].CGColor;
+    label.layer.shadowOpacity = 1;
+    label.layer.shadowRadius=0.5;
+    [littleBoxView addSubview:label];
+    [rotationSubView addSubview:littleBoxView];
 }
 
 - (void)viewDidUnload{
@@ -131,7 +157,23 @@
 - (IBAction)goToNext{
     [self comprobarUsuario];
 }
-
+-(IBAction)littleBox:(id)sender{
+    if (littleBoxView.alpha==0) {
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.4];
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+        littleBoxView.alpha=1;
+        [UIView commitAnimations];
+    }
+    else{
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.4];
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+        littleBoxView.alpha=0;
+        [UIView commitAnimations];
+    }
+    
+}
 #pragma mark -
 #pragma mark Animaciones
 

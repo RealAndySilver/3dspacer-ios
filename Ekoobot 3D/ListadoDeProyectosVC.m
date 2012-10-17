@@ -147,41 +147,106 @@
 
 - (void)paginaCreadaConObjeto:(Proyecto*)proyecto enPosicion:(int)posicion{
 
-      
-    CGRect frame=[[UIScreen mainScreen] applicationFrame];
-    UIScrollView *scrollPage=[[UIScrollView alloc]init];
-    scrollPage.frame=CGRectMake(0, 0, frame.size.height, frame.size.width);
-    scrollPage.contentSize=CGSizeMake(frame.size.height, frame.size.width*3);
-    scrollPage.userInteractionEnabled=YES;
-    scrollPage.pagingEnabled=YES;
-    scrollPage.showsVerticalScrollIndicator=YES;
-    scrollPage.delegate=self;
-    UIView *pg1=[[UIView alloc]init];
-    pg1.frame=CGRectMake(0, frame.size.width, frame.size.height, frame.size.width);
-    pg1.backgroundColor=[UIColor redColor];
-    [scrollPage addSubview:pg1];
-    UIView *pg2=[[UIView alloc]init];
-    pg2.frame=CGRectMake(0, frame.size.width*2, frame.size.height, frame.size.width);
-    pg2.backgroundColor=[UIColor orangeColor];
-    
-    UIButton *player = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    player.frame = CGRectMake(0, 0, 512, 288);
-    player.center=CGPointMake(pg2.frame.size.width/2, pg2.frame.size.height/2);
-    [player setTitle:@"Video" forState:UIControlStateNormal];
-    [player addTarget:self action:@selector(gomita) forControlEvents:UIControlEventTouchUpInside];
-    [pg2 addSubview:player];
+    if (![proyecto.nombre isEqualToString:@"Encenillos"]) {
+        CGRect frame=[[UIScreen mainScreen] applicationFrame];
+        UIScrollView *scrollPage=[[UIScrollView alloc]init];
+        scrollPage.frame=CGRectMake(0, 0, frame.size.height, frame.size.width);
+        scrollPage.contentSize=CGSizeMake(frame.size.height, frame.size.width);
+        scrollPage.userInteractionEnabled=YES;
+        scrollPage.pagingEnabled=YES;
+        scrollPage.showsVerticalScrollIndicator=YES;
+        scrollPage.delegate=self;
+        
+        UIView *pg1=[[UIView alloc]init];
+        pg1.frame=CGRectMake(0, frame.size.width, frame.size.height, frame.size.width);
+        pg1.backgroundColor=[UIColor redColor];
+        [scrollPage addSubview:pg1];
+        UIView *pg2=[[UIView alloc]init];
+        pg2.frame=CGRectMake(0, frame.size.width*2, frame.size.height, frame.size.width);
+        pg2.backgroundColor=[UIColor orangeColor];
+        
+        UIButton *player = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        player.frame = CGRectMake(0, 0, 512, 288);
+        player.center=CGPointMake(pg2.frame.size.width/2, pg2.frame.size.height/2);
+        [player setTitle:@"Video" forState:UIControlStateNormal];
+        [player addTarget:self action:@selector(gomita) forControlEvents:UIControlEventTouchUpInside];
+        [pg2 addSubview:player];
+        
+        [scrollPage addSubview:pg2];
+        UIView *pagina=[[UIView alloc]init];
+        pagina.frame=CGRectMake(frame.size.height*posicion, 0, frame.size.height, frame.size.width);
+        [pagina addSubview:scrollPage];
+        [self insertarImagenProyectoEnPagina:scrollPage conProyecto:proyecto];
+        [self insertarImagenBotonProyectoEnPagina:pagina conProyecto:proyecto yPosicion:(int)posicion];
+        [self insertarLogoProyectoEnPagina:pagina conProyecto:proyecto];
+        [self insertarLabelProyectoEnPagina:pagina conProyecto:proyecto];
+        [self mostrarLabelDeActualizacionConTag:posicion+2000 enView:pagina yProyecto:proyecto];
+        [self insertarActualizadorEnPagina:pagina yTag:posicion];
+        [scrollView addSubview:pagina];
+        
+        SendInfoButton *sendInfoButton=[[SendInfoButton alloc]init];
+        sendInfoButton.nombreProyecto=proyecto.nombre;
+        UIImage *imageButton = [UIImage imageNamed:@"loginBtn.png"];
+        [sendInfoButton setImage:imageButton forState:UIControlStateNormal];
+        sendInfoButton.frame=CGRectMake(pagina.frame.size.width-140, 50, 100, 50);
+        [sendInfoButton addTarget:self action:@selector(sendInfo:) forControlEvents:UIControlEventTouchUpInside];
+        [pagina addSubview:sendInfoButton];
+    }
+    else{
+        CGRect frame=[[UIScreen mainScreen] applicationFrame];
+        UIScrollView *scrollPage=[[UIScrollView alloc]init];
+        scrollPage.frame=CGRectMake(0, 0, frame.size.height, frame.size.width);
+        scrollPage.contentSize=CGSizeMake(frame.size.height, frame.size.width*4);
+        scrollPage.userInteractionEnabled=YES;
+        scrollPage.pagingEnabled=YES;
+        scrollPage.showsVerticalScrollIndicator=YES;
+        scrollPage.delegate=self;
+        
+        UIImageView *pg1=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"render1.jpeg"]];
+        pg1.frame=CGRectMake(0, frame.size.width, frame.size.height, frame.size.width);
+        pg1.backgroundColor=[UIColor redColor];
+        [scrollPage addSubview:pg1];
+        UIImageView *pg2=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"render2.jpeg"]];
+        pg2.frame=CGRectMake(0, frame.size.width*2, frame.size.height, frame.size.width);
+        pg2.backgroundColor=[UIColor orangeColor];
+        UIView *pg3=[[UIView alloc]init];
+        pg3.frame=CGRectMake(0, frame.size.width*3, frame.size.height, frame.size.width);
+        pg3.backgroundColor=[UIColor viewFlipsideBackgroundColor];
+        
+        UIButton *player = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        player.frame = CGRectMake(0, 0, 512, 288);
+        player.center=CGPointMake(pg3.frame.size.width/2, pg3.frame.size.height/2);
+        [player setTitle:@"" forState:UIControlStateNormal];
+        [player addTarget:self action:@selector(gomita) forControlEvents:UIControlEventTouchUpInside];
+        [pg3 addSubview:player];
+        
+        UIImageView *playButton=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"play-video.png"]];
+        playButton.frame=CGRectMake(0, 0, 80, 56);
+        playButton.center=CGPointMake(pg3.frame.size.width/2, pg3.frame.size.height/2);
+        [pg3 addSubview:playButton];
+        
+        [scrollPage addSubview:pg2];
+        [scrollPage addSubview:pg3];
 
-    [scrollPage addSubview:pg2];
-    UIView *pagina=[[UIView alloc]init];
-    pagina.frame=CGRectMake(frame.size.height*posicion, 0, frame.size.height, frame.size.width);
-    [pagina addSubview:scrollPage];
-    [self insertarImagenProyectoEnPagina:scrollPage conProyecto:proyecto];
-    [self insertarImagenBotonProyectoEnPagina:pagina conProyecto:proyecto yPosicion:(int)posicion];
-    [self insertarLogoProyectoEnPagina:pagina conProyecto:proyecto];
-    [self insertarLabelProyectoEnPagina:pagina conProyecto:proyecto];
-    [self mostrarLabelDeActualizacionConTag:posicion+2000 enView:pagina yProyecto:proyecto];
-    [self insertarActualizadorEnPagina:pagina yTag:posicion];
-    [scrollView addSubview:pagina];
+        UIView *pagina=[[UIView alloc]init];
+        pagina.frame=CGRectMake(frame.size.height*posicion, 0, frame.size.height, frame.size.width);
+        [pagina addSubview:scrollPage];
+        [self insertarImagenProyectoEnPagina:scrollPage conProyecto:proyecto];
+        [self insertarImagenBotonProyectoEnPagina:pagina conProyecto:proyecto yPosicion:(int)posicion];
+        [self insertarLogoProyectoEnPagina:pagina conProyecto:proyecto];
+        [self insertarLabelProyectoEnPagina:pagina conProyecto:proyecto];
+        [self mostrarLabelDeActualizacionConTag:posicion+2000 enView:pagina yProyecto:proyecto];
+        [self insertarActualizadorEnPagina:pagina yTag:posicion];
+        [scrollView addSubview:pagina];
+        
+        SendInfoButton *sendInfoButton=[[SendInfoButton alloc]init];
+        sendInfoButton.nombreProyecto=proyecto.nombre;
+        UIImage *imageButton = [UIImage imageNamed:@"loginBtn.png"];
+        [sendInfoButton setImage:imageButton forState:UIControlStateNormal];
+        sendInfoButton.frame=CGRectMake(pagina.frame.size.width-140, 50, 100, 50);
+        [sendInfoButton addTarget:self action:@selector(sendInfo:) forControlEvents:UIControlEventTouchUpInside];
+        [pagina addSubview:sendInfoButton];
+    }
 
 }
 -(void)gomita{
@@ -420,6 +485,12 @@
 -(void)alertViewAppear{
     UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Error al descargar el proyecto. Por favor intente de nuevo." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
     [alert show];
+}
+-(void)sendInfo:(SendInfoButton*)sender{
+    SendInfoViewController *siVC=[[SendInfoViewController alloc]init];
+    siVC=[self.storyboard instantiateViewControllerWithIdentifier:@"SendInfo"];
+    siVC.nombreProyecto=sender.nombreProyecto;
+    [self.navigationController pushViewController:siVC animated:YES];
 }
 
 @end

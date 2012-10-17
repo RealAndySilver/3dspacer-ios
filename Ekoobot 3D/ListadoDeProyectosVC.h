@@ -20,6 +20,8 @@
 #import "IAmCoder.h"
 #import "UpdateView.h"
 #import "VideoViewController.h"
+#import "SendInfoButton.h"
+#import "SendInfoViewController.h"
 @interface ListadoDeProyectosVC : UIViewController <UIScrollViewDelegate,UIAlertViewDelegate> {
     UIScrollView *scrollView;
     Usuario *usuarioActual;

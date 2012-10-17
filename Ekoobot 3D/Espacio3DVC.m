@@ -63,7 +63,7 @@
     
     
     compassPlaceholder=[[UIView alloc]init];
-    compassPlaceholder.frame=CGRectMake(lowerView.frame.size.width-120, 45, lowerView.frame.size.height/2, lowerView.frame.size.height/2);
+    compassPlaceholder.frame=CGRectMake(lowerView.frame.size.width-80, -75, lowerView.frame.size.height/2, lowerView.frame.size.height/2);
     compassPlaceholder.backgroundColor=[UIColor whiteColor];
     compassPlaceholder.layer.cornerRadius=lowerView.frame.size.height/4;
     compassPlaceholder.layer.masksToBounds=YES;

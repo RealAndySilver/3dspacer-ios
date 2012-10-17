@@ -28,6 +28,10 @@
     NSString *contrasenaString;
     NSString *usuarioString;
     
+    IBOutlet UIView *rotationSubView;
+    IBOutlet UIButton *infoButton;
+    UIView *littleBoxView;
+    
 }
 
 @end                        

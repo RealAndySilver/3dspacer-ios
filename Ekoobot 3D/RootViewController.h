@@ -14,6 +14,7 @@
 #import "ServerCommunicator.h"
 #import "EraseViewController.h"
 #import "FileSaver.h"
+#import "TermsViewController.h"
 
 
 @interface RootViewController : UIViewController<UITextFieldDelegate> {
@@ -33,5 +34,6 @@
     UIView *littleBoxView;
     
 }
-
+- (void)irAlSiguienteViewConUsuario:(id)usuario yCopia:(id)copia;
+-(void)stopSpinner;
 @end                        

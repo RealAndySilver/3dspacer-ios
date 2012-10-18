@@ -9,7 +9,7 @@
 #import "ProjectDownloader.h"
 float cuenta=0;
 @implementation ProjectDownloader
-+(void)downloadProject:(Proyecto *)proyecto yTag:(int)tag{
+/*+(void)downloadProject:(Proyecto *)proyecto yTag:(int)tag{
     //[self downloadImageWithURLString:proyecto.logo ID:proyecto.idProyecto andName:@"logo"];
     //[self downloadImageWithURLString:proyecto.imagen ID:proyecto.idProyecto andName:@"cover"];
     float contarInterno=[self contar:proyecto];
@@ -149,8 +149,8 @@ float cuenta=0;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"updates" object:[NSNumber numberWithInt:tag]];
     }
     
-}
-+(void)downloadProject:(Proyecto *)proyecto yTag:(int)tag sender:(id)sender{
+}*/
++(void)downloadProject:(Proyecto *)proyecto yTag:(int)tag sender:(id)sender usuario:(Usuario*)usuario{
     //[self downloadImageWithURLString:proyecto.logo ID:proyecto.idProyecto andName:@"logo"];
     //[self downloadImageWithURLString:proyecto.imagen ID:proyecto.idProyecto andName:@"cover"];
     float contarInterno=[self contar:proyecto];
@@ -162,7 +162,7 @@ float cuenta=0;
         if ([itemUrbanismo.imagenUrbanismo isKindOfClass:[NSString class]]) {
             if (itemUrbanismo.existe) {
                 if (contadorError==0) {
-                    contadorError+=[self downloadImageWithURLString:itemUrbanismo.imagenUrbanismo ID:itemUrbanismo.idUrbanismo andName:@"imagenUrbanismo"];
+                    contadorError+=[self downloadImageWithURLString:itemUrbanismo.imagenUrbanismo ID:itemUrbanismo.idUrbanismo andName:@"imagenUrbanismo" usuario:usuario];
                 }
                 else{
                     [self llamarAlertaDeError];
@@ -182,7 +182,7 @@ float cuenta=0;
                 if ([tipoDePiso.imagen isKindOfClass:[NSString class]]) {
                     if (tipoDePiso.existe) {
                         if (contadorError==0) {
-                            contadorError+=[self downloadImageWithURLString:tipoDePiso.imagen ID:tipoDePiso.idTipoPiso andName:@"tipoDePiso"];
+                            contadorError+=[self downloadImageWithURLString:tipoDePiso.imagen ID:tipoDePiso.idTipoPiso andName:@"tipoDePiso" usuario:usuario];
                         }
                         else{
                             [self llamarAlertaDeError];
@@ -201,7 +201,7 @@ float cuenta=0;
                         if ([planta.imagenPlanta isKindOfClass:[NSString class]]) {
                             //if (planta.existe) {
                             if (contadorError==0){
-                                [self downloadImageWithURLString:planta.imagenPlanta ID:planta.idPlanta andName:@"planta"];
+                                [self downloadImageWithURLString:planta.imagenPlanta ID:planta.idPlanta andName:@"planta" usuario:usuario];
                                 //contadorError+=[self downloadImageWithURLString:planta.imagenPlanta ID:planta.idPlanta andName:@"planta"];
                                 
                             }
@@ -223,7 +223,7 @@ float cuenta=0;
                             for (int o=0; o<arrayCaras.count; o++) {
                                 Caras *caras=[arrayCaras objectAtIndex:o];
                                 if (contadorError==0) {
-                                    contadorError+=[self downloadImageWithURLString:caras.arriba ID:caras.idArriba andName:@"caraArriba"];
+                                    contadorError+=[self downloadImageWithURLString:caras.arriba ID:caras.idArriba andName:@"caraArriba" usuario:usuario];
                                 }
                                 else{
                                     [self llamarAlertaDeError];
@@ -232,17 +232,7 @@ float cuenta=0;
                                 
                                 [self regresarCuentaConNumero:contarInterno sender:sender];
                                 if (contadorError==0) {
-                                    contadorError+=[self downloadImageWithURLString:caras.abajo ID:caras.idAbajo andName:@"caraAbajo"];
-                                }
-                                else{
-                                    [self llamarAlertaDeError];
-                                    return;
-                                }
-                                
-                                [self regresarCuentaConNumero:contarInterno sender:sender];
-                                
-                                if (contadorError==0) {
-                                    contadorError+=[self downloadImageWithURLString:caras.izquierda ID:caras.idIzquierda andName:@"caraIzquierda"];
+                                    contadorError+=[self downloadImageWithURLString:caras.abajo ID:caras.idAbajo andName:@"caraAbajo" usuario:usuario];
                                 }
                                 else{
                                     [self llamarAlertaDeError];
@@ -252,7 +242,7 @@ float cuenta=0;
                                 [self regresarCuentaConNumero:contarInterno sender:sender];
                                 
                                 if (contadorError==0) {
-                                    contadorError+=[self downloadImageWithURLString:caras.derecha ID:caras.idDerecha andName:@"caraDerecha"];
+                                    contadorError+=[self downloadImageWithURLString:caras.izquierda ID:caras.idIzquierda andName:@"caraIzquierda" usuario:usuario];
                                 }
                                 else{
                                     [self llamarAlertaDeError];
@@ -262,7 +252,17 @@ float cuenta=0;
                                 [self regresarCuentaConNumero:contarInterno sender:sender];
                                 
                                 if (contadorError==0) {
-                                    contadorError+=[self downloadImageWithURLString:caras.frente ID:caras.idFrente andName:@"caraFrente"];
+                                    contadorError+=[self downloadImageWithURLString:caras.derecha ID:caras.idDerecha andName:@"caraDerecha" usuario:usuario];
+                                }
+                                else{
+                                    [self llamarAlertaDeError];
+                                    return;
+                                }
+                                
+                                [self regresarCuentaConNumero:contarInterno sender:sender];
+                                
+                                if (contadorError==0) {
+                                    contadorError+=[self downloadImageWithURLString:caras.frente ID:caras.idFrente andName:@"caraFrente" usuario:usuario];
                                 }
                                 else{
                                     [self llamarAlertaDeError];
@@ -271,7 +271,7 @@ float cuenta=0;
                                 
                                 [self regresarCuentaConNumero:contarInterno sender:sender];
                                 if (contadorError==0) {
-                                    contadorError+=[self downloadImageWithURLString:caras.atras ID:caras.idAtras andName:@"caraAtras"];
+                                    contadorError+=[self downloadImageWithURLString:caras.atras ID:caras.idAtras andName:@"caraAtras" usuario:usuario];
                                 }
                                 else{
                                     [self llamarAlertaDeError];
@@ -361,7 +361,7 @@ float cuenta=0;
     NSLog(@"Porcentaje %@, %f, %f",intRes,cuenta,numero);
     return resultado;
 }
-+(int)downloadImageWithURLString:(NSString*)imageUrl ID:(NSString*)ID andName:(NSString*)name{
++(int)downloadImageWithURLString:(NSString*)imageUrl ID:(NSString*)ID andName:(NSString*)name usuario:(Usuario*)usuario{
     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/%@%@.jpeg",docDir,name,ID];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
@@ -382,9 +382,8 @@ float cuenta=0;
         else{
             //NSLog(@"NO hubo imagen, no se guardó %@ con ID %@",imageUrl,ID);
             ServerCommunicator *server=[[ServerCommunicator alloc]init];
-            FileSaver *file=[[FileSaver alloc]init];
             NSString *message=[NSString stringWithFormat:@"No se guardó %@ con ID %@",imageUrl,ID];
-            NSString *parameters=[NSString stringWithFormat:@"<ns:setEventLog><username>%@</username><password>%@</password><message>%@</message></ns:setEventLog>",[file getNombre],[file getPassword],message];
+            NSString *parameters=[NSString stringWithFormat:@"<ns:setEventLog><username>%@</username><password>%@</password><message>%@</message></ns:setEventLog>",usuario.usuario,usuario.contrasena,message];
             [server callServerWithMethod:@"" andParameter:parameters];
             return 1;
         }

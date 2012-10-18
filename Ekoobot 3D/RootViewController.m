@@ -93,6 +93,7 @@
 #pragma mark Accion de Boton
 
 - (void)irAlSiguienteViewConUsuario:(id)usuario yCopia:(id)copia{
+    NSLog(@"Aca toy");
     CATransition *transition = [CATransition animation];
     transition.duration = 0.3f;
     transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
@@ -118,7 +119,10 @@
     spinner.alpha=1;
     [spinner startAnimating];
 }
-
+-(void)stopSpinner{
+    spinner.alpha=0;
+    [spinner stopAnimating];
+}
 #pragma mark -
 #pragma mark Eventos de Text Fields
 
@@ -212,7 +216,22 @@
                       password:passwordTF.text
                          andId:[[sc.resDic objectForKey:@"usuario"]objectForKey:@"id_usuario"]];
         
-        [self irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];
+        usuario.usuario=usuarioTF.text;
+        usuarioCopia.usuario=usuarioTF.text;
+        usuario.contrasena=passwordTF.text;
+        usuarioCopia.contrasena=passwordTF.text;
+        
+        TermsViewController *tVC=[[TermsViewController alloc]init];
+        tVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Terms"];
+        tVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        //tVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        tVC.modalPresentationStyle = UIModalPresentationFormSheet;
+        tVC.usuario=usuario;
+        tVC.usuarioCopia=usuarioCopia;
+        tVC.VC=self;
+        [self presentModalViewController:tVC animated:YES];
+        
+        //[self irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];
         
     }
     else{
@@ -221,7 +240,6 @@
         spinner.alpha=0;
         [spinner stopAnimating];
     }
-    
 }
 -(void)receivedDataFromServerWithError:(id)sender{
     FileSaver *fileSaver=[[FileSaver alloc]init];
@@ -241,9 +259,11 @@
         [navController setOrientationType:2];
         [navController forceLandscapeMode];
 
+        usuario.usuario=usuarioTF.text;
+        usuarioCopia.usuario=usuarioTF.text;
+        usuario.contrasena=passwordTF.text;
+        usuarioCopia.contrasena=passwordTF.text;
         [self irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];
     }
-    
-    
 }
 @end

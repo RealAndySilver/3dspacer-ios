@@ -78,6 +78,7 @@
 		75550744162F0FF300479537 /* play-video.png in Resources */ = {isa = PBXBuildFile; fileRef = 75550743162F0FF300479537 /* play-video.png */; };
 		75550747162F293A00479537 /* SendInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75550746162F293A00479537 /* SendInfoViewController.m */; };
 		7555074A162F2B6A00479537 /* SendInfoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 75550749162F2B6A00479537 /* SendInfoButton.m */; };
+		75550750162F74B700479537 /* TermsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7555074F162F74B700479537 /* TermsViewController.m */; };
 		7574E81E16029F7300974D7B /* downloading.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7574E81D16029F7300974D7B /* downloading.jpg */; };
 		7574E8211602A12100974D7B /* downloadBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 7574E8201602A12100974D7B /* downloadBtn.png */; };
 		7574E8231602A16E00974D7B /* updateBox.png in Resources */ = {isa = PBXBuildFile; fileRef = 7574E8221602A16E00974D7B /* updateBox.png */; };
@@ -219,6 +220,8 @@
 		75550746162F293A00479537 /* SendInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendInfoViewController.m; sourceTree = "<group>"; };
 		75550748162F2B6A00479537 /* SendInfoButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendInfoButton.h; sourceTree = "<group>"; };
 		75550749162F2B6A00479537 /* SendInfoButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendInfoButton.m; sourceTree = "<group>"; };
+		7555074E162F74B700479537 /* TermsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TermsViewController.h; sourceTree = "<group>"; };
+		7555074F162F74B700479537 /* TermsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TermsViewController.m; sourceTree = "<group>"; };
 		7574E81D16029F7300974D7B /* downloading.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = downloading.jpg; sourceTree = "<group>"; };
 		7574E8201602A12100974D7B /* downloadBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = downloadBtn.png; sourceTree = "<group>"; };
 		7574E8221602A16E00974D7B /* updateBox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = updateBox.png; sourceTree = "<group>"; };
@@ -493,6 +496,8 @@
 				751045551627726B00BA12C6 /* VideoViewController.m */,
 				75550745162F293A00479537 /* SendInfoViewController.h */,
 				75550746162F293A00479537 /* SendInfoViewController.m */,
+				7555074E162F74B700479537 /* TermsViewController.h */,
+				7555074F162F74B700479537 /* TermsViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -763,6 +768,7 @@
 				751045561627726B00BA12C6 /* VideoViewController.m in Sources */,
 				75550747162F293A00479537 /* SendInfoViewController.m in Sources */,
 				7555074A162F2B6A00479537 /* SendInfoButton.m in Sources */,
+				75550750162F74B700479537 /* TermsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

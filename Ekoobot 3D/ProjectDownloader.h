@@ -9,14 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "Proyecto.h"
 #import "FileSaver.h"
+#import "Usuario.h"
 #import "ServerCommunicator.h"
 
 
 @interface ProjectDownloader : NSObject{
 
 }
-+(void)downloadProject:(Proyecto *)proyecto yTag:(int)tag;
-+(void)downloadProject:(Proyecto *)proyecto yTag:(int)tag sender:(id)sender;
++(void)downloadProject:(Proyecto *)proyecto yTag:(int)tag sender:(id)sender usuario:(Usuario*)usuario;
 +(void)eraseAllFiles;
 
 @end

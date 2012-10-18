@@ -13,7 +13,7 @@
 @end
 
 @implementation SendInfoViewController
-@synthesize nombreProyecto;
+@synthesize nombreProyecto,usuario,contrasena;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -40,11 +40,11 @@
 }
 #pragma mark actions
 -(IBAction)send:(id)sender{
+    NSLog(@"--------------> %@ %@",usuario,contrasena);
     if (![nombreTF.text isEqualToString:@""]) {
         if (![emailTF.text isEqualToString:@""]) {
             if (![comentarioTV.text isEqualToString:@""]) {
-                FileSaver *file=[[FileSaver alloc]init];
-                NSString *params=[NSString stringWithFormat:@"<ns:setRegister><username>%@</username><password>%@</password><register><name>%@</name><email>%@</email><project>%@</project></register></ns:setRegister>",[file getNombre],[file getPassword],nombreTF.text,emailTF.text,nombreProyecto];
+                NSString *params=[NSString stringWithFormat:@"<ns:setRegister><username>%@</username><password>%@</password><register><name>%@</name><email>%@</email><project>%@</project></register></ns:setRegister>",usuario,contrasena,nombreTF.text,emailTF.text,nombreProyecto];
                 [server callServerWithMethod:@"" andParameter:params];
             }
             else{

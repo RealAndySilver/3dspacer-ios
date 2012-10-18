@@ -262,7 +262,7 @@
     NSString *key=[NSString stringWithFormat:@"%i",button.tag-1000];
     [progressView setViewAlphaToOne];
     //[ProjectDownloader downloadProject:[usuarioActual.arrayProyectos objectAtIndex:[key intValue]] yTag:button.tag+1000];
-    [ProjectDownloader downloadProject:[usuarioCopia.arrayProyectos objectAtIndex:[key intValue]] yTag:button.tag+1000 sender:progressView];
+    [ProjectDownloader downloadProject:[usuarioCopia.arrayProyectos objectAtIndex:[key intValue]] yTag:button.tag+1000 sender:progressView usuario:usuarioActual];
     [progressView setViewAlphaToCero];
 }
 -(void)insertarActualizadorEnPagina:(UIView*)view yTag:(int)tag{
@@ -490,6 +490,8 @@
     SendInfoViewController *siVC=[[SendInfoViewController alloc]init];
     siVC=[self.storyboard instantiateViewControllerWithIdentifier:@"SendInfo"];
     siVC.nombreProyecto=sender.nombreProyecto;
+    siVC.usuario=usuarioActual.usuario;
+    siVC.contrasena=usuarioActual.contrasena;
     [self.navigationController pushViewController:siVC animated:YES];
 }
 

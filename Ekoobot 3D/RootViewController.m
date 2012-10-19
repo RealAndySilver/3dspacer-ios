@@ -94,6 +94,9 @@
 
 - (void)irAlSiguienteViewConUsuario:(id)usuario yCopia:(id)copia{
     NSLog(@"Aca toy");
+    NavController *navController = (NavController *)self.navigationController;
+    [navController setOrientationType:2];
+    [navController forceLandscapeMode];
     CATransition *transition = [CATransition animation];
     transition.duration = 0.3f;
     transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
@@ -200,9 +203,7 @@
 -(void)receivedDataFromServer:(id)sender{
     sc=sender;
     if ([sc.resDic objectForKey:@"usuario"]) {
-        NavController *navController = (NavController *)self.navigationController;
-        [navController setOrientationType:2];
-        [navController forceLandscapeMode];
+        
         
         
         Usuario *usuario=[[Usuario alloc]initWithDictionary:[sc.resDic objectForKey:@"usuario"]];
@@ -229,7 +230,7 @@
         tVC.usuario=usuario;
         tVC.usuarioCopia=usuarioCopia;
         tVC.VC=self;
-        [self presentModalViewController:tVC animated:YES];
+        [self.navigationController presentModalViewController:tVC animated:YES];
         
         //[self irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];
         
@@ -254,10 +255,6 @@
         NSString *idLocal=[fileSaver getUserWithName:usuarioString andPassword:contrasenaString];
         Usuario *usuario=[[Usuario alloc]initWithDictionary:[fileSaver getDictionary:idLocal]];
         Usuario *usuarioCopia=[[Usuario alloc]initWithDictionary:[fileSaver getDictionary:idLocal]];
-        NavController *navController = (NavController *)self.navigationController;
-        [navController shouldAutorotateToInterfaceOrientation:UIInterfaceOrientationLandscapeLeft];
-        [navController setOrientationType:2];
-        [navController forceLandscapeMode];
 
         usuario.usuario=usuarioTF.text;
         usuarioCopia.usuario=usuarioTF.text;

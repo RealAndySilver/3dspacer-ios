@@ -89,6 +89,7 @@
 		757BEC14161B89C9002B251A /* loginBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 757BEC13161B89C9002B251A /* loginBtn.png */; };
 		757BEC17161B8A69002B251A /* ekoomediaWterMark.png in Resources */ = {isa = PBXBuildFile; fileRef = 757BEC16161B8A69002B251A /* ekoomediaWterMark.png */; };
 		757D4DA31612491800F31913 /* NavController.m in Sources */ = {isa = PBXBuildFile; fileRef = 757D4DA21612491800F31913 /* NavController.m */; };
+		7587C9CB163200E000C66896 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 7587C9CA163200E000C66896 /* pin.png */; };
 		7589BB36161CF32D0027453E /* botonEntrar.png in Resources */ = {isa = PBXBuildFile; fileRef = 7589BB35161CF32D0027453E /* botonEntrar.png */; };
 		7589C5A915A4CF2E000C99AF /* ProjectDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7589C5A815A4CF2E000C99AF /* ProjectDownloader.m */; };
 		7589C5AE15A4FC6F000C99AF /* ProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7589C5AD15A4FC6F000C99AF /* ProgressView.m */; };
@@ -233,6 +234,7 @@
 		757BEC16161B8A69002B251A /* ekoomediaWterMark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ekoomediaWterMark.png; sourceTree = "<group>"; };
 		757D4DA11612491800F31913 /* NavController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavController.h; sourceTree = "<group>"; };
 		757D4DA21612491800F31913 /* NavController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavController.m; sourceTree = "<group>"; };
+		7587C9CA163200E000C66896 /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin.png; sourceTree = "<group>"; };
 		7589BB35161CF32D0027453E /* botonEntrar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = botonEntrar.png; sourceTree = "<group>"; };
 		7589C5A715A4CF2E000C99AF /* ProjectDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectDownloader.h; sourceTree = "<group>"; };
 		7589C5A815A4CF2E000C99AF /* ProjectDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectDownloader.m; sourceTree = "<group>"; };
@@ -520,6 +522,7 @@
 		37F1EBF71541D65D00426C48 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7587C9CA163200E000C66896 /* pin.png */,
 				75550743162F0FF300479537 /* play-video.png */,
 				75550741162F0FCA00479537 /* video.mp4 */,
 				755506A3162BB19E00479537 /* render1.jpeg */,
@@ -695,6 +698,7 @@
 				755506A7162BB22B00479537 /* render2.jpeg in Resources */,
 				75550742162F0FCA00479537 /* video.mp4 in Resources */,
 				75550744162F0FF300479537 /* play-video.png in Resources */,
+				7587C9CB163200E000C66896 /* pin.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

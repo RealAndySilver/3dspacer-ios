@@ -93,7 +93,7 @@
     }
     else if ([caller respondsToSelector:@selector(receivedDataFromServerRegister:)]) {
         NSDictionary * dictionary2=[[[[dictionary1 objectForKey:@"SOAP-ENV:Envelope"]objectForKey:@"SOAP-ENV:Body"]objectForKey:@"ns1:setRegisterResponse"]objectForKey:@"return"];
-        resDic=[[NSMutableDictionary alloc]initWithDictionary:dictionary2];
+        //resDic=[[NSMutableDictionary alloc]initWithDictionary:dictionary2];
         //NSLog(@"xml %@",resDic);
         NSLog(@"xml %@",dictionary1);
         [caller performSelector:@selector(receivedDataFromServerRegister:) withObject:self];

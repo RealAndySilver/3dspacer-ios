@@ -44,7 +44,8 @@
     if (![nombreTF.text isEqualToString:@""]) {
         if (![emailTF.text isEqualToString:@""]) {
             if (![comentarioTV.text isEqualToString:@""]) {
-                NSString *params=[NSString stringWithFormat:@"<ns:setRegister><username>%@</username><password>%@</password><register><name>%@</name><email>%@</email><project>%@</project></register></ns:setRegister>",usuario,contrasena,nombreTF.text,emailTF.text,nombreProyecto];
+                NSLog(@"Usuario :%@ \nContrasena : %@",usuario,contrasena);
+                NSString *params=[NSString stringWithFormat:@"<ns:setRegister><username>%@</username><password>%@</password><register><name>%@</name><email>%@</email><comments>%@</comments><project>%@</project></register></ns:setRegister>",usuario,contrasena,nombreTF.text,emailTF.text,comentarioTV.text,nombreProyecto];
                 [server callServerWithMethod:@"" andParameter:params];
             }
             else{
@@ -62,5 +63,8 @@
         [alert show];
     }
 }
-
+-(void)receivedDataFromServerRegister:(id)sender{
+    server=sender;
+    //NSLog(@"Resultado %@",server.resDic );
+}
 @end

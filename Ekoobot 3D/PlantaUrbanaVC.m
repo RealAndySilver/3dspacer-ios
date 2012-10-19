@@ -135,13 +135,13 @@
 }
 -(void)insertarBotonEn:(UIView*)view enPosicionX:(NSString*)posX yPosicionY:(NSString*)posY yTag:(int)tag titulo:(NSString*)eltitulo{
     UIButton *boton = [[UIButton alloc]init];
-    UIImage *imageButton = [UIImage imageNamed:@"flechamapa.png"];
+    UIImage *imageButton = [UIImage imageNamed:@"pin.png"];
     boton.tag=tag;
     [boton setImage:imageButton forState:UIControlStateNormal];
     [boton addTarget:self action:@selector(irAlSiguienteViewController:) forControlEvents:UIControlEventTouchUpInside];
     int posXint=[posX intValue];
     int posYint=[posY intValue];
-    boton.frame=CGRectMake(posXint-50, posYint-100,100, 100);
+    boton.frame=CGRectMake(posXint-50, posYint-100,60, 60);
     [self agregarLabelAlLadoDelBotonEnView:view enPosicionX:posXint yPosicionY:posYint conTitulo:eltitulo];
     [view addSubview:boton];
     [view bringSubviewToFront:boton];
@@ -149,25 +149,29 @@
 -(void)agregarLabelAlLadoDelBotonEnView:(UIView*)view enPosicionX:(int)posX yPosicionY:(int)posY conTitulo:(NSString*)titulo{
     //Tamaño del texto
     CGFloat constrainedSize = 1000.0f;
-    UIFont * font = [UIFont fontWithName:@"Helvetica" size:22];
+    //UIFont * font = [UIFont fontWithName:@"Helvetica" size:22];
+    UIFont * font = [UIFont boldSystemFontOfSize:22];
+
     CGSize textSize = [titulo sizeWithFont: font
                          constrainedToSize:CGSizeMake(constrainedSize, CGFLOAT_MAX)
                              lineBreakMode:UILineBreakModeWordWrap];
     
     UIView *container=[[UIView alloc]init];
-    container.frame=CGRectMake(posX+16, posY-80,textSize.width+20, 28);
+    container.frame=CGRectMake(posX+5, posY-85,textSize.width+20, 28);
     container.backgroundColor=[UIColor clearColor];
     [view addSubview:container];
     UIView *lowAlphaView=[[UIView alloc]init];
     lowAlphaView.frame=CGRectMake(0, 0, container.frame.size.width, container.frame.size.height);
-    lowAlphaView.backgroundColor=[UIColor blackColor];
+    lowAlphaView.backgroundColor=[UIColor clearColor];
     lowAlphaView.alpha=0.5;
     [container addSubview:lowAlphaView];
     
     UILabel *label=[[UILabel alloc]init];
-    label.font=[UIFont fontWithName:@"Helvetica" size:22];
+    label.font=font;
     label.frame=CGRectMake(10, 2,textSize.width, 24);
     label.text=titulo;
+    label.shadowColor = [UIColor blackColor];
+    label.shadowOffset = CGSizeMake(1, 1);
     [label setAdjustsFontSizeToFitWidth:YES];
     label.textColor=[UIColor whiteColor];
     label.backgroundColor=[UIColor clearColor];

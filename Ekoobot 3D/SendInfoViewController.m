@@ -13,7 +13,7 @@
 @end
 
 @implementation SendInfoViewController
-@synthesize nombreProyecto,usuario,contrasena;
+@synthesize nombreProyecto,usuario,contrasena,proyectoID;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -45,7 +45,7 @@
         if (![emailTF.text isEqualToString:@""]) {
             if (![comentarioTV.text isEqualToString:@""]) {
                 NSLog(@"Usuario :%@ \nContrasena : %@",usuario,contrasena);
-                NSString *params=[NSString stringWithFormat:@"<ns:setRegister><username>%@</username><password>%@</password><register><name>%@</name><email>%@</email><comments>%@</comments><project>%@</project></register></ns:setRegister>",usuario,contrasena,nombreTF.text,emailTF.text,comentarioTV.text,nombreProyecto];
+                NSString *params=[NSString stringWithFormat:@"<ns:setRegister><username>%@</username><password>%@</password><register><name>%@</name><email>%@</email><comments>%@</comments><project>%@</project></register></ns:setRegister>",usuario,contrasena,nombreTF.text,emailTF.text,comentarioTV.text,proyectoID];
                 [server callServerWithMethod:@"" andParameter:params];
             }
             else{

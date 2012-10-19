@@ -241,6 +241,7 @@
         
         SendInfoButton *sendInfoButton=[[SendInfoButton alloc]init];
         sendInfoButton.nombreProyecto=proyecto.nombre;
+        sendInfoButton.proyectoID=proyecto.idProyecto;
         UIImage *imageButton = [UIImage imageNamed:@"loginBtn.png"];
         [sendInfoButton setImage:imageButton forState:UIControlStateNormal];
         sendInfoButton.frame=CGRectMake(pagina.frame.size.width-140, 50, 100, 50);
@@ -490,6 +491,7 @@
     SendInfoViewController *siVC=[[SendInfoViewController alloc]init];
     siVC=[self.storyboard instantiateViewControllerWithIdentifier:@"SendInfo"];
     siVC.nombreProyecto=sender.nombreProyecto;
+    siVC.proyectoID=sender.proyectoID;
     siVC.usuario=usuarioActual.usuario;
     siVC.contrasena=usuarioActual.contrasena;
     [self.navigationController pushViewController:siVC animated:YES];

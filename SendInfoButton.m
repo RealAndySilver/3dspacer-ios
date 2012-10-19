@@ -9,7 +9,7 @@
 #import "SendInfoButton.h"
 
 @implementation SendInfoButton
-@synthesize nombreProyecto;
+@synthesize nombreProyecto,proyectoID;
 
 
 

@@ -17,5 +17,5 @@
     IBOutlet UITextView *comentarioTV;
     IBOutlet UIButton *sendBtn;
 }
-@property(nonatomic,retain)NSString *nombreProyecto,*usuario,*contrasena;
+@property(nonatomic,retain)NSString *nombreProyecto,*usuario,*contrasena,*proyectoID;
 @end

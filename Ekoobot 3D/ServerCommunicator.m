@@ -33,7 +33,9 @@
                              "%@\n"
                              "</soapenv:Body>\n"
                              "</soapenv:Envelope>\n",parameter];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.ekoomedia.com.co/ekoobot3d/web/ws/bot_api?wsdl"]];        
+	//NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.ekoomedia.com.co/ekoobot3d/web/ws/bot_api?wsdl"]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://ekoomedia.com.co/ekoobot3d_test/web/ws/bot_api?wsdl"]];
+
     NSString *soapAction=[NSString stringWithFormat:@"http://bot_api/1.0/"];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];  
 	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];          

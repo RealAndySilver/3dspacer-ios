@@ -9,9 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "Usuario.h"
 #import "RootViewController.h"
+#import "MBProgressHud.h"
 @class RootViewController;
 @interface TermsViewController : UIViewController{
     RootViewController *rVC;
+    MBProgressHUD *hud;
 }
 @property(nonatomic,retain)id VC;
 @property(nonatomic,retain)Usuario *usuario;

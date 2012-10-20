@@ -36,7 +36,13 @@
 }
 #pragma mark actions
 -(IBAction)accept:(id)sender{
+    hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText=@"Loading";
+    [self performSelector:@selector(go:) withObject:sender afterDelay:0.1];
+    }
+-(void)go:(id)sender{
     [rVC irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     [self dismissModalViewControllerAnimated:YES];
 }
 -(IBAction)decline:(id)sender{

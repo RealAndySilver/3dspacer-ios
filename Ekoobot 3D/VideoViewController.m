@@ -27,14 +27,21 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor=[UIColor blackColor];
+    hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText=@"Loading";
+    [self performSelector:@selector(loadVideo) withObject:nil afterDelay:0.001];
+    
+}
+-(void)loadVideo{
     player = [[MPMoviePlayerController alloc] initWithContentURL:[self pathForSource]];
     player.scalingMode = MPMovieScalingModeFill;
     player.movieSourceType = MPMovieSourceTypeFile;
     [player setControlStyle:MPMovieControlStyleEmbedded];
     [player setShouldAutoplay:YES];
-    player.view.frame = CGRectMake(0, 0, self.view.frame.size.height/2, 576/2);
-    player.view.center=CGPointMake(self.view.frame.size.height/2, self.view.frame.size.width/2+45);
+    player.view.frame = CGRectMake(0, 0, self.view.frame.size.width/2, 576/2);
+    player.view.center=CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2+45);
     [self.view addSubview:player.view];
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     [player prepareToPlay];
 }
 -(void)viewWillAppear:(BOOL)animated{

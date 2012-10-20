@@ -173,7 +173,7 @@
                     if (renderImage.image) {
                         [data2 writeToFile:jpegFilePath atomically:YES];
                     }
-                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1), frame.size.height, frame.size.width);
+                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-50, frame.size.height, frame.size.width);
                     renderImage.backgroundColor=[UIColor clearColor];
                     [scrollPage addSubview:renderImage];
                 }
@@ -181,7 +181,7 @@
                     //NSLog(@"si existe proj img %@",jpegFilePath);
                     UIImageView *renderImage = [[UIImageView alloc]init];
                     renderImage.image = [UIImage imageWithContentsOfFile:jpegFilePath];
-                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1), frame.size.height, frame.size.width);
+                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-50, frame.size.height, frame.size.width);
                     renderImage.backgroundColor=[UIColor clearColor];
                     [scrollPage addSubview:renderImage];
                 }

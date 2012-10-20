@@ -9,7 +9,7 @@
 #import "CustomButton.h"
 
 @implementation CustomButton
-@synthesize secondaryId;
+@synthesize secondaryId,url,extraContent;
 
 - (id)initWithFrame:(CGRect)frame
 {

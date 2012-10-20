@@ -13,7 +13,7 @@
 @end
 
 @implementation VideoViewController
-@synthesize player,videoPath;
+@synthesize player,videoPath,proyecto;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -27,7 +27,7 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor=[UIColor blackColor];
-    player = [[MPMoviePlayerController alloc] initWithContentURL:videoPath];
+    player = [[MPMoviePlayerController alloc] initWithContentURL:[self pathForSource]];
     player.scalingMode = MPMovieScalingModeFill;
     player.movieSourceType = MPMovieSourceTypeFile;
     [player setControlStyle:MPMovieControlStyleEmbedded];
@@ -51,5 +51,24 @@
     [player stop];
     player=nil;
     [self dismissModalViewControllerAnimated:YES];
+}
+#pragma mark path returner
+-(NSURL*)pathForSource{
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *videoFilePath = [NSString stringWithFormat:@"%@/video%@%@.mp4",docDir,proyecto.idProyecto,[IAmCoder encodeURL:[videoPath absoluteString]]];
+    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:videoFilePath];
+    if (!fileExists) {
+        //NSLog(@"no existe proj img %@",jpegFilePath);
+        NSURL *urlVideo=videoPath;
+        NSData *data=[NSData dataWithContentsOfURL:urlVideo];
+        [data writeToFile:videoFilePath atomically:YES];
+        NSLog(@"No Existe %@",videoPath);
+
+        return videoPath;
+    }
+    else {
+        NSLog(@"Ya Existe %@",videoFilePath);
+        return [NSURL fileURLWithPath:videoFilePath isDirectory:YES];
+    }
 }
 @end

@@ -8,9 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import "Proyecto.h"
+#import "IAmCoder.h"
 
 @interface VideoViewController : UIViewController{
 }
 @property (nonatomic)__strong MPMoviePlayerController *player;
 @property (nonatomic,retain)NSURL *videoPath;
+@property (nonatomic,retain)Proyecto *proyecto;
+
 @end

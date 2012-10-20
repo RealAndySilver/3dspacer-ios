@@ -12,7 +12,7 @@
 
 @synthesize idProyecto,nombre;
 @synthesize logo,imagen;
-@synthesize urbanismo,imagenUrbanismo,edificio,arrayItemsUrbanismo,actualizado;
+@synthesize urbanismo,imagenUrbanismo,edificio,arrayItemsUrbanismo,actualizado,arrayAdjuntos;
 
 - (id)init{
     if (self=[super init]) {
@@ -25,6 +25,8 @@
         imagenUrbanismo = @"";
         actualizado=@"";
         arrayItemsUrbanismo = [[NSMutableArray alloc]init];
+        arrayAdjuntos = [[NSMutableArray alloc]init];
+
     }
     return self;
 }
@@ -38,6 +40,23 @@
     ItemUrbanismo *itemUrbanismo=[[ItemUrbanismo alloc]init];
     itemUrbanismo = [itemUrbanismo initWithDictionary:[dictionary objectForKey:@"planta_urbana"]];
     [arrayItemsUrbanismo addObject:itemUrbanismo];
+    if ([[[dictionary objectForKey:@"adjuntos"]objectForKey:@"item"] isKindOfClass:[NSArray class]]) {
+        NSArray *array=[[dictionary objectForKey:@"adjuntos"]objectForKey:@"item"];
+        NSLog(@"esto es parcerooo -> %@",array);
+
+        for (int i=0; i<[array count]; i++){
+            Adjunto *adjunto=[[Adjunto alloc]init];
+            adjunto=[adjunto initWithDictionary:[[array objectAtIndex:i]objectForKey:@"adjunto"]];
+            [arrayAdjuntos addObject:adjunto];
+        }
+    }
+    else if ([[[dictionary objectForKey:@"adjuntos"]objectForKey:@"item"]isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *dicClass=[[dictionary objectForKey:@"adjuntos"]objectForKey:@"item"];
+        Adjunto *adjunto=[[Adjunto alloc]init];
+        adjunto=[adjunto initWithDictionary:[dicClass objectForKey:@"adjunto"]];
+        [arrayAdjuntos addObject:adjunto];
+    }
+    
     return self;
 }
 

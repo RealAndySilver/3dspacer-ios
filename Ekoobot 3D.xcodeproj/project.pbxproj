@@ -72,9 +72,6 @@
 		752DCB0C15A7EB06002B732D /* CustomButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 752DCB0B15A7EB06002B732D /* CustomButton.m */; };
 		7532A46815E716C6002A0CF6 /* trash.png in Resources */ = {isa = PBXBuildFile; fileRef = 7532A46715E716C6002A0CF6 /* trash.png */; };
 		7546A58215AF3A7F000F48E5 /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7546A58115AF3A7F000F48E5 /* LoadingView.m */; };
-		755506A4162BB19E00479537 /* render1.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 755506A3162BB19E00479537 /* render1.jpeg */; };
-		755506A7162BB22B00479537 /* render2.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 755506A6162BB22B00479537 /* render2.jpeg */; };
-		75550742162F0FCA00479537 /* video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 75550741162F0FCA00479537 /* video.mp4 */; };
 		75550744162F0FF300479537 /* play-video.png in Resources */ = {isa = PBXBuildFile; fileRef = 75550743162F0FF300479537 /* play-video.png */; };
 		75550747162F293A00479537 /* SendInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75550746162F293A00479537 /* SendInfoViewController.m */; };
 		7555074A162F2B6A00479537 /* SendInfoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 75550749162F2B6A00479537 /* SendInfoButton.m */; };
@@ -90,6 +87,7 @@
 		757BEC17161B8A69002B251A /* ekoomediaWterMark.png in Resources */ = {isa = PBXBuildFile; fileRef = 757BEC16161B8A69002B251A /* ekoomediaWterMark.png */; };
 		757D4DA31612491800F31913 /* NavController.m in Sources */ = {isa = PBXBuildFile; fileRef = 757D4DA21612491800F31913 /* NavController.m */; };
 		7587C9CB163200E000C66896 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 7587C9CA163200E000C66896 /* pin.png */; };
+		7587C9CF1632182E00C66896 /* Adjunto.m in Sources */ = {isa = PBXBuildFile; fileRef = 7587C9CE1632182E00C66896 /* Adjunto.m */; };
 		7589BB36161CF32D0027453E /* botonEntrar.png in Resources */ = {isa = PBXBuildFile; fileRef = 7589BB35161CF32D0027453E /* botonEntrar.png */; };
 		7589C5A915A4CF2E000C99AF /* ProjectDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7589C5A815A4CF2E000C99AF /* ProjectDownloader.m */; };
 		7589C5AE15A4FC6F000C99AF /* ProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7589C5AD15A4FC6F000C99AF /* ProgressView.m */; };
@@ -213,9 +211,6 @@
 		7532A46715E716C6002A0CF6 /* trash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trash.png; sourceTree = "<group>"; };
 		7546A58015AF3A7F000F48E5 /* LoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingView.h; sourceTree = "<group>"; };
 		7546A58115AF3A7F000F48E5 /* LoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingView.m; sourceTree = "<group>"; };
-		755506A3162BB19E00479537 /* render1.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = render1.jpeg; path = ../../Desktop/render1.jpeg; sourceTree = "<group>"; };
-		755506A6162BB22B00479537 /* render2.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = render2.jpeg; path = ../../Desktop/render2.jpeg; sourceTree = "<group>"; };
-		75550741162F0FCA00479537 /* video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = video.mp4; path = ../../Desktop/video.mp4; sourceTree = "<group>"; };
 		75550743162F0FF300479537 /* play-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play-video.png"; sourceTree = "<group>"; };
 		75550745162F293A00479537 /* SendInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendInfoViewController.h; sourceTree = "<group>"; };
 		75550746162F293A00479537 /* SendInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendInfoViewController.m; sourceTree = "<group>"; };
@@ -235,6 +230,8 @@
 		757D4DA11612491800F31913 /* NavController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavController.h; sourceTree = "<group>"; };
 		757D4DA21612491800F31913 /* NavController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavController.m; sourceTree = "<group>"; };
 		7587C9CA163200E000C66896 /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin.png; sourceTree = "<group>"; };
+		7587C9CD1632182E00C66896 /* Adjunto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Adjunto.h; sourceTree = "<group>"; };
+		7587C9CE1632182E00C66896 /* Adjunto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Adjunto.m; sourceTree = "<group>"; };
 		7589BB35161CF32D0027453E /* botonEntrar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = botonEntrar.png; sourceTree = "<group>"; };
 		7589C5A715A4CF2E000C99AF /* ProjectDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectDownloader.h; sourceTree = "<group>"; };
 		7589C5A815A4CF2E000C99AF /* ProjectDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectDownloader.m; sourceTree = "<group>"; };
@@ -453,6 +450,8 @@
 				37A49D71159528C40055FAA5 /* Caras.m */,
 				37A49D6D159528820055FAA5 /* Variacion.h */,
 				37A49D6E159528820055FAA5 /* Variacion.m */,
+				7587C9CD1632182E00C66896 /* Adjunto.h */,
+				7587C9CE1632182E00C66896 /* Adjunto.m */,
 			);
 			name = Objetos;
 			sourceTree = "<group>";
@@ -524,9 +523,6 @@
 			children = (
 				7587C9CA163200E000C66896 /* pin.png */,
 				75550743162F0FF300479537 /* play-video.png */,
-				75550741162F0FCA00479537 /* video.mp4 */,
-				755506A3162BB19E00479537 /* render1.jpeg */,
-				755506A6162BB22B00479537 /* render2.jpeg */,
 				75E69F7516040622005907F6 /* bin.png */,
 				7574E81D16029F7300974D7B /* downloading.jpg */,
 				7574E8201602A12100974D7B /* downloadBtn.png */,
@@ -694,9 +690,6 @@
 				757BEC14161B89C9002B251A /* loginBtn.png in Resources */,
 				757BEC17161B8A69002B251A /* ekoomediaWterMark.png in Resources */,
 				7589BB36161CF32D0027453E /* botonEntrar.png in Resources */,
-				755506A4162BB19E00479537 /* render1.jpeg in Resources */,
-				755506A7162BB22B00479537 /* render2.jpeg in Resources */,
-				75550742162F0FCA00479537 /* video.mp4 in Resources */,
 				75550744162F0FF300479537 /* play-video.png in Resources */,
 				7587C9CB163200E000C66896 /* pin.png in Resources */,
 			);
@@ -773,6 +766,7 @@
 				75550747162F293A00479537 /* SendInfoViewController.m in Sources */,
 				7555074A162F2B6A00479537 /* SendInfoButton.m in Sources */,
 				75550750162F74B700479537 /* TermsViewController.m in Sources */,
+				7587C9CF1632182E00C66896 /* Adjunto.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

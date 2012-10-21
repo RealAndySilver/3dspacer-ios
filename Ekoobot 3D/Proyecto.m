@@ -42,7 +42,6 @@
     [arrayItemsUrbanismo addObject:itemUrbanismo];
     if ([[[dictionary objectForKey:@"adjuntos"]objectForKey:@"item"] isKindOfClass:[NSArray class]]) {
         NSArray *array=[[dictionary objectForKey:@"adjuntos"]objectForKey:@"item"];
-        NSLog(@"esto es parcerooo -> %@",array);
 
         for (int i=0; i<[array count]; i++){
             Adjunto *adjunto=[[Adjunto alloc]init];

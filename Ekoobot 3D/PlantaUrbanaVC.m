@@ -97,6 +97,7 @@
     
     //Crear todos los botones de los items del urbanismo
     [imageViewUrbanismo setUserInteractionEnabled:YES];
+    //imageViewUrbanismo.center=CGPointMake(self.view.frame.size.height/2, self.view.frame.size.width/2);
     scrollViewUrbanismo.frame=CGRectMake(0, 0, self.view.frame.size.height, self.view.frame.size.width);
     scrollViewUrbanismo.center=CGPointMake(self.view.frame.size.height/2, self.view.frame.size.width/2);
     scrollViewUrbanismo.contentSize=CGSizeMake(imageViewUrbanismo.frame.size.width, imageViewUrbanismo.frame.size.height);
@@ -111,6 +112,7 @@
     [scrollViewUrbanismo setMaximumZoomScale:maximumZoomScale];
     [scrollViewUrbanismo setCanCancelContentTouches:NO];
     scrollViewUrbanismo.clipsToBounds = YES;
+    [scrollViewUrbanismo scrollRectToVisible:CGRectMake(self.view.frame.size.height/2, self.view.frame.size.width/2, self.view.frame.size.height, self.view.frame.size.width) animated:YES];
     [scrollViewUrbanismo setDelegate:self];
 }
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView

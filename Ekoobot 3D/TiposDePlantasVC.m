@@ -208,6 +208,7 @@
     CustomButton *boton = [[CustomButton alloc]init];
     UIImage *imageButton = [UIImage imageNamed:@"pin.png"];
     boton.tag=tag;
+    float buttonSize=34;
     boton.secondaryId=pagina;
     //[boton setImage:imageButton forState:UIControlStateNormal];
     [boton setBackgroundImage:imageButton forState:UIControlStateNormal];
@@ -218,7 +219,7 @@
     [boton addTarget:self action:@selector(irAlSiguienteViewController:) forControlEvents:UIControlEventTouchUpInside];
     int posXint=[posX intValue];
     int posYint=[posY intValue];
-    boton.frame=CGRectMake(posXint-25, posYint-65,34, 34);
+    boton.frame=CGRectMake(posXint-(buttonSize/2), posYint-buttonSize,buttonSize, buttonSize);
     [self agregarLabelAlLadoDelBotonEnView:view enPosicionX:posXint yPosicionY:posYint conTitulo:eltitulo];
     [view addSubview:boton];
     [view bringSubviewToFront:boton];
@@ -232,9 +233,9 @@
     CGSize textSize = [titulo sizeWithFont: font
                          constrainedToSize:CGSizeMake(constrainedSize, CGFLOAT_MAX)
                              lineBreakMode:UILineBreakModeWordWrap];
-    
+    float buttonSize=34;
     UIView *container=[[UIView alloc]init];
-    container.frame=CGRectMake(posX+2, posY-58,textSize.width+20, 20);
+    container.frame=CGRectMake(posX+10, posY-(buttonSize/1.2),textSize.width+20, 20);
     container.backgroundColor=[UIColor clearColor];
     [view addSubview:container];
     UIView *lowAlphaView=[[UIView alloc]init];

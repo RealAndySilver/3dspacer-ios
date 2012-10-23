@@ -34,7 +34,7 @@
 }
 -(void)loadVideo{
     player = [[MPMoviePlayerController alloc] initWithContentURL:[self pathForSource]];
-    player.scalingMode = MPMovieScalingModeFill;
+    player.scalingMode = MPMovieScalingModeAspectFit;
     player.movieSourceType = MPMovieSourceTypeFile;
     [player setControlStyle:MPMovieControlStyleEmbedded];
     [player setShouldAutoplay:YES];

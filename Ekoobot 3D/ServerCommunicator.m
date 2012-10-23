@@ -33,8 +33,8 @@
                              "%@\n"
                              "</soapenv:Body>\n"
                              "</soapenv:Envelope>\n",parameter];
-	//NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.ekoomedia.com.co/ekoobot3d/web/ws/bot_api?wsdl"]];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://ekoomedia.com.co/ekoobot3d_test/web/ws/bot_api?wsdl"]];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.ekoomedia.com.co/ekoobot3d/web/ws/bot_api?wsdl"]];
+    //NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://ekoomedia.com.co/ekoobot3d_test/web/ws/bot_api?wsdl"]];
 
     NSString *soapAction=[NSString stringWithFormat:@"http://bot_api/1.0/"];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];  
@@ -94,7 +94,6 @@
         [caller performSelector:@selector(receivedDataFromServer:) withObject:self];
     }
     else if ([caller respondsToSelector:@selector(receivedDataFromServerRegister:)]) {
-        NSDictionary * dictionary2=[[[[dictionary1 objectForKey:@"SOAP-ENV:Envelope"]objectForKey:@"SOAP-ENV:Body"]objectForKey:@"ns1:setRegisterResponse"]objectForKey:@"return"];
         //resDic=[[NSMutableDictionary alloc]initWithDictionary:dictionary2];
         //NSLog(@"xml %@",resDic);
         NSLog(@"xml %@",dictionary1);

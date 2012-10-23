@@ -32,7 +32,7 @@
     nombre=[dictionary objectForKey:@"nombre"];
     //usuario=[dictionary objectForKey:@"usuario"];
     //contrasena=[dictionary objectForKey:@"contrasena"];
-    //tipo=[dictionary objectForKey:@"tipo"];
+    tipo=[dictionary objectForKey:@"tipo"];
     //estado=[dictionary objectForKey:@"estado"];
     arrayProyectos = [[NSMutableArray alloc]init];
     /*for (int i=0; i<[array count]; i++) {

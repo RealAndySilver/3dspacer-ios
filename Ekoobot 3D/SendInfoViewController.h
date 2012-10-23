@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ServerCommunicator.h"
 #import "FileSaver.h"
+#import "Usuario.h"
 @interface SendInfoViewController : UIViewController{
     ServerCommunicator *server;
     IBOutlet UILabel *tituloProyectoLabel;
@@ -18,4 +19,5 @@
     IBOutlet UIButton *sendBtn;
 }
 @property(nonatomic,retain)NSString *nombreProyecto,*usuario,*contrasena,*proyectoID;
+@property(nonatomic,retain)Usuario *currentUser;
 @end

@@ -475,6 +475,7 @@
     siVC.nombreProyecto=sender.nombreProyecto;
     siVC.proyectoID=sender.proyectoID;
     siVC.usuario=usuarioActual.usuario;
+    siVC.currentUser=usuarioActual;
     siVC.contrasena=usuarioActual.contrasena;
     [self.navigationController pushViewController:siVC animated:YES];
 }

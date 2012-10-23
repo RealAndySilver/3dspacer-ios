@@ -13,7 +13,7 @@
 @end
 
 @implementation SendInfoViewController
-@synthesize nombreProyecto,usuario,contrasena,proyectoID;
+@synthesize nombreProyecto,usuario,contrasena,proyectoID,currentUser;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -26,7 +26,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationItem.title=@"Enviar Información";
+    if ([currentUser.tipo isEqualToString:@"sellers"]) {
+        self.navigationItem.title=@"Enviar Información";
+    }
+    else{
+        self.navigationItem.title=@"Recomendar Proyecto";
+    }
     server=[[ServerCommunicator alloc]init];
     server.caller=self;
     tituloProyectoLabel.text=nombreProyecto;
@@ -41,30 +46,57 @@
 #pragma mark actions
 -(IBAction)send:(id)sender{
     NSLog(@"--------------> %@ %@",usuario,contrasena);
-    if (![nombreTF.text isEqualToString:@""]) {
-        if (![emailTF.text isEqualToString:@""]) {
-            if (![comentarioTV.text isEqualToString:@""]) {
-                NSLog(@"Usuario :%@ \nContrasena : %@",usuario,contrasena);
-                NSString *params=[NSString stringWithFormat:@"<ns:setRegister><username>%@</username><password>%@</password><register><name>%@</name><email>%@</email><comments>%@</comments><project>%@</project></register></ns:setRegister>",usuario,contrasena,nombreTF.text,emailTF.text,comentarioTV.text,proyectoID];
-                [server callServerWithMethod:@"" andParameter:params];
+    if ([currentUser.tipo isEqualToString:@"sellers"]) {
+        
+        if (![nombreTF.text isEqualToString:@""]) {
+            if (![emailTF.text isEqualToString:@""]) {
+                if (![comentarioTV.text isEqualToString:@""]) {
+                    NSLog(@"Usuario :%@ \nContrasena : %@",usuario,contrasena);
+                    NSString *params=[NSString stringWithFormat:@"<ns:setRegister><username>%@</username><password>%@</password><register><name>%@</name><email>%@</email><comments>%@</comments><project>%@</project></register></ns:setRegister>",usuario,contrasena,nombreTF.text,emailTF.text,comentarioTV.text,proyectoID];
+                    [server callServerWithMethod:@"" andParameter:params];
+                }
+                else{
+                    UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Debe agregar un comentario." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                    [alert show];
+                }
             }
             else{
-                UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Debe agregar un comentario." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Debe ingresar un correo electrónico." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                 [alert show];
             }
         }
         else{
-            UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Debe ingresar un correo electrónico." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Debe ingresar un nombre." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
             [alert show];
         }
     }
     else{
-        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Debe ingresar un nombre." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert show];
+        if (![nombreTF.text isEqualToString:@""]) {
+            if (![emailTF.text isEqualToString:@""]) {
+                if (![comentarioTV.text isEqualToString:@""]) {
+                    NSLog(@"Usuario :%@ \nContrasena : %@",usuario,contrasena);
+                    NSString *params=[NSString stringWithFormat:@"<ns:sendSuggest><username>%@</username><password>%@</password><register><name>%@</name><email>%@</email><comments>%@</comments><project>%@</project></register></ns:sendSuggest>",usuario,contrasena,nombreTF.text,emailTF.text,comentarioTV.text,proyectoID];
+                    [server callServerWithMethod:@"" andParameter:params];
+                }
+                else{
+                    UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Debe agregar un comentario." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                    [alert show];
+                }
+            }
+            else{
+                UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Debe ingresar un correo electrónico." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [alert show];
+            }
+        }
+        else{
+            UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Debe ingresar un nombre." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert show];
+        }
     }
 }
 -(void)receivedDataFromServerRegister:(id)sender{
     server=sender;
+    [self.navigationController popViewControllerAnimated:YES];
     //NSLog(@"Resultado %@",server.resDic );
 }
 @end

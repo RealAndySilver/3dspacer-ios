@@ -18,6 +18,8 @@
 #pragma mark Ciclo de Vida
 #define NOMBREUSER @"ekoomedia"
 #define PASSWORD @"1234"
+#define USERTYPE @"clients"
+
 
 - (void)viewDidLoad{
     [super viewDidLoad];
@@ -221,18 +223,20 @@
         usuarioCopia.usuario=usuarioTF.text;
         usuario.contrasena=passwordTF.text;
         usuarioCopia.contrasena=passwordTF.text;
-        
-        TermsViewController *tVC=[[TermsViewController alloc]init];
-        tVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Terms"];
-        tVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-        //tVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        tVC.modalPresentationStyle = UIModalPresentationFormSheet;
-        tVC.usuario=usuario;
-        tVC.usuarioCopia=usuarioCopia;
-        tVC.VC=self;
-        //[self.navigationController presentModalViewController:tVC animated:YES];
-        
-        [self irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];
+        if ([usuario.tipo isEqualToString:USERTYPE]) {
+            TermsViewController *tVC=[[TermsViewController alloc]init];
+            tVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Terms"];
+            tVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+            //tVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            tVC.modalPresentationStyle = UIModalPresentationFormSheet;
+            tVC.usuario=usuario;
+            tVC.usuarioCopia=usuarioCopia;
+            tVC.VC=self;
+            [self.navigationController presentModalViewController:tVC animated:YES];
+        }
+        else{
+            [self irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];
+        }
         
     }
     else{
@@ -255,21 +259,26 @@
         NSString *idLocal=[fileSaver getUserWithName:usuarioString andPassword:contrasenaString];
         Usuario *usuario=[[Usuario alloc]initWithDictionary:[fileSaver getDictionary:idLocal]];
         Usuario *usuarioCopia=[[Usuario alloc]initWithDictionary:[fileSaver getDictionary:idLocal]];
-
+        
         usuario.usuario=usuarioTF.text;
         usuarioCopia.usuario=usuarioTF.text;
         usuario.contrasena=passwordTF.text;
         usuarioCopia.contrasena=passwordTF.text;
-        TermsViewController *tVC=[[TermsViewController alloc]init];
-        tVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Terms"];
-        tVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-        //tVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        tVC.modalPresentationStyle = UIModalPresentationFormSheet;
-        tVC.usuario=usuario;
-        tVC.usuarioCopia=usuarioCopia;
-        tVC.VC=self;
-        [self.navigationController presentModalViewController:tVC animated:YES];
-        //[self irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];
+        
+        if ([usuario.tipo isEqualToString:USERTYPE]) {
+            TermsViewController *tVC=[[TermsViewController alloc]init];
+            tVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Terms"];
+            tVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+            //tVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            tVC.modalPresentationStyle = UIModalPresentationFormSheet;
+            tVC.usuario=usuario;
+            tVC.usuarioCopia=usuarioCopia;
+            tVC.VC=self;
+            [self.navigationController presentModalViewController:tVC animated:YES];
+        }
+        else{
+            [self irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];
+        }
     }
 }
 @end

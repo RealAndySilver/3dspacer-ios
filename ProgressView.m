@@ -16,7 +16,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         spinner=[[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        spinner.center=CGPointMake(self.frame.size.width/2, self.frame.size.height/2-40);
+        spinner.center=CGPointMake(self.frame.size.width/2, self.frame.size.height/2-80);
         [self bgInit];
     }
     return self;
@@ -28,7 +28,7 @@
     elView.backgroundColor=[UIColor blackColor];
     elView.alpha=1;
     UIImageView *backGround=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"downloading.jpg"]];
-    backGround.frame=elView.frame;
+    backGround.frame=CGRectMake(-85, 0, self.frame.size.width+170, self.frame.size.height);
     [elView addSubview:backGround];
     
     _loading=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 300, 70)];

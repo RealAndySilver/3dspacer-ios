@@ -13,7 +13,7 @@
 @end
 
 @implementation VideoViewController
-@synthesize player,videoPath,proyecto;
+@synthesize player,adjunto,proyecto;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -62,16 +62,16 @@
 #pragma mark path returner
 -(NSURL*)pathForSource{
     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *videoFilePath = [NSString stringWithFormat:@"%@/video%@%@.mp4",docDir,proyecto.idProyecto,[IAmCoder encodeURL:[videoPath absoluteString]]];
+    NSString *videoFilePath = [NSString stringWithFormat:@"%@/video%@.mp4",docDir,adjunto.ID];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:videoFilePath];
     if (!fileExists) {
         //NSLog(@"no existe proj img %@",jpegFilePath);
-        NSURL *urlVideo=videoPath;
+        NSURL *urlVideo=[NSURL URLWithString:adjunto.imagen];
         NSData *data=[NSData dataWithContentsOfURL:urlVideo];
         [data writeToFile:videoFilePath atomically:YES];
-        NSLog(@"No Existe %@",videoPath);
+        NSLog(@"No Existe %@",adjunto.imagen);
 
-        return videoPath;
+        return urlVideo;
     }
     else {
         NSLog(@"Ya Existe %@",videoFilePath);

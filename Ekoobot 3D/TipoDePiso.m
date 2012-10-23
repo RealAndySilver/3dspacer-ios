@@ -10,7 +10,7 @@
 
 @implementation TipoDePiso
 
-@synthesize imagen,arrayProductos,coordenadaY,coordenadaX,idTipoPiso,existe;
+@synthesize imagen,arrayProductos,coordenadaY,coordenadaX,idTipoPiso,existe,nombre;
 - (id)init{
     if (self=[super init]) {
         imagen = @"";
@@ -18,6 +18,7 @@
         coordenadaY = @"";
         idTipoPiso = @"";
         existe=NO;
+        nombre=@"";
         arrayProductos =[[NSMutableArray alloc]init];
     }
     return self;
@@ -27,6 +28,7 @@
     coordenadaX = [dictionary objectForKey:@"x_coord"];
     coordenadaY = [dictionary objectForKey:@"y_coord"];
     idTipoPiso = [dictionary objectForKey:@"id_piso_tipo"];
+    nombre = [dictionary objectForKey:@"nombre"];
     existe=[[dictionary objectForKey:@"existe"]boolValue];
     /*for (int i=0; i<[[dictionary objectForKey:@"productos"]count]; i++) {
         NSString *key=[NSString stringWithFormat:@"%i",i];

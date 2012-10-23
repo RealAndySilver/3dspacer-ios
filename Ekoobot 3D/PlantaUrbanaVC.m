@@ -84,6 +84,18 @@
             [data2 writeToFile:jpegFilePath atomically:YES];
         }
         imageViewUrbanismo=[[UIImageView alloc]initWithImage:[UIImage imageWithData:data2]];
+        if (imageViewUrbanismo.frame.size.width<self.view.frame.size.height) {
+            float ancho=imageViewUrbanismo.frame.size.width;
+            float alto=imageViewUrbanismo.frame.size.height;
+            float proporcion=0;
+            if (ancho<alto) {
+                proporcion=alto/ancho;
+            }
+            else{
+                proporcion=ancho/alto;
+            }
+            imageViewUrbanismo.frame=CGRectMake(0, 0, (imageUrbanismo.size.width*2), (imageUrbanismo.size.height*2));
+        }
     }
     
     else{
@@ -93,10 +105,23 @@
         NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(imageUrbanismo, 1.0f)];
         //imageViewUrbanismo=[[UIImageView alloc]initWithImage:imageUrbanismo];
         imageViewUrbanismo=[[UIImageView alloc]initWithImage:[UIImage imageWithData:data2]];
+        if (imageViewUrbanismo.frame.size.width<self.view.frame.size.height) {
+            float ancho=imageViewUrbanismo.frame.size.width;
+            float alto=imageViewUrbanismo.frame.size.height;
+            float proporcion=0;
+            if (ancho<alto) {
+                proporcion=alto/ancho;
+            }
+            else{
+                proporcion=ancho/alto;
+            }
+            imageViewUrbanismo.frame=CGRectMake(0, 0, (imageUrbanismo.size.width*2), (imageUrbanismo.size.height*2));
+        }
     }
     
     //Crear todos los botones de los items del urbanismo
     [imageViewUrbanismo setUserInteractionEnabled:YES];
+    
     //imageViewUrbanismo.center=CGPointMake(self.view.frame.size.height/2, self.view.frame.size.width/2);
     scrollViewUrbanismo.frame=CGRectMake(0, 0, self.view.frame.size.height, self.view.frame.size.width);
     scrollViewUrbanismo.center=CGPointMake(self.view.frame.size.height/2, self.view.frame.size.width/2);
@@ -112,7 +137,8 @@
     [scrollViewUrbanismo setMaximumZoomScale:maximumZoomScale];
     [scrollViewUrbanismo setCanCancelContentTouches:NO];
     scrollViewUrbanismo.clipsToBounds = YES;
-    [scrollViewUrbanismo scrollRectToVisible:CGRectMake(self.view.frame.size.height/2, self.view.frame.size.width/2, self.view.frame.size.height, self.view.frame.size.width) animated:YES];
+    //[scrollViewUrbanismo scrollRectToVisible:CGRectMake(self.view.frame.size.height/2, self.view.frame.size.width/2, self.view.frame.size.height, self.view.frame.size.width) animated:YES];
+    [scrollViewUrbanismo scrollRectToVisible:CGRectMake(self.view.frame.size.height/2, self.view.frame.size.width/2, imageViewUrbanismo.frame.size.width, self.view.frame.size.height) animated:YES];
     [scrollViewUrbanismo setDelegate:self];
 }
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView

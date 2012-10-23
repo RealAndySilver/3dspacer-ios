@@ -192,13 +192,14 @@
         if (plantaImage.image) {
             [data2 writeToFile:jpegFilePath atomically:YES];
         }
-        plantaImage.frame = CGRectMake(0, 0, view.frame.size.width-50, view.frame.size.height-100);
+        plantaImage.frame = CGRectMake(0, 0, view.frame.size.width-50, view.frame.size.height-150);
         return plantaImage;
     }
     else {
         NSLog(@"si existe planta img %@",jpegFilePath);
         plantaImage.image = [UIImage imageWithContentsOfFile:jpegFilePath];
-        plantaImage.frame = CGRectMake(0, 0, view.frame.size.width-50, view.frame.size.height-100);
+        plantaImage.frame = CGRectMake(0, 0, view.frame.size.width-50, view.frame.size.height-150);
+        NSLog(@"width %f height %f",plantaImage.frame.size.width,plantaImage.frame.size.height);
         return plantaImage;
     }
     return nil;

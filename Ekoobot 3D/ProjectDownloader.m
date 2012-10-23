@@ -153,6 +153,13 @@ float cuenta=0;
 +(void)downloadProject:(Proyecto *)proyecto yTag:(int)tag sender:(id)sender usuario:(Usuario*)usuario{
     //[self downloadImageWithURLString:proyecto.logo ID:proyecto.idProyecto andName:@"logo"];
     //[self downloadImageWithURLString:proyecto.imagen ID:proyecto.idProyecto andName:@"cover"];
+    NSMutableArray *adjuntosArray=proyecto.arrayAdjuntos;
+    for (int i=0; i<adjuntosArray.count; i++) {
+        Adjunto *adjunto=[adjuntosArray objectAtIndex:i];
+        if ([adjunto.tipo isEqualToString:@"video"]) {
+            [self downloadVideoWithURLString:adjunto.imagen ID:adjunto.ID andName:@"video" usuario:usuario];
+        }
+    }
     float contarInterno=[self contar:proyecto];
     int contadorError=0;
     NSMutableArray *itemsUrbanismoArray=proyecto.arrayItemsUrbanismo;
@@ -303,6 +310,14 @@ float cuenta=0;
 }
 +(int)contar:(Proyecto*)proyecto{
     int w=0;
+    NSMutableArray *adjuntosArray=proyecto.arrayAdjuntos;
+    for (int i=0; i<adjuntosArray.count; i++) {
+        Adjunto *adjunto=[adjuntosArray objectAtIndex:i];
+        if ([adjunto.tipo isEqualToString:@"video"]) {
+            w+=1;
+        }
+    }
+
     NSMutableArray *itemsUrbanismoArray=proyecto.arrayItemsUrbanismo;
     for (int i=0; i<itemsUrbanismoArray.count; i++) {
         w+=1;
@@ -391,6 +406,36 @@ float cuenta=0;
     else{
         return 0;
     }
+}
++(int)downloadVideoWithURLString:(NSString*)videoUrl ID:(NSString*)ID andName:(NSString*)name usuario:(Usuario*)usuario{
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *videoFilePath = [NSString stringWithFormat:@"%@/%@%@.mp4",docDir,name,ID];
+    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:videoFilePath];
+
+    NSLog(@"downloader file path : %@",videoFilePath);
+
+    if (!fileExists) {
+        //NSLog(@"no existe proj img %@",jpegFilePath);
+        NSData *data=[NSData dataWithContentsOfURL:[NSURL URLWithString:videoUrl]];
+        if (data) {
+            [data writeToFile:videoFilePath atomically:YES];
+            NSLog(@"No Existe %@",videoUrl);
+            return 0;
+        }
+        else{
+            //NSLog(@"NO hubo imagen, no se guardó %@ con ID %@",imageUrl,ID);
+            ServerCommunicator *server=[[ServerCommunicator alloc]init];
+            NSString *message=[NSString stringWithFormat:@"No se guardó video %@ con ID %@",videoUrl,ID];
+            NSString *parameters=[NSString stringWithFormat:@"<ns:setEventLog><username>%@</username><password>%@</password><message>%@</message></ns:setEventLog>",usuario.usuario,usuario.contrasena,message];
+            [server callServerWithMethod:@"" andParameter:parameters];
+            return 1;
+        }
+        
+    }
+    else {
+        return 0;
+    }
+
 }
 +(void)eraseAllFiles{
     NSFileManager *fileMgr = [[NSFileManager alloc] init];

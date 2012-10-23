@@ -497,7 +497,7 @@ const GLubyte IndicesBottom[] = {
         
         Espacio3DVC *nvc=context;
         
-        brujula=[[UIView alloc]init];
+        /*brujula=[[UIView alloc]init];
         brujula.frame=CGRectMake(0, 0, (nvc.compassPlaceholder.frame.size.height-10)*0.15, nvc.compassPlaceholder.frame.size.height-10);
         brujula.center=CGPointMake(nvc.compassPlaceholder.frame.size.width/2,nvc.compassPlaceholder.frame.size.height/2);
         brujula.backgroundColor=[UIColor redColor];
@@ -509,7 +509,10 @@ const GLubyte IndicesBottom[] = {
         brujula.layer.shouldRasterize = YES;
         brujula.layer.shadowOffset = CGSizeMake(0, -1);
         brujula.layer.shadowOpacity = 1;
-        brujula.layer.shadowColor = [UIColor blackColor].CGColor;
+        brujula.layer.shadowColor = [UIColor blackColor].CGColor;*/
+        brujula=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"cursor.png"]];
+        brujula.frame=CGRectMake(0, 0, (nvc.compassPlaceholder.frame.size.height-10)*0.35, nvc.compassPlaceholder.frame.size.height-10);
+        brujula.center=CGPointMake(nvc.compassPlaceholder.frame.size.width/2,nvc.compassPlaceholder.frame.size.height/2);
         
         int type = [[UIDevice currentDevice] orientation];
         

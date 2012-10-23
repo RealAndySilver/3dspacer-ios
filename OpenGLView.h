@@ -92,7 +92,7 @@
     CADisplayLink* displayLink;
     UILabel *lbl;
     
-    UIView *brujula;
+    UIImageView *brujula;
     
     NSTimer *zoomTimer;
     

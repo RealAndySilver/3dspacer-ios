@@ -16,7 +16,7 @@
     NSMutableArray *arrayProductos;
 }
 
-@property(nonatomic,retain)NSString *imagen;
+@property(nonatomic,retain)NSString *imagen,*nombre;
 @property(nonatomic,retain)NSString *coordenadaX,*coordenadaY,*idTipoPiso;
 @property(nonatomic,retain)NSMutableArray *arrayProductos;
 @property(nonatomic)BOOL existe;

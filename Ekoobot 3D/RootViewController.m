@@ -16,7 +16,7 @@
 
 #pragma mark -
 #pragma mark Ciclo de Vida
-#define NOMBREUSER @"ekoomedia"
+#define NOMBREUSER @"cata"
 #define PASSWORD @"1234"
 
 - (void)viewDidLoad{

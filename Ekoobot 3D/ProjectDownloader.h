@@ -10,6 +10,7 @@
 #import "Proyecto.h"
 #import "FileSaver.h"
 #import "Usuario.h"
+#import "Adjunto.h"
 #import "ServerCommunicator.h"
 
 

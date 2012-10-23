@@ -11,12 +11,13 @@
 #import "Proyecto.h"
 #import "IAmCoder.h"
 #import "MBProgressHud.h"
+#import "Adjunto.h"
 
 @interface VideoViewController : UIViewController{
     MBProgressHUD *hud;
 }
 @property (nonatomic)__strong MPMoviePlayerController *player;
-@property (nonatomic,retain)NSURL *videoPath;
+@property (nonatomic,retain)Adjunto *adjunto;
 @property (nonatomic,retain)Proyecto *proyecto;
 
 @end

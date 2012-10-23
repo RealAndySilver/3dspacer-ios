@@ -78,7 +78,7 @@
     //compassPlaceholder.frame=CGRectMake(lowerView.frame.size.width-80, -75, lowerView.frame.size.height/2, lowerView.frame.size.height/2);
     compassPlaceholder.frame=CGRectMake(self.view.frame.size.width-80, 50, lowerView.frame.size.height/2, lowerView.frame.size.height/2);
 
-    compassPlaceholder.backgroundColor=[UIColor whiteColor];
+    compassPlaceholder.backgroundColor=[UIColor clearColor];
     compassPlaceholder.layer.cornerRadius=lowerView.frame.size.height/4;
     compassPlaceholder.layer.masksToBounds=YES;
     compassPlaceholder.layer.borderColor=[UIColor blackColor].CGColor;
@@ -197,7 +197,7 @@
     [lowerView sendSubviewToBack:alphaView];
     
     lowerScroll=[[UIScrollView alloc]init];
-    lowerScroll.frame=CGRectMake(10, 30, alphaView.frame.size.width-220, 100);
+    lowerScroll.frame=CGRectMake(10, 30, alphaView.frame.size.width-20, 100);
     lowerScroll.backgroundColor=[UIColor clearColor];
     [lowerScroll setShowsHorizontalScrollIndicator:NO];
     //lowerScroll.contentSize=CGSizeMake(lowerScroll.frame.size.width+1, 100);

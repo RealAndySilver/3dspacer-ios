@@ -28,7 +28,7 @@
     [super viewDidLoad];
     self.view.backgroundColor=[UIColor blackColor];
     hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText=@"Loading";
+    hud.labelText=@"Su video se está descargando. Por favor espere. Este proceso puede tardar un poco.";
     [self performSelector:@selector(loadVideo) withObject:nil afterDelay:0.001];
     
 }

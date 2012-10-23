@@ -16,7 +16,7 @@
 
 #pragma mark -
 #pragma mark Ciclo de Vida
-#define NOMBREUSER @"cata"
+#define NOMBREUSER @"ekoomedia"
 #define PASSWORD @"1234"
 
 - (void)viewDidLoad{
@@ -230,9 +230,9 @@
         tVC.usuario=usuario;
         tVC.usuarioCopia=usuarioCopia;
         tVC.VC=self;
-        [self.navigationController presentModalViewController:tVC animated:YES];
+        //[self.navigationController presentModalViewController:tVC animated:YES];
         
-        //[self irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];
+        [self irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];
         
     }
     else{
@@ -260,7 +260,16 @@
         usuarioCopia.usuario=usuarioTF.text;
         usuario.contrasena=passwordTF.text;
         usuarioCopia.contrasena=passwordTF.text;
-        [self irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];
+        TermsViewController *tVC=[[TermsViewController alloc]init];
+        tVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Terms"];
+        tVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        //tVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        tVC.modalPresentationStyle = UIModalPresentationFormSheet;
+        tVC.usuario=usuario;
+        tVC.usuarioCopia=usuarioCopia;
+        tVC.VC=self;
+        [self.navigationController presentModalViewController:tVC animated:YES];
+        //[self irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];
     }
 }
 @end

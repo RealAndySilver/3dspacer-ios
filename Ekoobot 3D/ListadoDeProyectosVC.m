@@ -173,7 +173,7 @@
                     if (renderImage.image) {
                         [data2 writeToFile:jpegFilePath atomically:YES];
                     }
-                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-50, frame.size.height, frame.size.width);
+                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-40, frame.size.height, frame.size.width);
                     renderImage.backgroundColor=[UIColor clearColor];
                     [scrollPage addSubview:renderImage];
                 }
@@ -181,7 +181,7 @@
                     //NSLog(@"si existe proj img %@",jpegFilePath);
                     UIImageView *renderImage = [[UIImageView alloc]init];
                     renderImage.image = [UIImage imageWithContentsOfFile:jpegFilePath];
-                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-50, frame.size.height, frame.size.width);
+                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-40, frame.size.height, frame.size.width);
                     renderImage.backgroundColor=[UIColor clearColor];
                     [scrollPage addSubview:renderImage];
                 }
@@ -197,7 +197,7 @@
                 player.center=CGPointMake(pg3.frame.size.width/2, pg3.frame.size.height/2);
                 player.backgroundColor=[UIColor whiteColor];
                 [player setTitle:@"" forState:UIControlStateNormal];
-                player.url=adjunto.imagen;
+                player.adjunto=adjunto;
                 player.extraContent=proyecto;
                 [player addTarget:self action:@selector(callVideo:) forControlEvents:UIControlEventTouchUpInside];
                 [pg3 addSubview:player];
@@ -237,7 +237,7 @@
     vVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Video"];
     [vVC setModalPresentationStyle:UIModalPresentationFullScreen];
     [vVC setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
-    vVC.videoPath=[NSURL URLWithString:sender.url];
+    vVC.adjunto=sender.adjunto;
     vVC.proyecto=sender.extraContent;
     [self presentModalViewController:vVC animated:YES];
 }

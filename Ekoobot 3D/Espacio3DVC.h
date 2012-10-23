@@ -33,7 +33,7 @@
     BOOL borderFlag;//para el cambio de color del borde de los thumbs
     int initialTag;
     UIScrollView *lowerScroll;
-    UIView *compassPlaceholder;
+    UIImageView *compassPlaceholder;
     
 }
 @property (nonatomic,retain)Espacio3D *espacio3D;

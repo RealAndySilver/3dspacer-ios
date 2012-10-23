@@ -12,7 +12,7 @@
 @interface CustomButton : UIButton{
 }
 @property(nonatomic)int secondaryId;
-@property(nonatomic)NSString *url;
+@property(nonatomic)id adjunto;
 @property(nonatomic)id extraContent;
 
 

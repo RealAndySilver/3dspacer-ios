@@ -14,7 +14,7 @@
     NSMutableArray *arrayEspacios3D;
 }
 
-@property(nonatomic,retain)NSString *imagenPlanta,*idPlanta;
+@property(nonatomic,retain)NSString *imagenPlanta,*idPlanta,*nombre;
 @property(nonatomic,retain)NSMutableArray *arrayEspacios3D;
 @property(nonatomic)BOOL existe;
 

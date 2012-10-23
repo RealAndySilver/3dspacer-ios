@@ -34,11 +34,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Ekoobot 3D/TiposDePisosVC.m"
-         timestampString = "369866028.10136"
+         timestampString = "372701371.18793"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "26"
-         endingLineNumber = "26"
+         startingLineNumber = "27"
+         endingLineNumber = "27"
          landmarkName = "-viewDidLoad"
          landmarkType = "5">
       </FileBreakpoint>
@@ -47,11 +47,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Ekoobot 3D/TiposDePlantasVC.m"
-         timestampString = "372633834.070053"
+         timestampString = "372700947.300081"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "276"
-         endingLineNumber = "276"
+         startingLineNumber = "286"
+         endingLineNumber = "286"
          landmarkName = "-delayedAction:"
          landmarkType = "5">
       </FileBreakpoint>

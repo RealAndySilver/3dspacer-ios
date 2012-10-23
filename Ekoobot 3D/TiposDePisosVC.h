@@ -17,6 +17,7 @@
     UIScrollView *scrollView;
     Grupo *grupo;
     MBProgressHUD *hud;
+    NSMutableArray *arrayNombrePisos;
 }
 
 @property(nonatomic,retain)Grupo *grupo;

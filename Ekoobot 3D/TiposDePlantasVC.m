@@ -24,8 +24,12 @@
 {
     [super viewDidLoad];
     //Se cargan y muestran todos los proyectos
-    [self crearObjetos];    
+    arrayNombresPlantas=[[NSMutableArray alloc]init];
+    [self crearObjetos];
     self.navigationItem.title=@"Plantas";
+    Planta *planta=[producto.arrayPlantas objectAtIndex:0];
+    self.navigationItem.title=planta.nombre;
+
     [self.navigationItem setHidesBackButton:NO animated:YES];
 }
 -(void)didReceiveMemoryWarning{
@@ -58,7 +62,12 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView1{
     CGRect frame=[[UIScreen mainScreen] applicationFrame];
     float roundedValue = round(scrollView.contentOffset.x / frame.size.height);
-    self.pageCon.currentPage=roundedValue;
+    //self.pageCon.currentPage=roundedValue;
+    if (roundedValue>=0 && roundedValue<=arrayNombresPlantas.count) {
+        self.pageCon.currentPage=roundedValue;
+        NSString *key=[NSString stringWithFormat:@"%f",roundedValue];
+        self.navigationItem.title=[arrayNombresPlantas objectAtIndex:[key intValue]];
+    }
 }
 
 - (void)customLogoutAlert{
@@ -93,6 +102,7 @@
     for (int i= 0; i<producto.arrayPlantas.count; i++) {
         Planta *planta=[[Planta alloc]init];
         planta = [producto.arrayPlantas objectAtIndex:i];
+        [arrayNombresPlantas addObject:planta.nombre];
         [self paginaCreadaConPlanta:planta enPosicion:i];
     }
 }

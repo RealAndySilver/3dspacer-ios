@@ -17,6 +17,7 @@
     UIScrollView *scrollView;
     IBOutlet UIActivityIndicatorView *spinner;
     MBProgressHUD *hud;
+    NSMutableArray *arrayNombresPlantas;
 }
 
 @property (nonatomic,retain)Producto *producto;

@@ -23,10 +23,13 @@
 -(void)viewDidLoad{
     [super viewDidLoad];
     //Se cargan y muestran todos los proyectos
+    arrayNombrePisos=[[NSMutableArray alloc]init];
     [self crearObjetos];
     
     //El titulo del view
     self.navigationItem.title=@"Piso Tipo";
+    TipoDePiso *piso=[grupo.arrayTiposDePiso objectAtIndex:0];
+    self.navigationItem.title=piso.nombre;
     /*UIBarButtonItem *logout = [[UIBarButtonItem alloc] initWithTitle:@"Logout" 
                                                                style:UIBarButtonItemStylePlain 
                                                               target:self 
@@ -58,6 +61,11 @@
     CGRect frame=[[UIScreen mainScreen] applicationFrame];
     float roundedValue = round(scrollView.contentOffset.x / frame.size.height);
     self.pageCon.currentPage=roundedValue;
+    if (roundedValue>=0 && roundedValue<=arrayNombrePisos.count) {
+        self.pageCon.currentPage=roundedValue;
+        NSString *key=[NSString stringWithFormat:@"%f",roundedValue];
+        self.navigationItem.title=[arrayNombrePisos objectAtIndex:[key intValue]];
+    }
 }
 -(void)customLogoutAlert{
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cerrar Sesión" 
@@ -87,6 +95,7 @@
     for (int i= 0; i<grupo.arrayTiposDePiso.count; i++) {
         TipoDePiso *tipoDePiso=[[TipoDePiso alloc]init];
         tipoDePiso = [grupo.arrayTiposDePiso objectAtIndex:i];
+        [arrayNombrePisos addObject:tipoDePiso.nombre];
         [self paginaCreadaConTipoPiso:tipoDePiso enPosicion:i];
     }
 }

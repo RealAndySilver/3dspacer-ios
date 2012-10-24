@@ -24,6 +24,7 @@
     [super viewDidLoad];
     //Se cargan y muestran todos los proyectos
     arrayNombrePisos=[[NSMutableArray alloc]init];
+    scrollArray=[[NSMutableArray alloc]init];
     [self crearObjetos];
     
     //El titulo del view
@@ -52,6 +53,10 @@
 }
 -(void)viewWillAppear:(BOOL)animated{
     self.navigationController.navigationBarHidden=NO;
+}
+-(void)viewDidAppear:(BOOL)animated{
+    UIScrollView *sv=[scrollArray objectAtIndex:scrollVar];
+    [sv setZoomScale:1 animated:YES];
 }
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
     return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) || 
@@ -150,6 +155,7 @@
     [sv setCanCancelContentTouches:NO];
     sv.clipsToBounds = YES;
     sv.delegate=self;
+    [scrollArray addObject:sv];
     [scrollView addSubview:pagina];
 }
 -(UIView *)viewForZoomingInScrollView:(UIScrollView*)scrollview{

@@ -18,6 +18,8 @@
     Grupo *grupo;
     MBProgressHUD *hud;
     NSMutableArray *arrayNombrePisos;
+    int scrollVar;
+    NSMutableArray *scrollArray;
 }
 
 @property(nonatomic,retain)Grupo *grupo;

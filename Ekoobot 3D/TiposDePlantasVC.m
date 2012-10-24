@@ -25,6 +25,7 @@
     [super viewDidLoad];
     //Se cargan y muestran todos los proyectos
     arrayNombresPlantas=[[NSMutableArray alloc]init];
+    scrollArray=[[NSMutableArray alloc]init];
     [self crearObjetos];
     self.navigationItem.title=@"Plantas";
     Planta *planta=[producto.arrayPlantas objectAtIndex:0];
@@ -53,12 +54,14 @@
     NavController *navController = (NavController *)self.navigationController;
     [navController setInterfaceOrientation:YES];
 }
-
+-(void)viewDidAppear:(BOOL)animated{
+        UIScrollView *sv=[scrollArray objectAtIndex:scrollVar];
+        [sv setZoomScale:1 animated:YES];
+}
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
     return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) || 
     (interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView1{
     CGRect frame=[[UIScreen mainScreen] applicationFrame];
     float roundedValue = round(scrollView.contentOffset.x / frame.size.height);
@@ -67,6 +70,7 @@
         self.pageCon.currentPage=roundedValue;
         NSString *key=[NSString stringWithFormat:@"%f",roundedValue];
         self.navigationItem.title=[arrayNombresPlantas objectAtIndex:[key intValue]];
+        scrollVar=roundedValue;
     }
 }
 
@@ -160,6 +164,7 @@
     [sv setCanCancelContentTouches:NO];
     sv.clipsToBounds = YES;
     sv.delegate=self;
+    [scrollArray addObject:sv];
     [scrollView addSubview:pagina];
 }
 -(UIView *)viewForZoomingInScrollView:(UIScrollView*)scrollview{
@@ -283,6 +288,9 @@
     e3dVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Espacio3DVC"];
     e3dVC.espacio3D=espacio3D;
     e3dVC.arregloEspacial=tempArray;
+    NavController *navController = (NavController *)self.navigationController;
+    [navController setOrientationType:0];
+    [navController forceLandscapeMode];
     [self.navigationController pushViewController:e3dVC animated:YES];
 }
 #pragma mark - scroll tap

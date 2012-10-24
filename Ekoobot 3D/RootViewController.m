@@ -97,7 +97,7 @@
 - (void)irAlSiguienteViewConUsuario:(id)usuario yCopia:(id)copia{
     NSLog(@"Aca toy");
     NavController *navController = (NavController *)self.navigationController;
-    [navController setOrientationType:2];
+    [navController setOrientationType:0];
     [navController forceLandscapeMode];
     CATransition *transition = [CATransition animation];
     transition.duration = 0.3f;

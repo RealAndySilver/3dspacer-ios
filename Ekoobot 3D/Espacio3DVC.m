@@ -173,15 +173,14 @@
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
     NSLog(@"Autorotate 2");
-    return NO;
+    return YES;
 }
 -(BOOL)shouldAutorotate{
     NSLog(@"Autorotate 1");
-    return NO;
+    return YES;
 }
 -(NSUInteger)supportedInterfaceOrientations{
-    NSLog(@"mmmm");
-    return 3;
+    return UIInterfaceOrientationMaskLandscape;
 }
 
 -(void)threadParaViewInferior{
@@ -222,6 +221,17 @@
     boton.frame=CGRectMake(10, 5,20, 30);
     boton.tag=205;
     //[lowerView addSubview:boton];
+    
+    //coloca un view con receptor de toques en la pestaña del lowerview
+    UIView *touchReceiver=[[UIView alloc]initWithFrame:CGRectMake(0, 0, lowerView.frame.size.width, 30)];
+    touchReceiver.backgroundColor=[UIColor clearColor];
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleView:)];
+    [singleTap setNumberOfTapsRequired:1];
+    [singleTap setNumberOfTouchesRequired:1];
+    [touchReceiver addGestureRecognizer:singleTap];
+    [lowerView addSubview:touchReceiver];
+    
+    
     [self.view addSubview:lowerView];
     [self insertarListaDeThumbsEnView:arregloEspacial];
     [self animateViewFadeIn:lowerView];

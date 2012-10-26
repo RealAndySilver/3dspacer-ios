@@ -26,6 +26,8 @@
     MBProgressHUD *hud;
     BOOL zoomCheck;
     float maximumZoomScale;
+    float minimumZoomScale;
+
 }
 @property Proyecto *proyecto;
 

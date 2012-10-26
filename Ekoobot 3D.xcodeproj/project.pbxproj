@@ -61,6 +61,9 @@
 		752DCAFE15A77A8C002B732D /* Grupo.m in Sources */ = {isa = PBXBuildFile; fileRef = 752DCAFD15A77A8C002B732D /* Grupo.m */; };
 		752DCB0C15A7EB06002B732D /* CustomButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 752DCB0B15A7EB06002B732D /* CustomButton.m */; };
 		7546A58215AF3A7F000F48E5 /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7546A58115AF3A7F000F48E5 /* LoadingView.m */; };
+		755233A0163ACB4400D541DB /* recomendar.png in Resources */ = {isa = PBXBuildFile; fileRef = 7552339F163ACB4400D541DB /* recomendar.png */; };
+		755233A3163AEEB900D541DB /* brujula.png in Resources */ = {isa = PBXBuildFile; fileRef = 755233A2163AEEB900D541DB /* brujula.png */; };
+		755233A5163AF21800D541DB /* enviar.png in Resources */ = {isa = PBXBuildFile; fileRef = 755233A4163AF21800D541DB /* enviar.png */; };
 		75550744162F0FF300479537 /* play-video.png in Resources */ = {isa = PBXBuildFile; fileRef = 75550743162F0FF300479537 /* play-video.png */; };
 		75550747162F293A00479537 /* SendInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75550746162F293A00479537 /* SendInfoViewController.m */; };
 		7555074A162F2B6A00479537 /* SendInfoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 75550749162F2B6A00479537 /* SendInfoButton.m */; };
@@ -85,7 +88,6 @@
 		7595184916360BCA00336C0A /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 7595184816360BCA00336C0A /* Default-Portrait@2x~ipad.png */; };
 		7595184B16360BE700336C0A /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 7595184A16360BE700336C0A /* Default-Landscape~ipad.png */; };
 		7595184D16360C0300336C0A /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 7595184C16360C0300336C0A /* Default-Portrait~ipad.png */; };
-		75AAF1C3163735BE002C93F5 /* brujula.png in Resources */ = {isa = PBXBuildFile; fileRef = 75AAF1C2163735BE002C93F5 /* brujula.png */; };
 		75C8E937162387280094A609 /* UpdateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 75C8E936162387280094A609 /* UpdateView.m */; };
 		75D49A8215ED2FF000A4F6BA /* IAmCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 75D49A8115ED2FEF00A4F6BA /* IAmCoder.m */; };
 		75E69F74160404F3005907F6 /* EraseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E69F73160404F3005907F6 /* EraseViewController.m */; };
@@ -191,6 +193,9 @@
 		752DCB0B15A7EB06002B732D /* CustomButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomButton.m; sourceTree = "<group>"; };
 		7546A58015AF3A7F000F48E5 /* LoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingView.h; sourceTree = "<group>"; };
 		7546A58115AF3A7F000F48E5 /* LoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingView.m; sourceTree = "<group>"; };
+		7552339F163ACB4400D541DB /* recomendar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = recomendar.png; sourceTree = "<group>"; };
+		755233A2163AEEB900D541DB /* brujula.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = brujula.png; sourceTree = "<group>"; };
+		755233A4163AF21800D541DB /* enviar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enviar.png; sourceTree = "<group>"; };
 		75550743162F0FF300479537 /* play-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play-video.png"; sourceTree = "<group>"; };
 		75550745162F293A00479537 /* SendInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendInfoViewController.h; sourceTree = "<group>"; };
 		75550746162F293A00479537 /* SendInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendInfoViewController.m; sourceTree = "<group>"; };
@@ -222,7 +227,6 @@
 		7595184816360BCA00336C0A /* Default-Portrait@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x~ipad.png"; sourceTree = "<group>"; };
 		7595184A16360BE700336C0A /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		7595184C16360C0300336C0A /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait~ipad.png"; sourceTree = "<group>"; };
-		75AAF1C2163735BE002C93F5 /* brujula.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = brujula.png; sourceTree = "<group>"; };
 		75C8E935162387280094A609 /* UpdateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateView.h; sourceTree = "<group>"; };
 		75C8E936162387280094A609 /* UpdateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateView.m; sourceTree = "<group>"; };
 		75D49A8015ED2FEF00A4F6BA /* IAmCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAmCoder.h; sourceTree = "<group>"; };
@@ -493,7 +497,9 @@
 		37F1EBF71541D65D00426C48 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				75AAF1C2163735BE002C93F5 /* brujula.png */,
+				755233A4163AF21800D541DB /* enviar.png */,
+				755233A2163AEEB900D541DB /* brujula.png */,
+				7552339F163ACB4400D541DB /* recomendar.png */,
 				75951840163608DE00336C0A /* cursor.png */,
 				7595183A1635FC5F00336C0A /* pin.png */,
 				75550743162F0FF300479537 /* play-video.png */,
@@ -647,7 +653,9 @@
 				7595184916360BCA00336C0A /* Default-Portrait@2x~ipad.png in Resources */,
 				7595184B16360BE700336C0A /* Default-Landscape~ipad.png in Resources */,
 				7595184D16360C0300336C0A /* Default-Portrait~ipad.png in Resources */,
-				75AAF1C3163735BE002C93F5 /* brujula.png in Resources */,
+				755233A0163ACB4400D541DB /* recomendar.png in Resources */,
+				755233A3163AEEB900D541DB /* brujula.png in Resources */,
+				755233A5163AF21800D541DB /* enviar.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

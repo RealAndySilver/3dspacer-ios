@@ -26,18 +26,29 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.navigationItem setHidesBackButton:YES];
     if ([currentUser.tipo isEqualToString:@"sellers"]) {
-        self.navigationItem.title=@"Enviar Información";
+        methodName=@"setRegister";
+        self.navigationItem.title=@"Enviar Proyecto";
     }
     else{
+        methodName=@"sendSuggest";
         self.navigationItem.title=@"Recomendar Proyecto";
     }
+    
+    
+    nombreTF.delegate=self;
+    emailTF.delegate=self;
+    comentarioTV.delegate=self;
     server=[[ServerCommunicator alloc]init];
     server.caller=self;
     tituloProyectoLabel.text=nombreProyecto;
 	// Do any additional setup after loading the view.
 }
-
+-(void)viewWillAppear:(BOOL)animated{
+    initialFrame=container.frame;
+    finalFrame=CGRectMake(161, 0, 710, 494);
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -94,9 +105,72 @@
         }
     }
 }
+-(IBAction)cancel:(id)sender{
+    [self customLogoutAlert];
+}
+- (void)customLogoutAlert{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cancelar Envía"
+                                                    message:@"¿Está seguro que desea cancelar?"
+                                                   delegate:self
+                                          cancelButtonTitle:@"Cancelar"
+                                          otherButtonTitles:@"OK",nil];
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    if([title isEqualToString:@"OK"])
+    {
+        [self goBack];
+    }
+}
+-(void)goBack{
+    [self.navigationController popViewControllerAnimated:YES];
+}
 -(void)receivedDataFromServerRegister:(id)sender{
     server=sender;
-    [self.navigationController popViewControllerAnimated:YES];
     //NSLog(@"Resultado %@",server.resDic );
+    NSString *tempMethod=[NSString stringWithFormat:@"ns1:%@Response",methodName];
+    NSDictionary *dic=[[server.resDic objectForKey:tempMethod]objectForKey:@"return"];
+}
+-(void)receivedDataFromServerWithError:(id)sender{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                    message:@"Su mensaje no pudo ser enviado.\nPor favor intente de nuevo."
+                                                   delegate:nil
+                                          cancelButtonTitle:@"Cancelar"
+                                          otherButtonTitles:nil,nil];
+    [alert show];
+}
+#pragma text delegates
+-(void)textFieldDidBeginEditing:(UITextField *)textField{
+    touchFlag=YES;
+    [self animarHasta:finalFrame];
+}
+-(void)textViewDidBeginEditing:(UITextView *)textView{
+    touchFlag=YES;
+    [self animarHasta:finalFrame];
+}
+-(void)textFieldDidEndEditing:(UITextField *)textField{
+    touchFlag=NO;
+    [self performSelector:@selector(delayed) withObject:nil afterDelay:0.01];
+}
+-(void)textViewDidEndEditing:(UITextView *)textView{
+    touchFlag=NO;
+    [self performSelector:@selector(delayed) withObject:nil afterDelay:0.01];
+}
+-(void)delayed{
+    if (!touchFlag) {
+        [self animarHasta:initialFrame];
+    }
+}
+#pragma mark animacion
+-(void)animarHasta:(CGRect)hasta{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.5];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    container.frame=hasta;
+    [UIView commitAnimations];
 }
 @end

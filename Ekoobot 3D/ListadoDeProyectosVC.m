@@ -226,9 +226,9 @@
         SendInfoButton *sendInfoButton=[[SendInfoButton alloc]init];
         sendInfoButton.nombreProyecto=proyecto.nombre;
         sendInfoButton.proyectoID=proyecto.idProyecto;
-        UIImage *imageButton = [UIImage imageNamed:@"loginBtn.png"];
+        UIImage *imageButton = [UIImage imageNamed:@"recomendar.png"];
         [sendInfoButton setImage:imageButton forState:UIControlStateNormal];
-        sendInfoButton.frame=CGRectMake(pagina.frame.size.width-140, 50, 100, 50);
+        sendInfoButton.frame=CGRectMake(pagina.frame.size.width-140, 50, 100, 100);
         [sendInfoButton addTarget:self action:@selector(sendInfo:) forControlEvents:UIControlEventTouchUpInside];
         [pagina addSubview:sendInfoButton];
 }

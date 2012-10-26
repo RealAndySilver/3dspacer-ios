@@ -52,12 +52,73 @@
 }
 -(void)forceLandscapeMode{
     if(UIDeviceOrientationIsPortrait(self.interfaceOrientation)){
-        NSLog(@"dentro del 1er if");
+        int type = [[UIDevice currentDevice] orientation];
+        BOOL leftRotated=NO;
+        if(type ==3){
+            leftRotated=NO;
+        }
+        else if(type==4){
+            leftRotated=YES;
+        }
         if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)])
+            
         {
             objc_msgSend([UIDevice currentDevice], @selector(setOrientation:), UIInterfaceOrientationLandscapeLeft );
-            NSLog(@"dentro del 2ndo if");
+            NSLog(@"dentro del if portrait");
         }
     }
+    /*else if(UIDeviceOrientationIsLandscape(self.interfaceOrientation)){
+        int type = [[UIDevice currentDevice] orientation];
+        BOOL leftRotated=NO;
+        if(type ==3){
+            leftRotated=NO;
+        }
+        else if(type==4){
+            leftRotated=YES;
+        }
+        if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)])
+            
+        {
+            if (leftRotated) {
+                objc_msgSend([UIDevice currentDevice], @selector(setOrientation:), UIInterfaceOrientationLandscapeLeft );
+                NSLog(@"dentro del 1er if landscapeleft");
+                return;
+            }
+            else{
+                objc_msgSend([UIDevice currentDevice], @selector(setOrientation:), UIInterfaceOrientationLandscapeRight );
+                NSLog(@"dentro del 2ndo if landscaperight");
+                return;
+            }
+            
+        }
+    }*/
+}
+-(void)forceLandscapeFromLandscape{
+    if(UIDeviceOrientationIsLandscape(self.interfaceOrientation)){
+        int type = [[UIDevice currentDevice] orientation];
+        BOOL leftRotated=NO;
+        if(type ==3){
+            leftRotated=NO;
+        }
+        else if(type==4){
+            leftRotated=YES;
+        }
+        if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)])
+            
+        {
+            if (leftRotated) {
+                objc_msgSend([UIDevice currentDevice], @selector(setOrientation:), UIInterfaceOrientationLandscapeLeft );
+                NSLog(@"dentro del 1er if landscapeleft");
+                return;
+            }
+            else{
+                objc_msgSend([UIDevice currentDevice], @selector(setOrientation:), UIInterfaceOrientationLandscapeRight );
+                NSLog(@"dentro del 2ndo if landscaperight");
+                return;
+            }
+            
+        }
+    }
+    
 }
 @end

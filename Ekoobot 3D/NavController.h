@@ -14,4 +14,5 @@
 @property(nonatomic)int orientationType;
 -(void)setInterfaceOrientation:(BOOL)orientation;
 -(void)forceLandscapeMode;
+-(void)forceLandscapeFromLandscape;
 @end

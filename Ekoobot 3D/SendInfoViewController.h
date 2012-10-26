@@ -10,13 +10,19 @@
 #import "ServerCommunicator.h"
 #import "FileSaver.h"
 #import "Usuario.h"
-@interface SendInfoViewController : UIViewController{
+@interface SendInfoViewController : UIViewController<UIAlertViewDelegate,UITextFieldDelegate,UITextViewDelegate>{
     ServerCommunicator *server;
     IBOutlet UILabel *tituloProyectoLabel;
     IBOutlet UITextField *nombreTF;
     IBOutlet UITextField *emailTF;
     IBOutlet UITextView *comentarioTV;
     IBOutlet UIButton *sendBtn;
+    IBOutlet UIButton *cancelButton;
+    IBOutlet UIView *container;
+    CGRect initialFrame;
+    CGRect finalFrame;
+    NSString *methodName;
+    BOOL touchFlag;
 }
 @property(nonatomic,retain)NSString *nombreProyecto,*usuario,*contrasena,*proyectoID;
 @property(nonatomic,retain)Usuario *currentUser;

@@ -27,8 +27,8 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     self.navigationItem.title = @"Planta Urbana";
-    maximumZoomScale=5.0;
-    
+    maximumZoomScale=2.0;
+    minimumZoomScale=0.3;
     [spinner startAnimating];
     [self loadScrollViewWithMap];
     
@@ -56,9 +56,10 @@
 }
 -(void)viewWillAppear:(BOOL)animated{
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    [scrollViewUrbanismo setZoomScale:minimumZoomScale animated:NO];
 }
 -(void)viewDidAppear:(BOOL)animated{
-    [scrollViewUrbanismo setZoomScale:0.3 animated:YES];
+    //[scrollViewUrbanismo setZoomScale:0.3 animated:NO];
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
     return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) || 
@@ -97,7 +98,8 @@
             else{
                 proporcion=ancho/alto;
             }
-            imageViewUrbanismo.frame=CGRectMake(0, 0, (imageUrbanismo.size.width*2), (imageUrbanismo.size.height*2));
+            imageViewUrbanismo.frame=CGRectMake(0, 0, (imageUrbanismo.size.width*1), (imageUrbanismo.size.height*1));
+            minimumZoomScale=0.6;
             NSLog(@"width %.0f height %.0f",imageViewUrbanismo.frame.size.width,imageViewUrbanismo.frame.size.height);
         }
     }
@@ -118,7 +120,8 @@
             else{
                 proporcion=ancho/alto;
             }
-            imageViewUrbanismo.frame=CGRectMake(0, 0, (imageUrbanismo.size.width*2), (imageUrbanismo.size.height*2));
+            imageViewUrbanismo.frame=CGRectMake(0, 0, (imageUrbanismo.size.width*1), (imageUrbanismo.size.height*1));
+            minimumZoomScale=0.6;
             NSLog(@"width %.0f height %.0f",imageViewUrbanismo.frame.size.width,imageViewUrbanismo.frame.size.height);
         }
     }
@@ -127,7 +130,7 @@
     [imageViewUrbanismo setUserInteractionEnabled:YES];
     
     //imageViewUrbanismo.center=CGPointMake(self.view.frame.size.height/2, self.view.frame.size.width/2);
-    scrollViewUrbanismo.frame=CGRectMake(0, 0, self.view.frame.size.height, self.view.frame.size.width-50);
+    scrollViewUrbanismo.frame=CGRectMake(0, 0, self.view.frame.size.height, self.view.frame.size.width-44);
     scrollViewUrbanismo.contentSize=CGSizeMake(imageViewUrbanismo.frame.size.width, imageViewUrbanismo.frame.size.height);
     //[self layoutScrollView];
     [self.view addSubview:scrollViewUrbanismo];
@@ -136,7 +139,7 @@
         Grupo *grupo=[arrayGrupos objectAtIndex:i];
         [self insertarBotonEn:imageViewUrbanismo enPosicionX:grupo.coordenadaX yPosicionY:grupo.coordenadaY yTag:i titulo:grupo.nombre];
     }
-    [scrollViewUrbanismo setMinimumZoomScale:0.3];
+    [scrollViewUrbanismo setMinimumZoomScale:minimumZoomScale];
     [scrollViewUrbanismo setMaximumZoomScale:maximumZoomScale];
     [scrollViewUrbanismo setCanCancelContentTouches:NO];
     scrollViewUrbanismo.clipsToBounds = YES;
@@ -275,7 +278,7 @@
     NSLog(@"doubletap ");
     if(zoomCheck){
         CGPoint Pointview=[recognizer locationInView:scrollViewUrbanismo];
-        CGFloat newZoomscal=3.0;
+        CGFloat newZoomscal=maximumZoomScale;
         
         newZoomscal=MIN(newZoomscal, maximumZoomScale);
         
@@ -289,7 +292,7 @@
         CGRect rectTozoom=CGRectMake(x, y, w, h);
         [scrollViewUrbanismo zoomToRect:rectTozoom animated:YES];
         
-        [scrollViewUrbanismo setZoomScale:3.0 animated:YES];
+        [scrollViewUrbanismo setZoomScale:maximumZoomScale animated:YES];
         zoomCheck=NO;
     }
     else{

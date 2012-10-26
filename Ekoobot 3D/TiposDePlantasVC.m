@@ -160,7 +160,7 @@
     }
     [sv setUserInteractionEnabled:YES];
     [sv setMinimumZoomScale:1];
-    [sv setMaximumZoomScale:3];
+    [sv setMaximumZoomScale:2];
     [sv setCanCancelContentTouches:NO];
     sv.clipsToBounds = YES;
     sv.delegate=self;
@@ -290,7 +290,7 @@
     e3dVC.arregloEspacial=tempArray;
     NavController *navController = (NavController *)self.navigationController;
     [navController setOrientationType:0];
-    [navController forceLandscapeMode];
+    [navController forceLandscapeFromLandscape];
     [self.navigationController pushViewController:e3dVC animated:YES];
 }
 #pragma mark - scroll tap
@@ -313,7 +313,7 @@
         CGRect rectTozoom=CGRectMake(x, y, w, h);
         [tempScroll zoomToRect:rectTozoom animated:YES];
         
-        [tempScroll setZoomScale:3.0 animated:YES];
+        [tempScroll setZoomScale:2.0 animated:YES];
         //zoomCheck=NO;
     }
     else{

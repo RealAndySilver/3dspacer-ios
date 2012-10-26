@@ -151,7 +151,7 @@
     }
     [sv setUserInteractionEnabled:YES];
     [sv setMinimumZoomScale:1];
-    [sv setMaximumZoomScale:3];
+    [sv setMaximumZoomScale:2];
     [sv setCanCancelContentTouches:NO];
     sv.clipsToBounds = YES;
     sv.delegate=self;
@@ -279,7 +279,7 @@
         CGRect rectTozoom=CGRectMake(x, y, w, h);
         [tempScroll zoomToRect:rectTozoom animated:YES];
         
-        [tempScroll setZoomScale:3.0 animated:YES];
+        [tempScroll setZoomScale:2.0 animated:YES];
         //zoomCheck=NO;
     }
     else{

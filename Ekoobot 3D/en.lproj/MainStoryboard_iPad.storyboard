@@ -83,11 +83,11 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <view contentMode="scaleToFill" id="k3O-lp-gyb">
-                                <rect key="frame" x="112" y="82" width="800" height="563"/>
+                                <rect key="frame" x="112" y="47" width="800" height="563"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="8WU-OP-xb3">
-                                        <rect key="frame" x="402" y="324" width="90" height="32"/>
+                                        <rect key="frame" x="402" y="314" width="90" height="32"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" title="Login" image="loginBtn.png">
@@ -102,19 +102,19 @@
                                         </connections>
                                     </button>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" id="bJt-Uf-NgJ">
-                                        <rect key="frame" x="282" y="286" width="210" height="30"/>
+                                        <rect key="frame" x="282" y="276" width="210" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardAppearance="alert" secureTextEntry="YES"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="usuario" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" id="Arg-nN-7O4">
-                                        <rect key="frame" x="282" y="250" width="210" height="30"/>
+                                        <rect key="frame" x="282" y="240" width="210" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardAppearance="alert"/>
                                     </textField>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="gray" id="Ufh-VN-5P2">
-                                        <rect key="frame" x="377" y="222" width="20" height="20"/>
+                                        <rect key="frame" x="377" y="212" width="20" height="20"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </activityIndicatorView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="logo.png" id="nZb-PO-UJC">
@@ -126,7 +126,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoDark" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="j3J-rP-ab6">
-                                        <rect key="frame" x="500" y="255" width="18" height="19"/>
+                                        <rect key="frame" x="500" y="245" width="18" height="19"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal">
@@ -437,6 +437,71 @@
         <image name="loginBtn.png" width="136" height="52"/>
         <image name="logo.png" width="628" height="574"/>
     </resources>
+    <classes>
+        <class className="EraseViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EraseViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="eraseButton" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="Espacio3DVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/Espacio3DVC.h"/>
+        </class>
+        <class className="ListadoDeProyectosVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ListadoDeProyectosVC.h"/>
+        </class>
+        <class className="NavController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NavController.h"/>
+        </class>
+        <class className="PlantaUrbanaVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PlantaUrbanaVC.h"/>
+            <relationships>
+                <relationship kind="outlet" name="spinner" candidateClass="UIActivityIndicatorView"/>
+            </relationships>
+        </class>
+        <class className="RootViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RootViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="ekoobot3dLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="infoButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="loginButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="loginViewContainer" candidateClass="UIView"/>
+                <relationship kind="outlet" name="passwordTF" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="rotationSubView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="spinner" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="usuarioTF" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="SendInfoViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SendInfoViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="send:"/>
+                <relationship kind="outlet" name="comentarioTV" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="emailTF" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="nombreTF" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="sendBtn" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="tituloProyectoLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="TermsViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TermsViewController.h"/>
+        </class>
+        <class className="TiposDePisosVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TiposDePisosVC.h"/>
+        </class>
+        <class className="TiposDePlantasVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TiposDePlantasVC.h"/>
+            <relationships>
+                <relationship kind="outlet" name="spinner" candidateClass="UIActivityIndicatorView"/>
+            </relationships>
+        </class>
+        <class className="VideoViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/VideoViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="back:"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation" orientation="landscapeRight"/>

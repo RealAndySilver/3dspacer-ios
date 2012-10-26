@@ -324,19 +324,20 @@ const GLubyte IndicesBottom[] = {
                 [projection rotateByX: [self radiansToDegrees:attitude.roll]];
                 [projection rotateByZ: [self radiansToDegrees:attitude.pitch]];
                 [projection rotateByY: -[self radiansToDegrees:attitude.yaw]];
+                //printf("%s",[@"!left" UTF8String]);
             }
             else{
                 attitude = _motionManager.deviceMotion.attitude;
                 
                 CGAffineTransform swingTransform = CGAffineTransformIdentity;
-                swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)]);
+                swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw-DegreesToRadians(180))]);
                 brujula.transform = swingTransform;
                 xx=-[self radiansToDegrees:attitude.roll];
                 yy=-[self radiansToDegrees:attitude.pitch];
                 zz=-[self radiansToDegrees:attitude.yaw];
                 [projection rotateByX: -[self radiansToDegrees:attitude.roll]];
                 [projection rotateByZ: -[self radiansToDegrees:attitude.pitch]];
-                [projection rotateByY: -[self radiansToDegrees:attitude.yaw]-[self radiansToDegrees:0]];
+                [projection rotateByY: -[self radiansToDegrees:attitude.yaw]-180];
             }
         }
     }
@@ -515,12 +516,28 @@ const GLubyte IndicesBottom[] = {
         brujula.center=CGPointMake(nvc.compassPlaceholder.frame.size.width/2,nvc.compassPlaceholder.frame.size.height/2);
         
         int type = [[UIDevice currentDevice] orientation];
-        
+        NSLog(@"El type es %i",type);
         if(type ==3){
             leftRotated=NO;
         }
         else if(type==4){
             leftRotated=YES;
+        }
+        UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+        if (UIInterfaceOrientationIsLandscape(orientation)) {
+            if(orientation ==3){
+                NSLog(@"OrientacionLandscape numero %i",orientation);
+                leftRotated=NO;
+                dxActualCamara = 90;
+            }
+            else if(orientation==4){
+                NSLog(@"OrientacionLandscapeElse numero %i",orientation);
+                leftRotated=YES;
+                dxActualCamara = 90;
+            }
+        } else {
+            NSLog(@"Orientacion Portrait numero %i",orientation);
+
         }
         _motionManager = [[CMMotionManager alloc] init];
         _motionManager.showsDeviceMovementDisplay = YES;
@@ -534,7 +551,7 @@ const GLubyte IndicesBottom[] = {
         }
         [_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
         isTouchEnabled=NO;
-        dxActualCamara = 90;
+        
         UIPinchGestureRecognizer *twoFingerPinch =
         [[[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(twoFingerPinch:)] autorelease];
         [self addGestureRecognizer:twoFingerPinch];

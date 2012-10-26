@@ -477,7 +477,12 @@
     siVC.usuario=usuarioActual.usuario;
     siVC.currentUser=usuarioActual;
     siVC.contrasena=usuarioActual.contrasena;
-    [self.navigationController pushViewController:siVC animated:YES];
+    siVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    siVC.modalPresentationStyle = UIModalPresentationCurrentContext;
+
+    [self.navigationController presentModalViewController:siVC animated:YES];
+
+    //[self.navigationController pushViewController:siVC animated:YES];
 }
 
 @end

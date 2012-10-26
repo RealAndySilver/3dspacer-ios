@@ -290,7 +290,7 @@
     e3dVC.arregloEspacial=tempArray;
     NavController *navController = (NavController *)self.navigationController;
     [navController setOrientationType:0];
-    [navController forceLandscapeFromLandscape];
+    //[navController forceLandscapeFromLandscape];
     [self.navigationController pushViewController:e3dVC animated:YES];
 }
 #pragma mark - scroll tap

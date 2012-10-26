@@ -47,11 +47,11 @@
 }
 -(void)viewWillAppear:(BOOL)animated{
     initialFrame=container.frame;
-    finalFrame=CGRectMake(161, 0, 710, 494);
+    finalFrame=CGRectMake(161, 50, 710, 494);
 }
 - (void)didReceiveMemoryWarning
 {
-    [super didReceiveMemoryWarning];
+    //[super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 #pragma mark actions
@@ -109,8 +109,8 @@
     [self customLogoutAlert];
 }
 - (void)customLogoutAlert{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cancelar Envía"
-                                                    message:@"¿Está seguro que desea cancelar?"
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cancelar Envío"
+                                                    message:@"¿Está seguro que desea cancelar?\nEl mensaje no será enviado."
                                                    delegate:self
                                           cancelButtonTitle:@"Cancelar"
                                           otherButtonTitles:@"OK",nil];
@@ -127,6 +127,8 @@
 }
 -(void)goBack{
     [self.navigationController popViewControllerAnimated:YES];
+    [self dismissModalViewControllerAnimated:YES];
+
 }
 -(void)receivedDataFromServerRegister:(id)sender{
     server=sender;

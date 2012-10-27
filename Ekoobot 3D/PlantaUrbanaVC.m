@@ -227,7 +227,7 @@
     Grupo *grupo=[itemUrbanismo.arrayGrupos objectAtIndex:sender.tag];
     NSString *string =grupo.idGrupo;
 
-    if ([string rangeOfString:@"urbanizationspaces"].location != NSNotFound) {
+    if ([string rangeOfString:@"Urbanizationspaces"].location != NSNotFound) {
         NSLog(@"voy pa espacios...");
         Espacio3DVC *e3DVC=[[Espacio3DVC alloc]init];
         e3DVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Espacio3DVC"];
@@ -259,9 +259,19 @@
             TipoDePiso *tipoDePiso=[grupo.arrayTiposDePiso objectAtIndex:0];
             Producto *producto=[tipoDePiso.arrayProductos objectAtIndex:0];
             TiposDePlantasVC *tpVC=[[TiposDePlantasVC alloc]init];
-            tpVC=[self.storyboard instantiateViewControllerWithIdentifier:@"TiposDePlantasVC"];
-            tpVC.producto=producto;
-            [self.navigationController pushViewController:tpVC animated:YES];
+            if (producto.existe) {
+                tpVC=[self.storyboard instantiateViewControllerWithIdentifier:@"TiposDePlantasVC"];
+                tpVC.producto=producto;
+                [self.navigationController pushViewController:tpVC animated:YES];
+            }
+            else{
+                Espacio3DVC *e3DVC=[[Espacio3DVC alloc]init];
+                e3DVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Espacio3DVC"];
+                Planta *planta=[producto.arrayPlantas objectAtIndex:0];
+                e3DVC.espacio3D=[planta.arrayEspacios3D objectAtIndex:0];
+                [self.navigationController pushViewController:e3DVC animated:YES];
+            }
+            
         }
         
     }

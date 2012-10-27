@@ -228,7 +228,7 @@
         sendInfoButton.proyectoID=proyecto.idProyecto;
         UIImage *imageButton = [UIImage imageNamed:@"recomendar.png"];
         [sendInfoButton setImage:imageButton forState:UIControlStateNormal];
-        sendInfoButton.frame=CGRectMake(pagina.frame.size.width-140, 50, 100, 100);
+        sendInfoButton.frame=CGRectMake(50, 560, 25, 25);
         [sendInfoButton addTarget:self action:@selector(sendInfo:) forControlEvents:UIControlEventTouchUpInside];
         [pagina addSubview:sendInfoButton];
 }
@@ -332,7 +332,7 @@
 
 - (void)insertarLabelProyectoEnPagina:(UIView*)view conProyecto:(Proyecto*)proyecto{
     [arrayDeTitulos addObject:proyecto.nombre];
-    UIView *container=[[UIView alloc]initWithFrame:CGRectMake(50, 57, 265, 35)];
+    UIView *container=[[UIView alloc]initWithFrame:CGRectMake(55, 57, 265, 35)];
     container.backgroundColor=[UIColor colorWithWhite:0.2 alpha:1];
     container.alpha=0.8;
     container.layer.cornerRadius = 10.0;

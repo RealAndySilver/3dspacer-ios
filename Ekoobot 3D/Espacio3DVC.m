@@ -81,11 +81,11 @@
     compassPlaceholder.backgroundColor=[UIColor clearColor];
     compassPlaceholder.layer.cornerRadius=lowerView.frame.size.height/4;
     compassPlaceholder.layer.masksToBounds=YES;
-    compassPlaceholder.layer.borderColor=[UIColor blackColor].CGColor;
+    compassPlaceholder.layer.borderColor=[UIColor clearColor].CGColor;
     compassPlaceholder.layer.borderWidth=2.0;
     compassPlaceholder.layer.shouldRasterize = YES;
     compassPlaceholder.layer.shadowOffset = CGSizeMake(0, -1);
-    compassPlaceholder.layer.shadowOpacity = 1;
+    compassPlaceholder.layer.shadowOpacity = 0;
     compassPlaceholder.layer.shadowColor = [UIColor blackColor].CGColor;
     
     

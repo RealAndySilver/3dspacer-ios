@@ -65,6 +65,7 @@
                     NSLog(@"Usuario :%@ \nContrasena : %@",usuario,contrasena);
                     NSString *params=[NSString stringWithFormat:@"<ns:setRegister><username>%@</username><password>%@</password><register><name>%@</name><email>%@</email><comments>%@</comments><project>%@</project></register></ns:setRegister>",usuario,contrasena,nombreTF.text,emailTF.text,comentarioTV.text,proyectoID];
                     [server callServerWithMethod:@"" andParameter:params];
+                    [self resignKeyboard];
                 }
                 else{
                     UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Debe agregar un comentario." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
@@ -110,7 +111,7 @@
 }
 - (void)customLogoutAlert{
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cancelar Envío"
-                                                    message:@"¿Está seguro que desea cancelar?\nEl mensaje no será enviado."
+                                                    message:@"¿Está seguro que desea cancelar?\nEl proyecto no será enviado."
                                                    delegate:self
                                           cancelButtonTitle:@"Cancelar"
                                           otherButtonTitles:@"OK",nil];
@@ -134,11 +135,25 @@
     server=sender;
     //NSLog(@"Resultado %@",server.resDic );
     NSString *tempMethod=[NSString stringWithFormat:@"ns1:%@Response",methodName];
-    NSDictionary *dic=[[server.resDic objectForKey:tempMethod]objectForKey:@"return"];
+    NSString *response=[[server.resDic objectForKey:tempMethod]objectForKey:@"return"];
+    if ([response isEqualToString:@"success"]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Proyecto Enviado"
+                                                        message:@"Su proyecto ha sido enviado con éxito."
+                                                       delegate:self
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil,nil];
+        [alert show];
+    }
+    else{
+        [self errorAlert];
+    }
 }
 -(void)receivedDataFromServerWithError:(id)sender{
+    [self errorAlert];
+}
+-(void)errorAlert{
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                    message:@"Su mensaje no pudo ser enviado.\nPor favor intente de nuevo."
+                                                    message:@"Su proyecto no pudo ser enviado.\nPor favor intente de nuevo."
                                                    delegate:nil
                                           cancelButtonTitle:@"Cancelar"
                                           otherButtonTitles:nil,nil];
@@ -174,5 +189,11 @@
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
     container.frame=hasta;
     [UIView commitAnimations];
+}
+#pragma mark dismiss keyboard
+-(void)resignKeyboard{
+    [nombreTF resignFirstResponder];
+    [emailTF resignFirstResponder];
+    [comentarioTV resignFirstResponder];
 }
 @end

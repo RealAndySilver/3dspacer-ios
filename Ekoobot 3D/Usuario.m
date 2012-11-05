@@ -2,15 +2,15 @@
 //  Usuario.m
 //  Ekoobot 3D
 //
-//  Created by Andres David Carreño on 4/17/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Created by Andres Abril on 4/17/12.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "Usuario.h"
 
 @implementation Usuario
 
-@synthesize idUsuario,nombre,usuario,contrasena,tipo,estado;
+@synthesize idUsuario,nombre,usuario,contrasena,tipo,estado,terminos;
 @synthesize arrayProyectos;
 
 - (id)init{
@@ -21,6 +21,7 @@
         contrasena=@"Ninguno";
         tipo=@"Ninguno";
         estado=@"Ninguno";
+        terminos=@"";
         //arrayProyectos = [[NSMutableArray alloc]init];
     }
     return self;

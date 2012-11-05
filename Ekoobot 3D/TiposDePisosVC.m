@@ -2,8 +2,8 @@
 //  PlantaUrbanaEspecificaVC.m
 //  Ekoobot 3D
 //
-//  Created by Andres David Carreño on 4/19/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Created by Andres Abril on 4/19/12.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "TiposDePisosVC.h"
@@ -70,6 +70,7 @@
         self.pageCon.currentPage=roundedValue;
         NSString *key=[NSString stringWithFormat:@"%f",roundedValue];
         self.navigationItem.title=[arrayNombrePisos objectAtIndex:[key intValue]];
+        scrollVar=roundedValue;
     }
 }
 -(void)customLogoutAlert{
@@ -246,7 +247,8 @@
 
 -(void)irAlSiguienteViewController:(CustomButton*)sender{
     hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText=@"Loading";
+    NSString *loadingText=NSLocalizedString(@"Cargando", nil);
+    hud.labelText=loadingText;
     [self performSelector:@selector(delayedAction:) withObject:sender afterDelay:0.3];
 }
 -(void)delayedAction:(CustomButton*)sender{

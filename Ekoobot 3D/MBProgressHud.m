@@ -1,6 +1,6 @@
 //
 //  MBProgressHud.m
-//  PrizeKing
+//  Ekoobot 3D
 //
 //  Created by Andrés Abril on 17/07/12.
 //

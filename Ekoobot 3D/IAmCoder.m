@@ -1,6 +1,6 @@
 //
 //  IAmCoder.m
-//  PrizeKing
+//  Ekoobot 3D
 //
 //  Created by Andrés Abril on 26/07/12.
 //

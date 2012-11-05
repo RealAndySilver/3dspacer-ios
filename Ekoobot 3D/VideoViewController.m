@@ -3,7 +3,7 @@
 //  Ekoobot 3D
 //
 //  Created by Andres Abril on 11/10/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "VideoViewController.h"
@@ -28,7 +28,8 @@
     [super viewDidLoad];
     self.view.backgroundColor=[UIColor blackColor];
     hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText=@"Su video se está descargando. Por favor espere. Este proceso puede tardar un poco.";
+    NSString *text=NSLocalizedString(@"DescargaVideo", nil);
+    hud.labelText=text;
     [self performSelector:@selector(loadVideo) withObject:nil afterDelay:0.001];
     
 }
@@ -77,5 +78,12 @@
         NSLog(@"Ya Existe %@",videoFilePath);
         return [NSURL fileURLWithPath:videoFilePath isDirectory:YES];
     }
+}
+#pragma mark rotation
+-(BOOL)shouldAutorotate{
+    return YES;
+}
+-(NSUInteger)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskLandscape;
 }
 @end

@@ -1,9 +1,9 @@
 //
 //  OpenGLView.m
-//  HelloOpenGL
+//  Ekoobot 3D
 //
-//  Created by Andres David Carreño on 4/17/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Created by Andres Abril on 4/17/12.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "OpenGLView.h"
@@ -22,6 +22,8 @@ typedef struct {
 
 #define TEX_COORD_MAX   1
 #define CUBE_SIZE   5
+#define CAMERA360 90
+#define CAMERA180 0
 const Vertex Vertices[] = {
     // Front
     {{CUBE_SIZE, -CUBE_SIZE, CUBE_SIZE}, {1, 1, 1, 1}, {TEX_COORD_MAX, 0}},
@@ -433,9 +435,6 @@ const GLubyte IndicesBottom[] = {
     [_context presentRenderbuffer:GL_RENDERBUFFER];
     
 }
--(void)setLabelText:(NSString*)text{
-    lbl.text=text;
-}
 -(void)setupDisplayLink{
     displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(render:)];
     [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -485,10 +484,7 @@ const GLubyte IndicesBottom[] = {
         [self compileShaders];
         [self setupVBOs];
         [self setupDisplayLink];
-        lbl=[[UILabel alloc]initWithFrame:CGRectMake(50, 50, 200, 50)];
-        lbl.backgroundColor=[UIColor blackColor];
-        lbl.textColor=[UIColor whiteColor];
-        lbl.textAlignment=UITextAlignmentCenter;
+
         _backTexture = [self setupTexture:face.atras];
         _frontTexture = [self setupTexture:face.frente];
         _rightTexture = [self setupTexture:face.derecha];
@@ -528,12 +524,12 @@ const GLubyte IndicesBottom[] = {
             if(orientation ==3){
                 NSLog(@"OrientacionLandscape numero %i",orientation);
                 leftRotated=NO;
-                dxActualCamara = 90;
+                dxActualCamara = CAMERA360;
             }
             else if(orientation==4){
                 NSLog(@"OrientacionLandscapeElse numero %i",orientation);
                 leftRotated=YES;
-                dxActualCamara = 90;
+                dxActualCamara = CAMERA360;
             }
         } else {
             NSLog(@"Orientacion Portrait numero %i",orientation);
@@ -576,7 +572,7 @@ const GLubyte IndicesBottom[] = {
     }
     else {
         isTouchEnabled=NO;
-        dxActualCamara=90;
+        dxActualCamara=CAMERA360;
         dyActualCamara=0;
         dzActualCamara=0;
     }
@@ -590,6 +586,7 @@ const GLubyte IndicesBottom[] = {
     glDeleteTextures(1, &_rightTexture);
 }
 - (void)dealloc{
+    _motionManager.showsDeviceMovementDisplay = NO;
     brujula=nil;
     [displayLink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     //[displayLink invalidate];
@@ -657,7 +654,7 @@ const GLubyte IndicesBottom[] = {
         startPoint = point;
         CGAffineTransform swingTransform = CGAffineTransformIdentity;
         swingTransform = CGAffineTransformRotate(swingTransform, DegreesToRadians(dyActualCamara));
-        brujula.transform = swingTransform;
+        //brujula.transform = swingTransform;
     }
 }
 

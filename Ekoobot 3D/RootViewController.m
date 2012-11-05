@@ -2,8 +2,8 @@
 //  FirstViewController.m
 //  Ekoobot 3D
 //
-//  Created by Andres David Carreño on 4/17/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Created by Andres Abril on 4/17/12.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "RootViewController.h"
@@ -16,8 +16,10 @@
 
 #pragma mark -
 #pragma mark Ciclo de Vida
-#define NOMBREUSER @"ekoomedia"
+#define NOMBREUSER @"ariassernasaravia"
 #define PASSWORD @"1234"
+//#define NOMBREUSER @"ekoomedia"
+//#define PASSWORD @""
 #define USERTYPE @"clients"
 
 
@@ -44,7 +46,7 @@
     label.backgroundColor=[UIColor clearColor];
     label.textColor=[UIColor whiteColor];
     label.font=[UIFont fontWithName:@"Helvetica" size:15];
-    label.text=@"Creado por Ekoomedia Ltda. ©2012 Ekoobot 3D.";
+    label.text=NSLocalizedString(@"CreadoPor", nil);
     label.layer.masksToBounds=YES;
     label.layer.shouldRasterize=YES;
     label.layer.shadowOffset=CGSizeMake(0, -1);
@@ -61,6 +63,7 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     self.navigationController.navigationBarHidden= YES;
+    loginButton.enabled=YES;
     spinner.alpha=0;
     usuarioTF.text=NOMBREUSER;
     passwordTF.text=PASSWORD;
@@ -144,6 +147,7 @@
 - (void)comprobarUsuario{
     contrasenaString=passwordTF.text;
     usuarioString=usuarioTF.text;
+    loginButton.enabled=NO;
     if ([usuarioString isEqualToString:@"admin"]&&[contrasenaString isEqualToString:@"admin"]) {
         EraseViewController *eVC=[[EraseViewController alloc]init];
         eVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Erase"];
@@ -164,6 +168,7 @@
 #pragma mark IBActions
 
 - (IBAction)goToNext{
+    loginButton.enabled=NO;
     [self comprobarUsuario];
 }
 -(IBAction)littleBox:(id)sender{
@@ -205,11 +210,10 @@
 -(void)receivedDataFromServer:(id)sender{
     sc=sender;
     if ([sc.resDic objectForKey:@"usuario"]) {
-        
-        
-        
         Usuario *usuario=[[Usuario alloc]initWithDictionary:[sc.resDic objectForKey:@"usuario"]];
         Usuario *usuarioCopia=[[Usuario alloc]initWithDictionary:[sc.resDic objectForKey:@"usuario"]];
+        usuario.terminos=[[[sc.resDic objectForKey:@"system"]objectForKey:@"terminos"] stringByReplacingOccurrencesOfString:@"<br/>" withString:@"\n"];
+        usuarioCopia.terminos=[[[sc.resDic objectForKey:@"system"]objectForKey:@"terminos"]stringByReplacingOccurrencesOfString:@"<br/>" withString:@"\n"];
         FileSaver *fileSaver=[[FileSaver alloc]init];
         
         [fileSaver setDictionary:[sc.resDic objectForKey:@"usuario"]
@@ -240,17 +244,20 @@
         
     }
     else{
-        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Nombre de usuario o contraseña incorrectos" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        NSString *message=NSLocalizedString(@"LoginError", nil);
+        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
         spinner.alpha=0;
         [spinner stopAnimating];
+        loginButton.enabled=YES;
     }
 }
 -(void)receivedDataFromServerWithError:(id)sender{
     FileSaver *fileSaver=[[FileSaver alloc]init];
     NSLog(@"saver %@",[fileSaver getUserWithName:usuarioTF.text andPassword:passwordTF.text]);
     if(![fileSaver getUserWithName:usuarioTF.text andPassword:passwordTF.text]){
-        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Nombre de usuario o contraseña incorrectos" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        NSString *message=NSLocalizedString(@"LoginError", nil);
+        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
         spinner.alpha=0;
         [spinner stopAnimating];
@@ -280,5 +287,6 @@
             [self irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];
         }
     }
+    loginButton.enabled=YES;
 }
 @end

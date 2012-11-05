@@ -3,13 +3,13 @@
 //  Ekoobot 3D
 //
 //  Created by Andres Abril on 8/10/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "UpdateView.h"
 
 @implementation UpdateView
-@synthesize backgroundImage,titleText,updateText,infoButton,container;
+@synthesize backgroundImage,titleText,updateText,infoButton,container,pesoProyecto;
 
 - (id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];

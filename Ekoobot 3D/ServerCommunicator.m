@@ -1,9 +1,9 @@
 //
 //  ServerCommunicator.m
-//  PrizeKing
+//  Ekoobot 3D
 //
 //  Created by Andres Abril on 10/07/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "ServerCommunicator.h"
@@ -34,7 +34,9 @@
                              "</soapenv:Body>\n"
                              "</soapenv:Envelope>\n",parameter];
 	//NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.ekoomedia.com.co/ekoobot3d/web/ws/bot_api?wsdl"]];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://ekoomedia.com.co/ekoobot3d_test/web/ws/bot_api?wsdl"]];
+    //NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://ekoomedia.com.co/ekoobot3d_test/web/ws/bot_api?wsdl"]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://ekoobot.com/web/ws/bot_api?wsdl"]];
+
 
     NSString *soapAction=[NSString stringWithFormat:@"http://bot_api/1.0/"];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];  

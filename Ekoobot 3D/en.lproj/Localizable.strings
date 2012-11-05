@@ -1,0 +1,40 @@
+/* 
+  Localizable.strings
+  Ekoobot 3D
+
+  Created by Andres Abril on 5/11/12.
+  Copyright (c) 2012 Ekoomedia. All rights reserved.
+*/
+"CreadoPor"="Creado by Ekoomedia Ltda. ©2012 Ekoobot 3D.";
+"LoginError"="Wrong user name or password";
+"CerrarSesion"="Logout";
+"CerrarSesionSeguro"="¿Are you sure you want to logout?";
+"Cancelar"="Cancel";
+
+"CancelarEnvio"="Cancel";
+"CancelarEnvioSeguro"="¿Are you sure you want to cancel?\nThe project won't be sent.";
+"ProyectoEnviado"="Project sent.";
+"ProyectoEnviadoExito"="Project sent successfully";
+"ProyectoEnviadoNOExito"="Your project could not be sent.\nPlease try again.";
+
+"ActualizadoEl"="Updated on:";
+"NuevaVersion"="New version available";
+"UltimaVersion"="You have the latest version.";
+"Descarga"="Download the project to watch it.";
+"Peso"="Weight:";
+"ErrorDescarga"="An error has occurred while downloading the project. Please try again.";
+
+"Cargando"="Loading";
+"DescargaVideo"="Your video is being downloaded. Please wait. This process might take a few minutes.";
+
+"AreaTotal"="Total area:";
+
+"DescargandoProyecto"="YOUR PROJECT IS BEING DOWNLOADED, PLEASE WAIT";
+
+"AgregarComentario"="You must place a comment.";
+"AgregarEmail"="You must add an email address.";
+"AgregarNombre"="You must add a name.";
+
+"Espacio3D"="3D Space";
+"Toque"="Touch ";
+"3D"="3D ";

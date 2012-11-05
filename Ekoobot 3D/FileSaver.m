@@ -1,9 +1,9 @@
 //
 //  FileSaver.m
-//  PrizeKing
+//  Ekoobot 3D
 //
 //  Created by Andres Abril on 18/06/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "FileSaver.h"

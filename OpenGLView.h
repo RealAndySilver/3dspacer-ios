@@ -1,9 +1,9 @@
 //
 //  OpenGLView.h
-//  HelloOpenGL
+//  Ekoobot 3D
 //
-//  Created by Andres David Carreño on 4/17/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Created by Andres Abril on 4/17/12.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #include <OpenGLES/ES2/gl.h>
@@ -90,7 +90,6 @@
     float headingValue;
     
     CADisplayLink* displayLink;
-    UILabel *lbl;
     
     UIImageView *brujula;
     

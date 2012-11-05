@@ -2,8 +2,8 @@
 //  TiposDePlantasVC.m
 //  Ekoobot 3D
 //
-//  Created by Andres David Carreño on 6/19/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Created by Andres Abril on 6/19/12.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "TiposDePlantasVC.h"
@@ -151,7 +151,8 @@
 
     sv.clipsToBounds=YES;
     [pagina addSubview:sv];
-    [self labelDeArea:[NSString stringWithFormat:@"Área total: %@", producto.area] eInsertarEnView:imageView];
+    NSString *area=NSLocalizedString(@"AreaTotal", nil);
+    [self labelDeArea:[NSString stringWithFormat:@"%@ %@",area, producto.area] eInsertarEnView:imageView];
     
     [imageView setUserInteractionEnabled:YES];
     for (int i=0; i<tempArray.count; i++) {
@@ -185,7 +186,8 @@
     areaLabel.textColor=[UIColor whiteColor];
     [areaLabel setAdjustsFontSizeToFitWidth:YES];
     NSString *replacedMt=[producto.area stringByReplacingOccurrencesOfString:@"mt2" withString:@"mt\u00B2"];
-    areaLabel.text=[NSString stringWithFormat:@"Área total: %@", replacedMt];
+    NSString *areaTotal=NSLocalizedString(@"AreaTotal", nil);
+    areaLabel.text=[NSString stringWithFormat:@"%@ %@",areaTotal, replacedMt];
     areaLabel.center=CGPointMake(toolBar.frame.size.width/2, toolBar.frame.size.height/2);
     [toolBar addSubview:areaLabel];
 }
@@ -276,7 +278,8 @@
 
 - (void)irAlSiguienteViewController:(CustomButton*)sender{
     hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText=@"Loading";
+    NSString *loadingText=NSLocalizedString(@"Cargando", nil);
+    hud.labelText=loadingText;
     [self performSelector:@selector(delayedAction:) withObject:sender afterDelay:0.2];
 }
 -(void)delayedAction:(CustomButton*)sender{

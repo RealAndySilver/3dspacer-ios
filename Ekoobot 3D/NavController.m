@@ -3,7 +3,7 @@
 //  Ekoobot 3D
 //
 //  Created by Andrés Abril on 25/09/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "NavController.h"

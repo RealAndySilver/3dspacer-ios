@@ -3,7 +3,7 @@
 //  Ekoobot 3D
 //
 //  Created by Andres Abril on 4/07/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "ProgressView.h"
@@ -41,7 +41,7 @@
     UILabel *loadingLabel=[[UILabel alloc]init];
     loadingLabel.frame=CGRectMake(0, 500, 500, 20);
     loadingLabel.center=CGPointMake(self.frame.size.width/2, self.frame.size.height/2+170);
-    loadingLabel.text=@"SU PROYECTO SE ESTÁ DESCARGANDO, POR FAVOR ESPERE";
+    loadingLabel.text=NSLocalizedString(@"DescargandoProyecto", nil);
     loadingLabel.font=[UIFont boldSystemFontOfSize:16];
     loadingLabel.backgroundColor=[UIColor clearColor];
     loadingLabel.textColor=[UIColor grayColor];

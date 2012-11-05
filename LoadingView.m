@@ -3,7 +3,7 @@
 //  Ekoobot 3D
 //
 //  Created by Andres Abril on 12/07/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "LoadingView.h"
@@ -35,7 +35,7 @@
     button.alpha=0;
     loading=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 30)];
     loading.center=CGPointMake(self.frame.size.width/2,self.frame.size.height/2);
-    loading.text=@"loading";
+    loading.text=NSLocalizedString(@"Cargando", nil);
     loading.backgroundColor=[UIColor clearColor];
     loading.textColor=[UIColor whiteColor];
     loading.textAlignment=UITextAlignmentCenter;
@@ -61,7 +61,7 @@
     [spinner stopAnimating];
 }
 -(void)threadTo1:(NSString*)string{
-    loading.text=[NSString stringWithFormat:@"Loading %@",string];
+    loading.text=[NSString stringWithFormat:@"%@ %@",NSLocalizedString(@"Cargando", nil),string];
     [spinner startAnimating];
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];

@@ -2,8 +2,8 @@
 //  Proyecto.m
 //  Ekoobot 3D
 //
-//  Created by Andres David Carreño on 4/17/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Created by Andres Abril on 4/17/12.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "Proyecto.h"
@@ -12,7 +12,7 @@
 
 @synthesize idProyecto,nombre;
 @synthesize logo,imagen;
-@synthesize urbanismo,imagenUrbanismo,edificio,arrayItemsUrbanismo,actualizado,arrayAdjuntos;
+@synthesize urbanismo,imagenUrbanismo,edificio,arrayItemsUrbanismo,actualizado,arrayAdjuntos,peso;
 
 - (id)init{
     if (self=[super init]) {
@@ -24,6 +24,7 @@
         edificio = @"";
         imagenUrbanismo = @"";
         actualizado=@"";
+        peso=@"";
         arrayItemsUrbanismo = [[NSMutableArray alloc]init];
         arrayAdjuntos = [[NSMutableArray alloc]init];
 
@@ -37,6 +38,7 @@
     logo = [dictionary objectForKey:@"logo"];
     imagen = [dictionary objectForKey:@"imagen"];
     actualizado = [dictionary objectForKey:@"actualizado"];
+    peso=[dictionary objectForKey:@"peso"];
     ItemUrbanismo *itemUrbanismo=[[ItemUrbanismo alloc]init];
     itemUrbanismo = [itemUrbanismo initWithDictionary:[dictionary objectForKey:@"planta_urbana"]];
     [arrayItemsUrbanismo addObject:itemUrbanismo];

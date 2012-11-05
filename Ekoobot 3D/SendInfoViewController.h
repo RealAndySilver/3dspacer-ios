@@ -3,13 +3,14 @@
 //  Ekoobot 3D
 //
 //  Created by Andres Abril on 17/10/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "ServerCommunicator.h"
 #import "FileSaver.h"
 #import "Usuario.h"
+#import "NavController.h"
 @interface SendInfoViewController : UIViewController<UIAlertViewDelegate,UITextFieldDelegate,UITextViewDelegate>{
     ServerCommunicator *server;
     IBOutlet UILabel *tituloProyectoLabel;

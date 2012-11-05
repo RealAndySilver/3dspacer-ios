@@ -3,7 +3,7 @@
 //  Ekoobot 3D
 //
 //  Created by Andres Abril on 17/10/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "TermsViewController.h"
@@ -27,6 +27,7 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     rVC=VC;
+    textView.text=usuario.terminos;
 	// Do any additional setup after loading the view.
 }
 
@@ -37,7 +38,7 @@
 #pragma mark actions
 -(IBAction)accept:(id)sender{
     hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText=@"Loading";
+    hud.labelText=NSLocalizedString(@"Cargando", nil);
     [self performSelector:@selector(go:) withObject:sender afterDelay:0.1];
     }
 -(void)go:(id)sender{

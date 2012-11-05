@@ -3,7 +3,7 @@
 //  Ekoobot 3D
 //
 //  Created by Andres Abril on 17/10/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "SendInfoViewController.h"
@@ -35,8 +35,7 @@
         methodName=@"sendSuggest";
         self.navigationItem.title=@"Recomendar Proyecto";
     }
-    
-    
+
     nombreTF.delegate=self;
     emailTF.delegate=self;
     comentarioTV.delegate=self;
@@ -91,17 +90,17 @@
                     [server callServerWithMethod:@"" andParameter:params];
                 }
                 else{
-                    UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Debe agregar un comentario." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                    UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:NSLocalizedString(@"AgregarComentario", nil) delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                     [alert show];
                 }
             }
             else{
-                UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Debe ingresar un correo electrónico." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:NSLocalizedString(@"AgregarEmail", nil) delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                 [alert show];
             }
         }
         else{
-            UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Debe ingresar un nombre." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:NSLocalizedString(@"AgregarNombre", nil) delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
             [alert show];
         }
     }
@@ -110,10 +109,10 @@
     [self customLogoutAlert];
 }
 - (void)customLogoutAlert{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cancelar Envío"
-                                                    message:@"¿Está seguro que desea cancelar?\nEl proyecto no será enviado."
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"CancelarEnvio", nil)
+                                                    message:NSLocalizedString(@"CancelarEnvioSeguro", nil)
                                                    delegate:self
-                                          cancelButtonTitle:@"Cancelar"
+                                          cancelButtonTitle:NSLocalizedString(@"Cancelar", nil)
                                           otherButtonTitles:@"OK",nil];
     [alert show];
 }
@@ -137,8 +136,8 @@
     NSString *tempMethod=[NSString stringWithFormat:@"ns1:%@Response",methodName];
     NSString *response=[[server.resDic objectForKey:tempMethod]objectForKey:@"return"];
     if ([response isEqualToString:@"success"]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Proyecto Enviado"
-                                                        message:@"Su proyecto ha sido enviado con éxito."
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ProyectoEnviado", nil)
+                                                        message:NSLocalizedString(@"ProyectoEnviadoExito", nil)
                                                        delegate:self
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil,nil];
@@ -153,9 +152,9 @@
 }
 -(void)errorAlert{
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                    message:@"Su proyecto no pudo ser enviado.\nPor favor intente de nuevo."
+                                                    message:NSLocalizedString(@"ProyectoEnviadoNOExito", nil)
                                                    delegate:nil
-                                          cancelButtonTitle:@"Cancelar"
+                                          cancelButtonTitle:NSLocalizedString(@"Cancelar", nil)
                                           otherButtonTitles:nil,nil];
     [alert show];
 }
@@ -195,5 +194,12 @@
     [nombreTF resignFirstResponder];
     [emailTF resignFirstResponder];
     [comentarioTV resignFirstResponder];
+}
+#pragma mark rotation
+-(BOOL)shouldAutorotate{
+    return YES;
+}
+-(NSUInteger)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskLandscape;
 }
 @end

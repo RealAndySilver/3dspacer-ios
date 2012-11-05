@@ -2,8 +2,8 @@
 //  PlantaUrbanaGeneralVC.m
 //  Ekoobot 3D
 //
-//  Created by Andres David Carreño on 4/19/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Created by Andres Abril on 4/19/12.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "PlantaUrbanaVC.h"
@@ -217,7 +217,7 @@
 
 -(void)irAlSiguienteViewController:(UIButton*)sender{
     hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText=@"Loading";
+    hud.labelText=NSLocalizedString(@"Cargando", nil);
     [self performSelector:@selector(delayedAction:) withObject:sender afterDelay:0.3];
         
     //NSLog(@"hecho por acá");

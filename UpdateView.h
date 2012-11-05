@@ -3,7 +3,7 @@
 //  Ekoobot 3D
 //
 //  Created by Andres Abril on 8/10/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -14,6 +14,8 @@
 @property(nonatomic,retain)UILabel *titleText;
 @property(nonatomic,retain)UILabel *updateText;
 @property(nonatomic,retain)UIButton *infoButton;
+@property(nonatomic,retain)UIButton *pesoProyecto;
+
 
 
 @end

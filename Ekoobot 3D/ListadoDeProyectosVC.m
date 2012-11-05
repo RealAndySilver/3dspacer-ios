@@ -2,8 +2,8 @@
 //  SecondViewController.m
 //  Ekoobot 3D
 //
-//  Created by Andres David Carreño on 4/17/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Created by Andres Abril on 4/17/12.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "ListadoDeProyectosVC.h"
@@ -32,7 +32,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLabelWithTag:) name:@"updates" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertViewAppear) name:@"alert" object:nil];
 
-    UIBarButtonItem *logout = [[UIBarButtonItem alloc] initWithTitle:@"Logout"
+    UIBarButtonItem *logout = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CerrarSesion", nil)
                                                                style:UIBarButtonItemStylePlain 
                                                               target:self 
                                                               action:@selector(customLogoutAlert)];   
@@ -82,10 +82,13 @@
 }
 
 - (void)customLogoutAlert{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cerrar Sesión" 
-                                                    message:@"¿Está seguro que desea cerrar sesión?" 
+    NSString *title=NSLocalizedString(@"CerrarSesion", nil);
+    NSString *message=NSLocalizedString(@"CerrarSesionSeguro", nil);
+    NSString *cancel=NSLocalizedString(@"Cancelar", nil);;
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:message
                                                    delegate:self 
-                                          cancelButtonTitle:@"Cancelar"
+                                          cancelButtonTitle:cancel
                                           otherButtonTitles:@"OK",nil];
     [alert show];
 }
@@ -199,6 +202,7 @@
                 [player setTitle:@"" forState:UIControlStateNormal];
                 player.adjunto=adjunto;
                 player.extraContent=proyecto;
+                //[player setImage:[UIImage imageNamed:@"thumb.jpeg"] forState:UIControlStateNormal];
                 [player addTarget:self action:@selector(callVideo:) forControlEvents:UIControlEventTouchUpInside];
                 [pg3 addSubview:player];
                 
@@ -362,9 +366,10 @@
     FileSaver *file=[[FileSaver alloc]init];
     NSString *composedTag=[NSString stringWithFormat:@"%i%@",tag,proyecto.idProyecto];
     if ([file getUpdateFileWithString:composedTag]) {
-        updateBox.updateText.text=[NSString stringWithFormat:@"Actualizado el: %@",[file getUpdateFileWithString:composedTag]];
+        NSString *actualizadoEl=NSLocalizedString(@"ActualizadoEl", nil);
+        updateBox.updateText.text=[NSString stringWithFormat:@"%@ %@",actualizadoEl,[file getUpdateFileWithString:composedTag]];
         if (![proyecto.actualizado isEqualToString:[file getUpdateFileWithString:composedTag]]) {
-            updateBox.titleText.text=@"Hay una neva versión";
+            updateBox.titleText.text=NSLocalizedString(@"NuevaVersion", nil);
             updateBox.titleText.textColor=[UIColor redColor];
             updateBox.titleText.tag=tag+1100;
             updateBox.container.alpha=1;
@@ -372,7 +377,7 @@
         }
         else{
             updateBox.titleText.backgroundColor=[UIColor clearColor];
-            updateBox.titleText.text=@"Tienes la última versión";
+            updateBox.titleText.text=NSLocalizedString(@"UltimaVersion", nil);
             updateBox.titleText.textColor=[UIColor greenColor];
             updateBox.titleText.tag=tag+1100;
             updateBox.updateText.textColor=[UIColor whiteColor];
@@ -384,6 +389,9 @@
     }
     else{
         updateBox.container.alpha=0;
+        updateBox.titleText.text=NSLocalizedString(@"Descarga", nil);
+        NSString *peso=NSLocalizedString(@"Peso", nil);
+        updateBox.updateText.text=[NSString stringWithFormat:@"%@ %@",peso,proyecto.peso];
     }
     [view bringSubviewToFront:updateBox];
 }
@@ -399,7 +407,8 @@
     if ([file getUpdateFileWithString:composedTag]) {
         UpdateView *updateBox = (UpdateView *)[scrollView viewWithTag:[number intValue]+250];
         NSLog(@"number li tag----> %i %@",updateBox.tag,updateBox.updateText);
-        updateBox.updateText.text=[NSString stringWithFormat:@"Actualizado el: %@",[file getUpdateFileWithString:composedTag]];
+        NSString *actualizadoEl=NSLocalizedString(@"ActualizadoEl", nil);
+        updateBox.updateText.text=[NSString stringWithFormat:@"%@ %@",actualizadoEl,[file getUpdateFileWithString:composedTag]];
         updateBox.container.alpha=0;
         updateBox.titleText.textColor=[UIColor whiteColor];
         UIButton *button = (UIButton *)[scrollView viewWithTag:[number intValue]+1000];
@@ -407,7 +416,7 @@
         //NSLog(@"Updated %@ %@",number,[file getUpdateFile:[number intValue]]);
         
         [self irAlSiguienteViewController:button];
-        updateBox.titleText.text=[NSString stringWithFormat:@"Tienes la última versión"];
+        updateBox.titleText.text=[NSString stringWithFormat:NSLocalizedString(@"UltimaVersion", nil)];
         updateBox.titleText.textColor=[UIColor greenColor];
     }
 }
@@ -416,7 +425,7 @@
 
 - (void)irAlSiguienteViewController:(UIButton*)sender{
     hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText=@"Loading";
+    hud.labelText=NSLocalizedString(@"Cargando", nil);
     [self performSelector:@selector(delayedAction:) withObject:sender afterDelay:0.3];    
 }
 -(void)delayedAction:(UIButton*)sender{
@@ -466,7 +475,8 @@
 }
 
 -(void)alertViewAppear{
-    UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Error al descargar el proyecto. Por favor intente de nuevo." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    NSString *message=NSLocalizedString(@"ErrorDescarga", nil);
+    UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
     [alert show];
 }
 -(void)sendInfo:(SendInfoButton*)sender{

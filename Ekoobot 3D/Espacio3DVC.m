@@ -2,8 +2,8 @@
 //  Espacio3DVC.m
 //  Ekoobot 3D
 //
-//  Created by Andres David Carreño on 6/21/12.
-//  Copyright (c) 2012 Ekoomedia. All rights reserved.
+//  Created by Andres Abril on 6/21/12.
+//  Copyright (c) 2012 iAmStudio SAS. All rights reserved.
 //
 
 #import "Espacio3DVC.h"
@@ -96,7 +96,7 @@
     //[self viewInferior];
     pastTag=-1;
     threeD=YES;
-    self.navigationItem.title=@"Espacio 3D";
+    self.navigationItem.title=NSLocalizedString(@"Espacio3D", nil);
     Caras *face=[espacio3D.arrayCaras objectAtIndex:0];
     [self checkIfDownloadedWithFace:face];
     face.atras=[self pathForResourceWithName:@"Atras" andFace:face ID:face.idAtras];
@@ -108,7 +108,7 @@
     view3D=[[OpenGLView alloc]initWithFrame:glFrame andFaces:face andContext:self];
     [self.view addSubview:view3D];
     [self.view bringSubviewToFront:lowerView];
-    rightButton = [[UIBarButtonItem alloc] initWithTitle:@"touch " style:UIBarButtonItemStylePlain target:self action:@selector(navButtonAction:)];
+    rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Toque", nil) style:UIBarButtonItemStylePlain target:self action:@selector(navButtonAction:)];
     self.navigationItem.rightBarButtonItem = rightButton;
     //[loading setViewAlphaToCero];
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleView:)];
@@ -131,13 +131,13 @@
 }
 -(void)navButtonAction:(UIButton*)sender{
     if (threeD) {
-        rightButton.title=@"3D ";
+        rightButton.title=NSLocalizedString(@"3D", nil);
         [view3D cambiarToquePorMotion:sender];
         threeD=NO;
         return;
     }
     else{
-        rightButton.title=@"touch ";
+        rightButton.title=NSLocalizedString(@"Toque", nil);
         [view3D cambiarToquePorMotion:sender];
         threeD=YES;
         return;

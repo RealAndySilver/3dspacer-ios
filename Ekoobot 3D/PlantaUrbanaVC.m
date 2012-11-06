@@ -26,7 +26,7 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    self.navigationItem.title = @"Planta Urbana";
+    self.navigationItem.title = NSLocalizedString(@"PlantaUrbana", nil);
     maximumZoomScale=2.0;
     minimumZoomScale=0.3;
     [spinner startAnimating];

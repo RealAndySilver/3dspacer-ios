@@ -11,6 +11,8 @@
 "CerrarSesionSeguro"="¿Está seguro que desea cerrar sesión?";
 "Cancelar"="Cancelar";
 
+"PlantaUrbana"="Planta Urbana";
+
 "CancelarEnvio"="Cancelar Envío";
 "CancelarEnvioSeguro"="¿Está seguro que desea cancelar?\nEl proyecto no será enviado.";
 "ProyectoEnviado"="Proyecto enviado.";

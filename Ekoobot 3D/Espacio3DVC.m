@@ -87,6 +87,7 @@
     compassPlaceholder.layer.shadowOffset = CGSizeMake(0, -1);
     compassPlaceholder.layer.shadowOpacity = 0;
     compassPlaceholder.layer.shadowColor = [UIColor blackColor].CGColor;
+    [compassPlaceholder setUserInteractionEnabled:YES];
     
     
     flag=NO;
@@ -121,11 +122,22 @@
     [doubleTap setNumberOfTouchesRequired:1];
     [view3D addGestureRecognizer:doubleTap];
     
+    UITapGestureRecognizer *compassTap = [[UITapGestureRecognizer alloc] initWithTarget:view3D action:@selector(compassFlag)];
+    [compassTap setNumberOfTapsRequired:1];
+    [compassTap setNumberOfTouchesRequired:1];
+    [compassPlaceholder addGestureRecognizer:compassTap];
+    
+    
     [singleTap requireGestureRecognizerToFail:doubleTap];
+    
+    
+    
+    
     [self.view addSubview:compassPlaceholder];
 
     [self toggleView:nil];
 }
+
 - (void)viewWillAppear:(BOOL)animated{
     [self start];
 }

@@ -102,6 +102,8 @@
     CGPoint oldPoint;
     BOOL imageViewTouched;
     
+    BOOL compassTouched;
+    
 }
 @property(nonatomic)BOOL leftRotated;
 @property(nonatomic)GLuint _backTexture;
@@ -118,4 +120,5 @@
 -(void)deleteTextures;
 -(void)cambiarToquePorMotion:(UIButton*)button;
 -(void)zoom;
+-(void)compassFlag;
 @end

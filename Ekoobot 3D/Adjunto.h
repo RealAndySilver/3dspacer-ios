@@ -14,6 +14,8 @@
 @property(nonatomic,retain)NSString *ID;
 @property(nonatomic,retain)NSString *nombre;
 @property(nonatomic,retain)NSString *tipo;
+@property(nonatomic,retain)NSString *thumb;
+
 
 - (id)initWithDictionary:(NSDictionary*)dictionary;
 @end

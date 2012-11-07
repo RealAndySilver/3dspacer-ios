@@ -9,7 +9,7 @@
 #import "Adjunto.h"
 
 @implementation Adjunto
-@synthesize actualizado,imagen,nombre,tipo,ID;
+@synthesize actualizado,imagen,nombre,tipo,ID,thumb;
 - (id)init{
     if (self=[super init]) {
         ID = @"";
@@ -17,6 +17,7 @@
         imagen = @"";
         actualizado = @"";
         tipo = @"";
+        thumb=@"";
     }
     return self;
 }
@@ -27,6 +28,11 @@
     ID = [dictionary objectForKey:@"id"];
     imagen = [dictionary objectForKey:@"archivo"];
     tipo = [dictionary objectForKey:@"tipo"];
+    if ([[dictionary objectForKey:@"extra"]isKindOfClass:[NSString class]]) {
+        thumb = [dictionary objectForKey:@"extra"];
+        NSLog(@"Thumb is %@",thumb);
+    }
+
     return self;
 }
 @end

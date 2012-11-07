@@ -21,6 +21,8 @@
 -(NSString *)getUpdateFileWithString:(NSString*)tag;
 -(void)setUpdateFile:(NSString*)name date:(NSString*)date andTag:(int)tag;
 -(void)setUpdateFile:(NSString*)name date:(NSString*)date andTag:(int)tag andId:(NSString*)ID;
+-(void)setLastUserName:(NSString*)name andPassword:(NSString*)password;
+-(NSDictionary*)getLastUserNameAndPassword;
 
 -(NSString*)getNombre;
 -(NSString*)getPassword;

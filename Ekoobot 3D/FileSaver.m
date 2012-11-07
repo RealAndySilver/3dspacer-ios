@@ -131,4 +131,21 @@
 -(NSString*)getPassword{
     return [datos objectForKey:@"passwordLocal"];
 }
+
+-(void)setLastUserName:(NSString *)name andPassword:(NSString *)password{
+    NSMutableDictionary *newData = [datos mutableCopy];
+	[newData setObject:name forKey:@"name"];
+    [newData setObject:password forKey:@"password"];
+	datos = newData;
+	[self guardar];
+}
+-(NSDictionary *)getLastUserNameAndPassword{
+    NSMutableDictionary *dic=[[NSMutableDictionary alloc]init];
+    if ([[datos objectForKey:@"name"] isKindOfClass:[NSString class]]) {
+        [dic setObject:[datos objectForKey:@"name"] forKey:@"name"];
+        [dic setObject:[datos objectForKey:@"password"] forKey:@"password"];
+    }
+    return dic;
+}
+
 @end

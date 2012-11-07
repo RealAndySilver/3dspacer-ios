@@ -55,6 +55,7 @@
     label.layer.shadowRadius=0.5;
     [littleBoxView addSubview:label];
     [rotationSubView addSubview:littleBoxView];
+    
 }
 
 - (void)viewDidUnload{
@@ -65,8 +66,12 @@
     self.navigationController.navigationBarHidden= YES;
     loginButton.enabled=YES;
     spinner.alpha=0;
-    usuarioTF.text=NOMBREUSER;
-    passwordTF.text=PASSWORD;
+    //usuarioTF.text=NOMBREUSER;
+    //passwordTF.text=PASSWORD;
+    FileSaver *file=[[FileSaver alloc]init];
+    NSDictionary *loginDic=[file getLastUserNameAndPassword];
+    usuarioTF.text=[loginDic objectForKey:@"name"];
+    passwordTF.text=[loginDic objectForKey:@"password"];
     [self inicializarRootViewControllerConAnimaciones];
     keyboardIsMoved = NO;
     NavController *navController = (NavController *)self.navigationController;
@@ -223,6 +228,8 @@
                       password:passwordTF.text
                          andId:[[sc.resDic objectForKey:@"usuario"]objectForKey:@"id_usuario"]];
         
+        [fileSaver setLastUserName:usuarioTF.text andPassword:passwordTF.text];
+        
         usuario.usuario=usuarioTF.text;
         usuarioCopia.usuario=usuarioTF.text;
         usuario.contrasena=passwordTF.text;
@@ -271,6 +278,8 @@
         usuarioCopia.usuario=usuarioTF.text;
         usuario.contrasena=passwordTF.text;
         usuarioCopia.contrasena=passwordTF.text;
+        
+        [fileSaver setLastUserName:usuarioTF.text andPassword:passwordTF.text];
         
         if ([usuario.tipo isEqualToString:USERTYPE]) {
             TermsViewController *tVC=[[TermsViewController alloc]init];

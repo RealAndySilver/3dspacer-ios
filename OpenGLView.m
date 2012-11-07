@@ -318,7 +318,9 @@ const GLubyte IndicesBottom[] = {
                 
                 CGAffineTransform swingTransform = CGAffineTransformIdentity;
                 swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)]);
-                brujula.transform = swingTransform;
+                if (!compassTouched) {
+                    brujula.transform = swingTransform;
+                }
                 
                 xx=[self radiansToDegrees:attitude.roll];
                 yy=-[self radiansToDegrees:attitude.pitch];
@@ -333,7 +335,10 @@ const GLubyte IndicesBottom[] = {
                 
                 CGAffineTransform swingTransform = CGAffineTransformIdentity;
                 swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw-DegreesToRadians(180))]);
-                brujula.transform = swingTransform;
+                if (!compassTouched) {
+                    brujula.transform = swingTransform;
+                }
+                
                 xx=-[self radiansToDegrees:attitude.roll];
                 yy=-[self radiansToDegrees:attitude.pitch];
                 zz=-[self radiansToDegrees:attitude.yaw];
@@ -559,9 +564,21 @@ const GLubyte IndicesBottom[] = {
         [nvc.compassPlaceholder addSubview:brujula];
         NSLog(@"el view es %@",context);
         zoomFlag =YES;
+        compassTouched=NO;
     }
     
     return self;
+}
+-(void)compassFlag{
+    if (compassTouched) {
+        NSLog(@"Touched compass");
+        compassTouched=NO;
+        return;
+    }
+    else{
+        compassTouched=YES;
+        return;
+    }
 }
 -(void)cambiarToquePorMotion:(UIButton*)button{
     if (!isTouchEnabled) {
@@ -654,7 +671,9 @@ const GLubyte IndicesBottom[] = {
         startPoint = point;
         CGAffineTransform swingTransform = CGAffineTransformIdentity;
         swingTransform = CGAffineTransformRotate(swingTransform, DegreesToRadians(dyActualCamara));
-        //brujula.transform = swingTransform;
+        if (!compassTouched) {
+            brujula.transform = swingTransform;
+        }
     }
 }
 

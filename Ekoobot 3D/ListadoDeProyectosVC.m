@@ -202,7 +202,29 @@
                 [player setTitle:@"" forState:UIControlStateNormal];
                 player.adjunto=adjunto;
                 player.extraContent=proyecto;
-                //[player setImage:[UIImage imageNamed:@"thumb.jpeg"] forState:UIControlStateNormal];
+                
+                NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                NSString *jpegFilePath = [NSString stringWithFormat:@"%@/thumb%@%@",docDir,proyecto.idProyecto,[IAmCoder encodeURL:adjunto.thumb]];
+                BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
+                NSLog(@"file pathing %@",jpegFilePath);
+                if (fileExists) {
+                    NSLog(@"Pathing dont exist %@",adjunto.thumb);
+                    UIImage *thumbImage=[UIImage imageWithContentsOfFile:jpegFilePath];;
+                    [player setImage:thumbImage forState:UIControlStateNormal];
+                }
+                else{
+                    NSLog(@"Pathing exist");
+                    NSURL *urlImagen=[NSURL URLWithString:adjunto.thumb];
+                    NSData *data=[NSData dataWithContentsOfURL:urlImagen];
+                    UIImage *thumbImage = [UIImage imageWithData:data];
+                    NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(thumbImage, 1.0f)];//1.0f = 100% quality
+                    if (thumbImage) {
+                        [data2 writeToFile:jpegFilePath atomically:YES];
+                    }
+                    [player setImage:thumbImage forState:UIControlStateNormal];
+                }
+                
+                
                 [player addTarget:self action:@selector(callVideo:) forControlEvents:UIControlEventTouchUpInside];
                 [pg3 addSubview:player];
                 

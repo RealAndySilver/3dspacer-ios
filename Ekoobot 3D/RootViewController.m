@@ -29,8 +29,8 @@
     passwordTF.delegate=self;
     sc=[[ServerCommunicator alloc]init];    
     sc.caller=self;
-    littleBoxView=[[UIView alloc]initWithFrame:CGRectMake(infoButton.frame.origin.x+40, infoButton.frame.origin.y-90,200, 200)];
-    littleBoxView.backgroundColor=[UIColor underPageBackgroundColor];
+    littleBoxView=[[UIView alloc]initWithFrame:CGRectMake(infoButton.frame.origin.x+40, infoButton.frame.origin.y-10,200, 80)];
+    littleBoxView.backgroundColor=[UIColor viewFlipsideBackgroundColor];
     littleBoxView.layer.cornerRadius=10.0f;
     littleBoxView.layer.masksToBounds=YES;
     littleBoxView.alpha=0;
@@ -40,7 +40,8 @@
     littleBoxView.layer.shadowColor=[UIColor blackColor].CGColor;
     littleBoxView.layer.shadowOpacity = 1;
     littleBoxView.layer.shadowRadius=2;
-    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(10, 50, littleBoxView.frame.size.width-30, littleBoxView.frame.size.height/2)];
+    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, littleBoxView.frame.size.width-30, littleBoxView.frame.size.height)];
+    label.center=CGPointMake(littleBoxView.frame.size.width/2, littleBoxView.frame.size.height/2);
     label.numberOfLines=3;
     label.textAlignment=UITextAlignmentCenter;
     label.backgroundColor=[UIColor clearColor];

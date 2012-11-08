@@ -122,7 +122,7 @@
     [doubleTap setNumberOfTouchesRequired:1];
     [view3D addGestureRecognizer:doubleTap];
     
-    UITapGestureRecognizer *compassTap = [[UITapGestureRecognizer alloc] initWithTarget:view3D action:@selector(compassFlag)];
+    UITapGestureRecognizer *compassTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(compassTouch)];
     [compassTap setNumberOfTapsRequired:1];
     [compassTap setNumberOfTouchesRequired:1];
     [compassPlaceholder addGestureRecognizer:compassTap];
@@ -137,7 +137,15 @@
 
     [self toggleView:nil];
 }
-
+-(void)compassTouch{
+    [view3D compassFlag];
+    if (compassPlaceholder.alpha<1) {
+        compassPlaceholder.alpha=1;
+    }
+    else{
+        compassPlaceholder.alpha=0.4;
+    }
+}
 - (void)viewWillAppear:(BOOL)animated{
     [self start];
 }

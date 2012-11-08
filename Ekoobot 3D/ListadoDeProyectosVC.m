@@ -318,7 +318,7 @@
 
 - (void)insertarImagenBotonProyectoEnPagina:(UIView*)view conProyecto:(Proyecto*)proyecto yPosicion:(int)posicion{
     UIButton *boton = [[UIButton alloc]init];
-    UIImage *imageButton = [UIImage imageNamed:@"botonEntrar.png"];
+    UIImage *imageButton = [UIImage imageNamed:NSLocalizedString(@"BotonEntrar", nil)];
     [boton setImage:imageButton forState:UIControlStateNormal];
     boton.tag=posicion+3000;
     NSLog(@"Boton taggggg %i",boton.tag);

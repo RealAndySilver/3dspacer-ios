@@ -69,8 +69,6 @@
 		7574E81E16029F7300974D7B /* downloading.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7574E81D16029F7300974D7B /* downloading.jpg */; };
 		7574E8211602A12100974D7B /* downloadBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 7574E8201602A12100974D7B /* downloadBtn.png */; };
 		7574E8231602A16E00974D7B /* updateBox.png in Resources */ = {isa = PBXBuildFile; fileRef = 7574E8221602A16E00974D7B /* updateBox.png */; };
-		7574E8251602BBFB00974D7B /* icono.png in Resources */ = {isa = PBXBuildFile; fileRef = 7574E8241602BBFB00974D7B /* icono.png */; };
-		7574E8271602BC1000974D7B /* iconoSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = 7574E8261602BC1000974D7B /* iconoSmall.png */; };
 		757BEC02161B8325002B251A /* fondo.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 757BEC01161B8325002B251A /* fondo.jpeg */; };
 		757BEC04161B8736002B251A /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 757BEC03161B8736002B251A /* logo.png */; };
 		757BEC14161B89C9002B251A /* loginBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 757BEC13161B89C9002B251A /* loginBtn.png */; };
@@ -91,6 +89,11 @@
 		75D49A8215ED2FF000A4F6BA /* IAmCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 75D49A8115ED2FEF00A4F6BA /* IAmCoder.m */; };
 		75E69F74160404F3005907F6 /* EraseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E69F73160404F3005907F6 /* EraseViewController.m */; };
 		75E69F7616040622005907F6 /* bin.png in Resources */ = {isa = PBXBuildFile; fileRef = 75E69F7516040622005907F6 /* bin.png */; };
+		75E995BE164AABFE00C7452E /* botonEntrar-en.png in Resources */ = {isa = PBXBuildFile; fileRef = 75E995BD164AABFE00C7452E /* botonEntrar-en.png */; };
+		75E995C1164AAC6E00C7452E /* cancel-en.png in Resources */ = {isa = PBXBuildFile; fileRef = 75E995BF164AAC6E00C7452E /* cancel-en.png */; };
+		75E995C2164AAC6E00C7452E /* send-en.png in Resources */ = {isa = PBXBuildFile; fileRef = 75E995C0164AAC6E00C7452E /* send-en.png */; };
+		75E995D9164AEBBC00C7452E /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 75E995D8164AEBBC00C7452E /* icon.png */; };
+		75E995DB164AEBC000C7452E /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 75E995DA164AEBC000C7452E /* icon@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -203,8 +206,6 @@
 		7574E81D16029F7300974D7B /* downloading.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = downloading.jpg; sourceTree = "<group>"; };
 		7574E8201602A12100974D7B /* downloadBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = downloadBtn.png; sourceTree = "<group>"; };
 		7574E8221602A16E00974D7B /* updateBox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = updateBox.png; sourceTree = "<group>"; };
-		7574E8241602BBFB00974D7B /* icono.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icono.png; sourceTree = "<group>"; };
-		7574E8261602BC1000974D7B /* iconoSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iconoSmall.png; sourceTree = "<group>"; };
 		757BEC01161B8325002B251A /* fondo.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = fondo.jpeg; sourceTree = "<group>"; };
 		757BEC03161B8736002B251A /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		757BEC13161B89C9002B251A /* loginBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = loginBtn.png; sourceTree = "<group>"; };
@@ -237,6 +238,11 @@
 		75E69F72160404F3005907F6 /* EraseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EraseViewController.h; sourceTree = "<group>"; };
 		75E69F73160404F3005907F6 /* EraseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EraseViewController.m; sourceTree = "<group>"; };
 		75E69F7516040622005907F6 /* bin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bin.png; sourceTree = "<group>"; };
+		75E995BD164AABFE00C7452E /* botonEntrar-en.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "botonEntrar-en.png"; sourceTree = "<group>"; };
+		75E995BF164AAC6E00C7452E /* cancel-en.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cancel-en.png"; sourceTree = "<group>"; };
+		75E995C0164AAC6E00C7452E /* send-en.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "send-en.png"; sourceTree = "<group>"; };
+		75E995D8164AEBBC00C7452E /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		75E995DA164AEBC000C7452E /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -317,12 +323,12 @@
 		37E98A2A153E0D70001B9BFE = {
 			isa = PBXGroup;
 			children = (
+				75E995DA164AEBC000C7452E /* icon@2x.png */,
+				75E995D8164AEBBC00C7452E /* icon.png */,
 				7595184C16360C0300336C0A /* Default-Portrait~ipad.png */,
 				7595184A16360BE700336C0A /* Default-Landscape~ipad.png */,
 				7595184816360BCA00336C0A /* Default-Portrait@2x~ipad.png */,
 				7595184416360B8900336C0A /* Default-Landscape@2x~ipad.png */,
-				7574E8261602BC1000974D7B /* iconoSmall.png */,
-				7574E8241602BBFB00974D7B /* icono.png */,
 				37E98A3F153E0D70001B9BFE /* Ekoobot 3D */,
 				37E98A40153E0D70001B9BFE /* Supporting Files */,
 				37E98A6B153E0D71001B9BFE /* Ekoobot 3DTests */,
@@ -498,6 +504,8 @@
 		37F1EBF71541D65D00426C48 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				75E995BF164AAC6E00C7452E /* cancel-en.png */,
+				75E995C0164AAC6E00C7452E /* send-en.png */,
 				755233AE163B446A00D541DB /* brujula.png */,
 				755233AC163B3A8F00D541DB /* cancel.png */,
 				755233A4163AF21800D541DB /* enviar.png */,
@@ -513,6 +521,7 @@
 				757BEC03161B8736002B251A /* logo.png */,
 				757BEC01161B8325002B251A /* fondo.jpeg */,
 				7589BB35161CF32D0027453E /* botonEntrar.png */,
+				75E995BD164AABFE00C7452E /* botonEntrar-en.png */,
 				7574E8221602A16E00974D7B /* updateBox.png */,
 			);
 			name = Resources;
@@ -638,8 +647,6 @@
 				7574E81E16029F7300974D7B /* downloading.jpg in Resources */,
 				7574E8211602A12100974D7B /* downloadBtn.png in Resources */,
 				7574E8231602A16E00974D7B /* updateBox.png in Resources */,
-				7574E8251602BBFB00974D7B /* icono.png in Resources */,
-				7574E8271602BC1000974D7B /* iconoSmall.png in Resources */,
 				75E69F7616040622005907F6 /* bin.png in Resources */,
 				757BEC02161B8325002B251A /* fondo.jpeg in Resources */,
 				757BEC04161B8736002B251A /* logo.png in Resources */,
@@ -658,6 +665,11 @@
 				755233AD163B3A8F00D541DB /* cancel.png in Resources */,
 				755233AF163B446A00D541DB /* brujula.png in Resources */,
 				75879A2B1648523A00020A2B /* Localizable.strings in Resources */,
+				75E995BE164AABFE00C7452E /* botonEntrar-en.png in Resources */,
+				75E995C1164AAC6E00C7452E /* cancel-en.png in Resources */,
+				75E995C2164AAC6E00C7452E /* send-en.png in Resources */,
+				75E995D9164AEBBC00C7452E /* icon.png in Resources */,
+				75E995DB164AEBC000C7452E /* icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -868,8 +880,8 @@
 				INFOPLIST_FILE = "Ekoobot 3D/Ekoobot 3D-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B6DA6EC2-A47F-438F-A457-382647ECFBC3";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B6DA6EC2-A47F-438F-A457-382647ECFBC3";
+				PROVISIONING_PROFILE = "9AF61719-AE9B-44C5-A8DA-34633F1AD949";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9AF61719-AE9B-44C5-A8DA-34633F1AD949";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -885,8 +897,8 @@
 				INFOPLIST_FILE = "Ekoobot 3D/Ekoobot 3D-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B6DA6EC2-A47F-438F-A457-382647ECFBC3";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B6DA6EC2-A47F-438F-A457-382647ECFBC3";
+				PROVISIONING_PROFILE = "9AF61719-AE9B-44C5-A8DA-34633F1AD949";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9AF61719-AE9B-44C5-A8DA-34633F1AD949";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -926,6 +938,64 @@
 			};
 			name = Release;
 		};
+		75E995DC164AF28000C7452E /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ekoomedia Ltda.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ekoomedia Ltda.";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "69827DA8-59C3-47D7-A804-6278B1CF7560";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "69827DA8-59C3-47D7-A804-6278B1CF7560";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Distribution;
+		};
+		75E995DD164AF28000C7452E /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer: Andres Abril (SG2KB3SDCR)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Andres Abril (SG2KB3SDCR)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Ekoobot 3D/Ekoobot 3D-Prefix.pch";
+				INFOPLIST_FILE = "Ekoobot 3D/Ekoobot 3D-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "9AF61719-AE9B-44C5-A8DA-34633F1AD949";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9AF61719-AE9B-44C5-A8DA-34633F1AD949";
+				TARGETED_DEVICE_FAMILY = 2;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Distribution;
+		};
+		75E995DE164AF28000C7452E /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Ekoobot 3D.app/Ekoobot 3D";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Ekoobot 3D/Ekoobot 3D-Prefix.pch";
+				INFOPLIST_FILE = "Ekoobot 3DTests/Ekoobot 3DTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Distribution;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -934,6 +1004,7 @@
 			buildConfigurations = (
 				37E98A74153E0D71001B9BFE /* Debug */,
 				37E98A75153E0D71001B9BFE /* Release */,
+				75E995DC164AF28000C7452E /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -943,6 +1014,7 @@
 			buildConfigurations = (
 				37E98A77153E0D71001B9BFE /* Debug */,
 				37E98A78153E0D71001B9BFE /* Release */,
+				75E995DD164AF28000C7452E /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -952,6 +1024,7 @@
 			buildConfigurations = (
 				37E98A7A153E0D71001B9BFE /* Debug */,
 				37E98A7B153E0D71001B9BFE /* Release */,
+				75E995DE164AF28000C7452E /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

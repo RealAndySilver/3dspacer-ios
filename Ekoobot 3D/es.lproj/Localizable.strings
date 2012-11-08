@@ -5,7 +5,7 @@
   Created by Andres Abril on 5/11/12.
   Copyright (c) 2012 Ekoomedia. All rights reserved.
 */
-"CreadoPor"="Creado por Ekoomedia Ltda. ©2012 Ekoobot 3D.";
+"CreadoPor"="Creado por:\nEkoomedia Ltda.\n©2012 Ekoobot 3D.";
 "LoginError"="Nombre de usuario o contraseña incorrectos";
 "CerrarSesion"="Cerrar Sesión";
 "CerrarSesionSeguro"="¿Está seguro que desea cerrar sesión?";
@@ -23,7 +23,7 @@
 "NuevaVersion"="Hay una nueva versión";
 "UltimaVersion"="Tienes la última versión";
 "Descarga"="Descarga el proyecto para visualizar";
-"Peso"="Peso:";
+"Peso"="Tamaño:";
 "ErrorDescarga"="Error al descargar el proyecto. Por favor intente de nuevo.";
 
 "Cargando"="Cargando";
@@ -40,3 +40,5 @@
 "Espacio3D"="Espacio 3D";
 "Toque"="Toque ";
 "3D"="3D ";
+
+"BotonEntrar"="botonEntrar.png";

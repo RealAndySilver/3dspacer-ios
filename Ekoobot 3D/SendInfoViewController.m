@@ -42,6 +42,9 @@
     server=[[ServerCommunicator alloc]init];
     server.caller=self;
     tituloProyectoLabel.text=nombreProyecto;
+    NSString *langID = [[NSLocale preferredLanguages] objectAtIndex:0];
+    lang = [[NSLocale currentLocale] displayNameForKey:NSLocaleLanguageCode value:langID];
+    NSLog(@"Language is %@",lang);
 	// Do any additional setup after loading the view.
 }
 -(void)viewWillAppear:(BOOL)animated{
@@ -62,7 +65,7 @@
             if (![emailTF.text isEqualToString:@""]) {
                 if (![comentarioTV.text isEqualToString:@""]) {
                     NSLog(@"Usuario :%@ \nContrasena : %@",usuario,contrasena);
-                    NSString *params=[NSString stringWithFormat:@"<ns:setRegister><username>%@</username><password>%@</password><register><name>%@</name><email>%@</email><comments>%@</comments><project>%@</project></register></ns:setRegister>",usuario,contrasena,nombreTF.text,emailTF.text,comentarioTV.text,proyectoID];
+                    NSString *params=[NSString stringWithFormat:@"<ns:setRegister><username>%@</username><password>%@</password><language>%@</language><register><name>%@</name><email>%@</email><comments>%@</comments><project>%@</project></register></ns:setRegister>",usuario,contrasena,lang,nombreTF.text,emailTF.text,comentarioTV.text,proyectoID];
                     [server callServerWithMethod:@"" andParameter:params];
                     [self resignKeyboard];
                 }
@@ -86,7 +89,7 @@
             if (![emailTF.text isEqualToString:@""]) {
                 if (![comentarioTV.text isEqualToString:@""]) {
                     NSLog(@"Usuario :%@ \nContrasena : %@",usuario,contrasena);
-                    NSString *params=[NSString stringWithFormat:@"<ns:sendSuggest><username>%@</username><password>%@</password><register><name>%@</name><email>%@</email><comments>%@</comments><project>%@</project></register></ns:sendSuggest>",usuario,contrasena,nombreTF.text,emailTF.text,comentarioTV.text,proyectoID];
+                    NSString *params=[NSString stringWithFormat:@"<ns:sendSuggest><username>%@</username><password>%@</password> <language>%@</language><register><name>%@</name><email>%@</email><comments>%@</comments><project>%@</project></register></ns:sendSuggest>",usuario,contrasena,lang,nombreTF.text,emailTF.text,comentarioTV.text,proyectoID];
                     [server callServerWithMethod:@"" andParameter:params];
                 }
                 else{

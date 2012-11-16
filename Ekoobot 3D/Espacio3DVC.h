@@ -34,6 +34,7 @@
     int initialTag;
     UIScrollView *lowerScroll;
     UIImageView *compassPlaceholder;
+    UIImageView *compassOn;
     
 }
 @property (nonatomic,retain)Espacio3D *espacio3D;

@@ -88,6 +88,10 @@
     compassPlaceholder.layer.shadowOpacity = 0;
     compassPlaceholder.layer.shadowColor = [UIColor blackColor].CGColor;
     [compassPlaceholder setUserInteractionEnabled:YES];
+    compassOn=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"compassOn.png"]];
+    compassOn.frame=CGRectMake(0, 0, lowerView.frame.size.height/2, lowerView.frame.size.height/2);
+    compassOn.alpha=0;
+    [compassPlaceholder addSubview:compassOn];
     
     
     flag=NO;
@@ -138,12 +142,15 @@
     [self toggleView:nil];
 }
 -(void)compassTouch{
+    [compassPlaceholder bringSubviewToFront:compassOn];
     [view3D compassFlag];
     if (compassPlaceholder.alpha<1) {
         compassPlaceholder.alpha=1;
+        compassOn.alpha=0;
     }
     else{
-        compassPlaceholder.alpha=0.4;
+        compassPlaceholder.alpha=0.9;
+        compassOn.alpha=1;
     }
 }
 - (void)viewWillAppear:(BOOL)animated{

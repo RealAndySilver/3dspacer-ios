@@ -47,7 +47,9 @@
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
 	theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
-	dictionary = [[NSDictionary alloc]init];
+	NSString *str=[[NSString alloc]initWithData:theRequest.HTTPBody encoding:NSUTF8StringEncoding];
+    NSLog(@"Request %@",str);
+    dictionary = [[NSDictionary alloc]init];
 	if(theConnection) {
 		webData = [NSMutableData data];
 	}

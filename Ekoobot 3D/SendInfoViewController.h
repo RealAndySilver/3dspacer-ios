@@ -24,6 +24,7 @@
     CGRect finalFrame;
     NSString *methodName;
     BOOL touchFlag;
+    NSString *lang;
 }
 @property(nonatomic,retain)NSString *nombreProyecto,*usuario,*contrasena,*proyectoID;
 @property(nonatomic,retain)Usuario *currentUser;

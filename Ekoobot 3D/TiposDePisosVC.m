@@ -163,7 +163,7 @@
     return (UIImageView *)[scrollView viewWithTag:self.pageCon.currentPage+2000];
 }
 -(UIImageView*)insertarImagenProyectoEnPagina:(UIView*)view conTipoPiso:(TipoDePiso*)tipoPiso{
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/tipoDePiso%@.jpeg",docDir,tipoPiso.idTipoPiso];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     if (!fileExists) {

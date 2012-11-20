@@ -56,7 +56,8 @@
     label.layer.shadowRadius=0.5;
     [littleBoxView addSubview:label];
     [rotationSubView addSubview:littleBoxView];
-    
+    NSString *langID = [[NSLocale preferredLanguages] objectAtIndex:0];
+    lang = [[NSLocale currentLocale] displayNameForKey:NSLocaleLanguageCode value:langID];
 }
 
 - (void)viewDidUnload{
@@ -160,7 +161,7 @@
         [self.navigationController pushViewController:eVC animated:YES];
     }
     else{
-    NSString *parameters=[NSString stringWithFormat:@"<ns:getData><username>%@</username><password>%@</password></ns:getData>",usuarioString,contrasenaString];
+    NSString *parameters=[NSString stringWithFormat:@"<ns:getData><username>%@</username><password>%@</password><language>%@</language></ns:getData>",usuarioString,contrasenaString,lang];
     [sc callServerWithMethod:@"" andParameter:parameters];
     
         NSThread *secThread=[[NSThread alloc]initWithTarget:self 

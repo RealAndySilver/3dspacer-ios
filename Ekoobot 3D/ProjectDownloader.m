@@ -377,10 +377,12 @@ float cuenta=0;
     return resultado;
 }
 +(int)downloadImageWithURLString:(NSString*)imageUrl ID:(NSString*)ID andName:(NSString*)name usuario:(Usuario*)usuario{
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/%@%@.jpeg",docDir,name,ID];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     NSLog(@"downloader file path : %@",jpegFilePath);
+    ProjectDownloader *ll=[[ProjectDownloader alloc]init];
+    //[ll addSkipBackupAttributeToItemAtURL:[NSURL URLWithString:docDir]];
     if (!fileExists) {
         NSURL *urlImagen=[NSURL URLWithString:imageUrl];
         NSData *dataImagen=[NSData dataWithContentsOfURL:urlImagen];
@@ -408,10 +410,11 @@ float cuenta=0;
     }
 }
 +(int)downloadVideoWithURLString:(NSString*)videoUrl ID:(NSString*)ID andName:(NSString*)name usuario:(Usuario*)usuario{
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *videoFilePath = [NSString stringWithFormat:@"%@/%@%@.mp4",docDir,name,ID];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:videoFilePath];
-
+    ProjectDownloader *ll=[[ProjectDownloader alloc]init];
+    //[ll addSkipBackupAttributeToItemAtURL:[NSURL URLWithString:docDir]];
     NSLog(@"downloader file path : %@",videoFilePath);
 
     if (!fileExists) {
@@ -453,5 +456,20 @@ float cuenta=0;
 }
 +(void)llamarAlertaDeError{
     [[NSNotificationCenter defaultCenter] postNotificationName:@"alert" object:nil];
+}
+- (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL
+{
+    assert([[NSFileManager defaultManager] fileExistsAtPath: [URL path]]);
+    
+    NSError *error = nil;
+    BOOL success = [URL setResourceValue: [NSNumber numberWithBool: YES]
+                                  forKey: NSURLIsExcludedFromBackupKey error: &error];
+    if(!success){
+        NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
+    }
+    else{
+        NSLog(@"Excluded %@ from backup %@", [URL lastPathComponent], error);
+    }
+    return success;
 }
 @end

@@ -32,6 +32,7 @@
     IBOutlet UIView *rotationSubView;
     IBOutlet UIButton *infoButton;
     UIView *littleBoxView;
+    NSString *lang;
     
 }
 - (void)irAlSiguienteViewConUsuario:(id)usuario yCopia:(id)copia;

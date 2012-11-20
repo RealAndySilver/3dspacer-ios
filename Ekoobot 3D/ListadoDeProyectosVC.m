@@ -162,7 +162,7 @@
         for (int i=0; i<proyecto.arrayAdjuntos.count; i++) {
             Adjunto *adjunto=[proyecto.arrayAdjuntos objectAtIndex:i];
             if ([adjunto.tipo isEqualToString:@"image"]) {
-                NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
                 NSString *jpegFilePath = [NSString stringWithFormat:@"%@/render%@%@",docDir,proyecto.idProyecto,[IAmCoder encodeURL:adjunto.imagen]];
                 BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
                 NSLog(@"file path %@",jpegFilePath);
@@ -203,7 +203,7 @@
                 player.adjunto=adjunto;
                 player.extraContent=proyecto;
                 
-                NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
                 NSString *jpegFilePath = [NSString stringWithFormat:@"%@/thumb%@%@",docDir,proyecto.idProyecto,[IAmCoder encodeURL:adjunto.thumb]];
                 BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
                 NSLog(@"file pathing %@",jpegFilePath);
@@ -287,7 +287,7 @@
     [view bringSubviewToFront:boton];
 }
 - (void)insertarImagenProyectoEnPagina:(UIView*)view conProyecto:(Proyecto*)proyecto{
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cover%@%@.jpeg",docDir,proyecto.idProyecto,[IAmCoder encodeURL:proyecto.imagen]];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
@@ -330,7 +330,7 @@
 }
 
 - (void)insertarLogoProyectoEnPagina:(UIView*)view conProyecto:(Proyecto*)proyecto{
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/logo%@%@",docDir,proyecto.idProyecto,[IAmCoder encodeURL:proyecto.logo]];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     NSLog(@"file path %@",jpegFilePath);

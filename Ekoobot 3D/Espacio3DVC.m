@@ -171,7 +171,7 @@
     }
 }
 -(void)checkIfDownloadedWithFace:(Caras*)cara{
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSMutableArray *array=[[NSMutableArray alloc]initWithObjects:cara.arriba,cara.abajo,cara.izquierda,cara.derecha,cara.frente,cara.atras, nil];
     NSMutableArray *idarray=[[NSMutableArray alloc]initWithObjects:cara.idArriba,cara.idAbajo,cara.idIzquierda,cara.idDerecha,cara.idFrente,cara.idAtras, nil];
     NSMutableArray *stringArray=[[NSMutableArray alloc]initWithObjects:@"Arriba",@"Abajo",@"Izquierda",@"Derecha",@"Frente",@"Atras", nil];
@@ -194,7 +194,7 @@
     }
 }
 -(NSString*)pathForResourceWithName:(NSString*)name andFace:(Caras*)cara ID:(NSString*)ID{
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cara%@%@.jpeg",docDir,name,ID];
     return jpegFilePath;
 }

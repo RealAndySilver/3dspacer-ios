@@ -192,7 +192,7 @@
     [toolBar addSubview:areaLabel];
 }
 -(UIImageView*)insertarImagenPlantaEnPagina:(UIView*)view conPlanta:(Planta*)planta{
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/planta%@.jpeg",docDir,planta.idPlanta];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     UIImageView *plantaImage = [[UIImageView alloc]init];

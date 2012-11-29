@@ -19,5 +19,5 @@
 }
 +(void)downloadProject:(Proyecto *)proyecto yTag:(int)tag sender:(id)sender usuario:(Usuario*)usuario;
 +(void)eraseAllFiles;
-
++(BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
 @end

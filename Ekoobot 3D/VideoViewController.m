@@ -62,7 +62,8 @@
 }
 #pragma mark path returner
 -(NSURL*)pathForSource{
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *newFolder=[NSString stringWithFormat:@"%@/resources",docDir];
     NSString *videoFilePath = [NSString stringWithFormat:@"%@/video%@.mp4",docDir,adjunto.ID];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:videoFilePath];
     if (!fileExists) {

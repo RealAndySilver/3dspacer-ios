@@ -162,7 +162,10 @@
         for (int i=0; i<proyecto.arrayAdjuntos.count; i++) {
             Adjunto *adjunto=[proyecto.arrayAdjuntos objectAtIndex:i];
             if ([adjunto.tipo isEqualToString:@"image"]) {
-                NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                NSString *newFolder=[NSString stringWithFormat:@"%@/resources",docDir];
+                NSLog(@"New file path %@",newFolder);
+                [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
                 NSString *jpegFilePath = [NSString stringWithFormat:@"%@/render%@%@",docDir,proyecto.idProyecto,[IAmCoder encodeURL:adjunto.imagen]];
                 BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
                 NSLog(@"file path %@",jpegFilePath);
@@ -203,8 +206,10 @@
                 player.adjunto=adjunto;
                 player.extraContent=proyecto;
                 
-                NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                NSString *newFolder=[NSString stringWithFormat:@"%@/resources",docDir];
                 NSString *jpegFilePath = [NSString stringWithFormat:@"%@/thumb%@%@",docDir,proyecto.idProyecto,[IAmCoder encodeURL:adjunto.thumb]];
+                [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
                 BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
                 NSLog(@"file pathing %@",jpegFilePath);
                 if (fileExists) {
@@ -287,9 +292,11 @@
     [view bringSubviewToFront:boton];
 }
 - (void)insertarImagenProyectoEnPagina:(UIView*)view conProyecto:(Proyecto*)proyecto{
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *newFolder=[NSString stringWithFormat:@"%@",docDir];
+    NSLog(@"New file path %@",newFolder);
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cover%@%@.jpeg",docDir,proyecto.idProyecto,[IAmCoder encodeURL:proyecto.imagen]];
+    [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     UIImageView *proyectoImage = [[UIImageView alloc]init];
     proyectoImage.layer.cornerRadius=10.0f;
@@ -330,8 +337,11 @@
 }
 
 - (void)insertarLogoProyectoEnPagina:(UIView*)view conProyecto:(Proyecto*)proyecto{
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *newFolder=[NSString stringWithFormat:@"%@",docDir];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/logo%@%@",docDir,proyecto.idProyecto,[IAmCoder encodeURL:proyecto.logo]];
+    [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
+
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     NSLog(@"file path %@",jpegFilePath);
     if (!fileExists) {

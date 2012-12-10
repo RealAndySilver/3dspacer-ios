@@ -40,6 +40,8 @@
     littleBoxView.layer.shadowColor=[UIColor blackColor].CGColor;
     littleBoxView.layer.shadowOpacity = 1;
     littleBoxView.layer.shadowRadius=2;
+    UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goToWeb)];
+    [littleBoxView addGestureRecognizer:tap];
     UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, littleBoxView.frame.size.width-30, littleBoxView.frame.size.height)];
     label.center=CGPointMake(littleBoxView.frame.size.width/2, littleBoxView.frame.size.height/2);
     label.numberOfLines=3;
@@ -59,7 +61,9 @@
     NSString *langID = [[NSLocale preferredLanguages] objectAtIndex:0];
     lang = [[NSLocale currentLocale] displayNameForKey:NSLocaleLanguageCode value:langID];
 }
-
+-(void)goToWeb{
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"http://www.ekoobotscom"]];
+}
 - (void)viewDidUnload{
     [super viewDidUnload];
 }

@@ -17,7 +17,7 @@
 "CancelarEnvioSeguro"="¿Are you sure you want to cancel?\nThe project won't be sent.";
 "ProyectoEnviado"="Project sent.";
 "ProyectoEnviadoExito"="Project sent successfully";
-"ProyectoEnviadoNOExito"="Your project could not be sent.\nPlease try again.";
+"ProyectoEnviadoNOExito"="Your project could not be sent.\nMaybe you are experiencing internet connection issues.\nIf you wish, Ekoobot 3D will sent your project later, or you can try again.";
 
 "ActualizadoEl"="Updated on:";
 "NuevaVersion"="New version available";
@@ -42,3 +42,5 @@
 "3D"="3D ";
 
 "BotonEntrar"="botonEntrar-en.png";
+"RegistroPendiente" = "Pending Register";
+"RegistroPendienteText" = "Your last project submission could not be sent. You can try again your send by pressing the \"Send\" button";

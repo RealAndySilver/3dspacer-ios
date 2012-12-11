@@ -65,6 +65,16 @@
 	[self guardar];
 }
 
+-(NSDictionary*)getDictionaryWithName:(NSString*)dicName{
+    return [datos objectForKey:dicName];
+}
+-(void)setDictionary:(NSDictionary*)dictionary withName:(NSString*)dicName{
+	NSMutableDictionary *newData = [datos mutableCopy];
+	[newData setObject:dictionary forKey:dicName];
+	datos = newData;
+	[self guardar];
+}
+
 /*-(NSString*)getUserWithName:(NSString*)name andPassword:(NSString*)password{
     if ([[datos objectForKey:@"nombreLocal"]isEqualToString:name]&&[[datos objectForKey:@"passwordLocal"]isEqualToString:password]) {
         return [datos objectForKey:@"idLocal"];

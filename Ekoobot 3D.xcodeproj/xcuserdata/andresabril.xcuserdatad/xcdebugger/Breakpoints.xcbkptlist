@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Ekoobot 3D/ListadoDeProyectosVC.m"
-         timestampString = "375073513.99258"
+         timestampString = "376890090.894327"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "299"
-         endingLineNumber = "299"
+         startingLineNumber = "327"
+         endingLineNumber = "327"
          landmarkName = "-insertarImagenProyectoEnPagina:conProyecto:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -21,11 +21,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Ekoobot 3D/ListadoDeProyectosVC.m"
-         timestampString = "375073515.108553"
+         timestampString = "376890090.894327"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "300"
-         endingLineNumber = "300"
+         startingLineNumber = "328"
+         endingLineNumber = "328"
          landmarkName = "-insertarImagenProyectoEnPagina:conProyecto:"
          landmarkType = "5">
       </FileBreakpoint>

@@ -71,6 +71,8 @@
 		7574E81E16029F7300974D7B /* downloading.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7574E81D16029F7300974D7B /* downloading.jpg */; };
 		7574E8211602A12100974D7B /* downloadBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 7574E8201602A12100974D7B /* downloadBtn.png */; };
 		7574E8231602A16E00974D7B /* updateBox.png in Resources */ = {isa = PBXBuildFile; fileRef = 7574E8221602A16E00974D7B /* updateBox.png */; };
+		7575CA4A1676E6D20078E354 /* ZoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7575CA491676E6D20078E354 /* ZoomViewController.m */; };
+		7575CA581676EB5E0078E354 /* NavAnimations.m in Sources */ = {isa = PBXBuildFile; fileRef = 7575CA571676EB5E0078E354 /* NavAnimations.m */; };
 		757BEC02161B8325002B251A /* fondo.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 757BEC01161B8325002B251A /* fondo.jpeg */; };
 		757BEC04161B8736002B251A /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 757BEC03161B8736002B251A /* logo.png */; };
 		757BEC14161B89C9002B251A /* loginBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 757BEC13161B89C9002B251A /* loginBtn.png */; };
@@ -209,6 +211,10 @@
 		7574E81D16029F7300974D7B /* downloading.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = downloading.jpg; sourceTree = "<group>"; };
 		7574E8201602A12100974D7B /* downloadBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = downloadBtn.png; sourceTree = "<group>"; };
 		7574E8221602A16E00974D7B /* updateBox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = updateBox.png; sourceTree = "<group>"; };
+		7575CA481676E6D20078E354 /* ZoomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZoomViewController.h; sourceTree = "<group>"; };
+		7575CA491676E6D20078E354 /* ZoomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZoomViewController.m; sourceTree = "<group>"; };
+		7575CA561676EB5E0078E354 /* NavAnimations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavAnimations.h; sourceTree = "<group>"; };
+		7575CA571676EB5E0078E354 /* NavAnimations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavAnimations.m; sourceTree = "<group>"; };
 		757BEC01161B8325002B251A /* fondo.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = fondo.jpeg; sourceTree = "<group>"; };
 		757BEC03161B8736002B251A /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		757BEC13161B89C9002B251A /* loginBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = loginBtn.png; sourceTree = "<group>"; };
@@ -444,6 +450,8 @@
 		37E98A84153E24A1001B9BFE /* AppDelegate */ = {
 			isa = PBXGroup;
 			children = (
+				7575CA561676EB5E0078E354 /* NavAnimations.h */,
+				7575CA571676EB5E0078E354 /* NavAnimations.m */,
 				37E98A48153E0D70001B9BFE /* AppDelegate.h */,
 				37E98A49153E0D70001B9BFE /* AppDelegate.m */,
 				757D4DA11612491800F31913 /* NavController.h */,
@@ -468,6 +476,8 @@
 				37E98A52153E0D71001B9BFE /* RootViewController.m */,
 				37E98A58153E0D71001B9BFE /* ListadoDeProyectosVC.h */,
 				37E98A59153E0D71001B9BFE /* ListadoDeProyectosVC.m */,
+				7575CA481676E6D20078E354 /* ZoomViewController.h */,
+				7575CA491676E6D20078E354 /* ZoomViewController.m */,
 				37F553F41540ED8200BB6A90 /* PlantaUrbanaVC.h */,
 				37F553F51540ED8200BB6A90 /* PlantaUrbanaVC.m */,
 				3766D1131540F33B008B9437 /* TiposDePisosVC.h */,
@@ -749,6 +759,8 @@
 				7555074A162F2B6A00479537 /* SendInfoButton.m in Sources */,
 				75550750162F74B700479537 /* TermsViewController.m in Sources */,
 				7587C9CF1632182E00C66896 /* Adjunto.m in Sources */,
+				7575CA4A1676E6D20078E354 /* ZoomViewController.m in Sources */,
+				7575CA581676EB5E0078E354 /* NavAnimations.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -45,6 +45,14 @@
     NSString *langID = [[NSLocale preferredLanguages] objectAtIndex:0];
     lang = [[NSLocale currentLocale] displayNameForKey:NSLocaleLanguageCode value:langID];
     NSLog(@"Language is %@",lang);
+    FileSaver *file=[[FileSaver alloc]init];
+    NSDictionary *pendingDic=[file getDictionary:@"SendInfoDictionary"];
+    if ([[pendingDic objectForKey:@"SentState"]isEqualToString:@"false"]) {
+        nombreTF.text=[pendingDic objectForKey:@"Name"];
+        emailTF.text=[pendingDic objectForKey:@"Email"];
+        comentarioTV.text=[pendingDic objectForKey:@"Comment"];
+        [self pendingAlert];
+    }
 	// Do any additional setup after loading the view.
 }
 -(void)viewWillAppear:(BOOL)animated{
@@ -107,6 +115,19 @@
             [alert show];
         }
     }
+    NSMutableDictionary *dictionary=[[NSMutableDictionary alloc]init];
+    [dictionary setObject:usuario forKey:@"Username"];
+    [dictionary setObject:contrasena forKey:@"Password"];
+    [dictionary setObject:lang forKey:@"Language"];
+    [dictionary setObject:nombreTF.text forKey:@"Name"];
+    [dictionary setObject:emailTF.text forKey:@"Email"];
+    [dictionary setObject:comentarioTV.text forKey:@"Comment"];
+    [dictionary setObject:proyectoID forKey:@"ProjectID"];
+    [dictionary setObject:@"false" forKey:@"SentState"];
+    [dictionary setObject:methodName forKey:@"MethodName"];
+    FileSaver *file=[[FileSaver alloc]init];
+    [file setDictionary:dictionary withName:@"SendInfoDictionary"];
+    NSLog(@"Ditcionary dude %@",[file getDictionary:@"SendInfoDictionary"]);
 }
 -(IBAction)cancel:(id)sender{
     [self customLogoutAlert];
@@ -135,6 +156,10 @@
 }
 -(void)receivedDataFromServerRegister:(id)sender{
     server=sender;
+    NSMutableDictionary *dictionary=[[NSMutableDictionary alloc]init];
+    [dictionary setObject:@"true" forKey:@"SentState"];
+    FileSaver *file=[[FileSaver alloc]init];
+    [file setDictionary:dictionary withName:@"SendInfoDictionary"];
     //NSLog(@"Resultado %@",server.resDic );
     NSString *tempMethod=[NSString stringWithFormat:@"ns1:%@Response",methodName];
     NSString *response=[[server.resDic objectForKey:tempMethod]objectForKey:@"return"];
@@ -158,6 +183,14 @@
                                                     message:NSLocalizedString(@"ProyectoEnviadoNOExito", nil)
                                                    delegate:nil
                                           cancelButtonTitle:NSLocalizedString(@"Cancelar", nil)
+                                          otherButtonTitles:nil,nil];
+    [alert show];
+}
+-(void)pendingAlert{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"RegistroPendiente", nil)
+                                                    message:NSLocalizedString(@"RegistroPendienteText", nil)
+                                                   delegate:nil
+                                          cancelButtonTitle:NSLocalizedString(@"OK", nil)
                                           otherButtonTitles:nil,nil];
     [alert show];
 }

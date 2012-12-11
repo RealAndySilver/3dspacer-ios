@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <objc/message.h>
-
+#import "NavAnimations.h"
 @interface NavController : UINavigationController
 @property(nonatomic)BOOL orient;
 @property(nonatomic)int orientationType;

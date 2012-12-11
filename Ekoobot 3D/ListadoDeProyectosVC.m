@@ -59,8 +59,10 @@
 -(void)viewWillAppear:(BOOL)animated{
     self.navigationController.navigationBarHidden=NO;
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    progressView=[[ProgressView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [self.view addSubview:progressView];
+    //progressView=[[ProgressView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    progressView=[[ProgressView alloc]initWithFrame:CGRectMake(0, 0, self.navigationController.view.frame.size.height, self.navigationController.view.frame.size.width)];
+
+    [self.navigationController.view addSubview:progressView];
     [self.view bringSubviewToFront:progressView];
 }
 -(void)viewWillDisappear:(BOOL)animated{
@@ -163,10 +165,8 @@
             Adjunto *adjunto=[proyecto.arrayAdjuntos objectAtIndex:i];
             if ([adjunto.tipo isEqualToString:@"image"]) {
                 NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-                NSString *newFolder=[NSString stringWithFormat:@"%@/resources",docDir];
-                NSLog(@"New file path %@",newFolder);
                 [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
-                NSString *jpegFilePath = [NSString stringWithFormat:@"%@/render%@%@",docDir,proyecto.idProyecto,[IAmCoder encodeURL:adjunto.imagen]];
+                NSString *jpegFilePath = [NSString stringWithFormat:@"%@/render%@%@.jpg",docDir,proyecto.idProyecto,[IAmCoder encodeURL:adjunto.imagen]];
                 BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
                 NSLog(@"file path %@",jpegFilePath);
                 if (!fileExists) {
@@ -179,16 +179,33 @@
                     if (renderImage.image) {
                         [data2 writeToFile:jpegFilePath atomically:YES];
                     }
-                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-40, frame.size.height, frame.size.width);
+                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-44, frame.size.height, frame.size.width);
                     renderImage.backgroundColor=[UIColor clearColor];
+                    [renderImage setUserInteractionEnabled:YES];
+                    [renderImage setUserInteractionEnabled:YES];
+                    CustomButton *zoomButton=[[CustomButton alloc]init];
+                    zoomButton.path=jpegFilePath;
+                    zoomButton.frame=CGRectMake(0, 0, 100, 50);
+                    zoomButton.center=CGPointMake(renderImage.frame.size.width/2, renderImage.frame.size.height-70);
+                    [zoomButton setTitle:@"Zoom" forState:UIControlStateNormal];
+                    [zoomButton addTarget:self action:@selector(goToZoomView:) forControlEvents:UIControlEventTouchUpInside];
+                    [renderImage addSubview:zoomButton];
                     [scrollPage addSubview:renderImage];
                 }
                 else {
                     //NSLog(@"si existe proj img %@",jpegFilePath);
                     UIImageView *renderImage = [[UIImageView alloc]init];
                     renderImage.image = [UIImage imageWithContentsOfFile:jpegFilePath];
-                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-40, frame.size.height, frame.size.width);
+                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-44, frame.size.height, frame.size.width);
                     renderImage.backgroundColor=[UIColor clearColor];
+                    [renderImage setUserInteractionEnabled:YES];
+                    CustomButton *zoomButton=[[CustomButton alloc]init];
+                    zoomButton.path=jpegFilePath;
+                    zoomButton.frame=CGRectMake(0, 0, 100, 50);
+                    zoomButton.center=CGPointMake(renderImage.frame.size.width/2, renderImage.frame.size.height-70);
+                    [zoomButton setTitle:@"Zoom" forState:UIControlStateNormal];
+                    [zoomButton addTarget:self action:@selector(goToZoomView:) forControlEvents:UIControlEventTouchUpInside];
+                    [renderImage addSubview:zoomButton];
                     [scrollPage addSubview:renderImage];
                 }
                 
@@ -207,7 +224,6 @@
                 player.extraContent=proyecto;
                 
                 NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-                NSString *newFolder=[NSString stringWithFormat:@"%@/resources",docDir];
                 NSString *jpegFilePath = [NSString stringWithFormat:@"%@/thumb%@%@",docDir,proyecto.idProyecto,[IAmCoder encodeURL:adjunto.thumb]];
                 [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
                 BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
@@ -274,9 +290,21 @@
 }
 -(void)actualizarOdescargar:(UIButton*)button{
     NSString *key=[NSString stringWithFormat:@"%i",button.tag-1000];
-    [progressView setViewAlphaToOne];
+    /*[progressView setViewAlphaToOne];
     //[ProjectDownloader downloadProject:[usuarioActual.arrayProyectos objectAtIndex:[key intValue]] yTag:button.tag+1000];
     [ProjectDownloader downloadProject:[usuarioCopia.arrayProyectos objectAtIndex:[key intValue]] yTag:button.tag+1000 sender:progressView usuario:usuarioActual];
+    [progressView setViewAlphaToCero];*/
+    NSMutableDictionary *dic=[[NSMutableDictionary alloc]init];
+    [dic setObject:[usuarioActual.arrayProyectos objectAtIndex:[key intValue]] forKey:@"Project"];
+    [dic setObject:[NSNumber numberWithInt:button.tag+1000] forKey:@"Tag"];
+    [dic setObject:progressView forKey:@"Sender"];
+    [dic setObject:usuarioActual forKey:@"Usuario"];
+    [self performSelectorInBackground:@selector(threadTest:) withObject:dic];
+}
+-(void)threadTest:(NSMutableDictionary*)dic{
+    [progressView setViewAlphaToOne];
+    //[ProjectDownloader downloadProject:[usuarioActual.arrayProyectos objectAtIndex:[key intValue]] yTag:button.tag+1000];
+    [ProjectDownloader downloadProject:[dic objectForKey:@"Project"] yTag:[[dic objectForKey:@"Tag"]intValue] sender:progressView usuario:[dic objectForKey:@"Usuario"]];
     [progressView setViewAlphaToCero];
 }
 -(void)insertarActualizadorEnPagina:(UIView*)view yTag:(int)tag{
@@ -338,7 +366,6 @@
 
 - (void)insertarLogoProyectoEnPagina:(UIView*)view conProyecto:(Proyecto*)proyecto{
     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *newFolder=[NSString stringWithFormat:@"%@",docDir];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/logo%@%@",docDir,proyecto.idProyecto,[IAmCoder encodeURL:proyecto.logo]];
     [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
 
@@ -405,7 +432,9 @@
             updateBox.titleText.textColor=[UIColor redColor];
             updateBox.titleText.tag=tag+1100;
             updateBox.container.alpha=1;
-            updateBox.updateText.textColor=[UIColor orangeColor];
+            NSString *peso=NSLocalizedString(@"Peso", nil);
+            updateBox.updateText.text=[NSString stringWithFormat:@"%@ %@",peso,proyecto.peso];
+            //updateBox.updateText.textColor=[UIColor orangeColor];
         }
         else{
             updateBox.titleText.backgroundColor=[UIColor clearColor];
@@ -447,7 +476,7 @@
         button.alpha=1;
         //NSLog(@"Updated %@ %@",number,[file getUpdateFile:[number intValue]]);
         
-        [self irAlSiguienteViewController:button];
+        [self performSelectorOnMainThread:@selector(irAlSiguienteViewController:) withObject:button waitUntilDone:YES];
         updateBox.titleText.text=[NSString stringWithFormat:NSLocalizedString(@"UltimaVersion", nil)];
         updateBox.titleText.textColor=[UIColor greenColor];
     }
@@ -490,20 +519,23 @@
     PlantaUrbanaVC *pgVC = [[PlantaUrbanaVC alloc]init];
     pgVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlantaUrbanaVC"];
     pgVC.proyecto = proyecto;
-    [self.navigationController pushViewController:pgVC animated:YES];
+    [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
+    [self.navigationController pushViewController:pgVC animated:NO];
 }
 - (void)irATiposDePisosVCConGrupo:(id)grupo{
     TiposDePisosVC *peVC = [[TiposDePisosVC alloc]init];
     peVC = [self.storyboard instantiateViewControllerWithIdentifier:@"TiposDePisosVC"];
     peVC.grupo=grupo;
     //peVC.usuarioActual = usuarioActual;
-    [self.navigationController pushViewController:peVC animated:YES];
+    [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
+    [self.navigationController pushViewController:peVC animated:NO];
 }
 - (void)irATiposDePlantasVCConProducto:(id)producto{
     TiposDePlantasVC *tdpVC = [[TiposDePlantasVC alloc]init];
     tdpVC = [self.storyboard instantiateViewControllerWithIdentifier:@"TiposDePlantasVC"];
     tdpVC.producto=producto;
-    [self.navigationController pushViewController:tdpVC animated:YES];
+    [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
+    [self.navigationController pushViewController:tdpVC animated:NO];
 }
 
 -(void)alertViewAppear{
@@ -526,5 +558,47 @@
 
     //[self.navigationController pushViewController:siVC animated:YES];
 }
+-(void)goToZoomView:(CustomButton*)button{
+    NSLog(@"Touched %@",button.path);
+    //NSString *path=button.path;
+    //[self loadLocalDocument:button.path inView:nil];
+    [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
+    ZoomViewController *zVC=[[ZoomViewController alloc]init];
+    zVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Zoom"];
+    zVC.path=button.path;
+    [self.navigationController pushViewController:zVC animated:NO];
+}
 
+#pragma mark document interaction
+-(void)loadLocalDocument:(NSString*)documentName inView:(UIWebView*)webView{
+    //NSString *path = [[NSBundle mainBundle] pathForResource:documentName ofType:nil];
+    //NSString *path = documentName;
+    
+    NSURL *url = [NSURL fileURLWithPath:documentName];
+    //NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    //[webView loadRequest:request];
+    //[self loadDocument:@"test.pdf" inView:nil];
+    //UIDocumentInteractionController *UIC=[self setupControllerWithURL:url usingDelegate:self];
+    //[UIC presentOpenInMenuFromRect:CGRectMake(0, 0, 200, 200) inView:self.view animated:YES];
+    [self previewDocumentWithURL:url];
+}
+- (UIDocumentInteractionController *) setupControllerWithURL: (NSURL*) fileURL
+                                               usingDelegate: (id <UIDocumentInteractionControllerDelegate>) interactionDelegate {
+    
+    UIDocumentInteractionController *interactionController =
+    [UIDocumentInteractionController interactionControllerWithURL: fileURL];
+    interactionController.delegate = interactionDelegate;
+    interactionController.name=@"";
+    return interactionController;
+}
+- (void)previewDocumentWithURL:(NSURL*)url
+{
+    UIDocumentInteractionController* preview = [UIDocumentInteractionController interactionControllerWithURL:url];
+    preview.delegate = self;
+    preview.name=@"";
+    [preview presentPreviewAnimated:YES];
+}
+-(UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller{
+    return self;
+}
 @end

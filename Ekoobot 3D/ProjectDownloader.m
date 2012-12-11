@@ -153,13 +153,7 @@ float cuenta=0;
 +(void)downloadProject:(Proyecto *)proyecto yTag:(int)tag sender:(id)sender usuario:(Usuario*)usuario{
     //[self downloadImageWithURLString:proyecto.logo ID:proyecto.idProyecto andName:@"logo"];
     //[self downloadImageWithURLString:proyecto.imagen ID:proyecto.idProyecto andName:@"cover"];
-    NSMutableArray *adjuntosArray=proyecto.arrayAdjuntos;
-    for (int i=0; i<adjuntosArray.count; i++) {
-        Adjunto *adjunto=[adjuntosArray objectAtIndex:i];
-        if ([adjunto.tipo isEqualToString:@"video"]) {
-            [self downloadVideoWithURLString:adjunto.imagen ID:adjunto.ID andName:@"video" usuario:usuario];
-        }
-    }
+    
     float contarInterno=[self contar:proyecto];
     int contadorError=0;
     NSMutableArray *itemsUrbanismoArray=proyecto.arrayItemsUrbanismo;
@@ -293,7 +287,13 @@ float cuenta=0;
             }
         }
     }
-    
+    NSMutableArray *adjuntosArray=proyecto.arrayAdjuntos;
+    for (int i=0; i<adjuntosArray.count; i++) {
+        Adjunto *adjunto=[adjuntosArray objectAtIndex:i];
+        if ([adjunto.tipo isEqualToString:@"video"]) {
+            [self downloadVideoWithURLString:adjunto.imagen ID:adjunto.ID andName:@"video" usuario:usuario];
+        }
+    }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"notificationStop" object:nil];
     NSLog(@"contador error %i",contadorError);
     if (contadorError==0) {

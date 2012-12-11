@@ -121,4 +121,12 @@
     }
     
 }
+
+- (UIViewController *)popViewControllerAnimated:(BOOL)animated
+{
+    [self.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
+		UIViewController *viewController = [super popViewControllerAnimated:NO];
+        
+		return viewController;
+}
 @end

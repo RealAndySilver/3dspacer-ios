@@ -152,7 +152,7 @@
     sv.clipsToBounds=YES;
     [pagina addSubview:sv];
     NSString *area=NSLocalizedString(@"AreaTotal", nil);
-    [self labelDeArea:[NSString stringWithFormat:@"%@ %@",area, producto.area] eInsertarEnView:imageView];
+    [self labelDeArea:[NSString stringWithFormat:@"%@ %@",area, producto.area] eInsertarEnView:pagina];
     
     [imageView setUserInteractionEnabled:YES];
     for (int i=0; i<tempArray.count; i++) {
@@ -176,7 +176,7 @@
     //scrollview.minimumZoomScale = scale;
 }
 -(void)labelDeArea:(NSString*)area eInsertarEnView:(UIView*)view{
-    UIToolbar *toolBar=[[UIToolbar alloc]initWithFrame:CGRectMake(0, 600, self.view.frame.size.height-50, 50)];
+    UIToolbar *toolBar=[[UIToolbar alloc]initWithFrame:CGRectMake(25, 623, self.view.frame.size.height-50, 50)];
     [toolBar setBarStyle:UIBarStyleBlack];
     [view addSubview:toolBar];
     UILabel *areaLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, toolBar.frame.size.width, 50)];

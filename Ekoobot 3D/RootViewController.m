@@ -16,10 +16,10 @@
 
 #pragma mark -
 #pragma mark Ciclo de Vida
-#define NOMBREUSER @"ariassernasaravia"
-#define PASSWORD @"1234"
+//#define NOMBREUSER @"ariassernasaravia"
+//#define PASSWORD @"1234"
 //#define NOMBREUSER @"ekoomedia"
-//#define PASSWORD @""
+//#define PASSWORD @"1234"
 #define USERTYPE @"clients"
 
 
@@ -140,6 +140,7 @@
 }
 -(void)stopSpinner{
     spinner.alpha=0;
+    loginButton.enabled=YES;
     [spinner stopAnimating];
 }
 #pragma mark -

@@ -27,6 +27,6 @@
 -(NSString*)getNombre;
 -(NSString*)getPassword;
 
-
-
+-(void)setDictionary:(NSDictionary*)dictionary withName:(NSString*)dicName;
+-(NSDictionary*)getDictionaryWithName:(NSString*)dicName;
 @end

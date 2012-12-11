@@ -7,8 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+#import "FileSaver.h"
+#import "ServerCommunicator.h"
+@interface AppDelegate : UIResponder <UIApplicationDelegate>{
+    ServerCommunicator *server;
+    NSString *methodName;
+    int test;
+}
 
 @property (strong, nonatomic) UIWindow *window;
 

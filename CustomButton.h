@@ -14,6 +14,8 @@
 @property(nonatomic)int secondaryId;
 @property(nonatomic)id adjunto;
 @property(nonatomic)id extraContent;
+@property(nonatomic)NSString *path;
+
 
 
 @end

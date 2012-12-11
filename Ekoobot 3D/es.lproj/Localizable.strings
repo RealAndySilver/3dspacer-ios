@@ -17,7 +17,7 @@
 "CancelarEnvioSeguro"="¿Está seguro que desea cancelar?\nEl proyecto no será enviado.";
 "ProyectoEnviado"="Proyecto enviado.";
 "ProyectoEnviadoExito"="Proyecto enviado con éxito.";
-"ProyectoEnviadoNOExito"="Su proyecto no pudo ser enviado.\nPor favor intente de nuevo.";
+"ProyectoEnviadoNOExito"="Su proyecto no pudo ser enviado.\nEs probable que haya problema con su conexión a internet. Si desea, Ekoobot 3D se encargará de enviar su proyecto más tarde, o puede volverlo a intentar.";
 
 "ActualizadoEl"="Actualizado el:";
 "NuevaVersion"="Hay una nueva versión";
@@ -42,3 +42,5 @@
 "3D"="3D ";
 
 "BotonEntrar"="botonEntrar.png";
+"RegistroPendiente" = "Registro Pendiente";
+"RegistroPendienteText" = "El último envío de proyecto no fue completado con éxito. La información quedó almacenada y puedes volver a intentar enviarlo oprimiendo el botón \"Enviar\".";

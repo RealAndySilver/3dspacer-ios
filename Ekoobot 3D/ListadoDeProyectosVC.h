@@ -23,13 +23,16 @@
 #import "SendInfoButton.h"
 #import "SendInfoViewController.h"
 #import "Adjunto.h"
-@interface ListadoDeProyectosVC : UIViewController <UIScrollViewDelegate,UIAlertViewDelegate> {
+#import "ZoomViewController.h"
+#import "NavAnimations.h"
+@interface ListadoDeProyectosVC : UIViewController <UIScrollViewDelegate,UIAlertViewDelegate,UIDocumentInteractionControllerDelegate> {
     UIScrollView *scrollView;
     Usuario *usuarioActual;
     ProgressView *progressView;
     NSMutableArray *arrayDeTitulos;
     MBProgressHUD *hud;
     Usuario *usuarioCopia;
+    NSMutableArray *scrollArray;
 }
 
 @property(nonatomic,retain)Usuario *usuarioActual;

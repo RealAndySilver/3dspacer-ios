@@ -164,7 +164,6 @@
 }
 -(UIImageView*)insertarImagenProyectoEnPagina:(UIView*)view conTipoPiso:(TipoDePiso*)tipoPiso{
     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *newFolder=[NSString stringWithFormat:@"%@/resources",docDir];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/tipoDePiso%@.jpeg",docDir,tipoPiso.idTipoPiso];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     if (!fileExists) {

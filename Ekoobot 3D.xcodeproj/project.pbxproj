@@ -62,6 +62,8 @@
 		755233A5163AF21800D541DB /* enviar.png in Resources */ = {isa = PBXBuildFile; fileRef = 755233A4163AF21800D541DB /* enviar.png */; };
 		755233AD163B3A8F00D541DB /* cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 755233AC163B3A8F00D541DB /* cancel.png */; };
 		755233AF163B446A00D541DB /* brujula.png in Resources */ = {isa = PBXBuildFile; fileRef = 755233AE163B446A00D541DB /* brujula.png */; };
+		7552410D1677D2C8004BC471 /* BrujulaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7552410C1677D2C8004BC471 /* BrujulaViewController.m */; };
+		755241121677E303004BC471 /* BrujulaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 755241111677E303004BC471 /* BrujulaView.m */; };
 		75550744162F0FF300479537 /* play-video.png in Resources */ = {isa = PBXBuildFile; fileRef = 75550743162F0FF300479537 /* play-video.png */; };
 		75550747162F293A00479537 /* SendInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75550746162F293A00479537 /* SendInfoViewController.m */; };
 		7555074A162F2B6A00479537 /* SendInfoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 75550749162F2B6A00479537 /* SendInfoButton.m */; };
@@ -199,6 +201,10 @@
 		755233A4163AF21800D541DB /* enviar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enviar.png; sourceTree = "<group>"; };
 		755233AC163B3A8F00D541DB /* cancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cancel.png; sourceTree = "<group>"; };
 		755233AE163B446A00D541DB /* brujula.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = brujula.png; sourceTree = "<group>"; };
+		7552410B1677D2C8004BC471 /* BrujulaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrujulaViewController.h; sourceTree = "<group>"; };
+		7552410C1677D2C8004BC471 /* BrujulaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrujulaViewController.m; sourceTree = "<group>"; };
+		755241101677E303004BC471 /* BrujulaView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrujulaView.h; sourceTree = "<group>"; };
+		755241111677E303004BC471 /* BrujulaView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrujulaView.m; sourceTree = "<group>"; };
 		75550743162F0FF300479537 /* play-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play-video.png"; sourceTree = "<group>"; };
 		75550745162F293A00479537 /* SendInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendInfoViewController.h; sourceTree = "<group>"; };
 		75550746162F293A00479537 /* SendInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendInfoViewController.m; sourceTree = "<group>"; };
@@ -476,8 +482,7 @@
 				37E98A52153E0D71001B9BFE /* RootViewController.m */,
 				37E98A58153E0D71001B9BFE /* ListadoDeProyectosVC.h */,
 				37E98A59153E0D71001B9BFE /* ListadoDeProyectosVC.m */,
-				7575CA481676E6D20078E354 /* ZoomViewController.h */,
-				7575CA491676E6D20078E354 /* ZoomViewController.m */,
+				7552410F1677E2DB004BC471 /* ExtraViewControllers */,
 				37F553F41540ED8200BB6A90 /* PlantaUrbanaVC.h */,
 				37F553F51540ED8200BB6A90 /* PlantaUrbanaVC.m */,
 				3766D1131540F33B008B9437 /* TiposDePisosVC.h */,
@@ -561,6 +566,17 @@
 			path = "Ekoobot 3D";
 			sourceTree = "<group>";
 		};
+		7552410F1677E2DB004BC471 /* ExtraViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				7575CA481676E6D20078E354 /* ZoomViewController.h */,
+				7575CA491676E6D20078E354 /* ZoomViewController.m */,
+				7552410B1677D2C8004BC471 /* BrujulaViewController.h */,
+				7552410C1677D2C8004BC471 /* BrujulaViewController.m */,
+			);
+			name = ExtraViewControllers;
+			sourceTree = "<group>";
+		};
 		7589C5AB15A4FC4E000C99AF /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -575,6 +591,8 @@
 				75C8E936162387280094A609 /* UpdateView.m */,
 				75550748162F2B6A00479537 /* SendInfoButton.h */,
 				75550749162F2B6A00479537 /* SendInfoButton.m */,
+				755241101677E303004BC471 /* BrujulaView.h */,
+				755241111677E303004BC471 /* BrujulaView.m */,
 			);
 			name = Views;
 			path = ..;
@@ -761,6 +779,8 @@
 				7587C9CF1632182E00C66896 /* Adjunto.m in Sources */,
 				7575CA4A1676E6D20078E354 /* ZoomViewController.m in Sources */,
 				7575CA581676EB5E0078E354 /* NavAnimations.m in Sources */,
+				7552410D1677D2C8004BC471 /* BrujulaViewController.m in Sources */,
+				755241121677E303004BC471 /* BrujulaView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

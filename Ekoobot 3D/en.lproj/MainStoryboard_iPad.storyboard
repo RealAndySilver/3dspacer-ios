@@ -510,6 +510,32 @@
             </objects>
             <point key="canvasLocation" x="-2271" y="86"/>
         </scene>
+        <!--Brujula View Controller-->
+        <scene sceneID="jJX-9L-9Pe">
+            <objects>
+                <viewController storyboardIdentifier="Brujula" id="1ha-ZI-DRG" customClass="BrujulaViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="S3Q-Sx-C7f">
+                        <rect key="frame" x="0.0" y="64" width="1024" height="704"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="fondo.jpeg" id="YqQ-gS-4ec">
+                                <rect key="frame" x="0.0" y="0.0" width="1024" height="704"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="ekoomediaWterMark.png" id="bEA-Me-poF">
+                                <rect key="frame" x="20" y="653" width="132" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="blackOpaque" prompted="NO"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="q3B-Fe-com" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1127" y="92"/>
+        </scene>
     </scenes>
     <resources>
         <image name="bin.png" width="256" height="256"/>
@@ -522,6 +548,9 @@
         <image name="send-en.png" width="139" height="53"/>
     </resources>
     <classes>
+        <class className="BrujulaViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BrujulaViewController.h"/>
+        </class>
         <class className="EraseViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EraseViewController.h"/>
             <relationships>
@@ -546,7 +575,6 @@
         <class className="RootViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/RootViewController.h"/>
             <relationships>
-                <relationship kind="action" name="littleBox:"/>
                 <relationship kind="outlet" name="ekoobot3dLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="infoButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="loginButton" candidateClass="UIButton"/>

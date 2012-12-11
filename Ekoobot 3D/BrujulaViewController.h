@@ -7,7 +7,23 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OpenGLView.h"
+#import <QuartzCore/QuartzCore.h>
+#import <CoreMotion/CoreMotion.h>
+#import <CoreLocation/CoreLocation.h>
+#import "BrujulaView.h"
+@interface BrujulaViewController : UIViewController<UIScrollViewDelegate>{
+    BOOL zoomCheck;
+    float maximumZoomScale;
+    float minimumZoomScale;
+    UIScrollView *scrollViewRotar;
+    UIScrollView *scrollViewImagen;
+    UIImageView *imageViewZoomImage;
+    CMAttitude *attitude;
+    CMMotionManager *_motionManager;
+    NSTimer *timer;
+    BrujulaView *brujula;
 
-@interface BrujulaViewController : UIViewController
-
+}
+@property(nonatomic)NSString *path;
 @end

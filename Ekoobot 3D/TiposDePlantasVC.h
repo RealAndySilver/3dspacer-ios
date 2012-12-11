@@ -11,6 +11,7 @@
 #import "CustomButton.h"
 #import "Espacio3DVC.h"
 #import "MBProgressHud.h"
+#import "BrujulaViewController.h"
 
 @interface TiposDePlantasVC : UIViewController<UIScrollViewDelegate,UIAlertViewDelegate>{
     Producto *producto;

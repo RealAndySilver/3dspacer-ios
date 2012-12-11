@@ -75,7 +75,6 @@
     [doubleTap setNumberOfTapsRequired:2];
     [scrollViewUrbanismo addGestureRecognizer:doubleTap];
     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *newFolder=[NSString stringWithFormat:@"%@/resources",docDir];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/imagenUrbanismo%@.jpeg",docDir,itemUrbanismo.idUrbanismo];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     if (!fileExists) {

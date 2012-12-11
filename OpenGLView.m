@@ -558,6 +558,13 @@ const GLubyte IndicesBottom[] = {
         [self addGestureRecognizer:twoFingerPinch];
         nearValue=2;
         divisor=10;
+        t = 0.0;
+        Kf = 0.8;
+        m = 1.0;
+        step = 0.05;
+        sign[0] = sign[1] = -1;
+        madeTouch = NO;
+        
         maxZoomOut=2;
         maxZoomIn=8;
         //Brújula gráfica
@@ -631,7 +638,8 @@ const GLubyte IndicesBottom[] = {
 
 #pragma mark -
 #pragma mark Toques
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+/*- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSLog(@"began");
     UITouch *touch = [touches anyObject];
     startPoint = [touch locationInView:touchesReceiverOpenGLView];
     oldPoint = startPoint;
@@ -639,6 +647,8 @@ const GLubyte IndicesBottom[] = {
     imageViewTouched = YES;
 }
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event;{
+    NSLog(@"Moved");
+
     if (isTouchEnabled) {
         UITouch *touch = [touches anyObject];
         CGPoint point = [touch locationInView:touchesReceiverOpenGLView];
@@ -676,9 +686,145 @@ const GLubyte IndicesBottom[] = {
         }
     }
 }
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSLog(@"ended");
 
+}*/
+//int i=0;
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSLog(@"began");
+    UITouch *touch = [touches anyObject];
+    startPoint = [touch locationInView:touchesReceiverOpenGLView];
+    oldPoint = startPoint;
+    startTime = CACurrentMediaTime();
+    imageViewTouched = YES;
+    movePoint1 = movePoint0 = startPoint;
+    if ([timer1 isValid]) {
+        [timer1 invalidate];
+        timer1=nil;
+    }
+}
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event;{
+    NSLog(@"Moved");
+    if (isTouchEnabled) {
+        UITouch *touch = [touches anyObject];
+        CGPoint point = [touch locationInView:touchesReceiverOpenGLView];
+        movePoint0 = movePoint1;
+        movePoint1 = point;
+        
+        if (!leftRotated) {
+            dy = point.y - startPoint.y;
+            dx = point.x - startPoint.x;
+            dyActualCamara += dy/divisor;
+            dxActualCamara += dx/divisor;
+            if (dxActualCamara >= 90) {
+                dxActualCamara = 90;
+            }
+            else if (dxActualCamara <= -90) {
+                dxActualCamara = -90;
+            }
+            
+        }
+        else {
+            dy = point.y - startPoint.y;
+            dx = point.x - startPoint.x;
+            dyActualCamara += -dy/divisor;
+            dxActualCamara += -dx/divisor;
+            if (dxActualCamara >= 90) {
+                dxActualCamara = -90;
+            }
+            else if (dxActualCamara <= -90) {
+                dxActualCamara = 90;
+            }
+        }
+        oldPoint = point;
+        startPoint = point;
+        CGAffineTransform swingTransform = CGAffineTransformIdentity;
+        swingTransform = CGAffineTransformRotate(swingTransform, DegreesToRadians(dyActualCamara));
+        if (!compassTouched) {
+            brujula.transform = swingTransform;
+        }
+    }
+}
+/*-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSLog(@"ended");
+    X[0] = movePoint1.x;
+    X[1] = movePoint1.y;
+    NSLog(@"x0 = (%f,%f)",movePoint0.x,movePoint0.y);
+    NSLog(@"x1 = (%f,%f)",movePoint1.x,movePoint1.y);
 
+    V[0] = (movePoint0.x + movePoint1.x)/divisor;
+    V[1] = (movePoint0.y + movePoint1.y)/divisor;
+    if ([timer1 isValid]) {
+        [timer1 invalidate];
+        timer1=nil;
+    }
+    timer1=[[NSTimer alloc]init];
+    timer1=[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(trigger) userInfo:nil repeats:YES];
+}*/
 
+-(void)trigger{
+    //if(V[0]>0 && V[1]>0) {
+    BOOL mContinue = NO;
+        for(int k=0;k<2;k++) {
+            F[k] = 0;
+        }
+    
+    if (X[0] >= 90) {
+        V[0] = 0;
+    }
+    else if (X[0] <= -90) {
+        V[0] = 0;
+    }
+    
+    for(int k=0;k<2;k++) {
+        F[k] -= Kf*V[k];
+        mContinue = F[k] == 0.0;
+    }
+    NSLog(@"F = (%f,%f)",F[0],F[1]);
+    
+    if(!mContinue) {
+        for(int k=0;k<2;k++) {
+            f[k] = X[k];
+            f[k+2] = V[k];
+            df[k] = V[k];
+            df[k+2] = F[k]/m;
+        }
+        
+        NSLog(@"f = (%f,%f,%f,%f)",f[0],f[1],f[2],f[3]);
+        NSLog(@"df = (%f,%f,%f,%f)",df[0],df[1],df[2],df[3]);
+        
+        for(int k=0;k<4;k++) {
+            f[k] += df[k]*step;
+        }
+        
+        NSLog(@"f = (%f,%f,%f,%f)",f[0],f[1],f[2],f[3]);
+        
+        t += step;
+        
+        for(int k=0;k<2;k++) {
+            X[k] = f[k];
+            V[k] = f[k+2];
+        }
+        
+        dxActualCamara = X[0];
+        dyActualCamara = X[1];
+        
+        startPoint.x = dxActualCamara;
+        startPoint.y = dyActualCamara;
+        
+        CGAffineTransform swingTransform = CGAffineTransformIdentity;
+        swingTransform = CGAffineTransformRotate(swingTransform, DegreesToRadians(dyActualCamara));
+        if (!compassTouched) {
+            brujula.transform = swingTransform;
+        }
+    
+        NSLog(@"X = (%f,%f)",X[0],X[1]);
+        NSLog(@"V = (%f,%f)",V[0],V[1]);
+        NSLog(@"delta = (%f,%f)",dxActualCamara,dyActualCamara);
+    }
+    //}
+}
 -(void)twoFingerPinch:(UIPinchGestureRecognizer *)recognizer {
     nearValue += (1)*(logf(recognizer.scale) * 10.0f);
     float newValue=(nearValue-2)/(maxZoomIn-maxZoomOut);

@@ -378,7 +378,6 @@ float cuenta=0;
 }
 +(int)downloadImageWithURLString:(NSString*)imageUrl ID:(NSString*)ID andName:(NSString*)name usuario:(Usuario*)usuario{
     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *newFolder=[NSString stringWithFormat:@"%@/resources",docDir];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/%@%@.jpeg",docDir,name,ID];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     NSLog(@"downloader file path : %@",jpegFilePath);
@@ -411,7 +410,6 @@ float cuenta=0;
 }
 +(int)downloadVideoWithURLString:(NSString*)videoUrl ID:(NSString*)ID andName:(NSString*)name usuario:(Usuario*)usuario{
     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *newFolder=[NSString stringWithFormat:@"%@/resources",docDir];
     NSString *videoFilePath = [NSString stringWithFormat:@"%@/%@%@.mp4",docDir,name,ID];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:videoFilePath];
     [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];

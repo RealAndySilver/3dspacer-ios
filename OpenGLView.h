@@ -104,6 +104,22 @@
     
     BOOL compassTouched;
     
+    int i;
+    
+    float X[2];
+    float V[2];
+    float t;
+    float F[2];
+    float f[4];
+    float df[4];
+    float Kf;
+    float m;
+    float step;
+    int sign[2];
+    BOOL madeTouch;
+    CGPoint movePoint0;
+    CGPoint movePoint1;
+    NSTimer *timer1;
 }
 @property(nonatomic)BOOL leftRotated;
 @property(nonatomic)GLuint _backTexture;

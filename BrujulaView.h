@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface BrujulaView : UIView
-
+#import <QuartzCore/QuartzCore.h>
+@interface BrujulaView : UIView{
+    UIImageView *compassPlaceholder;
+   
+}
+@property(nonatomic,retain)UIImageView *cursor;
 @end

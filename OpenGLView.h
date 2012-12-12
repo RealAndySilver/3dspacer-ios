@@ -13,6 +13,7 @@
 #import "CC3GLMatrix.h"
 #import <CoreMotion/CoreMotion.h>
 #import "Caras.h"
+#import "AppDelegate.h"
 
 
 @interface OpenGLView : UIView{

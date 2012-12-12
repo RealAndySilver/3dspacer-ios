@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "FileSaver.h"
 #import "ServerCommunicator.h"
+#import <CoreMotion/CoreMotion.h>
 @interface AppDelegate : UIResponder <UIApplicationDelegate>{
     ServerCommunicator *server;
     NSString *methodName;
     int test;
+    CMMotionManager *motionManager;
 }
 
 @property (strong, nonatomic) UIWindow *window;

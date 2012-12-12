@@ -17,43 +17,38 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    self.navigationItem.title = NSLocalizedString(@"Zoom", nil);
+    self.navigationItem.title = NSLocalizedString(@"Compass View", nil);
     self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
-    scrollViewRotar=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.height-100, self.view.frame.size.width-50)];
+    scrollViewRotar=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.height, self.view.frame.size.width)];
     scrollViewRotar.center=CGPointMake(self.view.frame.size.height/2, self.view.frame.size.width/2);
     scrollViewRotar.backgroundColor=[UIColor clearColor];
     scrollViewRotar.layer.cornerRadius=0;
+    [scrollViewRotar setClipsToBounds:NO];
+    scrollViewRotar.layer.masksToBounds=NO;
     [self.view addSubview:scrollViewRotar];
     maximumZoomScale=3.0;
     minimumZoomScale=1;
     [self loadScrollView];
     
-    _motionManager = [[CMMotionManager alloc] init];
+    _motionManager = [self motionManager];
     _motionManager.showsDeviceMovementDisplay = YES;
     
-    //[_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
-        [_motionManager setDeviceMotionUpdateInterval:1/60];
-        [_motionManager startDeviceMotionUpdates];
-    //[_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
+    [_motionManager setDeviceMotionUpdateInterval:1/60];
+    [_motionManager startDeviceMotionUpdates];
+    [_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
     
     zoomCheck=YES;
     timer=[[NSTimer alloc]init];
-    timer =[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(thread) userInfo:nil repeats:YES];
+    timer =[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(update) userInfo:nil repeats:YES];
     brujula=[[BrujulaView alloc]initWithFrame:CGRectMake(self.view.frame.size.height-80, 60, 70, 70)];
     [self.view addSubview:brujula];
     // Do any additional setup after loading the view.
 }
--(void)thread{
-    //[self performSelectorInBackground:@selector(test) withObject:nil];
-    NSThread *t=[[NSThread alloc]initWithTarget:self selector:@selector(test) object:nil];
-    [t start];
-}
--(void)test{
+-(void)update{
     attitude = _motionManager.deviceMotion.attitude;
-    NSLog(@"Updating %f",attitude.yaw);
     CGAffineTransform swingTransform = CGAffineTransformIdentity;
     swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)]);
-    scrollViewRotar.transform = swingTransform;
+    scrollViewImagen.transform = swingTransform;
     brujula.cursor.transform = swingTransform;
 }
 - (float)radiansToDegrees:(float)number{
@@ -70,8 +65,14 @@
     //[scrollViewUrbanismo setZoomScale:0.3 animated:NO];
 }
 -(void)viewWillDisappear:(BOOL)animated{
+    _motionManager.showsDeviceMovementDisplay = NO;
     [timer invalidate];
     timer = nil;
+    //[_motionManager stopMagnetometerUpdates];
+    //[_motionManager stopDeviceMotionUpdates];
+    //_motionManager=nil;
+    attitude=nil;
+    
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
     return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) ||
@@ -82,11 +83,14 @@
     scrollViewImagen=[[UIScrollView alloc]init];
     scrollViewImagen.frame=CGRectMake(0, 0, scrollViewRotar.frame.size.width, scrollViewRotar.frame.size.height);
     [scrollViewRotar addSubview:scrollViewImagen];
+    [scrollViewImagen setClipsToBounds:NO];
+    scrollViewImagen.layer.masksToBounds=NO;
     [scrollViewImagen setMinimumZoomScale:minimumZoomScale];
     [scrollViewImagen setMaximumZoomScale:maximumZoomScale];
     [scrollViewImagen setCanCancelContentTouches:NO];
-    scrollViewImagen.clipsToBounds = YES;
     [scrollViewImagen setDelegate:self];
+    [scrollViewImagen setShowsHorizontalScrollIndicator:NO];
+    [scrollViewImagen setShowsVerticalScrollIndicator:NO];
     imageViewZoomImage=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, scrollViewImagen.frame.size.width, scrollViewImagen.frame.size.height)];
     imageViewZoomImage.image=[UIImage imageWithContentsOfFile:path];
     [scrollViewImagen addSubview:imageViewZoomImage];
@@ -141,6 +145,13 @@
         zoomCheck=YES;
     }
 }
-
+-(CMMotionManager *)motionManager{
+    CMMotionManager *motionManager = nil;
+    id appDelegate = [UIApplication sharedApplication].delegate;
+    if ([appDelegate respondsToSelector:@selector(motionManager)]) {
+        motionManager = [appDelegate motionManager];
+    }
+    return motionManager;
+}
 
 @end

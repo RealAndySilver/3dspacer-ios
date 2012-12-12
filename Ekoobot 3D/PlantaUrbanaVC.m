@@ -53,10 +53,27 @@
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     [spinner stopAnimating];
     [self.view sendSubviewToBack:spinner];
+    _motionManager.showsDeviceMovementDisplay = NO;
+    [timer invalidate];
+    brujula.alpha=0;
+    brujula=nil;
+    timer = nil;
+    attitude=nil;
 }
 -(void)viewWillAppear:(BOOL)animated{
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     [scrollViewUrbanismo setZoomScale:minimumZoomScale animated:NO];
+    _motionManager = [self motionManager];
+    _motionManager.showsDeviceMovementDisplay = YES;
+    
+    [_motionManager setDeviceMotionUpdateInterval:1/60];
+    [_motionManager startDeviceMotionUpdates];
+    [_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
+    
+    timer=[[NSTimer alloc]init];
+    timer =[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(update) userInfo:nil repeats:YES];
+    brujula=[[BrujulaView alloc]initWithFrame:CGRectMake(self.view.frame.size.width-90, 10, 70, 70)];
+    [self.view addSubview:brujula];
 }
 -(void)viewDidAppear:(BOOL)animated{
     //[scrollViewUrbanismo setZoomScale:0.3 animated:NO];
@@ -134,6 +151,8 @@
     scrollViewUrbanismo.contentSize=CGSizeMake(imageViewUrbanismo.frame.size.width, imageViewUrbanismo.frame.size.height);
     //[self layoutScrollView];
     [self.view addSubview:scrollViewUrbanismo];
+    [scrollViewUrbanismo setShowsVerticalScrollIndicator:YES];
+    [scrollViewUrbanismo setShowsHorizontalScrollIndicator:YES];
     [scrollViewUrbanismo addSubview:imageViewUrbanismo];
     for (int i=0; i<arrayGrupos.count; i++) {
         Grupo *grupo=[arrayGrupos objectAtIndex:i];
@@ -142,12 +161,30 @@
     [scrollViewUrbanismo setMinimumZoomScale:minimumZoomScale];
     [scrollViewUrbanismo setMaximumZoomScale:maximumZoomScale];
     [scrollViewUrbanismo setCanCancelContentTouches:NO];
-    scrollViewUrbanismo.clipsToBounds = YES;
+    scrollViewUrbanismo.clipsToBounds = NO;
     [scrollViewUrbanismo scrollRectToVisible:CGRectMake(imageViewUrbanismo.frame.size.width/2, scrollViewUrbanismo.frame.size.height/2, scrollViewUrbanismo.frame.size.width/2, imageViewUrbanismo.frame.size.height/2) animated:YES];
     
     [scrollViewUrbanismo setDelegate:self];
+    
 }
-
+-(void)update{
+    attitude = _motionManager.deviceMotion.attitude;
+    CGAffineTransform swingTransform = CGAffineTransformIdentity;
+    swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)]);
+    scrollViewUrbanismo.transform = swingTransform;
+    brujula.cursor.transform = swingTransform;
+}
+- (float)radiansToDegrees:(float)number{
+    return  number * 57.295780;
+}
+-(CMMotionManager *)motionManager{
+    CMMotionManager *motionManager = nil;
+    id appDelegate = [UIApplication sharedApplication].delegate;
+    if ([appDelegate respondsToSelector:@selector(motionManager)]) {
+        motionManager = [appDelegate motionManager];
+    }
+    return motionManager;
+}
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView
 {
     UIView *subView = [scrollView.subviews objectAtIndex:0];

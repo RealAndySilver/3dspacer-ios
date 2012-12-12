@@ -34,24 +34,24 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "OpenGLView.m"
-         timestampString = "376950513.093083"
+         timestampString = "376969609.237397"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "756"
-         endingLineNumber = "756"
-         landmarkName = "@implementation OpenGLView"
-         landmarkType = "3">
+         startingLineNumber = "757"
+         endingLineNumber = "757"
+         landmarkName = "-touchesEnded:withEvent:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "OpenGLView.m"
-         timestampString = "376951117.087671"
+         timestampString = "376969609.237397"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "688"
-         endingLineNumber = "688"
+         startingLineNumber = "689"
+         endingLineNumber = "689"
          landmarkName = "@implementation OpenGLView"
          landmarkType = "3">
       </FileBreakpoint>

@@ -20,6 +20,7 @@
     server=[[ServerCommunicator alloc]init];
     server.caller=self;
     server.tag=1;
+    motionManager = [[CMMotionManager alloc] init];
     return YES;
 }
 							
@@ -95,6 +96,9 @@
                                           cancelButtonTitle:NSLocalizedString(@"Cancelar", nil)
                                           otherButtonTitles:nil,nil];
     [alert show];*/
+}
+-(CMMotionManager*)motionManager{
+    return motionManager;
 }
 
 

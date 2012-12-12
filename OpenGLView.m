@@ -540,7 +540,8 @@ const GLubyte IndicesBottom[] = {
             NSLog(@"Orientacion Portrait numero %i",orientation);
 
         }
-        _motionManager = [[CMMotionManager alloc] init];
+        //_motionManager = [[CMMotionManager alloc] init];
+        _motionManager = [self motionManager];
         _motionManager.showsDeviceMovementDisplay = YES;
         
         //[_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
@@ -746,7 +747,7 @@ const GLubyte IndicesBottom[] = {
         }
     }
 }
-/*-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     NSLog(@"ended");
     X[0] = movePoint1.x;
     X[1] = movePoint1.y;
@@ -761,7 +762,7 @@ const GLubyte IndicesBottom[] = {
     }
     timer1=[[NSTimer alloc]init];
     timer1=[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(trigger) userInfo:nil repeats:YES];
-}*/
+}
 
 -(void)trigger{
     //if(V[0]>0 && V[1]>0) {
@@ -874,7 +875,6 @@ const GLubyte IndicesBottom[] = {
         nearValue-=0.020;
         //[self performSelector:@selector(zoomOut) withObject:nil afterDelay:1/200];
         [self performSelectorInBackground:@selector(zoomOut) withObject:nil];
-        
     }
     else{
         nearValue=maxZoomOut;
@@ -885,5 +885,13 @@ const GLubyte IndicesBottom[] = {
      }*/
     float newValue=(nearValue-2)/(maxZoomIn-maxZoomOut);
     divisor=10+(27*newValue);
+}
+-(CMMotionManager *)motionManager{
+    CMMotionManager *motionManager = nil;
+    id appDelegate = [UIApplication sharedApplication].delegate;
+    if ([appDelegate respondsToSelector:@selector(motionManager)]) {
+        motionManager = [appDelegate motionManager];
+    }
+    return motionManager;
 }
 @end

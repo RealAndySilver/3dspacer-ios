@@ -17,6 +17,7 @@
 #import "Producto.h"
 #import "Planta.h"
 #import "MBProgressHud.h"
+#import "BrujulaView.h"
 
 @interface PlantaUrbanaVC : UIViewController<UIScrollViewDelegate> {
     Proyecto *proyecto;
@@ -27,7 +28,10 @@
     BOOL zoomCheck;
     float maximumZoomScale;
     float minimumZoomScale;
-
+    CMAttitude *attitude;
+    CMMotionManager *_motionManager;
+    NSTimer *timer;
+    BrujulaView *brujula;
 }
 @property Proyecto *proyecto;
 

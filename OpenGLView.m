@@ -610,7 +610,7 @@ const GLubyte IndicesBottom[] = {
     glDeleteTextures(1, &_leftTexture);
     glDeleteTextures(1, &_rightTexture);
 }
-- (void)dealloc{
+-(void)dealloc{
     _motionManager.showsDeviceMovementDisplay = NO;
     brujula=nil;
     [displayLink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -627,13 +627,9 @@ const GLubyte IndicesBottom[] = {
     projection =nil;
     [_context release];
     _context = nil;
-    //[_motionManager stopMagnetometerUpdates];
-    //[_motionManager stopDeviceMotionUpdates];
-    //[_motionManager release];
-    //_motionManager = nil;
     [super dealloc];
 }
-- (float)radiansToDegrees:(float)number{
+-(float)radiansToDegrees:(float)number{
     return  number * 57.295780;
 }
 
@@ -693,25 +689,26 @@ const GLubyte IndicesBottom[] = {
 }*/
 //int i=0;
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"began");
+    //NSLog(@"began");
     UITouch *touch = [touches anyObject];
     startPoint = [touch locationInView:touchesReceiverOpenGLView];
     oldPoint = startPoint;
     startTime = CACurrentMediaTime();
     imageViewTouched = YES;
-    movePoint1 = movePoint0 = startPoint;
+    //movePoint1 = movePoint0 = startPoint;
+    movePoint0.x = movePoint1.x = dxActualCamara;
+    movePoint0.y = movePoint1.y = dyActualCamara;
     if ([timer1 isValid]) {
         [timer1 invalidate];
         timer1=nil;
     }
 }
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event;{
-    NSLog(@"Moved");
+    //NSLog(@"Moved");
     if (isTouchEnabled) {
         UITouch *touch = [touches anyObject];
         CGPoint point = [touch locationInView:touchesReceiverOpenGLView];
         movePoint0 = movePoint1;
-        movePoint1 = point;
         
         if (!leftRotated) {
             dy = point.y - startPoint.y;
@@ -738,6 +735,17 @@ const GLubyte IndicesBottom[] = {
                 dxActualCamara = 90;
             }
         }
+        
+        movePoint1.x = dxActualCamara;
+        movePoint1.y = dyActualCamara;
+        /*
+         * LOG TO SEE THE STATE OF VARIABLES
+        NSLog(@"x0 = (%f,%f)",movePoint0.x,movePoint0.y);
+        NSLog(@"x1 = (%f,%f)",movePoint1.x,movePoint1.y);
+        NSLog(@"actualCamera = (%f,%f)",dxActualCamara,dyActualCamara);
+        NSLog(@"delta = (%f,%f)",dx,dy);
+         */
+        
         oldPoint = point;
         startPoint = point;
         CGAffineTransform swingTransform = CGAffineTransformIdentity;
@@ -748,14 +756,22 @@ const GLubyte IndicesBottom[] = {
     }
 }
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"ended");
+    //NSLog(@"ended");
     X[0] = movePoint1.x;
     X[1] = movePoint1.y;
+    /*
+     * LOG TO SEE THE STATE OF VARIABLES
     NSLog(@"x0 = (%f,%f)",movePoint0.x,movePoint0.y);
     NSLog(@"x1 = (%f,%f)",movePoint1.x,movePoint1.y);
+     */
 
-    V[0] = (movePoint0.x + movePoint1.x)/divisor;
-    V[1] = (movePoint0.y + movePoint1.y)/divisor;
+    V[0] = 5.0*(movePoint1.x - movePoint0.x);
+    V[1] = 5.0*(movePoint1.y - movePoint0.y);
+    /*
+     * LOG TO SEE THE STATE OF VARIABLES
+    NSLog(@"X = (%f,%f)",X[0],X[1]);
+    NSLog(@"V = (%f,%f)",V[0],V[1]);
+     */
     if ([timer1 isValid]) {
         [timer1 invalidate];
         timer1=nil;
@@ -772,17 +788,24 @@ const GLubyte IndicesBottom[] = {
         }
     
     if (X[0] >= 90) {
-        V[0] = 0;
+        V[0] *=-1;
     }
     else if (X[0] <= -90) {
-        V[0] = 0;
+        V[0] *= -1;
     }
+    /*
+     * LOG TO SEE THE STATE OF VARIABLES
+    NSLog(@"V = (%f,%f)",V[0],V[1]);
+     */
     
     for(int k=0;k<2;k++) {
         F[k] -= Kf*V[k];
-        mContinue = F[k] == 0.0;
+        mContinue = abs(F[k]) <= 0.00001;
     }
+    /*Q
+     * LOG TO SEE THE STATE OF VARIABLES
     NSLog(@"F = (%f,%f)",F[0],F[1]);
+     */
     
     if(!mContinue) {
         for(int k=0;k<2;k++) {
@@ -792,14 +815,20 @@ const GLubyte IndicesBottom[] = {
             df[k+2] = F[k]/m;
         }
         
+        /*
+         * LOG TO SEE THE STATE OF VARIABLES
         NSLog(@"f = (%f,%f,%f,%f)",f[0],f[1],f[2],f[3]);
         NSLog(@"df = (%f,%f,%f,%f)",df[0],df[1],df[2],df[3]);
+        */
         
         for(int k=0;k<4;k++) {
             f[k] += df[k]*step;
         }
         
+        /*
+         * LOG TO SEE THE STATE OF VARIABLES
         NSLog(@"f = (%f,%f,%f,%f)",f[0],f[1],f[2],f[3]);
+        */
         
         t += step;
         
@@ -808,8 +837,34 @@ const GLubyte IndicesBottom[] = {
             V[k] = f[k+2];
         }
         
+        /*
+         * LOG TO SEE THE STATE OF VARIABLES
+        NSLog(@"X = (%f,%f)",X[0],X[1]);
+        NSLog(@"V = (%f,%f)",V[0],V[1]);
+         */
+        
+        /*
+        if (X[0] >= 90) {
+            X[0] = -90;
+        }
+        else if (X[0] <= -90) {
+            X[0] = 90;
+        }
+         */
+        
+        /*
+         * LOG TO SEE THE STATE OF VARIABLES
+        NSLog(@"X = (%f,%f)",X[0],X[1]);
+        NSLog(@"V = (%f,%f)",V[0],V[1]);
+         */
+        
         dxActualCamara = X[0];
         dyActualCamara = X[1];
+        
+        /*
+         * LOG TO SEE THE STATE OF VARIABLES
+        NSLog(@"delta = (%f,%f)",dxActualCamara,dyActualCamara);
+         */
         
         startPoint.x = dxActualCamara;
         startPoint.y = dyActualCamara;
@@ -819,10 +874,12 @@ const GLubyte IndicesBottom[] = {
         if (!compassTouched) {
             brujula.transform = swingTransform;
         }
-    
-        NSLog(@"X = (%f,%f)",X[0],X[1]);
-        NSLog(@"V = (%f,%f)",V[0],V[1]);
-        NSLog(@"delta = (%f,%f)",dxActualCamara,dyActualCamara);
+    }
+    else {
+        if ([timer1 isValid]) {
+            [timer1 invalidate];
+            timer1=nil;
+        }
     }
     //}
 }

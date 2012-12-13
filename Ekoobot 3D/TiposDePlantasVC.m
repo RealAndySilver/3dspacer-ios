@@ -167,6 +167,14 @@
     sv.delegate=self;
     [scrollArray addObject:sv];
     [scrollView addSubview:pagina];
+    CustomButton *zoomButton=[[CustomButton alloc]init];
+    zoomButton.imageView=imageView;
+    zoomButton.frame=CGRectMake(0, 0, 45, 45);
+    zoomButton.center=CGPointMake(pagina.frame.size.width-55, pagina.frame.size.height-100);
+    [zoomButton setTitle:@"" forState:UIControlStateNormal];
+    [zoomButton setBackgroundImage:[UIImage imageNamed:@"compassIcon.png"] forState:UIControlStateNormal];
+    [zoomButton addTarget:self action:@selector(goToZoomView:) forControlEvents:UIControlEventTouchUpInside];
+    [pagina addSubview:zoomButton];
     
 }
 -(UIView *)viewForZoomingInScrollView:(UIScrollView*)scrollview{
@@ -211,13 +219,7 @@
             [data2 writeToFile:jpegFilePath atomically:YES];
         }
         plantaImage.frame = CGRectMake(0, 0, view.frame.size.width-50, view.frame.size.height-150);
-        CustomButton *zoomButton=[[CustomButton alloc]init];
-        zoomButton.path=jpegFilePath;
-        zoomButton.frame=CGRectMake(0, 0, 100, 50);
-        zoomButton.center=CGPointMake(plantaImage.frame.size.width/2, plantaImage.frame.size.height-70);
-        [zoomButton setTitle:@"Zoom" forState:UIControlStateNormal];
-        [zoomButton addTarget:self action:@selector(goToZoomView:) forControlEvents:UIControlEventTouchUpInside];
-        [plantaImage addSubview:zoomButton];
+        
         return plantaImage;
     }
     else {
@@ -225,13 +227,6 @@
         plantaImage.image = [UIImage imageWithContentsOfFile:jpegFilePath];
         plantaImage.frame = CGRectMake(0, 0, view.frame.size.width-50, view.frame.size.height-150);
         NSLog(@"width %f height %f",plantaImage.frame.size.width,plantaImage.frame.size.height);
-        CustomButton *zoomButton=[[CustomButton alloc]init];
-        zoomButton.path=jpegFilePath;
-        zoomButton.frame=CGRectMake(0, 0, 100, 50);
-        zoomButton.center=CGPointMake(plantaImage.frame.size.width/2, plantaImage.frame.size.height-70);
-        [zoomButton setTitle:@"Zoom" forState:UIControlStateNormal];
-        [zoomButton addTarget:self action:@selector(goToZoomView:) forControlEvents:UIControlEventTouchUpInside];
-        [plantaImage addSubview:zoomButton];
         return plantaImage;
     }
     return nil;
@@ -242,6 +237,7 @@
     BrujulaViewController *zVC=[[BrujulaViewController alloc]init];
     zVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Brujula"];
     zVC.path=button.path;
+    zVC.externalImageView=button.imageView;
     [self.navigationController pushViewController:zVC animated:NO];
 }
 -(void)insertarBotonEn:(UIView*)view enPosicionX:(NSString*)posX yPosicionY:(NSString*)posY Tag:(int)tag yPagina:(int)pagina titulo:(NSString*)eltitulo{

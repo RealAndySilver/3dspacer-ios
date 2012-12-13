@@ -64,7 +64,6 @@
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     [scrollViewUrbanismo setZoomScale:minimumZoomScale animated:NO];
     _motionManager = [self motionManager];
-    _motionManager.showsDeviceMovementDisplay = YES;
     
     [_motionManager setDeviceMotionUpdateInterval:1/60];
     [_motionManager startDeviceMotionUpdates];
@@ -151,8 +150,8 @@
     scrollViewUrbanismo.contentSize=CGSizeMake(imageViewUrbanismo.frame.size.width, imageViewUrbanismo.frame.size.height);
     //[self layoutScrollView];
     [self.view addSubview:scrollViewUrbanismo];
-    [scrollViewUrbanismo setShowsVerticalScrollIndicator:YES];
-    [scrollViewUrbanismo setShowsHorizontalScrollIndicator:YES];
+    [scrollViewUrbanismo setShowsVerticalScrollIndicator:NO];
+    [scrollViewUrbanismo setShowsHorizontalScrollIndicator:NO];
     [scrollViewUrbanismo addSubview:imageViewUrbanismo];
     for (int i=0; i<arrayGrupos.count; i++) {
         Grupo *grupo=[arrayGrupos objectAtIndex:i];
@@ -168,11 +167,22 @@
     
 }
 -(void)update{
-    attitude = _motionManager.deviceMotion.attitude;
-    CGAffineTransform swingTransform = CGAffineTransformIdentity;
-    swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)]);
-    scrollViewUrbanismo.transform = swingTransform;
-    brujula.cursor.transform = swingTransform;
+    if (brujula.isOn) {
+        _motionManager.showsDeviceMovementDisplay = YES;
+        attitude = _motionManager.deviceMotion.attitude;
+        CGAffineTransform swingTransform = CGAffineTransformIdentity;
+        swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)]);
+        scrollViewUrbanismo.transform = swingTransform;
+        brujula.cursor.transform = swingTransform;
+    }
+    else{
+        _motionManager.showsDeviceMovementDisplay = NO;
+        CGAffineTransform swingTransform = CGAffineTransformIdentity;
+        swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(0)]);
+        scrollViewUrbanismo.transform = swingTransform;
+        brujula.cursor.transform = swingTransform;
+    }
+    
 }
 - (float)radiansToDegrees:(float)number{
     return  number * 57.295780;

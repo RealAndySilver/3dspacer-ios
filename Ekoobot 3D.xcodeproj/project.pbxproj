@@ -64,6 +64,8 @@
 		755233AF163B446A00D541DB /* brujula.png in Resources */ = {isa = PBXBuildFile; fileRef = 755233AE163B446A00D541DB /* brujula.png */; };
 		7552410D1677D2C8004BC471 /* BrujulaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7552410C1677D2C8004BC471 /* BrujulaViewController.m */; };
 		755241121677E303004BC471 /* BrujulaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 755241111677E303004BC471 /* BrujulaView.m */; };
+		75524125167937BF004BC471 /* compassIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 75524124167937BF004BC471 /* compassIcon.png */; };
+		755241271679388E004BC471 /* zoom.png in Resources */ = {isa = PBXBuildFile; fileRef = 755241261679388E004BC471 /* zoom.png */; };
 		75550744162F0FF300479537 /* play-video.png in Resources */ = {isa = PBXBuildFile; fileRef = 75550743162F0FF300479537 /* play-video.png */; };
 		75550747162F293A00479537 /* SendInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75550746162F293A00479537 /* SendInfoViewController.m */; };
 		7555074A162F2B6A00479537 /* SendInfoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 75550749162F2B6A00479537 /* SendInfoButton.m */; };
@@ -205,6 +207,8 @@
 		7552410C1677D2C8004BC471 /* BrujulaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrujulaViewController.m; sourceTree = "<group>"; };
 		755241101677E303004BC471 /* BrujulaView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrujulaView.h; sourceTree = "<group>"; };
 		755241111677E303004BC471 /* BrujulaView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrujulaView.m; sourceTree = "<group>"; };
+		75524124167937BF004BC471 /* compassIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compassIcon.png; sourceTree = "<group>"; };
+		755241261679388E004BC471 /* zoom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zoom.png; sourceTree = "<group>"; };
 		75550743162F0FF300479537 /* play-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play-video.png"; sourceTree = "<group>"; };
 		75550745162F293A00479537 /* SendInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendInfoViewController.h; sourceTree = "<group>"; };
 		75550746162F293A00479537 /* SendInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendInfoViewController.m; sourceTree = "<group>"; };
@@ -521,6 +525,8 @@
 		37F1EBF71541D65D00426C48 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				755241261679388E004BC471 /* zoom.png */,
+				75524124167937BF004BC471 /* compassIcon.png */,
 				75FF144F1652EA2700C39705 /* compassOn.png */,
 				75E995BF164AAC6E00C7452E /* cancel-en.png */,
 				75E995C0164AAC6E00C7452E /* send-en.png */,
@@ -702,6 +708,8 @@
 				75FF14501652EA2700C39705 /* compassOn.png in Resources */,
 				755F9F0E1653090C0002266B /* icon@2x.png in Resources */,
 				755F9F101653091B0002266B /* icon.png in Resources */,
+				75524125167937BF004BC471 /* compassIcon.png in Resources */,
+				755241271679388E004BC471 /* zoom.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

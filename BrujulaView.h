@@ -10,7 +10,10 @@
 #import <QuartzCore/QuartzCore.h>
 @interface BrujulaView : UIView{
     UIImageView *compassPlaceholder;
-   
+    UIImageView *compassOverlay;
+
 }
 @property(nonatomic,retain)UIImageView *cursor;
+@property(nonatomic)BOOL isOn;
+
 @end

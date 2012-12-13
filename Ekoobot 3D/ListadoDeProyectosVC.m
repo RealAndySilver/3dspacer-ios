@@ -185,9 +185,10 @@
                     [renderImage setUserInteractionEnabled:YES];
                     CustomButton *zoomButton=[[CustomButton alloc]init];
                     zoomButton.path=jpegFilePath;
-                    zoomButton.frame=CGRectMake(0, 0, 100, 50);
+                    zoomButton.frame=CGRectMake(0, 0, 50, 50);
                     zoomButton.center=CGPointMake(renderImage.frame.size.width/2, renderImage.frame.size.height-70);
-                    [zoomButton setTitle:@"Zoom" forState:UIControlStateNormal];
+                    [zoomButton setTitle:@"" forState:UIControlStateNormal];
+                    [zoomButton setBackgroundImage:[UIImage imageNamed:@"zoom.png"] forState:UIControlStateNormal];
                     [zoomButton addTarget:self action:@selector(goToZoomView:) forControlEvents:UIControlEventTouchUpInside];
                     [renderImage addSubview:zoomButton];
                     [scrollPage addSubview:renderImage];
@@ -201,9 +202,10 @@
                     [renderImage setUserInteractionEnabled:YES];
                     CustomButton *zoomButton=[[CustomButton alloc]init];
                     zoomButton.path=jpegFilePath;
-                    zoomButton.frame=CGRectMake(0, 0, 100, 50);
+                    zoomButton.frame=CGRectMake(0, 0, 50, 50);
                     zoomButton.center=CGPointMake(renderImage.frame.size.width/2, renderImage.frame.size.height-70);
-                    [zoomButton setTitle:@"Zoom" forState:UIControlStateNormal];
+                    [zoomButton setTitle:@"" forState:UIControlStateNormal];
+                    [zoomButton setBackgroundImage:[UIImage imageNamed:@"zoom.png"] forState:UIControlStateNormal];
                     [zoomButton addTarget:self action:@selector(goToZoomView:) forControlEvents:UIControlEventTouchUpInside];
                     [renderImage addSubview:zoomButton];
                     [scrollPage addSubview:renderImage];

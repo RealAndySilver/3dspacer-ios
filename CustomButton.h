@@ -15,6 +15,7 @@
 @property(nonatomic)id adjunto;
 @property(nonatomic)id extraContent;
 @property(nonatomic)NSString *path;
+@property(nonatomic)UIImageView *imageView;
 
 
 

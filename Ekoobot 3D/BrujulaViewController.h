@@ -24,6 +24,9 @@
     CMMotionManager *_motionManager;
     NSTimer *timer;
     BrujulaView *brujula;
+
 }
 @property(nonatomic)NSString *path;
+@property(nonatomic)UIImageView *externalImageView;
+
 @end

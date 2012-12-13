@@ -13,7 +13,7 @@
 @end
 
 @implementation BrujulaViewController
-@synthesize path;
+@synthesize path,externalImageView;
 
 - (void)viewDidLoad{
     [super viewDidLoad];
@@ -30,9 +30,7 @@
     minimumZoomScale=1;
     [self loadScrollView];
     
-    _motionManager = [self motionManager];
-    _motionManager.showsDeviceMovementDisplay = YES;
-    
+    _motionManager = [self motionManager];    
     [_motionManager setDeviceMotionUpdateInterval:1/60];
     [_motionManager startDeviceMotionUpdates];
     [_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
@@ -45,11 +43,22 @@
     // Do any additional setup after loading the view.
 }
 -(void)update{
-    attitude = _motionManager.deviceMotion.attitude;
-    CGAffineTransform swingTransform = CGAffineTransformIdentity;
-    swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)]);
-    scrollViewImagen.transform = swingTransform;
-    brujula.cursor.transform = swingTransform;
+    if (brujula.isOn) {
+        _motionManager.showsDeviceMovementDisplay = YES;
+        attitude = _motionManager.deviceMotion.attitude;
+        CGAffineTransform swingTransform = CGAffineTransformIdentity;
+        swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)]);
+        scrollViewImagen.transform = swingTransform;
+        brujula.cursor.transform = swingTransform;
+    }
+    else{
+        _motionManager.showsDeviceMovementDisplay = NO;
+        CGAffineTransform swingTransform = CGAffineTransformIdentity;
+        swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(0)]);
+        scrollViewImagen.transform = swingTransform;
+        brujula.cursor.transform = swingTransform;
+    }
+    
 }
 - (float)radiansToDegrees:(float)number{
     return  number * 57.295780;
@@ -92,7 +101,9 @@
     [scrollViewImagen setShowsHorizontalScrollIndicator:NO];
     [scrollViewImagen setShowsVerticalScrollIndicator:NO];
     imageViewZoomImage=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, scrollViewImagen.frame.size.width, scrollViewImagen.frame.size.height)];
-    imageViewZoomImage.image=[UIImage imageWithContentsOfFile:path];
+    //imageViewZoomImage.image=[UIImage imageWithContentsOfFile:path];
+    imageViewZoomImage.image=externalImageView.image;
+
     [scrollViewImagen addSubview:imageViewZoomImage];
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
     [doubleTap setNumberOfTapsRequired:2];

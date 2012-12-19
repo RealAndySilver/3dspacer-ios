@@ -610,7 +610,12 @@ const GLubyte IndicesBottom[] = {
     glDeleteTextures(1, &_leftTexture);
     glDeleteTextures(1, &_rightTexture);
 }
+-(void)dealloquer{
+    NSLog(@"dealoquer");
+    [self dealloc];
+}
 -(void)dealloc{
+    NSLog(@"Dealloc Display link %@",displayLink);
     _motionManager.showsDeviceMovementDisplay = NO;
     brujula=nil;
     [displayLink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -627,7 +632,9 @@ const GLubyte IndicesBottom[] = {
     projection =nil;
     [_context release];
     _context = nil;
-    [super dealloc];
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    //[super dealloc];
 }
 -(float)radiansToDegrees:(float)number{
     return  number * 57.295780;

@@ -116,10 +116,8 @@
                 NSLog(@"dentro del 2ndo if landscaperight");
                 return;
             }
-            
         }
     }
-    
 }
 
 - (UIViewController *)popViewControllerAnimated:(BOOL)animated

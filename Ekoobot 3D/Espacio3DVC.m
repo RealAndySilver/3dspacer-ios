@@ -35,6 +35,8 @@
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
+    NSLog(@"Dissappeared 3D");
+    [view3D dealloquer];
     view3D=nil;
     espacio3D=nil;
     lowerView=nil;

@@ -138,4 +138,5 @@
 -(void)cambiarToquePorMotion:(UIButton*)button;
 -(void)zoom;
 -(void)compassFlag;
+-(void)dealloquer;
 @end

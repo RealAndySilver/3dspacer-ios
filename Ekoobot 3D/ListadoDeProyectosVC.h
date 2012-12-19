@@ -25,6 +25,7 @@
 #import "Adjunto.h"
 #import "ZoomViewController.h"
 #import "NavAnimations.h"
+#import "Analytic.h"
 @interface ListadoDeProyectosVC : UIViewController <UIScrollViewDelegate,UIAlertViewDelegate,UIDocumentInteractionControllerDelegate> {
     UIScrollView *scrollView;
     Usuario *usuarioActual;

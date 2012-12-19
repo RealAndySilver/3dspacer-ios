@@ -10,6 +10,7 @@
 #import "FileSaver.h"
 #import "ServerCommunicator.h"
 #import <CoreMotion/CoreMotion.h>
+#import "SqlHandler.h"
 @interface AppDelegate : UIResponder <UIApplicationDelegate>{
     ServerCommunicator *server;
     NSString *methodName;

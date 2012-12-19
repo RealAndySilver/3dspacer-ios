@@ -52,6 +52,7 @@
     [MBProgressHUD hideHUDForView:self.view animated:YES];
 }
 -(void)viewWillAppear:(BOOL)animated{
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationController.navigationBarHidden=NO;
 }
 -(void)viewDidAppear:(BOOL)animated{

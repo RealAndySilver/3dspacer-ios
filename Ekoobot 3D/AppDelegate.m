@@ -21,6 +21,7 @@
     server.caller=self;
     server.tag=1;
     motionManager = [[CMMotionManager alloc] init];
+    [SqlHandler createEditableCopyOfDatabaseIfNeeded];
     return YES;
 }
 							

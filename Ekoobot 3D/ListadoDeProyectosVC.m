@@ -495,6 +495,9 @@
     NSString *keyProyecto = [NSString stringWithFormat:@"%i",sender.tag-3000];
     Proyecto *proyecto = [usuarioActual.arrayProyectos objectAtIndex:[keyProyecto intValue]];
     ItemUrbanismo *itemUrbanismo = [proyecto.arrayItemsUrbanismo objectAtIndex:0];
+    Analytic *analytic=[[Analytic alloc]init];
+    [analytic sendAnalyticWithProjectId:proyecto.idProyecto username:usuarioActual.usuario userId:usuarioActual.idUsuario andToken:@"Token"];
+
     if (itemUrbanismo.existe==1) {
         [self irAPlantaUrbanaVCConProyecto:proyecto];
     }
@@ -516,6 +519,14 @@
                 [self irATiposDePlantasVCConProducto:producto];
         }
     }
+}
+-(NSString*)getDatePieceFormatted:(NSString*)format{
+    NSDate *currentDateTime = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:format];
+    NSString *dateInStringFormated = [dateFormatter stringFromDate:currentDateTime];
+    NSLog(@"Date %@ format %@", format,dateInStringFormated);
+    return dateInStringFormated;
 }
 - (void)irAPlantaUrbanaVCConProyecto:(id)proyecto{
     PlantaUrbanaVC *pgVC = [[PlantaUrbanaVC alloc]init];

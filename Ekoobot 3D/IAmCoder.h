@@ -18,4 +18,5 @@
 +(NSString*)encodeURL:(NSString*)url;
 +(NSString*)decodeURL:(NSString*)url;
 +(NSString*)hash256:(NSString*)parameters;
++(NSString*)dateString;
 @end

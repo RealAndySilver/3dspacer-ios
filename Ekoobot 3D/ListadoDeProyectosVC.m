@@ -496,7 +496,7 @@
     Proyecto *proyecto = [usuarioActual.arrayProyectos objectAtIndex:[keyProyecto intValue]];
     ItemUrbanismo *itemUrbanismo = [proyecto.arrayItemsUrbanismo objectAtIndex:0];
     Analytic *analytic=[[Analytic alloc]init];
-    [analytic sendAnalyticWithProjectId:proyecto.idProyecto username:usuarioActual.usuario userId:usuarioActual.idUsuario andToken:@"Token"];
+    [analytic sendAnalyticWithProjectId:proyecto.idProyecto username:usuarioActual.usuario userId:usuarioActual.idUsuario andPass:usuarioActual.contrasena];
 
     if (itemUrbanismo.existe==1) {
         [self irAPlantaUrbanaVCConProyecto:proyecto];

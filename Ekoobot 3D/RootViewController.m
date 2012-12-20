@@ -166,7 +166,9 @@
         [self.navigationController pushViewController:eVC animated:YES];
     }
     else{
-    NSString *parameters=[NSString stringWithFormat:@"<ns:getData><username>%@</username><password>%@</password><language>%@</language></ns:getData>",usuarioString,contrasenaString,lang];
+    //NSString *parameters=[NSString stringWithFormat:@"<ns:getData><username>%@</username><password>%@</password><language>%@</language></ns:getData>",usuarioString,contrasenaString,lang];
+        NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",usuarioString,contrasenaString,[IAmCoder dateString]];
+        NSString *parameters=[NSString stringWithFormat:@"<ns:getData><data>%@</data><token>%@</token><language>%@</language></ns:getData>",loginData,[IAmCoder hash256:loginData],lang];
     [sc callServerWithMethod:@"" andParameter:parameters];
     
         NSThread *secThread=[[NSThread alloc]initWithTarget:self 

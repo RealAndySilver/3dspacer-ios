@@ -35,7 +35,8 @@
                              "</soapenv:Envelope>\n",parameter];
 	//NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.ekoomedia.com.co/ekoobot3d/web/ws/bot_api?wsdl"]];
     //NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://ekoomedia.com.co/ekoobot3d_test/web/ws/bot_api?wsdl"]];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://ekoobot.com/web/ws/bot_api?wsdl"]];
+    //NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://ekoobot.com/web/ws/bot_api?wsdl"]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://ekoobot.com/web/ws/bot_api_1_1?wsdl"]];
 
 
     NSString *soapAction=[NSString stringWithFormat:@"http://bot_api/1.0/"];
@@ -104,6 +105,14 @@
         resDic=[[NSMutableDictionary alloc]initWithDictionary:dictionary2];
         NSLog(@"xml %@",dictionary1);
         [caller performSelector:@selector(receivedDataFromServerRegister:) withObject:self];
+    }
+    else if ([caller respondsToSelector:@selector(receivedDataFromServerAnalytics:)]) {
+        //resDic=[[NSMutableDictionary alloc]initWithDictionary:dictionary2];
+        //NSLog(@"xml %@",resDic);
+        NSDictionary * dictionary2=[[[dictionary1 objectForKey:@"SOAP-ENV:Envelope"]objectForKey:@"SOAP-ENV:Body"]objectForKey:@"ns1:setAnalyticsResponse"];
+        resDic=[[NSMutableDictionary alloc]initWithDictionary:dictionary2];
+        NSLog(@"xml %@",dictionary1);
+        [caller performSelector:@selector(receivedDataFromServerAnalytics:) withObject:self];
     }
 }
 

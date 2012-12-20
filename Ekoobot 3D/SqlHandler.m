@@ -1,6 +1,5 @@
 //
 //  SqlHandler.m
-//  DroidSecure
 //
 //  Created by Andres Abril on 27/10/12.
 //  Copyright (c) 2012 Andres Abril. All rights reserved.
@@ -22,7 +21,7 @@
         if((sqlite3_open([dbPath UTF8String], &db) != SQLITE_OK)){
             NSLog(@"An error has occured.");
         }
-        NSString* sql =@"SELECT projectId,month,day,hour,username,userId,token,minute FROM project";
+        NSString* sql =@"SELECT projectId,month,day,hour,username,userId,token,minute,seconds,amPm,year FROM project";
         sqlite3_stmt *sqlStatement;
         if(sqlite3_prepare_v2(db, [sql UTF8String], -1, &sqlStatement, NULL) != SQLITE_OK)
         {
@@ -38,7 +37,12 @@
             analytic.userId = [NSString stringWithUTF8String:(char *) sqlite3_column_text(sqlStatement, 5)];
             analytic.token = [NSString stringWithUTF8String:(char *) sqlite3_column_text(sqlStatement, 6)];
             analytic.minute = [NSString stringWithUTF8String:(char *) sqlite3_column_text(sqlStatement, 7)];
-            NSLog(@"projectid: %@ \nmonth: %@ \nday: %@ \nhour: %@ \nusername: %@ \nuserId: %@ \ntoken: %@",analytic.projectId,analytic.month,analytic.day,analytic.hour,analytic.username,analytic.userId,analytic.token);
+            analytic.seconds = [NSString stringWithUTF8String:(char *) sqlite3_column_text(sqlStatement, 8)];
+            analytic.amPm = [NSString stringWithUTF8String:(char *) sqlite3_column_text(sqlStatement, 9)];
+            analytic.year = [NSString stringWithUTF8String:(char *) sqlite3_column_text(sqlStatement, 10)];
+
+
+            NSLog(@"projectid: %@ \nyear: %@\nmonth: %@ \nday: %@ \nhour: %@ \nminutes: %@\nseconds: %@\namPm: %@\nusername: %@ \nuserId: %@ \ntoken: %@",analytic.year,analytic.projectId,analytic.month,analytic.day,analytic.hour,analytic.minute,analytic.seconds,analytic.amPm,analytic.username,analytic.userId,analytic.token);
             [analyticsArray addObject:analytic];
         }
         sqlite3_finalize(sqlStatement);
@@ -76,7 +80,7 @@
     const char *dbpath = [dbPath UTF8String];
     sqlite3_stmt    *stmt;
     if (sqlite3_open(dbpath, &db) == SQLITE_OK){
-        NSString *insertSQL = [NSString stringWithFormat: @"INSERT INTO project (projectId,month,day,hour,username,userId,token,minute) VALUES ('%@','%@','%@','%@','%@','%@','%@','%@')", analytic.projectId,analytic.month,analytic.day,analytic.hour,analytic.username,analytic.userId,analytic.token,analytic.minute];
+        NSString *insertSQL = [NSString stringWithFormat: @"INSERT INTO project (projectId,month,day,hour,username,userId,token,minute,seconds,amPm,year) VALUES ('%@','%@','%@','%@','%@','%@','%@','%@','%@','%@','%@')", analytic.projectId,analytic.month,analytic.day,analytic.hour,analytic.username,analytic.userId,analytic.token,analytic.minute,analytic.seconds,analytic.amPm,analytic.year];
         const char *insert_stmt = [insertSQL UTF8String];
         sqlite3_prepare_v2(db, insert_stmt, -1, &stmt, NULL);
         if (sqlite3_step(stmt) == SQLITE_DONE){
@@ -88,6 +92,9 @@
             sqlite3_bind_text(stmt, 5, [analytic.userId UTF8String], -1, SQLITE_TRANSIENT);
             sqlite3_bind_text(stmt, 6, [analytic.token UTF8String], -1, SQLITE_TRANSIENT);
             sqlite3_bind_text(stmt, 7, [analytic.minute UTF8String], -1, SQLITE_TRANSIENT);
+            sqlite3_bind_text(stmt, 8, [analytic.seconds UTF8String], -1, SQLITE_TRANSIENT);
+            sqlite3_bind_text(stmt, 9, [analytic.amPm UTF8String], -1, SQLITE_TRANSIENT);
+            sqlite3_bind_text(stmt, 10, [analytic.year UTF8String], -1, SQLITE_TRANSIENT);
         }
         else {
             //NSLog(@"error %s",sqlite3_errmsg(db));

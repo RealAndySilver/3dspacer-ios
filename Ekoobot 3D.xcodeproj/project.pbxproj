@@ -57,6 +57,7 @@
 		7518923C15BE1E76006B51B2 /* MBProgressHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 7518923B15BE1E76006B51B2 /* MBProgressHud.m */; };
 		752DCAFE15A77A8C002B732D /* Grupo.m in Sources */ = {isa = PBXBuildFile; fileRef = 752DCAFD15A77A8C002B732D /* Grupo.m */; };
 		752DCB0C15A7EB06002B732D /* CustomButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 752DCB0B15A7EB06002B732D /* CustomButton.m */; };
+		7534B20B1682595B0005F7BC /* analytics.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 7534B20A1682595B0005F7BC /* analytics.sqlite */; };
 		7546A58215AF3A7F000F48E5 /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7546A58115AF3A7F000F48E5 /* LoadingView.m */; };
 		755233A0163ACB4400D541DB /* recomendar.png in Resources */ = {isa = PBXBuildFile; fileRef = 7552339F163ACB4400D541DB /* recomendar.png */; };
 		755233A5163AF21800D541DB /* enviar.png in Resources */ = {isa = PBXBuildFile; fileRef = 755233A4163AF21800D541DB /* enviar.png */; };
@@ -90,7 +91,6 @@
 		7589F49B167EBA8E007CA511 /* SqlHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 7589F49A167EBA8E007CA511 /* SqlHandler.m */; };
 		7589F49E167EBAFF007CA511 /* Analytic.m in Sources */ = {isa = PBXBuildFile; fileRef = 7589F49D167EBAFF007CA511 /* Analytic.m */; };
 		7589F4A0167EBC77007CA511 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7589F49F167EBC77007CA511 /* libsqlite3.0.dylib */; };
-		7589F4A2167EDB55007CA511 /* analytics.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 7589F4A1167EDB55007CA511 /* analytics.sqlite */; };
 		7595183B1635FC5F00336C0A /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 7595183A1635FC5F00336C0A /* pin.png */; };
 		75951841163608DE00336C0A /* cursor.png in Resources */ = {isa = PBXBuildFile; fileRef = 75951840163608DE00336C0A /* cursor.png */; };
 		7595184516360B8900336C0A /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 7595184416360B8900336C0A /* Default-Landscape@2x~ipad.png */; };
@@ -201,6 +201,7 @@
 		752DCAFD15A77A8C002B732D /* Grupo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Grupo.m; sourceTree = "<group>"; };
 		752DCB0A15A7EB06002B732D /* CustomButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomButton.h; sourceTree = "<group>"; };
 		752DCB0B15A7EB06002B732D /* CustomButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomButton.m; sourceTree = "<group>"; };
+		7534B20A1682595B0005F7BC /* analytics.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = analytics.sqlite; sourceTree = "<group>"; };
 		7546A58015AF3A7F000F48E5 /* LoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingView.h; sourceTree = "<group>"; };
 		7546A58115AF3A7F000F48E5 /* LoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingView.m; sourceTree = "<group>"; };
 		7552339F163ACB4400D541DB /* recomendar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = recomendar.png; sourceTree = "<group>"; };
@@ -253,7 +254,6 @@
 		7589F49C167EBAFF007CA511 /* Analytic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Analytic.h; sourceTree = "<group>"; };
 		7589F49D167EBAFF007CA511 /* Analytic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Analytic.m; sourceTree = "<group>"; };
 		7589F49F167EBC77007CA511 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
-		7589F4A1167EDB55007CA511 /* analytics.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = analytics.sqlite; sourceTree = "<group>"; };
 		7595183A1635FC5F00336C0A /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin.png; sourceTree = "<group>"; };
 		75951840163608DE00336C0A /* cursor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cursor.png; sourceTree = "<group>"; };
 		7595184416360B8900336C0A /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
@@ -624,7 +624,7 @@
 				7589F49A167EBA8E007CA511 /* SqlHandler.m */,
 				7589F49C167EBAFF007CA511 /* Analytic.h */,
 				7589F49D167EBAFF007CA511 /* Analytic.m */,
-				7589F4A1167EDB55007CA511 /* analytics.sqlite */,
+				7534B20A1682595B0005F7BC /* analytics.sqlite */,
 			);
 			name = Analytics;
 			sourceTree = "<group>";
@@ -735,7 +735,7 @@
 				755F9F101653091B0002266B /* icon.png in Resources */,
 				75524125167937BF004BC471 /* compassIcon.png in Resources */,
 				755241271679388E004BC471 /* zoom.png in Resources */,
-				7589F4A2167EDB55007CA511 /* analytics.sqlite in Resources */,
+				7534B20B1682595B0005F7BC /* analytics.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

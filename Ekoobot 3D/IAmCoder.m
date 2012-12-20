@@ -38,17 +38,17 @@ static const short _base64DecodingTable[256] = {
     return stringDecoded;
 }
 +(NSString *)hash256:(NSString *)parameters{
-    NSString *key = @"d4fe34231";
-    NSString *parameterParsed=[parameters stringByReplacingOccurrencesOfString:@"/" withString:@"|"];
-    NSLog(@"parsed %@",parameterParsed);
-    NSString *data = [NSString stringWithFormat:@"%@%@%@", @"sha256", parameterParsed, key];
+    NSString *key = @"b2c1b1aca372896cfb8e27e1451ad738";
+    //NSString *data = [NSString stringWithFormat:@"%@%@%@", @"sha256", parameterParsed, key];
+    NSString *data = [NSString stringWithFormat:@"%@",parameters];
+
     const char *cKey  = [key cStringUsingEncoding:NSASCIIStringEncoding];
     const char *cData = [data cStringUsingEncoding:NSASCIIStringEncoding];
     unsigned char cHMAC[CC_SHA256_DIGEST_LENGTH];
     CCHmac(kCCHmacAlgSHA256, cKey, strlen(cKey), cData, strlen(cData), cHMAC);
     NSData *HMAC = [[NSData alloc] initWithBytes:cHMAC
                                           length:sizeof(cHMAC)];
-    NSString *hash = [[[[[[[[[[[self base64EncodeData:HMAC]
+    /*NSString *hash = [[[[[[[[[[[self base64EncodeData:HMAC]
                     stringByReplacingOccurrencesOfString:@"+" withString:@""]
                     stringByReplacingOccurrencesOfString:@"$" withString:@""]
                     stringByReplacingOccurrencesOfString:@"=" withString:@""]
@@ -58,7 +58,8 @@ static const short _base64DecodingTable[256] = {
                     stringByReplacingOccurrencesOfString:@"@" withString:@""]
                     stringByReplacingOccurrencesOfString:@"/" withString:@""]
                     stringByReplacingOccurrencesOfString:@"#" withString:@""]
-                    stringByReplacingOccurrencesOfString:@"%%" withString:@""];
+                    stringByReplacingOccurrencesOfString:@"%%" withString:@""];*/
+    NSString *hash = [self base64EncodeData:HMAC];
     NSLog(@"hash %@",hash);
     return hash;
 }
@@ -185,5 +186,18 @@ static const short _base64DecodingTable[256] = {
 	NSData * objData = [[NSData alloc] initWithBytes:objResult length:j];
 	free(objResult);
 	return objData;
+}
++(NSString*)dateString{
+    NSDateFormatter *formatter=[[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyyMMdd-HHmmss"];
+    NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+    [formatter setTimeZone:timeZone];
+    NSDate *now = [[NSDate alloc] init];
+    NSString *date=[formatter stringFromDate:now];
+    NSDate *date2=[formatter dateFromString:date];
+    NSTimeInterval seconds = [date2 timeIntervalSince1970];
+    NSString *date3=[NSString stringWithFormat:@"%.0f",seconds];
+    NSLog(@"segundos entre fechas %@",date3);
+    return date3;
 }
 @end

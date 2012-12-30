@@ -36,11 +36,20 @@
                                                                style:UIBarButtonItemStylePlain 
                                                               target:self 
                                                               action:@selector(customLogoutAlert)];   
-    self.navigationItem.rightBarButtonItem = logout;
-    [self.navigationItem setHidesBackButton:YES animated:YES];
+    
+    UIBarButtonItem *refresh = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"RecargarProyectos", nil)
+                                                               style:UIBarButtonItemStylePlain
+                                                              target:self
+                                                              action:@selector(callServerToRefresh)];
+    
+    self.navigationItem.leftBarButtonItem = logout;
+    self.navigationItem.rightBarButtonItem = refresh;
+    
     NavController *navController = (NavController *)self.navigationController;
     [navController setOrientationType:0];
-    
+    nombreDeUsuario=usuarioActual.usuario;
+    passwordUsuario=usuarioActual.contrasena;
+
 }
 -(void)didReceiveMemoryWarning{
     NSLog(@"Listado Warning %@",usuarioActual.arrayProyectos);
@@ -125,12 +134,24 @@
     }
     
 }
+-(void)removerObjetos{
+    NSArray *array=[scrollView subviews];
+    for (UIView *sview in array) {
+        sview.alpha=0;
+        [sview removeFromSuperview];
+    }
+    int pageNumber=self.pageCon.currentPage;
+    [self mostrarObjetos];
+    [scrollView scrollRectToVisible:CGRectMake(scrollView.frame.size.width*pageNumber, 0, self.view.frame.size.width, self.view.frame.size.height) animated:YES];
+}
 
-- (void)crearScrollViewConPaginas:(int)numeroDePaginas
-{
+- (void)crearScrollViewConPaginas:(int)numeroDePaginas{
     //Se crea el scrollview
     CGRect frame = [[UIScreen mainScreen] applicationFrame];
-    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, frame.size.height,frame.size.width)];
+    if (!scrollView) {
+        scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, frame.size.height,frame.size.width)];
+    }
+    
     if (numeroDePaginas==1) {
         scrollView.contentSize=CGSizeMake(frame.size.height*numeroDePaginas+1, frame.size.width);
     }
@@ -143,8 +164,10 @@
     [self.view addSubview:scrollView];
     
     //Se crea el contador de paginas
-    self.pageCon = [[UIPageControl alloc]initWithFrame:CGRectMake(0, 0, frame.size.height, 50)];
-    self.pageCon.center=CGPointMake(365,frame.size.height-335);
+    if (!self.pageCon) {
+        self.pageCon = [[UIPageControl alloc]initWithFrame:CGRectMake(0, 0, frame.size.height, 50)];
+    }
+    self.pageCon.center=CGPointMake(self.view.frame.size.width/2,frame.size.height-335);
     self.pageCon.userInteractionEnabled=NO;
     self.pageCon.numberOfPages=numeroDePaginas;
     [self.view addSubview:pageCon];
@@ -496,7 +519,7 @@
     Proyecto *proyecto = [usuarioActual.arrayProyectos objectAtIndex:[keyProyecto intValue]];
     ItemUrbanismo *itemUrbanismo = [proyecto.arrayItemsUrbanismo objectAtIndex:0];
     Analytic *analytic=[[Analytic alloc]init];
-    [analytic sendAnalyticWithProjectId:proyecto.idProyecto username:usuarioActual.usuario userId:usuarioActual.idUsuario andPass:usuarioActual.contrasena];
+    //[analytic sendAnalyticWithProjectId:proyecto.idProyecto username:usuarioActual.usuario userId:usuarioActual.idUsuario andPass:usuarioActual.contrasena];
 
     if (itemUrbanismo.existe==1) {
         [self irAPlantaUrbanaVCConProyecto:proyecto];
@@ -613,5 +636,40 @@
 }
 -(UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller{
     return self;
+}
+#pragma mark call server method
+-(void)callServerToRefresh{
+    hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText=NSLocalizedString(@"Cargando", nil);
+    NSString *langID = [[NSLocale preferredLanguages] objectAtIndex:0];
+    NSString *lang = [[NSLocale currentLocale] displayNameForKey:NSLocaleLanguageCode value:langID];
+    ServerCommunicator *server=[[ServerCommunicator alloc]init];
+    server.caller=self;
+    server.tag=1;
+    NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",usuarioActual.usuario,usuarioActual.contrasena,[IAmCoder dateString]];
+    NSString *parameters=[NSString stringWithFormat:@"<ns:getData><data>%@</data><token>%@</token><language>%@</language></ns:getData>",loginData,[IAmCoder hash256:loginData],lang];
+    [server callServerWithMethod:@"" andParameter:parameters];
+}
+#pragma mark server response
+
+-(void)receivedDataFromServer:(ServerCommunicator*)sc{
+    NSLog(@"Usuario actual: %@ contraseña: %@",usuarioActual.usuario,usuarioActual.contrasena);
+    if ([sc.resDic objectForKey:@"usuario"]) {
+        usuarioActual=nil;
+        usuarioCopia=nil;
+        if (!usuarioActual) {
+            usuarioActual=[[Usuario alloc]initWithDictionary:[sc.resDic objectForKey:@"usuario"]];
+            usuarioCopia=[[Usuario alloc]initWithDictionary:[sc.resDic objectForKey:@"usuario"]];
+            usuarioActual.usuario=nombreDeUsuario;
+            usuarioActual.contrasena=passwordUsuario;
+            usuarioCopia.usuario=nombreDeUsuario;
+            usuarioCopia.contrasena=passwordUsuario;
+        }
+        [self removerObjetos];
+    }
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+}
+-(void)receivedDataFromServerWithError:(ServerCommunicator*)sc{
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
 }
 @end

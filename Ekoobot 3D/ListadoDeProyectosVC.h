@@ -34,6 +34,10 @@
     MBProgressHUD *hud;
     Usuario *usuarioCopia;
     NSMutableArray *scrollArray;
+    
+    //parametros para el server, son necesarios ya que se borran del usuario original
+    NSString *nombreDeUsuario;
+    NSString *passwordUsuario;
 }
 
 @property(nonatomic,retain)Usuario *usuarioActual;

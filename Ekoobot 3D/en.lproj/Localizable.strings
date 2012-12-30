@@ -40,6 +40,7 @@
 "Espacio3D"="3D Space";
 "Toque"="Touch ";
 "3D"="3D ";
+"RecargarProyectos"="Refresh Projects";
 
 "BotonEntrar"="botonEntrar-en.png";
 "RegistroPendiente" = "Pending Register";

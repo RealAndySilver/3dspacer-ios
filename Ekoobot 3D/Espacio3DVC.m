@@ -63,19 +63,6 @@
     lowerView.backgroundColor=[UIColor clearColor];
     [lowerView setUserInteractionEnabled:YES];
     
-    
-    /*compassPlaceholder=[[UIView alloc]init];
-    compassPlaceholder.frame=CGRectMake(lowerView.frame.size.width-80, -75, lowerView.frame.size.height/2, lowerView.frame.size.height/2);
-    compassPlaceholder.backgroundColor=[UIColor whiteColor];
-    compassPlaceholder.layer.cornerRadius=lowerView.frame.size.height/4;
-    compassPlaceholder.layer.masksToBounds=YES;
-    compassPlaceholder.layer.borderColor=[UIColor blackColor].CGColor;
-    compassPlaceholder.layer.borderWidth=2.0;
-    compassPlaceholder.layer.shouldRasterize = YES;
-    compassPlaceholder.layer.shadowOffset = CGSizeMake(0, -1);
-    compassPlaceholder.layer.shadowOpacity = 1;
-    compassPlaceholder.layer.shadowColor = [UIColor blackColor].CGColor;*/
-    
     compassPlaceholder=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"brujula.png"]];
     //compassPlaceholder.frame=CGRectMake(lowerView.frame.size.width-80, -75, lowerView.frame.size.height/2, lowerView.frame.size.height/2);
     compassPlaceholder.frame=CGRectMake(self.view.frame.size.width-80, 50, lowerView.frame.size.height/2, lowerView.frame.size.height/2);

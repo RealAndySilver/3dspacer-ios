@@ -161,10 +161,10 @@
     [scrollView addSubview:pagina];
     CustomButton *zoomButton=[[CustomButton alloc]init];
     zoomButton.imageView=imageView;
-    zoomButton.frame=CGRectMake(0, 0, 45, 45);
-    zoomButton.center=CGPointMake(pagina.frame.size.width-55, pagina.frame.size.height-100);
+    zoomButton.frame=CGRectMake(0, 0, 70, 70);
+    zoomButton.center=CGPointMake(pagina.frame.size.width-85, 80);
     [zoomButton setTitle:@"" forState:UIControlStateNormal];
-    [zoomButton setBackgroundImage:[UIImage imageNamed:@"compassIcon.png"] forState:UIControlStateNormal];
+    [zoomButton setBackgroundImage:[UIImage imageNamed:@"compassOn.png"] forState:UIControlStateNormal];
     [zoomButton addTarget:self action:@selector(goToZoomView:) forControlEvents:UIControlEventTouchUpInside];
     [pagina addSubview:zoomButton];
 

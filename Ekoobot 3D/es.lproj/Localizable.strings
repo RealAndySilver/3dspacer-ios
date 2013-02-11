@@ -5,7 +5,7 @@
   Created by Andres Abril on 5/11/12.
   Copyright (c) 2012 Ekoomedia. All rights reserved.
 */
-"CreadoPor"="Creado por:\nEkoomedia Ltda.\n©2012 Ekoobot 3D.";
+"CreadoPor"="Creado por:\nEkoomedia Ltda.\n©2013 Ekoobot 3D.";
 "LoginError"="Nombre de usuario o contraseña incorrectos";
 "CerrarSesion"="Cerrar Sesión";
 "CerrarSesionSeguro"="¿Está seguro que desea cerrar sesión?";
@@ -45,3 +45,6 @@
 "BotonEntrar"="botonEntrar.png";
 "RegistroPendiente" = "Registro Pendiente";
 "RegistroPendienteText" = "El último envío de proyecto no fue completado con éxito. La información quedó almacenada y puedes volver a intentar enviarlo oprimiendo el botón \"Enviar\".";
+
+"ProyectoDesactualizado" = "Listado de Proyectos Desactualizado";
+"MensajeProyectoDesactualizado" = "La lista de proyectos está desactualizada. Debe regresar al menú principal y actualizar el proyecto si es necesario";

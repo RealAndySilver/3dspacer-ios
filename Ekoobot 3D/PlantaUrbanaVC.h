@@ -32,6 +32,7 @@
     CMMotionManager *_motionManager;
     NSTimer *timer;
     BrujulaView *brujula;
+    float diferenciaRotacion;
 }
 @property Proyecto *proyecto;
 

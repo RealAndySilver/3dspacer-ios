@@ -23,6 +23,7 @@
     //[loading setViewAlphaToOne:@""];
     //NSLog(@"El Array Epacial %@",arregloEspacial);
     NavController *navController = (NavController *)self.navigationController;
+    //[navController setOrientationType:1];
     [navController setInterfaceOrientation:NO];
 }
 
@@ -348,6 +349,7 @@
     [UIView commitAnimations];*/
 }
 -(void)spaceSelected:(UIButton*)sender{
+    //[NSTimer cancelPreviousPerformRequestsWithTarget:view3D selector:@selector(trigger) object:nil];
     //NSLog(@"tag touched %i",sender.tag);
     [self.view setUserInteractionEnabled:NO];
     UIView *getView = (UIView*)[lowerView viewWithTag:sender.tag];
@@ -366,6 +368,7 @@
     [lowerView setUserInteractionEnabled:NO];
     //Espacio3D *espacio=[arregloEspacial objectAtIndex:sender.tag-1];
     espacio3D=[arregloEspacial objectAtIndex:sender.tag-1];
+    
     tituloEspacio.text=espacio3D.nombre;
     [loading setViewAlphaToOne:espacio3D.nombre];
     Caras *caras=[espacio3D.arrayCaras objectAtIndex:0];
@@ -375,6 +378,8 @@
     [self animateViewFadeInScale];
     pastTag=sender.tag;
     [self.view setUserInteractionEnabled:YES];
+}
+-(void)testing{
     
 }
 -(void)bthreadTest:(UIButton*)button{

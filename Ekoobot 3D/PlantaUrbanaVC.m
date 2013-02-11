@@ -25,6 +25,9 @@
 }
 
 - (void)viewDidLoad{
+    NavController *navController = (NavController *)self.navigationController;
+    [navController setInterfaceOrientation:YES];
+    
     [super viewDidLoad];
     self.navigationItem.title = NSLocalizedString(@"PlantaUrbana", nil);
     maximumZoomScale=2.0;
@@ -59,8 +62,21 @@
     brujula=nil;
     timer = nil;
     attitude=nil;
+    NavController *navController = (NavController *)self.navigationController;
+    [navController setInterfaceOrientation:YES];
 }
 -(void)viewWillAppear:(BOOL)animated{
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    if (UIInterfaceOrientationIsLandscape(orientation)) {
+        if(orientation ==3){
+            NSLog(@"OrientacionLandscape numero %i",orientation);
+            diferenciaRotacion=0;
+        }
+        else if(orientation==4){
+            NSLog(@"OrientacionLandscapeElse numero %i",orientation);
+            diferenciaRotacion=0.5;
+        }
+    }
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     [scrollViewUrbanismo setZoomScale:minimumZoomScale animated:NO];
     _motionManager = [self motionManager];
@@ -73,6 +89,7 @@
     timer =[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(update) userInfo:nil repeats:YES];
     brujula=[[BrujulaView alloc]initWithFrame:CGRectMake(self.view.frame.size.width-90, 10, 70, 70)];
     [self.view addSubview:brujula];
+    [brujula changeState];
 }
 -(void)viewDidAppear:(BOOL)animated{
     //[scrollViewUrbanismo setZoomScale:0.3 animated:NO];
@@ -168,14 +185,18 @@
 }
 -(void)update{
     if (brujula.isOn) {
+        NavController *navController = (NavController *)self.navigationController;
+        [navController setInterfaceOrientation:NO];
         _motionManager.showsDeviceMovementDisplay = YES;
         attitude = _motionManager.deviceMotion.attitude;
         CGAffineTransform swingTransform = CGAffineTransformIdentity;
-        swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)]);
+        swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)+diferenciaRotacion]);
         scrollViewUrbanismo.transform = swingTransform;
         brujula.cursor.transform = swingTransform;
     }
     else{
+        NavController *navController = (NavController *)self.navigationController;
+        [navController setInterfaceOrientation:YES];
         _motionManager.showsDeviceMovementDisplay = NO;
         CGAffineTransform swingTransform = CGAffineTransformIdentity;
         swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(0)]);

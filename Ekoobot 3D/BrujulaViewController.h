@@ -13,6 +13,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "BrujulaView.h"
 #import "AppDelegate.h"
+#import "NavController.h"
 @interface BrujulaViewController : UIViewController<UIScrollViewDelegate>{
     BOOL zoomCheck;
     float maximumZoomScale;
@@ -24,6 +25,7 @@
     CMMotionManager *_motionManager;
     NSTimer *timer;
     BrujulaView *brujula;
+    float diferenciaRotacion;
 
 }
 @property(nonatomic)NSString *path;

@@ -19,7 +19,17 @@
         spinner.center=CGPointMake(self.frame.size.width/2, self.frame.size.height/2-80);
         [self bgInit];
     }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(video) name:@"video" object:nil];
     return self;
+}
+-(void)video{
+    [self performSelectorInBackground:@selector(del) withObject:nil];
+}
+-(void)del{
+    hud = [MBProgressHUD showHUDAddedTo:self animated:YES];
+    hud.labelText=NSLocalizedString(@"DescargaVideo", nil);
+    spinner.alpha=0;
+    NSLog(@"video");
 }
 -(void)bgInit{
     CGRect viewFrame=CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
@@ -39,6 +49,7 @@
     _loading.textColor=[UIColor whiteColor];
     _loading.textAlignment=UITextAlignmentCenter;
     UILabel *loadingLabel=[[UILabel alloc]init];
+    loadingLabel.tag=12;
     loadingLabel.frame=CGRectMake(0, 500, 500, 20);
     loadingLabel.center=CGPointMake(self.frame.size.width/2, self.frame.size.height/2+170);
     loadingLabel.text=NSLocalizedString(@"DescargandoProyecto", nil);
@@ -79,6 +90,8 @@ float i=0;
     i=0;
     progressBar.progress=0;
     _loading.text=@"";
+    spinner.alpha=1;
+    [MBProgressHUD hideHUDForView:self animated:YES];
     if (![progressThread isFinished]) {
         //[progressThread isFinished];
         //[stopThread isFinished];
@@ -87,7 +100,7 @@ float i=0;
     
 }
 -(void)resetHud:(NSNotification*)notification{
-    stopThread=[[NSThread alloc]initWithTarget:self selector:@selector(stopHud:) object:notification];
+    //stopThread=[[NSThread alloc]initWithTarget:self selector:@selector(stopHud:) object:notification];
     //if (![stopThread isExecuting]){
     //    [stopThread start];
     //}

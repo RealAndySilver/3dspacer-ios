@@ -15,5 +15,6 @@
 }
 @property(nonatomic,retain)UIImageView *cursor;
 @property(nonatomic)BOOL isOn;
+-(void)changeState;
 
 @end

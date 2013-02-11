@@ -16,6 +16,19 @@
 @synthesize path,externalImageView;
 
 - (void)viewDidLoad{
+    NavController *navController = (NavController *)self.navigationController;
+    [navController setInterfaceOrientation:NO];
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    if (UIInterfaceOrientationIsLandscape(orientation)) {
+        if(orientation ==3){
+            NSLog(@"OrientacionLandscape numero %i",orientation);
+            diferenciaRotacion=0;
+        }
+        else if(orientation==4){
+            NSLog(@"OrientacionLandscapeElse numero %i",orientation);
+            diferenciaRotacion=0.5;
+        }
+    }
     [super viewDidLoad];
     self.navigationItem.title = NSLocalizedString(@"Compass View", nil);
     self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
@@ -40,6 +53,7 @@
     timer =[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(update) userInfo:nil repeats:YES];
     brujula=[[BrujulaView alloc]initWithFrame:CGRectMake(self.view.frame.size.height-80, 60, 70, 70)];
     [self.view addSubview:brujula];
+    [self.navigationItem setHidesBackButton:YES];
     // Do any additional setup after loading the view.
 }
 -(void)update{
@@ -47,11 +61,12 @@
         _motionManager.showsDeviceMovementDisplay = YES;
         attitude = _motionManager.deviceMotion.attitude;
         CGAffineTransform swingTransform = CGAffineTransformIdentity;
-        swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)]);
+        swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)+diferenciaRotacion]);
         scrollViewImagen.transform = swingTransform;
         brujula.cursor.transform = swingTransform;
     }
     else{
+        [self.navigationController popViewControllerAnimated:YES];
         _motionManager.showsDeviceMovementDisplay = NO;
         CGAffineTransform swingTransform = CGAffineTransformIdentity;
         swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(0)]);
@@ -69,6 +84,7 @@
 -(void)viewWillAppear:(BOOL)animated{
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     [scrollViewImagen setZoomScale:minimumZoomScale animated:NO];
+    //[brujula changeState];
 }
 -(void)viewDidAppear:(BOOL)animated{
     //[scrollViewUrbanismo setZoomScale:0.3 animated:NO];
@@ -81,9 +97,11 @@
     //[_motionManager stopDeviceMotionUpdates];
     //_motionManager=nil;
     attitude=nil;
-    
+    NavController *navController = (NavController *)self.navigationController;
+    [navController setInterfaceOrientation:YES];
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
+    NSLog(@"Orientation");
     return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) ||
     (interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
@@ -103,6 +121,7 @@
     imageViewZoomImage=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, scrollViewImagen.frame.size.width, scrollViewImagen.frame.size.height)];
     //imageViewZoomImage.image=[UIImage imageWithContentsOfFile:path];
     imageViewZoomImage.image=externalImageView.image;
+    imageViewZoomImage.contentMode = UIViewContentModeScaleAspectFill;
 
     [scrollViewImagen addSubview:imageViewZoomImage];
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];

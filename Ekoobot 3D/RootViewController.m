@@ -48,7 +48,8 @@
     label.textAlignment=UITextAlignmentCenter;
     label.backgroundColor=[UIColor clearColor];
     label.textColor=[UIColor whiteColor];
-    label.font=[UIFont fontWithName:@"Helvetica" size:15];
+    //label.font=[UIFont fontWithName:@"Helvetica" size:15];
+    label.font=[UIFont boldSystemFontOfSize:15];
     label.text=NSLocalizedString(@"CreadoPor", nil);
     label.layer.masksToBounds=YES;
     label.layer.shouldRasterize=YES;
@@ -62,7 +63,7 @@
     lang = [[NSLocale currentLocale] displayNameForKey:NSLocaleLanguageCode value:langID];
 }
 -(void)goToWeb{
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"http://www.ekoobotscom"]];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"http://www.ekoobot.com"]];
 }
 - (void)viewDidUnload{
     [super viewDidUnload];

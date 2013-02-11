@@ -32,7 +32,8 @@
 }
 -(void)viewWillAppear:(BOOL)animated{
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-    [scrollViewImagen setZoomScale:minimumZoomScale animated:NO];
+    [scrollViewImagen setZoomScale:1.2 animated:NO];
+    
 }
 -(void)viewDidAppear:(BOOL)animated{
     //[scrollViewUrbanismo setZoomScale:0.3 animated:NO];
@@ -41,7 +42,9 @@
     return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) ||
     (interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
-
+-(void)back{
+    [self.navigationController popViewControllerAnimated:YES];
+}
 - (void)loadScrollView{
     scrollViewImagen=[[UIScrollView alloc]init];
     scrollViewImagen.frame=CGRectMake(0, 0, self.view.frame.size.height, self.view.frame.size.width);
@@ -53,10 +56,18 @@
     [scrollViewImagen setDelegate:self];
     imageViewZoomImage=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, scrollViewImagen.frame.size.width, scrollViewImagen.frame.size.height)];
     imageViewZoomImage.image=[UIImage imageWithContentsOfFile:path];
+    imageViewZoomImage.contentMode = UIViewContentModeScaleAspectFill;
     [scrollViewImagen addSubview:imageViewZoomImage];
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
     [doubleTap setNumberOfTapsRequired:2];
     [scrollViewImagen addGestureRecognizer:doubleTap];
+    
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(back)];
+    [singleTap setNumberOfTapsRequired:1];
+    [singleTap setNumberOfTouchesRequired:1];
+    [scrollViewImagen addGestureRecognizer:singleTap];
+    
+    [singleTap requireGestureRecognizerToFail:doubleTap];
 }
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView

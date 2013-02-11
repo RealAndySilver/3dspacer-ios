@@ -12,7 +12,7 @@
 
 @implementation OpenGLView
 @synthesize leftRotated;
-@synthesize _backTexture,_frontTexture,_leftTexture,_rightTexture,_topTexture,_bottomTexture,_context,headingValue,theContext;
+@synthesize _backTexture,_frontTexture,_leftTexture,_rightTexture,_topTexture,_bottomTexture,_context,headingValue,theContext,timer1;
 #pragma mark Indices y Vertices
 typedef struct {
     float Position[3];
@@ -632,12 +632,17 @@ const GLubyte IndicesBottom[] = {
     projection =nil;
     [_context release];
     _context = nil;
+    if ([timer1 isValid]) {
+        [timer1 invalidate];
+        timer1=nil;
+        [timer1 release];
+    }
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
     //[super dealloc];
 }
 -(float)radiansToDegrees:(float)number{
-    return  number * 57.295780;
+    return number * 57.295780;
 }
 
 #pragma mark -
@@ -705,10 +710,15 @@ const GLubyte IndicesBottom[] = {
     //movePoint1 = movePoint0 = startPoint;
     movePoint0.x = movePoint1.x = dxActualCamara;
     movePoint0.y = movePoint1.y = dyActualCamara;
+    //if ([timer1 isValid]) {
     if ([timer1 isValid]) {
         [timer1 invalidate];
         timer1=nil;
+        [timer1 release];
+        NSLog(@"Invalidating timer in touches began");
     }
+    //}
+    NSLog(@"Began");
 }
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event;{
     //NSLog(@"Moved");
@@ -761,6 +771,7 @@ const GLubyte IndicesBottom[] = {
             brujula.transform = swingTransform;
         }
     }
+NSLog(@"Moved");
 }
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     //NSLog(@"ended");
@@ -785,6 +796,7 @@ const GLubyte IndicesBottom[] = {
     }
     timer1=[[NSTimer alloc]init];
     timer1=[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(trigger) userInfo:nil repeats:YES];
+    NSLog(@"Ended");
 }
 
 -(void)trigger{
@@ -881,11 +893,14 @@ const GLubyte IndicesBottom[] = {
         if (!compassTouched) {
             brujula.transform = swingTransform;
         }
+        NSLog(@"Keep going");
     }
     else {
         if ([timer1 isValid]) {
             [timer1 invalidate];
             timer1=nil;
+            [timer1 release];
+            NSLog(@"End timer natural");
         }
     }
     //}

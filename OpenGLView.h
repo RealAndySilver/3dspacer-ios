@@ -120,7 +120,7 @@
     BOOL madeTouch;
     CGPoint movePoint0;
     CGPoint movePoint1;
-    NSTimer *timer1;
+    
 }
 @property(nonatomic)BOOL leftRotated;
 @property(nonatomic)GLuint _backTexture;
@@ -129,6 +129,8 @@
 @property(nonatomic)GLuint _rightTexture;
 @property(nonatomic)GLuint _topTexture;
 @property(nonatomic)GLuint _bottomTexture;
+@property(nonatomic)NSTimer *timer1;
+
 @property(nonatomic, retain)EAGLContext* _context;
 @property(nonatomic)float headingValue;
 @property(nonatomic,retain)id theContext;

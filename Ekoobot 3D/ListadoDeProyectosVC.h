@@ -26,6 +26,7 @@
 #import "ZoomViewController.h"
 #import "NavAnimations.h"
 #import "Analytic.h"
+#import "ProyectoLite.h"
 @interface ListadoDeProyectosVC : UIViewController <UIScrollViewDelegate,UIAlertViewDelegate,UIDocumentInteractionControllerDelegate> {
     UIScrollView *scrollView;
     Usuario *usuarioActual;
@@ -38,10 +39,16 @@
     //parametros para el server, son necesarios ya que se borran del usuario original
     NSString *nombreDeUsuario;
     NSString *passwordUsuario;
+    
+    NSMutableArray *arrayLiteDesdeFull;
+    BOOL alertIsPresent;
+    BOOL isOnMainMenu;
 }
 
 @property(nonatomic,retain)Usuario *usuarioActual;
 @property(nonatomic,retain)Usuario *usuarioCopia;
+@property(nonatomic,retain)NSMutableArray *arrayLiteDesdeServer;
+;
 
 @property(nonatomic,retain)UIPageControl *pageCon;
 

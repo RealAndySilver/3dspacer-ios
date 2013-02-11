@@ -32,6 +32,7 @@
 @property (nonatomic,retain) id caller;
 @property (nonatomic,retain) NSMutableArray *objectDic;
 @property (nonatomic,retain) NSMutableDictionary *resDic;
+@property (nonatomic,retain) NSString *method;
 
 @property(nonatomic,retain)NSDictionary *dictionary;
 -(void)callServerWithMethod:(NSString*)method 

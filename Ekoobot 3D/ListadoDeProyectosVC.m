@@ -14,7 +14,7 @@
 @implementation ListadoDeProyectosVC
 
 @synthesize pageCon;
-@synthesize usuarioActual,usuarioCopia;
+@synthesize usuarioActual,usuarioCopia,arrayLiteDesdeServer;
 
 #pragma mark -
 #pragma mark Ciclo de Vida
@@ -24,6 +24,9 @@
     [super viewDidLoad];
     //Se cargan y muestran todos los proyectos
     arrayDeTitulos = [[NSMutableArray alloc]init];
+    arrayLiteDesdeFull=[[NSMutableArray alloc]init];
+    arrayLiteDesdeServer=[[NSMutableArray alloc]init];
+    alertIsPresent=NO;
     [self mostrarObjetos];
     //El titulo del view
     Proyecto *proyecto=[usuarioActual.arrayProyectos objectAtIndex:0];
@@ -43,20 +46,22 @@
                                                               action:@selector(callServerToRefresh)];
     
     self.navigationItem.leftBarButtonItem = logout;
-    self.navigationItem.rightBarButtonItem = refresh;
+    //self.navigationItem.rightBarButtonItem = refresh;
     
     NavController *navController = (NavController *)self.navigationController;
     [navController setOrientationType:0];
     nombreDeUsuario=usuarioActual.usuario;
     passwordUsuario=usuarioActual.contrasena;
+    
+    [self performSelector:@selector(callLiteServerData) withObject:nil afterDelay:15];
+    [NSTimer scheduledTimerWithTimeInterval:180 target:self selector:@selector(callLiteServerData) userInfo:nil repeats:YES];
 
 }
 -(void)didReceiveMemoryWarning{
     NSLog(@"Listado Warning %@",usuarioActual.arrayProyectos);
     //[self crearObjetos];
 }
-- (void)viewDidUnload
-{
+- (void)viewDidUnload{
     [super viewDidUnload];
     scrollView=nil;
     usuarioActual=nil;
@@ -66,8 +71,9 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
+    isOnMainMenu=YES;
     self.navigationController.navigationBarHidden=NO;
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     //progressView=[[ProgressView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     progressView=[[ProgressView alloc]initWithFrame:CGRectMake(0, 0, self.navigationController.view.frame.size.height, self.navigationController.view.frame.size.width)];
 
@@ -101,16 +107,28 @@
                                                    delegate:self 
                                           cancelButtonTitle:cancel
                                           otherButtonTitles:@"OK",nil];
+    alert.tag=1;
     [alert show];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
-    if([title isEqualToString:@"OK"])
-    {
+    if (alertView.tag==1) {
+
+    if([title isEqualToString:@"OK"]){
         [self logout];
     }
+    }
+    else if (alertView.tag==2){
+        if([title isEqualToString:@"OK"]){
+            [arrayLiteDesdeServer removeAllObjects];
+            //NSLog(@"Count acaaa %i %i",arrayLiteDesdeServer.count,arrayLiteDesdeFull.count);
+            [self.navigationController popToViewController:self animated:YES];
+            [self performSelector:@selector(callServerToRefresh) withObject:nil afterDelay:0.5];
+        }
+    }
+    alertIsPresent=NO;
 }
 
 - (void)logout{
@@ -129,6 +147,10 @@
     for (int i= 0; i<usuarioActual.arrayProyectos.count; i++) {
         Proyecto *proyecto=[[Proyecto alloc]init];
         proyecto = [usuarioActual.arrayProyectos objectAtIndex:i];
+        ProyectoLite *proyectoLite=[[ProyectoLite alloc]init];
+        proyectoLite.idProyecto=proyecto.idProyecto;
+        proyectoLite.actualizado=proyecto.actualizado;
+        [arrayLiteDesdeFull addObject:proyecto];
         //[ProjectDownloader downloadProject:proyecto];
         [self paginaCreadaConObjeto:proyecto enPosicion:i];
     }
@@ -167,7 +189,7 @@
     if (!self.pageCon) {
         self.pageCon = [[UIPageControl alloc]initWithFrame:CGRectMake(0, 0, frame.size.height, 50)];
     }
-    self.pageCon.center=CGPointMake(self.view.frame.size.width/2,frame.size.height-335);
+    self.pageCon.center=CGPointMake(self.view.frame.size.width/2,frame.size.height-295);
     self.pageCon.userInteractionEnabled=NO;
     self.pageCon.numberOfPages=numeroDePaginas;
     [self.view addSubview:pageCon];
@@ -198,18 +220,20 @@
                     NSData *data=[NSData dataWithContentsOfURL:urlImagen];
                     UIImageView *renderImage = [[UIImageView alloc]init];
                     renderImage.image = [UIImage imageWithData:data];
+                    renderImage.contentMode = UIViewContentModeScaleAspectFill;
                     NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(renderImage.image, 1.0f)];//1.0f = 100% quality
                     if (renderImage.image) {
                         [data2 writeToFile:jpegFilePath atomically:YES];
                     }
-                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-44, frame.size.height, frame.size.width);
+                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-0, frame.size.height, frame.size.width);
                     renderImage.backgroundColor=[UIColor clearColor];
                     [renderImage setUserInteractionEnabled:YES];
                     [renderImage setUserInteractionEnabled:YES];
                     CustomButton *zoomButton=[[CustomButton alloc]init];
                     zoomButton.path=jpegFilePath;
-                    zoomButton.frame=CGRectMake(0, 0, 50, 50);
-                    zoomButton.center=CGPointMake(renderImage.frame.size.width/2, renderImage.frame.size.height-70);
+                    //zoomButton.frame=CGRectMake(0, 0, 50, 50);
+                    zoomButton.frame=CGRectMake(53, 550, 21, 21);
+                    //zoomButton.center=CGPointMake(renderImage.frame.size.width/2, renderImage.frame.size.height-70);
                     [zoomButton setTitle:@"" forState:UIControlStateNormal];
                     [zoomButton setBackgroundImage:[UIImage imageNamed:@"zoom.png"] forState:UIControlStateNormal];
                     [zoomButton addTarget:self action:@selector(goToZoomView:) forControlEvents:UIControlEventTouchUpInside];
@@ -220,13 +244,15 @@
                     //NSLog(@"si existe proj img %@",jpegFilePath);
                     UIImageView *renderImage = [[UIImageView alloc]init];
                     renderImage.image = [UIImage imageWithContentsOfFile:jpegFilePath];
-                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-44, frame.size.height, frame.size.width);
+                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-0, frame.size.height, frame.size.width);
                     renderImage.backgroundColor=[UIColor clearColor];
                     [renderImage setUserInteractionEnabled:YES];
+                    renderImage.contentMode = UIViewContentModeScaleAspectFill;
                     CustomButton *zoomButton=[[CustomButton alloc]init];
                     zoomButton.path=jpegFilePath;
-                    zoomButton.frame=CGRectMake(0, 0, 50, 50);
-                    zoomButton.center=CGPointMake(renderImage.frame.size.width/2, renderImage.frame.size.height-70);
+                    //zoomButton.frame=CGRectMake(0, 0, 50, 50);
+                    zoomButton.frame=CGRectMake(53, 550, 21, 21);
+                    //zoomButton.center=CGPointMake(renderImage.frame.size.width/2, renderImage.frame.size.height-70);
                     [zoomButton setTitle:@"" forState:UIControlStateNormal];
                     [zoomButton setBackgroundImage:[UIImage imageNamed:@"zoom.png"] forState:UIControlStateNormal];
                     [zoomButton addTarget:self action:@selector(goToZoomView:) forControlEvents:UIControlEventTouchUpInside];
@@ -300,7 +326,7 @@
         sendInfoButton.proyectoID=proyecto.idProyecto;
         UIImage *imageButton = [UIImage imageNamed:@"recomendar.png"];
         [sendInfoButton setImage:imageButton forState:UIControlStateNormal];
-        sendInfoButton.frame=CGRectMake(50, 560, 25, 25);
+        sendInfoButton.frame=CGRectMake(50, 610, 25, 25);
         [sendInfoButton addTarget:self action:@selector(sendInfo:) forControlEvents:UIControlEventTouchUpInside];
         [pagina addSubview:sendInfoButton];
 }
@@ -339,7 +365,7 @@
     [boton setTitle:@"" forState:UIControlStateNormal];
     boton.tag=tag+1000;
     [boton addTarget:self action:@selector(actualizarOdescargar:) forControlEvents:UIControlEventTouchUpInside];
-    boton.frame=CGRectMake(25, 25,100, 100);
+    boton.frame=CGRectMake(25, 75,100, 100);
     
     [view addSubview:boton];
     [view bringSubviewToFront:boton];
@@ -352,8 +378,10 @@
     [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     UIImageView *proyectoImage = [[UIImageView alloc]init];
-    proyectoImage.layer.cornerRadius=10.0f;
+    proyectoImage.layer.cornerRadius=0.0f;
     proyectoImage.layer.masksToBounds=YES;
+    proyectoImage.contentMode = UIViewContentModeScaleAspectFill;
+    [proyectoImage setUserInteractionEnabled:YES];
     if (!fileExists) {
         //NSLog(@"no existe proj img %@",jpegFilePath);
         NSURL *urlImagen=[NSURL URLWithString:proyecto.imagen];
@@ -363,17 +391,27 @@
         if (proyectoImage.image) {
             [data2 writeToFile:jpegFilePath atomically:YES];
         }
-        proyectoImage.frame = CGRectMake(25, 25, view.frame.size.width-50, view.frame.size.height-100);
+        //proyectoImage.frame = CGRectMake(25, 25, view.frame.size.width-50, view.frame.size.height-100);
+        proyectoImage.frame = CGRectMake(0, 0, view.frame.size.width, view.frame.size.height);
         //NSLog(@"imagen width %.1f height %.1f",proyectoImage.frame.size.width,proyectoImage.frame.size.height);
         [view addSubview:proyectoImage];
     }
     else {
         //NSLog(@"si existe proj img %@",jpegFilePath);
         proyectoImage.image = [UIImage imageWithContentsOfFile:jpegFilePath];
-        proyectoImage.frame = CGRectMake(25, 25, view.frame.size.width-50, view.frame.size.height-100);
-        //NSLog(@"imagen width %.1f height %.1f",proyectoImage.frame.size.width,proyectoImage.frame.size.height);
+        //proyectoImage.frame = CGRectMake(25, 25, view.frame.size.width-50, view.frame.size.height-100);
+        proyectoImage.frame = CGRectMake(0, 0, view.frame.size.width, view.frame.size.height);
+        NSLog(@"imagen width %.1f height %.1f",proyectoImage.frame.size.width,proyectoImage.frame.size.height);
         [view addSubview:proyectoImage];
     }
+    CustomButton *zoomButton=[[CustomButton alloc]init];
+    zoomButton.path=jpegFilePath;
+    zoomButton.frame=CGRectMake(53, 550, 21, 21);
+    //zoomButton.center=CGPointMake(proyectoImage.frame.size.width/2, proyectoImage.frame.size.height-70);
+    [zoomButton setTitle:@"" forState:UIControlStateNormal];
+    [zoomButton setBackgroundImage:[UIImage imageNamed:@"zoom.png"] forState:UIControlStateNormal];
+    [zoomButton addTarget:self action:@selector(goToZoomView:) forControlEvents:UIControlEventTouchUpInside];
+    [proyectoImage addSubview:zoomButton];
 }
 
 - (void)insertarImagenBotonProyectoEnPagina:(UIView*)view conProyecto:(Proyecto*)proyecto yPosicion:(int)posicion{
@@ -384,7 +422,7 @@
     NSLog(@"Boton taggggg %i",boton.tag);
     boton.alpha=0;
     [boton addTarget:self action:@selector(irAlSiguienteViewController:) forControlEvents:UIControlEventTouchUpInside];
-    boton.frame=CGRectMake(830, 510,170, 170);
+    boton.frame=CGRectMake(830, 560,170, 170);
     [view addSubview:boton];
     [view bringSubviewToFront:boton];
 }
@@ -406,21 +444,21 @@
         if (proyectoLogo.image) {
             [data2 writeToFile:jpegFilePath atomically:YES];
         }
-        proyectoLogo.frame = CGRectMake(60, 90, 150, 150);
+        proyectoLogo.frame = CGRectMake(60, 140, 150, 150);
         [view addSubview:proyectoLogo];
     }
     else {
         //NSLog(@"si existe proj img %@",jpegFilePath);
         UIImageView *proyectoImage = [[UIImageView alloc]init];
         proyectoImage.image = [UIImage imageWithContentsOfFile:jpegFilePath];
-        proyectoImage.frame = CGRectMake(60, 90, 150, 150);
+        proyectoImage.frame = CGRectMake(60, 140, 150, 150);
         [view addSubview:proyectoImage];
     }
 }
 
 - (void)insertarLabelProyectoEnPagina:(UIView*)view conProyecto:(Proyecto*)proyecto{
     [arrayDeTitulos addObject:proyecto.nombre];
-    UIView *container=[[UIView alloc]initWithFrame:CGRectMake(55, 57, 265, 35)];
+    UIView *container=[[UIView alloc]initWithFrame:CGRectMake(55, 107, 265, 35)];
     container.backgroundColor=[UIColor colorWithWhite:0.2 alpha:1];
     container.alpha=0.8;
     container.layer.cornerRadius = 10.0;
@@ -428,7 +466,7 @@
     container.layer.shadowOffset = CGSizeMake(5.0f,5.0f);
     container.layer.shadowRadius = 5;
     container.layer.shadowOpacity = 1.0;
-    UILabel *tituloProyecto = [[UILabel alloc]initWithFrame:CGRectMake(100, 47, 200, 50)];
+    UILabel *tituloProyecto = [[UILabel alloc]initWithFrame:CGRectMake(100, 97, 200, 50)];
     tituloProyecto.text = proyecto.nombre;
     tituloProyecto.backgroundColor=[UIColor clearColor];
     tituloProyecto.textColor=[UIColor whiteColor];
@@ -443,7 +481,7 @@
 }
 
 -(void)mostrarLabelDeActualizacionConTag:(int)tag enView:(UIView*)view yProyecto:(Proyecto*)proyecto{
-    UpdateView *updateBox=[[UpdateView alloc]initWithFrame:CGRectMake(43, 585, 274, 67)];
+    UpdateView *updateBox=[[UpdateView alloc]initWithFrame:CGRectMake(43, 645, 274, 67)];
     updateBox.tag=tag+250;
     [view addSubview:updateBox];
     NSLog(@"update tag----> %i %@",updateBox.tag,updateBox);
@@ -512,6 +550,7 @@
 - (void)irAlSiguienteViewController:(UIButton*)sender{
     hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.labelText=NSLocalizedString(@"Cargando", nil);
+    isOnMainMenu=NO;
     [self performSelector:@selector(delayedAction:) withObject:sender afterDelay:0.3];    
 }
 -(void)delayedAction:(UIButton*)sender{
@@ -519,7 +558,7 @@
     Proyecto *proyecto = [usuarioActual.arrayProyectos objectAtIndex:[keyProyecto intValue]];
     ItemUrbanismo *itemUrbanismo = [proyecto.arrayItemsUrbanismo objectAtIndex:0];
     Analytic *analytic=[[Analytic alloc]init];
-    //[analytic sendAnalyticWithProjectId:proyecto.idProyecto username:usuarioActual.usuario userId:usuarioActual.idUsuario andPass:usuarioActual.contrasena];
+    [analytic sendAnalyticWithProjectId:proyecto.idProyecto username:usuarioActual.usuario userId:usuarioActual.idUsuario andPass:usuarioActual.contrasena];
 
     if (itemUrbanismo.existe==1) {
         [self irAPlantaUrbanaVCConProyecto:proyecto];
@@ -650,26 +689,115 @@
     NSString *parameters=[NSString stringWithFormat:@"<ns:getData><data>%@</data><token>%@</token><language>%@</language></ns:getData>",loginData,[IAmCoder hash256:loginData],lang];
     [server callServerWithMethod:@"" andParameter:parameters];
 }
+-(void)callLiteServerData{
+    //hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    //hud.labelText=NSLocalizedString(@"Cargando", nil);
+    NSString *langID = [[NSLocale preferredLanguages] objectAtIndex:0];
+    NSString *lang = [[NSLocale currentLocale] displayNameForKey:NSLocaleLanguageCode value:langID];
+    ServerCommunicator *server=[[ServerCommunicator alloc]init];
+    server.caller=self;
+    server.tag=2;
+    server.method=@"getDataLite";
+    NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",usuarioActual.usuario,usuarioActual.contrasena,[IAmCoder dateString]];
+    NSString *parameters=[NSString stringWithFormat:@"<ns:getDataLite><data>%@</data><token>%@</token><language>%@</language></ns:getDataLite>",loginData,[IAmCoder hash256:loginData],lang];
+    [server callServerWithMethod:@"" andParameter:parameters];
+}
 #pragma mark server response
 
 -(void)receivedDataFromServer:(ServerCommunicator*)sc{
     NSLog(@"Usuario actual: %@ contraseña: %@",usuarioActual.usuario,usuarioActual.contrasena);
-    if ([sc.resDic objectForKey:@"usuario"]) {
-        usuarioActual=nil;
-        usuarioCopia=nil;
-        if (!usuarioActual) {
-            usuarioActual=[[Usuario alloc]initWithDictionary:[sc.resDic objectForKey:@"usuario"]];
-            usuarioCopia=[[Usuario alloc]initWithDictionary:[sc.resDic objectForKey:@"usuario"]];
-            usuarioActual.usuario=nombreDeUsuario;
-            usuarioActual.contrasena=passwordUsuario;
-            usuarioCopia.usuario=nombreDeUsuario;
-            usuarioCopia.contrasena=passwordUsuario;
+    if (sc.tag==1) {
+        if ([sc.resDic objectForKey:@"usuario"]) {
+            usuarioActual=nil;
+            usuarioCopia=nil;
+            if (!usuarioActual) {
+                usuarioActual=[[Usuario alloc]initWithDictionary:[sc.resDic objectForKey:@"usuario"]];
+                usuarioCopia=[[Usuario alloc]initWithDictionary:[sc.resDic objectForKey:@"usuario"]];
+                usuarioActual.usuario=nombreDeUsuario;
+                usuarioActual.contrasena=passwordUsuario;
+                usuarioCopia.usuario=nombreDeUsuario;
+                usuarioCopia.contrasena=passwordUsuario;
+                FileSaver *fileSaver=[[FileSaver alloc]init];
+                [fileSaver setDictionary:[sc.resDic objectForKey:@"usuario"]
+                              withUserId:[[sc.resDic objectForKey:@"usuario"]objectForKey:@"id_usuario"]];
+            }
+            for (int i=0;i<usuarioActual.arrayProyectos.count;i++) {
+                Proyecto *proyectoFull=[usuarioActual.arrayProyectos objectAtIndex:i];
+                ProyectoLite *proyecto=[[ProyectoLite alloc]init];
+                proyecto.idProyecto=proyectoFull.idProyecto;
+                proyecto.actualizado=proyectoFull.actualizado;
+                [arrayLiteDesdeFull addObject:proyecto];
+            }
+            [self removerObjetos];
         }
-        [self removerObjetos];
     }
+    
     [MBProgressHUD hideHUDForView:self.view animated:YES];
+}
+-(void)receivedDataFromServerLite:(ServerCommunicator*)sc{
+    [arrayLiteDesdeServer removeAllObjects];
+    if (sc.tag==2){
+        if ([sc.resDic objectForKey:@"usuario"]) {
+            NSArray *array=[[[sc.resDic objectForKey:@"usuario"]objectForKey:@"proyectos"]objectForKey:@"item"];
+
+
+            for (int i=0; i<array.count; i++) {
+                NSDictionary *dic=[array objectAtIndex:i];
+                ProyectoLite *proyecto=[[ProyectoLite alloc]initWithDictionary:[dic objectForKey:@"proyecto"]];
+                [arrayLiteDesdeServer addObject:proyecto];
+            }
+        }
+    }
+    [self compararArregloFull:arrayLiteDesdeFull conArregloDelServer:arrayLiteDesdeServer];
 }
 -(void)receivedDataFromServerWithError:(ServerCommunicator*)sc{
     [MBProgressHUD hideHUDForView:self.view animated:YES];
+}
+-(void)compararArregloFull:(NSMutableArray*)arregloFull conArregloDelServer:(NSMutableArray*)arregloDelServer{
+    if (!arregloDelServer.count == arregloFull.count) {
+        
+        //NSLog(@"Cantidades Diferentes %i vs %i",arregloDelServer.count,arregloFull.count);
+        int conteo=0;
+        for (int i=0; i<arregloFull.count; i++) {
+            ProyectoLite *proLite=[arregloDelServer objectAtIndex:i];
+            Proyecto *proyecto=[arregloFull objectAtIndex:i];
+            if ([proyecto.actualizado isEqualToString:proLite.actualizado]) {
+                conteo++;
+            }
+        }
+        if (conteo!=arregloFull.count) {
+            if (!isOnMainMenu) {
+                if (!alertIsPresent) {
+                    UIAlertView *alert=[[UIAlertView alloc]initWithTitle:NSLocalizedString(@"ProyectoDesactualizado", nil) message:NSLocalizedString(@"MensajeProyectoDesactualizado", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                    alert.tag=2;
+                    //[alert show];
+                    //alertIsPresent=YES;
+                    [arrayLiteDesdeServer removeAllObjects];
+                    [self performSelector:@selector(callServerToRefresh) withObject:nil afterDelay:0.1];
+                }
+            }
+            else{
+                [arrayLiteDesdeServer removeAllObjects];
+                [self performSelector:@selector(callServerToRefresh) withObject:nil afterDelay:0.1];
+            }
+        }
+    }
+    else{
+        if (!isOnMainMenu) {
+            if (!alertIsPresent) {
+                UIAlertView *alert=[[UIAlertView alloc]initWithTitle:NSLocalizedString(@"ProyectoDesactualizado", nil) message:NSLocalizedString(@"MensajeProyectoDesactualizado", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                alert.tag=2;
+                //[alert show];
+                //alertIsPresent=YES;
+                [arrayLiteDesdeServer removeAllObjects];
+                [self performSelector:@selector(callServerToRefresh) withObject:nil afterDelay:0.1];
+                return;
+            }
+        }
+        else{
+            [arrayLiteDesdeServer removeAllObjects];
+            [self performSelector:@selector(callServerToRefresh) withObject:nil afterDelay:0.1];
+        }
+    }
 }
 @end

@@ -7,13 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "MBProgressHud.h"
 @interface ProgressView : UIView{
     UIActivityIndicatorView *spinner;
     //UILabel *loading;
     UIProgressView *progressBar;
     NSThread *progressThread;
     NSThread *stopThread;
+    MBProgressHUD *hud;
 }
 @property(strong,nonatomic,retain)UILabel *loading;
 

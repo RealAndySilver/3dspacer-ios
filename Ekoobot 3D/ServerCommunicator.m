@@ -9,7 +9,7 @@
 #import "ServerCommunicator.h"
 
 @implementation ServerCommunicator
-@synthesize dictionary,tag,caller,objectDic,resDic;
+@synthesize dictionary,tag,caller,objectDic,resDic,method;
 -(id)init {
     self = [super init];
     if (self) {
@@ -89,7 +89,14 @@
 
     NSDictionary *dictionary1 = [XMLReader dictionaryForXMLString:theXML error:nil];
     
-
+    if ([self.method isEqualToString:@"getDataLite"]) {
+        NSDictionary * dictionary2=[[[[dictionary1 objectForKey:@"SOAP-ENV:Envelope"]objectForKey:@"SOAP-ENV:Body"]objectForKey:@"ns1:getDataLiteResponse"]objectForKey:@"return"];
+        resDic=[[NSMutableDictionary alloc]initWithDictionary:dictionary2];
+        //NSLog(@"xml %@",resDic);
+        NSLog(@"xml %@",dictionary1);
+        [caller performSelector:@selector(receivedDataFromServerLite:) withObject:self];
+        return;
+    }
     
     if ([caller respondsToSelector:@selector(receivedDataFromServer:)]) {
         NSDictionary * dictionary2=[[[[dictionary1 objectForKey:@"SOAP-ENV:Envelope"]objectForKey:@"SOAP-ENV:Body"]objectForKey:@"ns1:getDataResponse"]objectForKey:@"return"];
@@ -98,6 +105,7 @@
         NSLog(@"xml %@",dictionary1);
         [caller performSelector:@selector(receivedDataFromServer:) withObject:self];
     }
+    
     else if ([caller respondsToSelector:@selector(receivedDataFromServerRegister:)]) {
         //resDic=[[NSMutableDictionary alloc]initWithDictionary:dictionary2];
         //NSLog(@"xml %@",resDic);

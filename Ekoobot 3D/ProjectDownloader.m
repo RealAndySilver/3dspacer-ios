@@ -416,6 +416,7 @@ float cuenta=0;
     NSLog(@"downloader file path : %@",videoFilePath);
 
     if (!fileExists) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"video" object:nil];
         //NSLog(@"no existe proj img %@",jpegFilePath);
         NSData *data=[NSData dataWithContentsOfURL:[NSURL URLWithString:videoUrl]];
         if (data) {

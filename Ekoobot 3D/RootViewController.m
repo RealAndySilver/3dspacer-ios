@@ -29,7 +29,7 @@
     passwordTF.delegate=self;
     sc=[[ServerCommunicator alloc]init];    
     sc.caller=self;
-    littleBoxView=[[UIView alloc]initWithFrame:CGRectMake(infoButton.frame.origin.x+40, infoButton.frame.origin.y-10,200, 80)];
+    littleBoxView=[[UIView alloc]initWithFrame:CGRectMake(infoButton.frame.origin.x+40, infoButton.frame.origin.y-10,230, 190)];
     littleBoxView.backgroundColor=[UIColor viewFlipsideBackgroundColor];
     littleBoxView.layer.cornerRadius=10.0f;
     littleBoxView.layer.masksToBounds=YES;
@@ -44,7 +44,7 @@
     [littleBoxView addGestureRecognizer:tap];
     UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, littleBoxView.frame.size.width-30, littleBoxView.frame.size.height)];
     label.center=CGPointMake(littleBoxView.frame.size.width/2, littleBoxView.frame.size.height/2);
-    label.numberOfLines=3;
+    label.numberOfLines=8;
     label.textAlignment=UITextAlignmentCenter;
     label.backgroundColor=[UIColor clearColor];
     label.textColor=[UIColor whiteColor];

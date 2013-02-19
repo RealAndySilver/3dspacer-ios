@@ -5,7 +5,7 @@
   Created by Andres Abril on 5/11/12.
   Copyright (c) 2012 Ekoomedia. All rights reserved.
 */
-"CreadoPor"="Created by:\nEkoomedia Ltda.\n©2013 Ekoobot 3D.";
+"CreadoPor"="To access demo account:\nusername: demo\npassword: 1234\n\nCreated by:\nEkoomedia Ltda.\n©2013 Ekoobot 3D.";
 "LoginError"="Wrong user name or password";
 "CerrarSesion"="Logout";
 "CerrarSesionSeguro"="¿Are you sure you want to logout?";

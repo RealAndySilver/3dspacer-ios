@@ -40,10 +40,10 @@
                                                               target:self 
                                                               action:@selector(customLogoutAlert)];   
     
-    UIBarButtonItem *refresh = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"RecargarProyectos", nil)
+    /*UIBarButtonItem *refresh = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"RecargarProyectos", nil)
                                                                style:UIBarButtonItemStylePlain
                                                               target:self
-                                                              action:@selector(callServerToRefresh)];
+                                                              action:@selector(callServerToRefresh)];*/
     
     self.navigationItem.leftBarButtonItem = logout;
     //self.navigationItem.rightBarButtonItem = refresh;
@@ -53,7 +53,7 @@
     nombreDeUsuario=usuarioActual.usuario;
     passwordUsuario=usuarioActual.contrasena;
     
-    [self performSelector:@selector(callLiteServerData) withObject:nil afterDelay:15];
+    //[self performSelector:@selector(callLiteServerData) withObject:nil afterDelay:15];
     [NSTimer scheduledTimerWithTimeInterval:180 target:self selector:@selector(callLiteServerData) userInfo:nil repeats:YES];
 
 }
@@ -354,9 +354,11 @@
 }
 -(void)threadTest:(NSMutableDictionary*)dic{
     [progressView setViewAlphaToOne];
+    isOnMainMenu=NO;
     //[ProjectDownloader downloadProject:[usuarioActual.arrayProyectos objectAtIndex:[key intValue]] yTag:button.tag+1000];
     [ProjectDownloader downloadProject:[dic objectForKey:@"Project"] yTag:[[dic objectForKey:@"Tag"]intValue] sender:progressView usuario:[dic objectForKey:@"Usuario"]];
     [progressView setViewAlphaToCero];
+    isOnMainMenu=YES;
 }
 -(void)insertarActualizadorEnPagina:(UIView*)view yTag:(int)tag{
     UIButton *boton = [[UIButton alloc]init];
@@ -678,29 +680,33 @@
 }
 #pragma mark call server method
 -(void)callServerToRefresh{
-    hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText=NSLocalizedString(@"Cargando", nil);
-    NSString *langID = [[NSLocale preferredLanguages] objectAtIndex:0];
-    NSString *lang = [[NSLocale currentLocale] displayNameForKey:NSLocaleLanguageCode value:langID];
-    ServerCommunicator *server=[[ServerCommunicator alloc]init];
-    server.caller=self;
-    server.tag=1;
-    NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",usuarioActual.usuario,usuarioActual.contrasena,[IAmCoder dateString]];
-    NSString *parameters=[NSString stringWithFormat:@"<ns:getData><data>%@</data><token>%@</token><language>%@</language></ns:getData>",loginData,[IAmCoder hash256:loginData],lang];
-    [server callServerWithMethod:@"" andParameter:parameters];
+    if (isOnMainMenu) {
+        hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText=NSLocalizedString(@"Cargando", nil);
+        NSString *langID = [[NSLocale preferredLanguages] objectAtIndex:0];
+        NSString *lang = [[NSLocale currentLocale] displayNameForKey:NSLocaleLanguageCode value:langID];
+        ServerCommunicator *server=[[ServerCommunicator alloc]init];
+        server.caller=self;
+        server.tag=1;
+        NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",usuarioActual.usuario,usuarioActual.contrasena,[IAmCoder dateString]];
+        NSString *parameters=[NSString stringWithFormat:@"<ns:getData><data>%@</data><token>%@</token><language>%@</language></ns:getData>",loginData,[IAmCoder hash256:loginData],lang];
+        [server callServerWithMethod:@"" andParameter:parameters];
+    }
 }
 -(void)callLiteServerData{
-    //hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    //hud.labelText=NSLocalizedString(@"Cargando", nil);
-    NSString *langID = [[NSLocale preferredLanguages] objectAtIndex:0];
-    NSString *lang = [[NSLocale currentLocale] displayNameForKey:NSLocaleLanguageCode value:langID];
-    ServerCommunicator *server=[[ServerCommunicator alloc]init];
-    server.caller=self;
-    server.tag=2;
-    server.method=@"getDataLite";
-    NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",usuarioActual.usuario,usuarioActual.contrasena,[IAmCoder dateString]];
-    NSString *parameters=[NSString stringWithFormat:@"<ns:getDataLite><data>%@</data><token>%@</token><language>%@</language></ns:getDataLite>",loginData,[IAmCoder hash256:loginData],lang];
-    [server callServerWithMethod:@"" andParameter:parameters];
+    if (isOnMainMenu) {
+        //hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        //hud.labelText=NSLocalizedString(@"Cargando", nil);
+        NSString *langID = [[NSLocale preferredLanguages] objectAtIndex:0];
+        NSString *lang = [[NSLocale currentLocale] displayNameForKey:NSLocaleLanguageCode value:langID];
+        ServerCommunicator *server=[[ServerCommunicator alloc]init];
+        server.caller=self;
+        server.tag=2;
+        server.method=@"getDataLite";
+        NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",usuarioActual.usuario,usuarioActual.contrasena,[IAmCoder dateString]];
+        NSString *parameters=[NSString stringWithFormat:@"<ns:getDataLite><data>%@</data><token>%@</token><language>%@</language></ns:getDataLite>",loginData,[IAmCoder hash256:loginData],lang];
+        [server callServerWithMethod:@"" andParameter:parameters];
+    }
 }
 #pragma mark server response
 
@@ -738,11 +744,17 @@
     [arrayLiteDesdeServer removeAllObjects];
     if (sc.tag==2){
         if ([sc.resDic objectForKey:@"usuario"]) {
-            NSArray *array=[[[sc.resDic objectForKey:@"usuario"]objectForKey:@"proyectos"]objectForKey:@"item"];
-
-
-            for (int i=0; i<array.count; i++) {
-                NSDictionary *dic=[array objectAtIndex:i];
+            //Determinamos si lo que llega es un array o un dictionary
+            if ([[[[sc.resDic objectForKey:@"usuario"]objectForKey:@"proyectos"]objectForKey:@"item"] isKindOfClass:[NSArray class]]) {
+                NSArray *array=[[[sc.resDic objectForKey:@"usuario"]objectForKey:@"proyectos"]objectForKey:@"item"];
+                for (int i=0; i<array.count; i++) {
+                    NSDictionary *dic=[array objectAtIndex:i];
+                    ProyectoLite *proyecto=[[ProyectoLite alloc]initWithDictionary:[dic objectForKey:@"proyecto"]];
+                    [arrayLiteDesdeServer addObject:proyecto];
+                }
+            }
+            else if ([[[[sc.resDic objectForKey:@"usuario"]objectForKey:@"proyectos"]objectForKey:@"item"] isKindOfClass:[NSDictionary class]]){
+                NSDictionary *dic=[[[sc.resDic objectForKey:@"usuario"]objectForKey:@"proyectos"]objectForKey:@"item"];
                 ProyectoLite *proyecto=[[ProyectoLite alloc]initWithDictionary:[dic objectForKey:@"proyecto"]];
                 [arrayLiteDesdeServer addObject:proyecto];
             }
@@ -754,7 +766,7 @@
     [MBProgressHUD hideHUDForView:self.view animated:YES];
 }
 -(void)compararArregloFull:(NSMutableArray*)arregloFull conArregloDelServer:(NSMutableArray*)arregloDelServer{
-    if (!arregloDelServer.count == arregloFull.count) {
+    if (arregloDelServer.count == arregloFull.count) {
         
         //NSLog(@"Cantidades Diferentes %i vs %i",arregloDelServer.count,arregloFull.count);
         int conteo=0;

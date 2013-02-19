@@ -53,8 +53,12 @@
     timer =[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(update) userInfo:nil repeats:YES];
     brujula=[[BrujulaView alloc]initWithFrame:CGRectMake(self.view.frame.size.height-80, 60, 70, 70)];
     [self.view addSubview:brujula];
-    [self.navigationItem setHidesBackButton:YES];
+    //[self.navigationItem setHidesBackButton:YES];
     // Do any additional setup after loading the view.
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(back)];
+    [singleTap setNumberOfTapsRequired:1];
+    [singleTap setNumberOfTouchesRequired:1];
+    [scrollViewImagen addGestureRecognizer:singleTap];    
 }
 -(void)update{
     if (brujula.isOn) {
@@ -183,5 +187,7 @@
     }
     return motionManager;
 }
-
+-(void)back{
+    [self.navigationController popViewControllerAnimated:YES];
+}
 @end

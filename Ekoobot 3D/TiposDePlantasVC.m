@@ -15,7 +15,7 @@
 @implementation TiposDePlantasVC
 
 @synthesize producto;
-@synthesize pageCon;
+@synthesize pageCon,scrollView;
 
 #pragma mark -
 #pragma mark Ciclo de Vida

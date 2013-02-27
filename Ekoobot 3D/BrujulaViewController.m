@@ -55,10 +55,6 @@
     [self.view addSubview:brujula];
     //[self.navigationItem setHidesBackButton:YES];
     // Do any additional setup after loading the view.
-    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(back)];
-    [singleTap setNumberOfTapsRequired:1];
-    [singleTap setNumberOfTouchesRequired:1];
-    [scrollViewImagen addGestureRecognizer:singleTap];    
 }
 -(void)update{
     if (brujula.isOn) {
@@ -131,6 +127,11 @@
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
     [doubleTap setNumberOfTapsRequired:2];
     [scrollViewImagen addGestureRecognizer:doubleTap];
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(back)];
+    [singleTap setNumberOfTapsRequired:1];
+    [singleTap setNumberOfTouchesRequired:1];
+    [scrollViewImagen addGestureRecognizer:singleTap];
+    [singleTap requireGestureRecognizerToFail:doubleTap];
 }
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView

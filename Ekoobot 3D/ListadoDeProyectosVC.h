@@ -28,7 +28,6 @@
 #import "Analytic.h"
 #import "ProyectoLite.h"
 @interface ListadoDeProyectosVC : UIViewController <UIScrollViewDelegate,UIAlertViewDelegate,UIDocumentInteractionControllerDelegate> {
-    UIScrollView *scrollView;
     Usuario *usuarioActual;
     ProgressView *progressView;
     NSMutableArray *arrayDeTitulos;
@@ -48,7 +47,8 @@
 @property(nonatomic,retain)Usuario *usuarioActual;
 @property(nonatomic,retain)Usuario *usuarioCopia;
 @property(nonatomic,retain)NSMutableArray *arrayLiteDesdeServer;
-;
+@property(nonatomic,retain)UIScrollView *scrollView;
+
 
 @property(nonatomic,retain)UIPageControl *pageCon;
 

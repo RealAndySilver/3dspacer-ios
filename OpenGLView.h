@@ -129,7 +129,7 @@
 @property(nonatomic)GLuint _rightTexture;
 @property(nonatomic)GLuint _topTexture;
 @property(nonatomic)GLuint _bottomTexture;
-@property(nonatomic)NSTimer *timer1;
+@property(nonatomic,retain)NSTimer *timer1;
 
 @property(nonatomic, retain)EAGLContext* _context;
 @property(nonatomic)float headingValue;

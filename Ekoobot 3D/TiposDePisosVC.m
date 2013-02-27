@@ -15,7 +15,7 @@
 @implementation TiposDePisosVC
 
 @synthesize grupo;
-@synthesize pageCon;
+@synthesize pageCon,scrollView;
 
 #pragma mark -
 #pragma mark Ciclo de Vida

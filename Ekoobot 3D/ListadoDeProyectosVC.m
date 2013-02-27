@@ -14,7 +14,7 @@
 @implementation ListadoDeProyectosVC
 
 @synthesize pageCon;
-@synthesize usuarioActual,usuarioCopia,arrayLiteDesdeServer;
+@synthesize usuarioActual,usuarioCopia,arrayLiteDesdeServer,scrollView;
 
 #pragma mark -
 #pragma mark Ciclo de Vida

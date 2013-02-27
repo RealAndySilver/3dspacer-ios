@@ -21,7 +21,6 @@
 
 @interface PlantaUrbanaVC : UIViewController<UIScrollViewDelegate> {
     Proyecto *proyecto;
-    UIScrollView *scrollViewUrbanismo;
     UIImageView *imageViewUrbanismo;
     IBOutlet UIActivityIndicatorView *spinner;
     MBProgressHUD *hud;
@@ -35,5 +34,6 @@
     float diferenciaRotacion;
 }
 @property Proyecto *proyecto;
+@property(nonatomic,retain)UIScrollView *scrollViewUrbanismo;
 
 @end

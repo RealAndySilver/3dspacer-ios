@@ -15,7 +15,6 @@
 
 @interface TiposDePlantasVC : UIViewController<UIScrollViewDelegate,UIAlertViewDelegate>{
     Producto *producto;
-    UIScrollView *scrollView;
     IBOutlet UIActivityIndicatorView *spinner;
     MBProgressHUD *hud;
     NSMutableArray *arrayNombresPlantas;
@@ -25,5 +24,6 @@
 
 @property (nonatomic,retain)Producto *producto;
 @property(nonatomic,retain)UIPageControl *pageCon;
+@property(nonatomic,retain)UIScrollView *scrollView;
 
 @end

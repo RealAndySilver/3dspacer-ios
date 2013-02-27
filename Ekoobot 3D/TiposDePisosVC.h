@@ -14,7 +14,6 @@
 #import "MBProgressHud.h"
 
 @interface TiposDePisosVC : UIViewController <UIScrollViewDelegate,UIAlertViewDelegate> {
-    UIScrollView *scrollView;
     Grupo *grupo;
     MBProgressHUD *hud;
     NSMutableArray *arrayNombrePisos;
@@ -24,5 +23,6 @@
 
 @property(nonatomic,retain)Grupo *grupo;
 @property(nonatomic,retain)UIPageControl *pageCon;
+@property(nonatomic,retain)UIScrollView *scrollView;
 
 @end

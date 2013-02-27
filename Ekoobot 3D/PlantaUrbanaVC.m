@@ -14,7 +14,7 @@
 
 @implementation PlantaUrbanaVC
 
-@synthesize proyecto;
+@synthesize proyecto,scrollViewUrbanismo;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

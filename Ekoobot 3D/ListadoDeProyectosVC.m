@@ -153,6 +153,7 @@
         [arrayLiteDesdeFull addObject:proyecto];
         //[ProjectDownloader downloadProject:proyecto];
         [self paginaCreadaConObjeto:proyecto enPosicion:i];
+        NSLog(@"Data del proyecto es %@",proyecto.data);
     }
     
 }
@@ -353,12 +354,15 @@
     [self performSelectorInBackground:@selector(threadTest:) withObject:dic];
 }
 -(void)threadTest:(NSMutableDictionary*)dic{
-    [progressView setViewAlphaToOne];
-    isOnMainMenu=NO;
-    //[ProjectDownloader downloadProject:[usuarioActual.arrayProyectos objectAtIndex:[key intValue]] yTag:button.tag+1000];
-    [ProjectDownloader downloadProject:[dic objectForKey:@"Project"] yTag:[[dic objectForKey:@"Tag"]intValue] sender:progressView usuario:[dic objectForKey:@"Usuario"]];
-    [progressView setViewAlphaToCero];
-    isOnMainMenu=YES;
+        Proyecto *proyecto=[dic objectForKey:@"Project"];
+    if ([proyecto.data isEqualToString:@"1"]) {
+        [progressView setViewAlphaToOne];
+        isOnMainMenu=NO;
+        //[ProjectDownloader downloadProject:[usuarioActual.arrayProyectos objectAtIndex:[key intValue]] yTag:button.tag+1000];
+        [ProjectDownloader downloadProject:[dic objectForKey:@"Project"] yTag:[[dic objectForKey:@"Tag"]intValue] sender:progressView usuario:[dic objectForKey:@"Usuario"]];
+        [progressView setViewAlphaToCero];
+        isOnMainMenu=YES;
+    }
 }
 -(void)insertarActualizadorEnPagina:(UIView*)view yTag:(int)tag{
     UIButton *boton = [[UIButton alloc]init];
@@ -425,8 +429,11 @@
     boton.alpha=0;
     [boton addTarget:self action:@selector(irAlSiguienteViewController:) forControlEvents:UIControlEventTouchUpInside];
     boton.frame=CGRectMake(830, 560,170, 170);
-    [view addSubview:boton];
-    [view bringSubviewToFront:boton];
+    if ([proyecto.data isEqualToString:@"1"]) {
+        [view addSubview:boton];
+        [view bringSubviewToFront:boton];
+    }
+    
 }
 
 - (void)insertarLogoProyectoEnPagina:(UIView*)view conProyecto:(Proyecto*)proyecto{
@@ -489,6 +496,16 @@
     NSLog(@"update tag----> %i %@",updateBox.tag,updateBox);
     FileSaver *file=[[FileSaver alloc]init];
     NSString *composedTag=[NSString stringWithFormat:@"%i%@",tag,proyecto.idProyecto];
+    if ([proyecto.data isEqualToString:@"0"]) {
+        updateBox.titleText.backgroundColor=[UIColor clearColor];
+        updateBox.titleText.text=NSLocalizedString(@"UltimaVersion", nil);
+        updateBox.titleText.textColor=[UIColor greenColor];
+        updateBox.titleText.tag=tag+1100;
+        updateBox.updateText.textColor=[UIColor whiteColor];
+        updateBox.updateText.text=@"";
+        updateBox.container.alpha=0;
+        return;
+    }
     if ([file getUpdateFileWithString:composedTag]) {
         NSString *actualizadoEl=NSLocalizedString(@"ActualizadoEl", nil);
         updateBox.updateText.text=[NSString stringWithFormat:@"%@ %@",actualizadoEl,[file getUpdateFileWithString:composedTag]];
@@ -500,6 +517,12 @@
             NSString *peso=NSLocalizedString(@"Peso", nil);
             updateBox.updateText.text=[NSString stringWithFormat:@"%@ %@",peso,proyecto.peso];
             //updateBox.updateText.textColor=[UIColor orangeColor];
+            if ([usuarioActual.tipo isEqualToString:@"sellers"]) {
+                // Para poner botón de entrar para vendedores con el proyecto desactualizado //
+                UIButton *lebuttons = (UIButton *)[view viewWithTag:tag+1000];
+                NSLog(@"Button punto tag %i",lebuttons.tag);
+                lebuttons.alpha=1;
+            }
         }
         else{
             updateBox.titleText.backgroundColor=[UIColor clearColor];
@@ -545,6 +568,13 @@
         updateBox.titleText.text=[NSString stringWithFormat:NSLocalizedString(@"UltimaVersion", nil)];
         updateBox.titleText.textColor=[UIColor greenColor];
     }
+    /*else{
+        UIButton *button = (UIButton *)[scrollView viewWithTag:[number intValue]+1000];
+        button.alpha=1;
+        //NSLog(@"Updated %@ %@",number,[file getUpdateFile:[number intValue]]);
+        
+        [self performSelectorOnMainThread:@selector(irAlSiguienteViewController:) withObject:button waitUntilDone:YES];
+    }*/
 }
 #pragma mark -
 #pragma mark Eventos para ir a otros viewcontrollers
@@ -558,6 +588,7 @@
 -(void)delayedAction:(UIButton*)sender{
     NSString *keyProyecto = [NSString stringWithFormat:@"%i",sender.tag-3000];
     Proyecto *proyecto = [usuarioActual.arrayProyectos objectAtIndex:[keyProyecto intValue]];
+    if ([proyecto.data isEqualToString:@"0"]) return;
     ItemUrbanismo *itemUrbanismo = [proyecto.arrayItemsUrbanismo objectAtIndex:0];
     Analytic *analytic=[[Analytic alloc]init];
     [analytic sendAnalyticWithProjectId:proyecto.idProyecto username:usuarioActual.usuario userId:usuarioActual.idUsuario andPass:usuarioActual.contrasena];

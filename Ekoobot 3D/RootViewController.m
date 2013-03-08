@@ -261,12 +261,13 @@
         
     }
     else{
-        NSString *message=NSLocalizedString(@"LoginError", nil);
+        /*NSString *message=NSLocalizedString(@"LoginError", nil);
         UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
         spinner.alpha=0;
         [spinner stopAnimating];
-        loginButton.enabled=YES;
+        loginButton.enabled=YES;*/
+        [self receivedDataFromServerWithError:nil];
     }
 }
 -(void)receivedDataFromServerWithError:(id)sender{

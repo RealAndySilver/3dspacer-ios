@@ -12,7 +12,7 @@
 
 @synthesize idProyecto,nombre;
 @synthesize logo,imagen;
-@synthesize urbanismo,imagenUrbanismo,edificio,arrayItemsUrbanismo,actualizado,arrayAdjuntos,peso;
+@synthesize urbanismo,imagenUrbanismo,edificio,arrayItemsUrbanismo,actualizado,arrayAdjuntos,peso,data;
 
 - (id)init{
     if (self=[super init]) {
@@ -25,9 +25,10 @@
         imagenUrbanismo = @"";
         actualizado=@"";
         peso=@"";
+        data=@"";
         arrayItemsUrbanismo = [[NSMutableArray alloc]init];
         arrayAdjuntos = [[NSMutableArray alloc]init];
-
+        
     }
     return self;
 }
@@ -39,6 +40,7 @@
     imagen = [dictionary objectForKey:@"imagen"];
     actualizado = [dictionary objectForKey:@"actualizado"];
     peso=[dictionary objectForKey:@"peso"];
+    data=[dictionary objectForKey:@"data"];
     ItemUrbanismo *itemUrbanismo=[[ItemUrbanismo alloc]init];
     itemUrbanismo = [itemUrbanismo initWithDictionary:[dictionary objectForKey:@"planta_urbana"]];
     [arrayItemsUrbanismo addObject:itemUrbanismo];

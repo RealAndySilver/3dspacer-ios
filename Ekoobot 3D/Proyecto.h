@@ -24,6 +24,8 @@
 @property(nonatomic,retain)NSString *idProyecto,*nombre,*logo,*imagen,*imagenUrbanismo,*peso;
 @property(nonatomic,retain)NSString *actualizado;
 @property(nonatomic,retain)NSString *urbanismo,*edificio;
+@property(nonatomic,retain)NSString *data;
+
 @property(nonatomic,retain)NSMutableArray *arrayItemsUrbanismo;
 @property(nonatomic,retain)NSMutableArray *arrayAdjuntos;
 - (id)initWithDictionary:(NSDictionary*)dictionary;

@@ -66,6 +66,9 @@
     [navController setInterfaceOrientation:YES];
 }
 -(void)viewWillAppear:(BOOL)animated{
+    NSMutableArray *tempArray=proyecto.arrayItemsUrbanismo;
+    ItemUrbanismo *itemUrbanismo=[tempArray objectAtIndex:0];
+    adicionalGrados=DegreesToRadians([itemUrbanismo.norte floatValue]);
     UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
     if (UIInterfaceOrientationIsLandscape(orientation)) {
         if(orientation ==3){
@@ -77,6 +80,7 @@
             diferenciaRotacion=0.5;
         }
     }
+    NSLog(@"Diferencia norte= %f",([itemUrbanismo.norte floatValue]/360));
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     [scrollViewUrbanismo setZoomScale:minimumZoomScale animated:NO];
     _motionManager = [self motionManager];
@@ -190,9 +194,11 @@
         _motionManager.showsDeviceMovementDisplay = YES;
         attitude = _motionManager.deviceMotion.attitude;
         CGAffineTransform swingTransform = CGAffineTransformIdentity;
-        swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)+diferenciaRotacion]);
+        swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)+diferenciaRotacion]-adicionalGrados);
+        CGAffineTransform swingTransform2 = CGAffineTransformIdentity;
+        swingTransform2 = CGAffineTransformRotate(swingTransform2, [self radiansToDegrees:DegreesToRadians(attitude.yaw)+diferenciaRotacion]);
         scrollViewUrbanismo.transform = swingTransform;
-        brujula.cursor.transform = swingTransform;
+        brujula.cursor.transform = swingTransform2;
     }
     else{
         NavController *navController = (NavController *)self.navigationController;

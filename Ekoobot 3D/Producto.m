@@ -10,7 +10,7 @@
 
 @implementation Producto
 
-@synthesize coordenadaX,coordenadaY,arrayPlantas,tipo,idProducto,existe,area,nombre;
+@synthesize coordenadaX,coordenadaY,arrayPlantas,tipo,idProducto,existe,area,nombre,norte;
 - (id)init{
     if (self=[super init]) {
         coordenadaX = @"";
@@ -20,6 +20,7 @@
         area=@"";
         existe=NO;
         nombre=@"";
+        norte=@"";
         arrayPlantas =[[NSMutableArray alloc]init];
     }
     return self;
@@ -31,6 +32,9 @@
     area = [dictionary objectForKey:@"area"];
     idProducto = [dictionary objectForKey:@"id_producto"];
     nombre = [dictionary objectForKey:@"nombre"];
+    norte = [dictionary objectForKey:@"norte"];
+    NSLog(@"Norte Pr= %@",norte);
+
     //NSLog(@"Dic %@",dictionary);
     //existe=[[dictionary objectForKey:@"existe"]boolValue];
     //NSLog(@"existen? %d",existe);

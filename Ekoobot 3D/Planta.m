@@ -11,12 +11,13 @@
 @implementation Planta
 
 @synthesize imagenPlanta,idPlanta;
-@synthesize arrayEspacios3D,nombre;
+@synthesize arrayEspacios3D,nombre,norte;
 - (id)init{
     if (self=[super init]) {
         idPlanta=@"";
         imagenPlanta = @"";
         nombre=@"";
+        norte=@"";
         arrayEspacios3D =[[NSMutableArray alloc]init];
     }
     return self;
@@ -25,6 +26,9 @@
     idPlanta = [dictionary objectForKey:@"id_planta"];
     imagenPlanta = [dictionary objectForKey:@"map"];
     nombre = [dictionary objectForKey:@"nombre"];
+    norte = [dictionary objectForKey:@"norte"];
+    NSLog(@"Norte Pl= %@",norte);
+
     /*for (int i=0; i<[[dictionary objectForKey:@"espacios3D"]count]; i++) {
         NSString *key=[NSString stringWithFormat:@"%i",i];
         Espacio3D *espacio3D=[[Espacio3D alloc]init];

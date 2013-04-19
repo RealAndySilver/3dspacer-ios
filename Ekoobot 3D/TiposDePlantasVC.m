@@ -169,6 +169,7 @@
     [scrollView addSubview:pagina];
     CustomButton *zoomButton=[[CustomButton alloc]init];
     zoomButton.imageView=imageView;
+    zoomButton.gradosExtra=[planta.norte floatValue];
     zoomButton.frame=CGRectMake(0, 0, 70, 70);
     zoomButton.center=CGPointMake(pagina.frame.size.width-85, 80);
     [zoomButton setTitle:@"" forState:UIControlStateNormal];
@@ -238,6 +239,7 @@
     zVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Brujula"];
     zVC.path=button.path;
     zVC.externalImageView=button.imageView;
+    zVC.gradosExtra=button.gradosExtra;
 
     [self.navigationController pushViewController:zVC animated:NO];
 }

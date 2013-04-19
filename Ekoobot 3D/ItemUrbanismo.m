@@ -10,7 +10,7 @@
 
 @implementation ItemUrbanismo
 
-@synthesize tipo,coordenadaX,coordenadaY,idUrbanismo,imagenUrbanismo,existe;
+@synthesize tipo,coordenadaX,coordenadaY,idUrbanismo,imagenUrbanismo,existe,norte;
 @synthesize arrayGrupos;
 
 - (id)init{
@@ -21,6 +21,7 @@
         coordenadaY = @"";
         imagenUrbanismo = @"";
         existe=NO;
+        norte=@"";
         arrayGrupos =[[NSMutableArray alloc]init];
     }
     return self;
@@ -33,6 +34,8 @@
     //coordenadaY = [dictionary objectForKey:@"coordenadaY"];
     imagenUrbanismo = [dictionary objectForKey:@"planta"];
     existe=[[dictionary objectForKey:@"existe"]boolValue];
+    norte = [dictionary objectForKey:@"norte"];
+    NSLog(@"Norte Urb= %@",norte);
     if ([[[dictionary objectForKey:@"grupos"]objectForKey:@"item"]isKindOfClass:[NSArray class]]) {
         NSArray *array=[[dictionary objectForKey:@"grupos"]objectForKey:@"item"];
         for (int i=0; i<[array count]; i++){

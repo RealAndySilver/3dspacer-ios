@@ -13,6 +13,7 @@
     NSString *coordenadaX;
     NSString *coordenadaY;
     NSString *nombre;
+    NSString *norte;
     NSString *idGrupo;
     NSMutableArray *arrayTiposDePiso;
 }

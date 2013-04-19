@@ -26,9 +26,10 @@
     NSTimer *timer;
     BrujulaView *brujula;
     float diferenciaRotacion;
+    float adicionalGrados;
 
 }
 @property(nonatomic)NSString *path;
 @property(nonatomic)UIImageView *externalImageView;
-
+@property(nonatomic)float gradosExtra;
 @end

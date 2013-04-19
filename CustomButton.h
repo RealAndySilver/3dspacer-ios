@@ -14,6 +14,7 @@
 @property(nonatomic)int secondaryId;
 @property(nonatomic)id adjunto;
 @property(nonatomic)id extraContent;
+@property(nonatomic)float gradosExtra;
 @property(nonatomic)NSString *path;
 @property(nonatomic)UIImageView *imageView;
 

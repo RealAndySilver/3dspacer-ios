@@ -15,10 +15,11 @@
     NSString *coordenadaX;
     NSString *coordenadaY;
     NSString *imagenUrbanismo;
+    NSString *norte;
     NSMutableArray *arrayGrupos;
 }
 
-@property(nonatomic,retain)NSString *tipo,*coordenadaX,*coordenadaY,*idUrbanismo,*imagenUrbanismo;
+@property(nonatomic,retain)NSString *tipo,*coordenadaX,*coordenadaY,*idUrbanismo,*imagenUrbanismo,*norte;
 @property(nonatomic,retain)NSMutableArray *arrayGrupos;
 @property(nonatomic)BOOL existe;
 

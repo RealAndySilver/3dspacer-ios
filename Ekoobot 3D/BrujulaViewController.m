@@ -13,12 +13,13 @@
 @end
 
 @implementation BrujulaViewController
-@synthesize path,externalImageView;
+@synthesize path,externalImageView,gradosExtra;
 
 - (void)viewDidLoad{
     NavController *navController = (NavController *)self.navigationController;
     [navController setInterfaceOrientation:NO];
     UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    adicionalGrados=DegreesToRadians(gradosExtra);
     if (UIInterfaceOrientationIsLandscape(orientation)) {
         if(orientation ==3){
             NSLog(@"OrientacionLandscape numero %i",orientation);
@@ -61,9 +62,11 @@
         _motionManager.showsDeviceMovementDisplay = YES;
         attitude = _motionManager.deviceMotion.attitude;
         CGAffineTransform swingTransform = CGAffineTransformIdentity;
-        swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)+diferenciaRotacion]);
+        swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)+diferenciaRotacion]-adicionalGrados);
+        CGAffineTransform swingTransform2 = CGAffineTransformIdentity;
+        swingTransform2 = CGAffineTransformRotate(swingTransform2, [self radiansToDegrees:DegreesToRadians(attitude.yaw)+diferenciaRotacion]);
         scrollViewImagen.transform = swingTransform;
-        brujula.cursor.transform = swingTransform;
+        brujula.cursor.transform = swingTransform2;
     }
     else{
         [self.navigationController popViewControllerAnimated:YES];

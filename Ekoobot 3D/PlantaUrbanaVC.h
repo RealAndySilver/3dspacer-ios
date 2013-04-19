@@ -32,6 +32,7 @@
     NSTimer *timer;
     BrujulaView *brujula;
     float diferenciaRotacion;
+    float adicionalGrados;
 }
 @property Proyecto *proyecto;
 @property(nonatomic,retain)UIScrollView *scrollViewUrbanismo;

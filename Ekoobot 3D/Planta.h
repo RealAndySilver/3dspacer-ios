@@ -11,10 +11,11 @@
 @interface Planta : NSObject{
     NSString *idPlanta;
     NSString *imagenPlanta;
+    NSString *norte;
     NSMutableArray *arrayEspacios3D;
 }
 
-@property(nonatomic,retain)NSString *imagenPlanta,*idPlanta,*nombre;
+@property(nonatomic,retain)NSString *imagenPlanta,*idPlanta,*nombre,*norte;
 @property(nonatomic,retain)NSMutableArray *arrayEspacios3D;
 @property(nonatomic)BOOL existe;
 

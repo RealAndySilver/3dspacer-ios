@@ -15,11 +15,12 @@
     NSString *tipo;
     NSString *idProducto;
     NSString *area;
+    NSString *norte;
     NSString *nombre;
     NSMutableArray *arrayPlantas;
 }
 
-@property(nonatomic,retain)NSString *coordenadaX,*coordenadaY,*tipo,*idProducto,*area,*nombre;
+@property(nonatomic,retain)NSString *coordenadaX,*coordenadaY,*tipo,*idProducto,*area,*nombre,*norte;
 @property(nonatomic,retain)NSMutableArray *arrayPlantas;
 @property(nonatomic)BOOL existe;
 

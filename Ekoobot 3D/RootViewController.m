@@ -61,6 +61,11 @@
     [rotationSubView addSubview:littleBoxView];
     NSString *langID = [[NSLocale preferredLanguages] objectAtIndex:0];
     lang = [[NSLocale currentLocale] displayNameForKey:NSLocaleLanguageCode value:langID];
+    usuarioTF.alpha=0;
+    passwordTF.alpha=0;
+    loginButton.alpha=0;
+    infoButton.alpha=0;
+    [self comprobarUsuario];
 }
 -(void)goToWeb{
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"http://www.ekoobot.com"]];
@@ -168,7 +173,7 @@
     }
     else{
     //NSString *parameters=[NSString stringWithFormat:@"<ns:getData><username>%@</username><password>%@</password><language>%@</language></ns:getData>",usuarioString,contrasenaString,lang];
-        NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",usuarioString,contrasenaString,[IAmCoder dateString]];
+        NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",/*usuarioString*/@"demo",/*contrasenaString*/@"1234",[IAmCoder dateString]];
         NSString *parameters=[NSString stringWithFormat:@"<ns:getData><data>%@</data><token>%@</token><language>%@</language></ns:getData>",loginData,[IAmCoder hash256:loginData],lang];
     [sc callServerWithMethod:@"" andParameter:parameters];
     

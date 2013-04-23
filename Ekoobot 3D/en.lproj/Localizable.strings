@@ -11,6 +11,8 @@
 "CerrarSesionSeguro"="¿Are you sure you want to logout?";
 "Cancelar"="Cancel";
 
+"ConnectionError"="You need an internet connection to download the project for the first time. Please try again.";
+
 "PlantaUrbana"="Urban Plant";
 
 "CancelarEnvio"="Cancel";

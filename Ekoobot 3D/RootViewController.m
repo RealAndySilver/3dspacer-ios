@@ -21,6 +21,8 @@
 //#define NOMBREUSER @"ekoomedia"
 //#define PASSWORD @"1234"
 #define USERTYPE @"clients"
+#define USERNAME @"demo"
+#define PASSWORD @"1234"
 
 
 - (void)viewDidLoad{
@@ -65,7 +67,8 @@
     passwordTF.alpha=0;
     loginButton.alpha=0;
     infoButton.alpha=0;
-    [self comprobarUsuario];
+    //[self comprobarUsuario];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(remoteCallUser) name:@"delegateCall" object:nil];
 }
 -(void)goToWeb{
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"http://www.ekoobot.com"]];
@@ -88,14 +91,25 @@
     keyboardIsMoved = NO;
     NavController *navController = (NavController *)self.navigationController;
     [navController setOrientationType:1];
+    isVisible=YES;
 }
 
+-(void)remoteCallUser{
+    if (isVisible) {
+        NSLog(@"Remote call inside if");
+        [self comprobarUsuario];
+    }
+    else{
+        NSLog(@"Remote call outside if");
+    }
+}
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
     return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) || 
     (interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
+    isVisible=NO;
     [spinner stopAnimating];
 }
 
@@ -163,8 +177,8 @@
 #pragma mark -
 #pragma mark Comprobacion de usuario
 - (void)comprobarUsuario{
-    contrasenaString=passwordTF.text;
-    usuarioString=usuarioTF.text;
+    contrasenaString=/*passwordTF.text*/PASSWORD;
+    usuarioString=/*usuarioTF.text*/USERNAME;
     loginButton.enabled=NO;
     if ([usuarioString isEqualToString:@"admin"]&&[contrasenaString isEqualToString:@"admin"]) {
         EraseViewController *eVC=[[EraseViewController alloc]init];
@@ -173,7 +187,7 @@
     }
     else{
     //NSString *parameters=[NSString stringWithFormat:@"<ns:getData><username>%@</username><password>%@</password><language>%@</language></ns:getData>",usuarioString,contrasenaString,lang];
-        NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",/*usuarioString*/@"demo",/*contrasenaString*/@"1234",[IAmCoder dateString]];
+        NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",/*usuarioString*/USERNAME,/*contrasenaString*/PASSWORD,[IAmCoder dateString]];
         NSString *parameters=[NSString stringWithFormat:@"<ns:getData><data>%@</data><token>%@</token><language>%@</language></ns:getData>",loginData,[IAmCoder hash256:loginData],lang];
     [sc callServerWithMethod:@"" andParameter:parameters];
     
@@ -239,17 +253,17 @@
         [fileSaver setDictionary:[sc.resDic objectForKey:@"usuario"]
                       withUserId:[[sc.resDic objectForKey:@"usuario"]objectForKey:@"id_usuario"]];
         
-        [fileSaver setUserName:usuarioTF.text
-                      password:passwordTF.text
+        [fileSaver setUserName:/*usuarioTF.text*/USERNAME
+                      password:/*passwordTF.text*/PASSWORD
                          andId:[[sc.resDic objectForKey:@"usuario"]objectForKey:@"id_usuario"]];
         
-        [fileSaver setLastUserName:usuarioTF.text andPassword:passwordTF.text];
+        [fileSaver setLastUserName:/*usuarioTF.text*/USERNAME andPassword:/*passwordTF.text*/PASSWORD];
         
-        usuario.usuario=usuarioTF.text;
-        usuarioCopia.usuario=usuarioTF.text;
-        usuario.contrasena=passwordTF.text;
-        usuarioCopia.contrasena=passwordTF.text;
-        if ([usuario.tipo isEqualToString:USERTYPE]) {
+        usuario.usuario=/*usuarioTF.text*/USERNAME;
+        usuarioCopia.usuario=/*usuarioTF.text*/USERNAME;
+        usuario.contrasena=/*passwordTF.text*/PASSWORD;
+        usuarioCopia.contrasena=/*passwordTF.text*/PASSWORD;
+        if ([usuario.tipo isEqualToString:/*USERTYPE*/USERNAME]) {
             TermsViewController *tVC=[[TermsViewController alloc]init];
             tVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Terms"];
             tVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
@@ -277,9 +291,11 @@
 }
 -(void)receivedDataFromServerWithError:(id)sender{
     FileSaver *fileSaver=[[FileSaver alloc]init];
-    NSLog(@"saver %@",[fileSaver getUserWithName:usuarioTF.text andPassword:passwordTF.text]);
-    if(![fileSaver getUserWithName:usuarioTF.text andPassword:passwordTF.text]){
-        NSString *message=NSLocalizedString(@"LoginError", nil);
+    //NSLog(@"saver %@",[fileSaver getUserWithName:usuarioTF.text andPassword:passwordTF.text]);
+    if(![fileSaver getUserWithName:USERNAME/*usuarioTF.text*/ andPassword:PASSWORD/*passwordTF.text*/]){
+        //NSString *message=NSLocalizedString(@"LoginError", nil);
+        NSString *message=NSLocalizedString(@"ConnectionError", nil);
+
         UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
         spinner.alpha=0;
@@ -290,14 +306,14 @@
         Usuario *usuario=[[Usuario alloc]initWithDictionary:[fileSaver getDictionary:idLocal]];
         Usuario *usuarioCopia=[[Usuario alloc]initWithDictionary:[fileSaver getDictionary:idLocal]];
         
-        usuario.usuario=usuarioTF.text;
-        usuarioCopia.usuario=usuarioTF.text;
-        usuario.contrasena=passwordTF.text;
-        usuarioCopia.contrasena=passwordTF.text;
+        usuario.usuario=/*usuarioTF.text*/USERNAME;
+        usuarioCopia.usuario=/*usuarioTF.text*/USERNAME;
+        usuario.contrasena=/*passwordTF.text*/PASSWORD;
+        usuarioCopia.contrasena=/*passwordTF.text*/PASSWORD;
         
-        [fileSaver setLastUserName:usuarioTF.text andPassword:passwordTF.text];
+        [fileSaver setLastUserName:/*usuarioTF.text*/USERNAME andPassword:/*passwordTF.text*/PASSWORD];
         
-        if ([usuario.tipo isEqualToString:USERTYPE]) {
+        if ([usuario.tipo isEqualToString:/*USERTYPE*/USERNAME]) {
             TermsViewController *tVC=[[TermsViewController alloc]init];
             tVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Terms"];
             tVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;

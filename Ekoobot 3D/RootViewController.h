@@ -33,6 +33,7 @@
     IBOutlet UIButton *infoButton;
     UIView *littleBoxView;
     NSString *lang;
+    BOOL isVisible;
     
 }
 - (void)irAlSiguienteViewConUsuario:(id)usuario yCopia:(id)copia;

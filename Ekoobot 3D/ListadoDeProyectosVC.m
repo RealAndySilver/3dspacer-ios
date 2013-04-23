@@ -35,17 +35,18 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLabelWithTag:) name:@"updates" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertViewAppear) name:@"alert" object:nil];
 
-    UIBarButtonItem *logout = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CerrarSesion", nil)
+    /*UIBarButtonItem *logout = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CerrarSesion", nil)
                                                                style:UIBarButtonItemStylePlain 
                                                               target:self 
-                                                              action:@selector(customLogoutAlert)];   
+                                                              action:@selector(customLogoutAlert)]; */  
     
     /*UIBarButtonItem *refresh = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"RecargarProyectos", nil)
                                                                style:UIBarButtonItemStylePlain
                                                               target:self
                                                               action:@selector(callServerToRefresh)];*/
     
-    self.navigationItem.leftBarButtonItem = logout;
+    //self.navigationItem.leftBarButtonItem = logout;
+    [self.navigationItem setHidesBackButton:YES];
     //self.navigationItem.rightBarButtonItem = refresh;
     
     NavController *navController = (NavController *)self.navigationController;

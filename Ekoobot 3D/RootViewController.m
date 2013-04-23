@@ -21,8 +21,8 @@
 //#define NOMBREUSER @"ekoomedia"
 //#define PASSWORD @"1234"
 #define USERTYPE @"clients"
-#define USERNAME @"demo"
-#define PASSWORD @"1234"
+#define USERNAME @"cabo tortuga"
+#define PASSWORD @"santa marta"
 
 
 - (void)viewDidLoad{

@@ -37,7 +37,7 @@
     [elView setClipsToBounds:YES];
     elView.backgroundColor=[UIColor blackColor];
     elView.alpha=1;
-    UIImageView *backGround=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"downloading.jpg"]];
+    UIImageView *backGround=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"cargando.png"]];
     backGround.frame=CGRectMake(-85, 0, self.frame.size.width+170, self.frame.size.height);
     [elView addSubview:backGround];
     

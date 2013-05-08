@@ -73,7 +73,8 @@
             if (![emailTF.text isEqualToString:@""]) {
                 if (![comentarioTV.text isEqualToString:@""]) {
                     NSLog(@"Usuario :%@ \nContrasena : %@",usuario,contrasena);
-                    NSString *params=[NSString stringWithFormat:@"<ns:setRegister><username>%@</username><password>%@</password><language>%@</language><register><name>%@</name><email>%@</email><comments>%@</comments><project>%@</project></register></ns:setRegister>",usuario,contrasena,lang,nombreTF.text,emailTF.text,comentarioTV.text,proyectoID];
+                    NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",usuario,contrasena,[IAmCoder dateString]];
+                    NSString *params=[NSString stringWithFormat:@"<ns:setRegister><data>%@</data><token>%@</token><language>%@</language><register><name>%@</name><email>%@</email><comments>%@</comments><project>%@</project></register></ns:setRegister>",loginData,[IAmCoder hash256:loginData],lang,nombreTF.text,emailTF.text,comentarioTV.text,proyectoID];
                     [server callServerWithMethod:@"" andParameter:params];
                     [self resignKeyboard];
                 }
@@ -97,7 +98,8 @@
             if (![emailTF.text isEqualToString:@""]) {
                 if (![comentarioTV.text isEqualToString:@""]) {
                     NSLog(@"Usuario :%@ \nContrasena : %@",usuario,contrasena);
-                    NSString *params=[NSString stringWithFormat:@"<ns:sendSuggest><username>%@</username><password>%@</password> <language>%@</language><register><name>%@</name><email>%@</email><comments>%@</comments><project>%@</project></register></ns:sendSuggest>",usuario,contrasena,lang,nombreTF.text,emailTF.text,comentarioTV.text,proyectoID];
+                    NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",usuario,contrasena,[IAmCoder dateString]];
+                    NSString *params=[NSString stringWithFormat:@"<ns:sendSuggest><data>%@</data><token>%@</token><language>%@</language><register><name>%@</name><email>%@</email><comments>%@</comments><project>%@</project></register></ns:sendSuggest>",loginData,[IAmCoder hash256:loginData],lang,nombreTF.text,emailTF.text,comentarioTV.text,proyectoID];
                     [server callServerWithMethod:@"" andParameter:params];
                 }
                 else{

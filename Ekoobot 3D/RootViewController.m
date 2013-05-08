@@ -142,7 +142,11 @@
     lVC=[self.storyboard instantiateViewControllerWithIdentifier:@"ListadoDeProyectosVC"];
     lVC.usuarioActual=usuario;
     lVC.usuarioCopia=copia;
-    [self.navigationController pushViewController:lVC animated:NO];
+    
+    [self performSelector:@selector(goToNextViewDelayed:) withObject:lVC afterDelay:4];
+}
+-(void)goToNextViewDelayed:(id)vC{
+    [self.navigationController pushViewController:vC animated:NO];
 }
 
 - (void)alertSimpleConTitulo:(NSString*)elTitulo yMensaje:(NSString*)mensaje{

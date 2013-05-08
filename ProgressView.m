@@ -42,7 +42,7 @@
     [elView addSubview:backGround];
     
     _loading=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 300, 70)];
-    _loading.center=CGPointMake(self.frame.size.width/2,self.frame.size.height/2+150);
+    _loading.center=CGPointMake(self.frame.size.width/2,self.frame.size.height/2+0);
     _loading.text=@"";
     _loading.font=[UIFont boldSystemFontOfSize:70];
     _loading.backgroundColor=[UIColor clearColor];
@@ -51,7 +51,7 @@
     UILabel *loadingLabel=[[UILabel alloc]init];
     loadingLabel.tag=12;
     loadingLabel.frame=CGRectMake(0, 500, 500, 20);
-    loadingLabel.center=CGPointMake(self.frame.size.width/2, self.frame.size.height/2+170);
+    loadingLabel.center=CGPointMake(self.frame.size.width/2, self.frame.size.height/2+20);
     loadingLabel.text=NSLocalizedString(@"DescargandoProyecto", nil);
     loadingLabel.font=[UIFont boldSystemFontOfSize:16];
     loadingLabel.backgroundColor=[UIColor clearColor];
@@ -59,7 +59,7 @@
     loadingLabel.textAlignment=UITextAlignmentCenter;
     progressBar=[[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleBar];
     progressBar.frame=CGRectMake(0, 0, 500, 50);
-    progressBar.center=CGPointMake(self.frame.size.width/2, self.frame.size.height/2+200);
+    progressBar.center=CGPointMake(self.frame.size.width/2, self.frame.size.height/2+50);
     [self addSubview:elView];
     [self addSubview:loadingLabel];
     [self addSubview:_loading];

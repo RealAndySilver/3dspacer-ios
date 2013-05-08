@@ -464,6 +464,11 @@
         proyectoImage.frame = CGRectMake(60, 140, 150, 150);
         [view addSubview:proyectoImage];
     }
+    UIImageView *logoEkoo=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"poweredBy.png"]];
+    logoEkoo.backgroundColor=[UIColor colorWithWhite:0.2 alpha:0.1];
+    logoEkoo.frame = CGRectMake(830, 140, 300, 150);
+    logoEkoo.center=CGPointMake(view.frame.size.width/2, view.frame.size.height-100);
+    [view addSubview:logoEkoo];
 }
 
 - (void)insertarLabelProyectoEnPagina:(UIView*)view conProyecto:(Proyecto*)proyecto{

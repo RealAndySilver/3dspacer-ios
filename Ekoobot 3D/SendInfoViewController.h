@@ -11,6 +11,7 @@
 #import "FileSaver.h"
 #import "Usuario.h"
 #import "NavController.h"
+#import "IAmCoder.h"
 @interface SendInfoViewController : UIViewController<UIAlertViewDelegate,UITextFieldDelegate,UITextViewDelegate>{
     ServerCommunicator *server;
     IBOutlet UILabel *tituloProyectoLabel;

@@ -25,6 +25,8 @@
     //Se cargan y muestran todos los proyectos
     arrayNombrePisos=[[NSMutableArray alloc]init];
     scrollArray=[[NSMutableArray alloc]init];
+    self.automaticallyAdjustsScrollViewInsets=NO;
+
     [self crearObjetos];
     
     //El titulo del view
@@ -37,6 +39,7 @@
                                                               action:@selector(customLogoutAlert)];   
     //self.navigationItem.rightBarButtonItem = logout;*/
     [self.navigationItem setHidesBackButton:NO animated:YES];
+
 }
 -(void)didReceiveMemoryWarning{
     NSLog(@"Pisos Warning %@",grupo.arrayTiposDePiso);
@@ -109,7 +112,7 @@
 -(void)crearScrollViewConPaginas:(int)numeroDePaginas{
     //Se crea el scrollview
     CGRect frame = [[UIScreen mainScreen] applicationFrame];
-    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, frame.size.height,frame.size.width)];
+    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 70, frame.size.height,frame.size.width)];
     if (numeroDePaginas==1) {
         scrollView.contentSize=CGSizeMake(frame.size.height*numeroDePaginas+1, frame.size.width);
     }
@@ -122,7 +125,7 @@
     [self.view addSubview:scrollView];
     //Se crea el contador de paginas
     self.pageCon = [[UIPageControl alloc]initWithFrame:CGRectMake(0, 0, frame.size.height, 50)];
-    self.pageCon.center=CGPointMake(365,frame.size.height-335);
+    self.pageCon.center=CGPointMake(365,frame.size.height-270);
     self.pageCon.userInteractionEnabled=NO;
     self.pageCon.numberOfPages=numeroDePaginas;
     [self.view addSubview:pageCon];
@@ -272,14 +275,34 @@
     [self performSelector:@selector(delayedAction:) withObject:sender afterDelay:0.3];
 }
 -(void)delayedAction:(CustomButton*)sender{
+//    TipoDePiso *tipoDePiso=[[TipoDePiso alloc]init];
+//    tipoDePiso = [grupo.arrayTiposDePiso objectAtIndex:sender.secondaryId];
+//    NSMutableArray *tempArray=tipoDePiso.arrayProductos;
+//    Producto *producto=[tempArray objectAtIndex:sender.tag];
+//    TiposDePlantasVC *tpVC=[[TiposDePlantasVC alloc]init];
+//    tpVC=[self.storyboard instantiateViewControllerWithIdentifier:@"TiposDePlantasVC"];
+//    tpVC.producto=producto;
+//    [self.navigationController pushViewController:tpVC animated:YES];
+    
     TipoDePiso *tipoDePiso=[[TipoDePiso alloc]init];
     tipoDePiso = [grupo.arrayTiposDePiso objectAtIndex:sender.secondaryId];
     NSMutableArray *tempArray=tipoDePiso.arrayProductos;
     Producto *producto=[tempArray objectAtIndex:sender.tag];
-    TiposDePlantasVC *tpVC=[[TiposDePlantasVC alloc]init];
-    tpVC=[self.storyboard instantiateViewControllerWithIdentifier:@"TiposDePlantasVC"];
-    tpVC.producto=producto;
-    [self.navigationController pushViewController:tpVC animated:YES];
+    NSLog(@"Existe %i %@",producto.existe,producto.nombre);
+    if (producto.existe==1) {
+        TiposDePlantasVC *tpVC=[[TiposDePlantasVC alloc]init];
+        tpVC=[self.storyboard instantiateViewControllerWithIdentifier:@"TiposDePlantasVC"];
+        tpVC.producto=producto;
+        [self.navigationController pushViewController:tpVC animated:YES];
+    }
+    else{
+        Espacio3DVC *e3DVC=[[Espacio3DVC alloc]init];
+        e3DVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Espacio3DVC"];
+        Planta *planta=[producto.arrayPlantas objectAtIndex:0];
+        e3DVC.espacio3D=[planta.arrayEspacios3D objectAtIndex:0];
+        [self.navigationController pushViewController:e3DVC animated:YES];
+    }
+    
 }
 #pragma mark - scroll tap
 - (void)handleDoubleTap:(UIGestureRecognizer *)recognizer {

@@ -26,6 +26,8 @@
     //Se cargan y muestran todos los proyectos
     arrayNombresPlantas=[[NSMutableArray alloc]init];
     scrollArray=[[NSMutableArray alloc]init];
+    self.automaticallyAdjustsScrollViewInsets=NO;
+
     [self crearObjetos];
     self.navigationItem.title=@"Plantas";
     Planta *planta=[producto.arrayPlantas objectAtIndex:0];
@@ -114,7 +116,7 @@
 - (void)crearScrollViewConPaginas:(int)numeroDePaginas{
     //Se crea el scrollview
     CGRect frame = [[UIScreen mainScreen] applicationFrame];
-    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, frame.size.height,frame.size.width)];
+    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 70, frame.size.height,frame.size.width)];
     if (numeroDePaginas==1) {
         scrollView.contentSize=CGSizeMake(frame.size.height*numeroDePaginas+1, frame.size.width);
     }
@@ -126,8 +128,8 @@
     scrollView.delegate=self;
     [self.view addSubview:scrollView];
     //Se crea el contador de paginas
-    self.pageCon = [[UIPageControl alloc]initWithFrame:CGRectMake(0, 0, frame.size.height, 50)];
-    self.pageCon.center=CGPointMake(365,frame.size.height-335);
+    self.pageCon = [[UIPageControl alloc]initWithFrame:CGRectMake(0, -70, frame.size.height, 50)];
+    self.pageCon.center=CGPointMake(365,frame.size.height-270);
     self.pageCon.userInteractionEnabled=NO;
     self.pageCon.numberOfPages=numeroDePaginas;
     [self.view addSubview:pageCon];

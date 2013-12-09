@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <QuartzCore/QuartzCore.h>
 @interface UpdateView : UIView
 @property(nonatomic,retain)UIView *container;
 @property(nonatomic,retain)UIImageView *backgroundImage;

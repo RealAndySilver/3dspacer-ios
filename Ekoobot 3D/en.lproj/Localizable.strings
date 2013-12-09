@@ -25,9 +25,10 @@
 "Descarga"="Download the project to watch it.";
 "Peso"="Size:";
 "ErrorDescarga"="An error has occurred while downloading the project. Please try again.";
+"ErrorConexion"="There is a problem with your internet connection. Please try again.";
 
 "Cargando"="Loading";
-"DescargaVideo"="Your video is being downloaded. Please wait. This process might take a few minutes.";
+"DescargaVideo"="Downloading Video";
 
 "AreaTotal"="Total area:";
 

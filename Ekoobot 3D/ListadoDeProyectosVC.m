@@ -27,6 +27,7 @@
     arrayLiteDesdeFull=[[NSMutableArray alloc]init];
     arrayLiteDesdeServer=[[NSMutableArray alloc]init];
     alertIsPresent=NO;
+    renderPathArray=[[NSMutableArray alloc]init];
     [self mostrarObjetos];
     //El titulo del view
     Proyecto *proyecto=[usuarioActual.arrayProyectos objectAtIndex:0];
@@ -34,16 +35,16 @@
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLabelWithTag:) name:@"updates" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLabelWithTag:) name:@"updates" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertViewAppear) name:@"alert" object:nil];
-
-    UIBarButtonItem *logout = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CerrarSesion", nil)
-                                                               style:UIBarButtonItemStylePlain 
-                                                              target:self 
-                                                              action:@selector(customLogoutAlert)];   
     
-    /*UIBarButtonItem *refresh = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"RecargarProyectos", nil)
+    UIBarButtonItem *logout = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CerrarSesion", nil)
                                                                style:UIBarButtonItemStylePlain
                                                               target:self
-                                                              action:@selector(callServerToRefresh)];*/
+                                                              action:@selector(customLogoutAlert)];
+    
+    /*UIBarButtonItem *refresh = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"RecargarProyectos", nil)
+     style:UIBarButtonItemStylePlain
+     target:self
+     action:@selector(callServerToRefresh)];*/
     
     self.navigationItem.leftBarButtonItem = logout;
     //self.navigationItem.rightBarButtonItem = refresh;
@@ -52,10 +53,11 @@
     [navController setOrientationType:0];
     nombreDeUsuario=usuarioActual.usuario;
     passwordUsuario=usuarioActual.contrasena;
+    self.automaticallyAdjustsScrollViewInsets=NO;
+
     
     //[self performSelector:@selector(callLiteServerData) withObject:nil afterDelay:15];
     [NSTimer scheduledTimerWithTimeInterval:180 target:self selector:@selector(callLiteServerData) userInfo:nil repeats:YES];
-
 }
 -(void)didReceiveMemoryWarning{
     NSLog(@"Listado Warning %@",usuarioActual.arrayProyectos);
@@ -76,15 +78,16 @@
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     //progressView=[[ProgressView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     progressView=[[ProgressView alloc]initWithFrame:CGRectMake(0, 0, self.navigationController.view.frame.size.height, self.navigationController.view.frame.size.width)];
-
+    
     [self.navigationController.view addSubview:progressView];
     [self.view bringSubviewToFront:progressView];
+
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [MBProgressHUD hideHUDForView:self.view animated:YES];
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
-    return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) || 
+    return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) ||
     (interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
 
@@ -104,7 +107,7 @@
     NSString *cancel=NSLocalizedString(@"Cancelar", nil);;
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
                                                     message:message
-                                                   delegate:self 
+                                                   delegate:self
                                           cancelButtonTitle:cancel
                                           otherButtonTitles:@"OK",nil];
     alert.tag=1;
@@ -115,10 +118,10 @@
 {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     if (alertView.tag==1) {
-
-    if([title isEqualToString:@"OK"]){
-        [self logout];
-    }
+        
+        if([title isEqualToString:@"OK"]){
+            [self logout];
+        }
     }
     else if (alertView.tag==2){
         if([title isEqualToString:@"OK"]){
@@ -151,10 +154,15 @@
         proyectoLite.idProyecto=proyecto.idProyecto;
         proyectoLite.actualizado=proyecto.actualizado;
         [arrayLiteDesdeFull addObject:proyecto];
+        
+        NSMutableArray *arrayForRenderPath=[[NSMutableArray alloc]init];
+        [renderPathArray addObject:arrayForRenderPath];
+        
         //[ProjectDownloader downloadProject:proyecto];
         [self paginaCreadaConObjeto:proyecto enPosicion:i];
         NSLog(@"Data del proyecto es %@",proyecto.data);
     }
+    NSLog(@"Arreglo de render paths %@",renderPathArray);
     
 }
 -(void)removerObjetos{
@@ -172,7 +180,7 @@
     //Se crea el scrollview
     CGRect frame = [[UIScreen mainScreen] applicationFrame];
     if (!scrollView) {
-        scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, frame.size.height,frame.size.width)];
+        scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 20, frame.size.height,768)];
     }
     
     if (numeroDePaginas==1) {
@@ -184,6 +192,9 @@
     scrollView.pagingEnabled = YES;
     scrollView.showsHorizontalScrollIndicator=NO;
     scrollView.delegate=self;
+    [scrollView setAlwaysBounceVertical:NO];
+    [scrollView setAlwaysBounceHorizontal:YES];
+
     [self.view addSubview:scrollView];
     
     //Se crea el contador de paginas
@@ -198,154 +209,176 @@
 
 - (void)paginaCreadaConObjeto:(Proyecto*)proyecto enPosicion:(int)posicion{
     
-        CGRect frame=[[UIScreen mainScreen] applicationFrame];
-        UIScrollView *scrollPage=[[UIScrollView alloc]init];
-        scrollPage.frame=CGRectMake(0, 0, frame.size.height, frame.size.width);
-        scrollPage.contentSize=CGSizeMake(frame.size.height, frame.size.width*(proyecto.arrayAdjuntos.count+1));
-        scrollPage.userInteractionEnabled=YES;
-        scrollPage.pagingEnabled=YES;
-        scrollPage.showsVerticalScrollIndicator=YES;
-        scrollPage.delegate=self;
-        
-        for (int i=0; i<proyecto.arrayAdjuntos.count; i++) {
-            Adjunto *adjunto=[proyecto.arrayAdjuntos objectAtIndex:i];
-            if ([adjunto.tipo isEqualToString:@"image"]) {
-                NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-                [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
-                NSString *jpegFilePath = [NSString stringWithFormat:@"%@/render%@%@.jpg",docDir,proyecto.idProyecto,[IAmCoder encodeURL:adjunto.imagen]];
-                BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
-                NSLog(@"file path %@",jpegFilePath);
-                if (!fileExists) {
-                    //NSLog(@"no existe proj img %@",jpegFilePath);
-                    NSURL *urlImagen=[NSURL URLWithString:adjunto.imagen];
-                    NSData *data=[NSData dataWithContentsOfURL:urlImagen];
-                    UIImageView *renderImage = [[UIImageView alloc]init];
-                    renderImage.image = [UIImage imageWithData:data];
-                    renderImage.contentMode = UIViewContentModeScaleAspectFill;
-                    NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(renderImage.image, 1.0f)];//1.0f = 100% quality
-                    if (renderImage.image) {
-                        [data2 writeToFile:jpegFilePath atomically:YES];
-                    }
-                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-0, frame.size.height, frame.size.width);
-                    renderImage.backgroundColor=[UIColor clearColor];
-                    [renderImage setUserInteractionEnabled:YES];
-                    [renderImage setUserInteractionEnabled:YES];
-                    CustomButton *zoomButton=[[CustomButton alloc]init];
-                    zoomButton.path=jpegFilePath;
-                    //zoomButton.frame=CGRectMake(0, 0, 50, 50);
-                    zoomButton.frame=CGRectMake(53, 550, 21, 21);
-                    //zoomButton.center=CGPointMake(renderImage.frame.size.width/2, renderImage.frame.size.height-70);
-                    [zoomButton setTitle:@"" forState:UIControlStateNormal];
-                    [zoomButton setBackgroundImage:[UIImage imageNamed:@"zoom.png"] forState:UIControlStateNormal];
-                    [zoomButton addTarget:self action:@selector(goToZoomView:) forControlEvents:UIControlEventTouchUpInside];
-                    [renderImage addSubview:zoomButton];
-                    [scrollPage addSubview:renderImage];
-                }
-                else {
-                    //NSLog(@"si existe proj img %@",jpegFilePath);
-                    UIImageView *renderImage = [[UIImageView alloc]init];
-                    renderImage.image = [UIImage imageWithContentsOfFile:jpegFilePath];
-                    renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-0, frame.size.height, frame.size.width);
-                    renderImage.backgroundColor=[UIColor clearColor];
-                    [renderImage setUserInteractionEnabled:YES];
-                    renderImage.contentMode = UIViewContentModeScaleAspectFill;
-                    CustomButton *zoomButton=[[CustomButton alloc]init];
-                    zoomButton.path=jpegFilePath;
-                    //zoomButton.frame=CGRectMake(0, 0, 50, 50);
-                    zoomButton.frame=CGRectMake(53, 550, 21, 21);
-                    //zoomButton.center=CGPointMake(renderImage.frame.size.width/2, renderImage.frame.size.height-70);
-                    [zoomButton setTitle:@"" forState:UIControlStateNormal];
-                    [zoomButton setBackgroundImage:[UIImage imageNamed:@"zoom.png"] forState:UIControlStateNormal];
-                    [zoomButton addTarget:self action:@selector(goToZoomView:) forControlEvents:UIControlEventTouchUpInside];
-                    [renderImage addSubview:zoomButton];
-                    [scrollPage addSubview:renderImage];
-                }
-                
-            }
-            else if ([adjunto.tipo isEqualToString:@"video"]){
-                UIView *pg3=[[UIView alloc]init];
-                pg3.frame=CGRectMake(0, frame.size.width*(i+1), frame.size.height, frame.size.width);
-                pg3.backgroundColor=[UIColor viewFlipsideBackgroundColor];
-                
-                CustomButton *player = [[CustomButton alloc]init];
-                player.frame = CGRectMake(0, 0, 512, 288);
-                player.center=CGPointMake(pg3.frame.size.width/2, pg3.frame.size.height/2);
-                player.backgroundColor=[UIColor whiteColor];
-                [player setTitle:@"" forState:UIControlStateNormal];
-                player.adjunto=adjunto;
-                player.extraContent=proyecto;
-                
-                NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-                NSString *jpegFilePath = [NSString stringWithFormat:@"%@/thumb%@%@",docDir,proyecto.idProyecto,[IAmCoder encodeURL:adjunto.thumb]];
-                [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
-                BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
-                NSLog(@"file pathing %@",jpegFilePath);
-                if (fileExists) {
-                    NSLog(@"Pathing dont exist %@",adjunto.thumb);
-                    UIImage *thumbImage=[UIImage imageWithContentsOfFile:jpegFilePath];;
-                    [player setImage:thumbImage forState:UIControlStateNormal];
-                }
-                else{
-                    NSLog(@"Pathing exist");
-                    NSURL *urlImagen=[NSURL URLWithString:adjunto.thumb];
-                    NSData *data=[NSData dataWithContentsOfURL:urlImagen];
-                    UIImage *thumbImage = [UIImage imageWithData:data];
-                    NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(thumbImage, 1.0f)];//1.0f = 100% quality
-                    if (thumbImage) {
-                        [data2 writeToFile:jpegFilePath atomically:YES];
-                    }
-                    [player setImage:thumbImage forState:UIControlStateNormal];
-                }
-                
-                
-                [player addTarget:self action:@selector(callVideo:) forControlEvents:UIControlEventTouchUpInside];
-                [pg3 addSubview:player];
-                
-                UIImageView *playButton=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"play-video.png"]];
-                playButton.frame=CGRectMake(0, 0, 80, 56);
-                playButton.center=CGPointMake(pg3.frame.size.width/2, pg3.frame.size.height/2);
-                [pg3 addSubview:playButton];
-                
-                [scrollPage addSubview:pg3];
-                
-            }
-        }
+    CGRect frame=[[UIScreen mainScreen] applicationFrame];
+    UIScrollView *scrollPage=[[UIScrollView alloc]init];
+    scrollPage.frame=CGRectMake(0, 0, frame.size.height, frame.size.width);
+    scrollPage.contentSize=CGSizeMake(frame.size.height, frame.size.width*(proyecto.arrayAdjuntos.count+1));
+    scrollPage.userInteractionEnabled=YES;
+    scrollPage.pagingEnabled=YES;
+    scrollPage.showsVerticalScrollIndicator=YES;
+    [scrollPage setAlwaysBounceVertical:YES];
+    scrollPage.delegate=self;
 
-        UIView *pagina=[[UIView alloc]init];
-        pagina.frame=CGRectMake(frame.size.height*posicion, 0, frame.size.height, frame.size.width);
-        [pagina addSubview:scrollPage];
-        [self insertarImagenProyectoEnPagina:scrollPage conProyecto:proyecto];
-        [self insertarImagenBotonProyectoEnPagina:pagina conProyecto:proyecto yPosicion:(int)posicion];
-        [self insertarLogoProyectoEnPagina:pagina conProyecto:proyecto];
-        [self insertarLabelProyectoEnPagina:pagina conProyecto:proyecto];
-        [self mostrarLabelDeActualizacionConTag:posicion+2000 enView:pagina yProyecto:proyecto];
-        [self insertarActualizadorEnPagina:pagina yTag:posicion];
-        [scrollView addSubview:pagina];
-        
-        SendInfoButton *sendInfoButton=[[SendInfoButton alloc]init];
-        sendInfoButton.nombreProyecto=proyecto.nombre;
-        sendInfoButton.proyectoID=proyecto.idProyecto;
-        UIImage *imageButton = [UIImage imageNamed:@"recomendar.png"];
-        [sendInfoButton setImage:imageButton forState:UIControlStateNormal];
-        sendInfoButton.frame=CGRectMake(50, 610, 25, 25);
-        [sendInfoButton addTarget:self action:@selector(sendInfo:) forControlEvents:UIControlEventTouchUpInside];
-        [pagina addSubview:sendInfoButton];
+    CustomButton *videoButton;
+    for (int i=0; i<proyecto.arrayAdjuntos.count; i++) {
+        Adjunto *adjunto=[proyecto.arrayAdjuntos objectAtIndex:i];
+        if ([adjunto.tipo isEqualToString:@"image"]) {
+            NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+            [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
+            NSString *jpegFilePath = [NSString stringWithFormat:@"%@/render%@%@.jpg",docDir,proyecto.idProyecto,[IAmCoder encodeURL:adjunto.imagen]];
+            BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
+            NSLog(@"file path %@",jpegFilePath);
+            
+            NSMutableArray *array=[renderPathArray objectAtIndex:posicion];
+            [array addObject:jpegFilePath];
+            
+            
+            if (!fileExists) {
+                //NSLog(@"no existe proj img %@",jpegFilePath);
+                NSURL *urlImagen=[NSURL URLWithString:adjunto.imagen];
+                NSData *data=[NSData dataWithContentsOfURL:urlImagen];
+                UIImageView *renderImage = [[UIImageView alloc]init];
+                renderImage.image = [UIImage imageWithData:data];
+                renderImage.contentMode = UIViewContentModeScaleAspectFill;
+                NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(renderImage.image, 1.0f)];//1.0f = 100% quality
+                if (renderImage.image) {
+                    [data2 writeToFile:jpegFilePath atomically:YES];
+                }
+                renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-0, frame.size.height, frame.size.width);
+                renderImage.backgroundColor=[UIColor clearColor];
+                [renderImage setUserInteractionEnabled:YES];
+                [renderImage setUserInteractionEnabled:YES];
+                CustomButton *zoomButton=[[CustomButton alloc]init];
+                zoomButton.path=jpegFilePath;
+                //zoomButton.frame=CGRectMake(0, 0, 50, 50);
+                zoomButton.frame=CGRectMake(53, 540, 40, 40);
+                //zoomButton.center=CGPointMake(renderImage.frame.size.width/2, renderImage.frame.size.height-70);
+                [zoomButton setTitle:@"" forState:UIControlStateNormal];
+                [zoomButton setBackgroundImage:[UIImage imageNamed:@"zoom.png"] forState:UIControlStateNormal];
+                [zoomButton addTarget:self action:@selector(goToZoomView:) forControlEvents:UIControlEventTouchUpInside];
+                [renderImage addSubview:zoomButton];
+                [scrollPage addSubview:renderImage];
+            }
+            else {
+                //NSLog(@"si existe proj img %@",jpegFilePath);
+                UIImageView *renderImage = [[UIImageView alloc]init];
+                renderImage.image = [UIImage imageWithContentsOfFile:jpegFilePath];
+                renderImage.frame=CGRectMake(0, frame.size.width*(i+1)-0, frame.size.height, frame.size.width);
+                renderImage.backgroundColor=[UIColor clearColor];
+                [renderImage setUserInteractionEnabled:YES];
+                renderImage.contentMode = UIViewContentModeScaleAspectFill;
+                CustomButton *zoomButton=[[CustomButton alloc]init];
+                zoomButton.path=jpegFilePath;
+                //zoomButton.frame=CGRectMake(0, 0, 50, 50);
+                zoomButton.frame=CGRectMake(53, 540, 40, 40);
+                //zoomButton.center=CGPointMake(renderImage.frame.size.width/2, renderImage.frame.size.height-70);
+                [zoomButton setTitle:@"" forState:UIControlStateNormal];
+                [zoomButton setBackgroundImage:[UIImage imageNamed:@"zoom.png"] forState:UIControlStateNormal];
+                [zoomButton addTarget:self action:@selector(goToZoomView:) forControlEvents:UIControlEventTouchUpInside];
+                [renderImage addSubview:zoomButton];
+                [scrollPage addSubview:renderImage];
+            }
+            
+        }
+        else if ([adjunto.tipo isEqualToString:@"video"]){
+            UIView *pg3=[[UIView alloc]init];
+            pg3.frame=CGRectMake(0, frame.size.width*(i+1), frame.size.height, frame.size.width);
+            pg3.backgroundColor=[UIColor viewFlipsideBackgroundColor];
+            
+            CustomButton *player = [[CustomButton alloc]init];
+            player.frame = CGRectMake(0, 0, 512, 288);
+            player.center=CGPointMake(pg3.frame.size.width/2, pg3.frame.size.height/2);
+            player.backgroundColor=[UIColor whiteColor];
+            [player setTitle:@"" forState:UIControlStateNormal];
+            player.adjunto=adjunto;
+            player.extraContent=proyecto;
+            
+            NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+            //NSString *jpegFilePath = [NSString stringWithFormat:@"%@/thumb%@%@",docDir,proyecto.idProyecto,[IAmCoder encodeURL:adjunto.thumb]];
+            [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
+//            BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
+//            NSLog(@"file pathing %@",jpegFilePath);
+//            if (fileExists) {
+//                NSLog(@"Pathing dont exist %@",adjunto.thumb);
+//                UIImage *thumbImage=[UIImage imageWithContentsOfFile:jpegFilePath];;
+//                [player setImage:thumbImage forState:UIControlStateNormal];
+//            }
+//            else{
+//                NSLog(@"Pathing exist");
+//                NSURL *urlImagen=[NSURL URLWithString:adjunto.thumb];
+//                NSData *data=[NSData dataWithContentsOfURL:urlImagen];
+//                UIImage *thumbImage = [UIImage imageWithData:data];
+//                NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(thumbImage, 1.0f)];//1.0f = 100% quality
+//                if (thumbImage) {
+//                    [data2 writeToFile:jpegFilePath atomically:YES];
+//                }
+//                [player setImage:thumbImage forState:UIControlStateNormal];
+//            }
+            
+            
+            [player addTarget:self action:@selector(callVideo:) forControlEvents:UIControlEventTouchUpInside];
+            
+            //Esta sección está comentada para evitar la creación de la página de video.
+            //Será reemplazada por el botón lateral. Al final de esta iteración se re ajusta el
+            //tamaño del scroll view.
+            /*[pg3 addSubview:player];
+            UIImageView *playButton=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"play-video.png"]];
+            playButton.frame=CGRectMake(0, 0, 80, 56);
+            playButton.center=CGPointMake(pg3.frame.size.width/2, pg3.frame.size.height/2);
+            [pg3 addSubview:playButton];
+            [scrollPage addSubview:pg3];*/
+            
+            videoButton=player;
+            scrollPage.contentSize=CGSizeMake(frame.size.height, frame.size.width*(proyecto.arrayAdjuntos.count));
+        }
+    }
+    
+    UIView *pagina=[[UIView alloc]init];
+    pagina.frame=CGRectMake(frame.size.height*posicion, 0, frame.size.height, frame.size.width);
+    [pagina addSubview:scrollPage];
+    [self insertarImagenProyectoEnPagina:scrollPage conProyecto:proyecto];
+    [self insertarImagenBotonProyectoEnPagina:pagina conProyecto:proyecto yPosicion:(int)posicion];
+    [self insertarImagenBotonSlideShowEnPagina:pagina conProyecto:proyecto yPosicion:(int)posicion];
+    [self insertarLogoProyectoEnPagina:pagina conProyecto:proyecto];
+    [self insertarLabelProyectoEnPagina:pagina conProyecto:proyecto];
+    [self mostrarLabelDeActualizacionConTag:posicion+2000 enView:pagina yProyecto:proyecto];
+    [self insertarActualizadorEnPagina:pagina yTag:posicion];
+   
+    //Botón lateral para el video
+    videoButton.frame=CGRectMake(53, 420, 40, 40);
+    videoButton.backgroundColor=[UIColor clearColor];
+    [videoButton setBackgroundImage:[UIImage imageNamed:@"video.png"] forState:UIControlStateNormal];
+    [pagina addSubview:videoButton];
+    
+    
+    [scrollView addSubview:pagina];
+    
+    SendInfoButton *sendInfoButton=[[SendInfoButton alloc]init];
+    sendInfoButton.nombreProyecto=proyecto.nombre;
+    sendInfoButton.proyectoID=proyecto.idProyecto;
+    UIImage *imageButton = [UIImage imageNamed:@"mensaje.png"];
+    [sendInfoButton setImage:imageButton forState:UIControlStateNormal];
+    sendInfoButton.frame=CGRectMake(53, 600, 40, 40);
+    [sendInfoButton addTarget:self action:@selector(sendInfo:) forControlEvents:UIControlEventTouchUpInside];
+    [pagina addSubview:sendInfoButton];
 }
 -(void)callVideo:(CustomButton*)sender{
     VideoViewController *vVC=[[VideoViewController alloc]init];
     vVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Video"];
-    [vVC setModalPresentationStyle:UIModalPresentationFullScreen];
-    [vVC setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
     vVC.adjunto=sender.adjunto;
     vVC.proyecto=sender.extraContent;
+    [vVC setModalPresentationStyle:UIModalPresentationFullScreen];
+    [vVC setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+    vVC.view.alpha=0.7;
+    
     [self presentModalViewController:vVC animated:YES];
 }
 -(void)actualizarOdescargar:(UIButton*)button{
     NSString *key=[NSString stringWithFormat:@"%i",button.tag-1000];
     /*[progressView setViewAlphaToOne];
-    //[ProjectDownloader downloadProject:[usuarioActual.arrayProyectos objectAtIndex:[key intValue]] yTag:button.tag+1000];
-    [ProjectDownloader downloadProject:[usuarioCopia.arrayProyectos objectAtIndex:[key intValue]] yTag:button.tag+1000 sender:progressView usuario:usuarioActual];
-    [progressView setViewAlphaToCero];*/
+     //[ProjectDownloader downloadProject:[usuarioActual.arrayProyectos objectAtIndex:[key intValue]] yTag:button.tag+1000];
+     [ProjectDownloader downloadProject:[usuarioCopia.arrayProyectos objectAtIndex:[key intValue]] yTag:button.tag+1000 sender:progressView usuario:usuarioActual];
+     [progressView setViewAlphaToCero];*/
     NSMutableDictionary *dic=[[NSMutableDictionary alloc]init];
     [dic setObject:[usuarioActual.arrayProyectos objectAtIndex:[key intValue]] forKey:@"Project"];
     [dic setObject:[NSNumber numberWithInt:button.tag+1000] forKey:@"Tag"];
@@ -354,7 +387,7 @@
     [self performSelectorInBackground:@selector(threadTest:) withObject:dic];
 }
 -(void)threadTest:(NSMutableDictionary*)dic{
-        Proyecto *proyecto=[dic objectForKey:@"Project"];
+    Proyecto *proyecto=[dic objectForKey:@"Project"];
     if ([proyecto.data isEqualToString:@"1"]) {
         [progressView setViewAlphaToOne];
         isOnMainMenu=NO;
@@ -412,7 +445,7 @@
     }
     CustomButton *zoomButton=[[CustomButton alloc]init];
     zoomButton.path=jpegFilePath;
-    zoomButton.frame=CGRectMake(53, 550, 21, 21);
+    zoomButton.frame=CGRectMake(53, 540, 40, 40);
     //zoomButton.center=CGPointMake(proyectoImage.frame.size.width/2, proyectoImage.frame.size.height-70);
     [zoomButton setTitle:@"" forState:UIControlStateNormal];
     [zoomButton setBackgroundImage:[UIImage imageNamed:@"zoom.png"] forState:UIControlStateNormal];
@@ -433,14 +466,26 @@
         [view addSubview:boton];
         [view bringSubviewToFront:boton];
     }
-    
 }
-
+- (void)insertarImagenBotonSlideShowEnPagina:(UIView*)view conProyecto:(Proyecto*)proyecto yPosicion:(int)posicion{
+    UIButton *botonSlideshow = [[UIButton alloc]init];
+    UIImage *ssImageButton = [UIImage imageNamed:NSLocalizedString(@"tv2.png", nil)];
+    [botonSlideshow setImage:ssImageButton forState:UIControlStateNormal];
+    botonSlideshow.tag=posicion+3500;
+    NSLog(@"Boton taggggg %i",botonSlideshow.tag);
+    botonSlideshow.alpha=1;
+    [botonSlideshow addTarget:self action:@selector(irAlSlideshow:) forControlEvents:UIControlEventTouchUpInside];
+    botonSlideshow.frame=CGRectMake(53, 480, 40, 40);
+    if (proyecto.arrayAdjuntos.count>0) {
+        [view addSubview:botonSlideshow];
+        [view bringSubviewToFront:botonSlideshow];
+    }
+}
 - (void)insertarLogoProyectoEnPagina:(UIView*)view conProyecto:(Proyecto*)proyecto{
     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/logo%@%@",docDir,proyecto.idProyecto,[IAmCoder encodeURL:proyecto.logo]];
     [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
-
+    
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     NSLog(@"file path %@",jpegFilePath);
     if (!fileExists) {
@@ -484,13 +529,13 @@
     
     [view addSubview:container];
     [view addSubview:tituloProyecto];
-
+    
     [view bringSubviewToFront:container];
     [view bringSubviewToFront:tituloProyecto];
 }
 
 -(void)mostrarLabelDeActualizacionConTag:(int)tag enView:(UIView*)view yProyecto:(Proyecto*)proyecto{
-    UpdateView *updateBox=[[UpdateView alloc]initWithFrame:CGRectMake(43, 645, 274, 67)];
+    UpdateView *updateBox=[[UpdateView alloc]initWithFrame:CGRectMake(43, 660, 274, 40)];
     updateBox.tag=tag+250;
     [view addSubview:updateBox];
     NSLog(@"update tag----> %i %@",updateBox.tag,updateBox);
@@ -504,6 +549,7 @@
         updateBox.updateText.textColor=[UIColor whiteColor];
         updateBox.updateText.text=@"";
         updateBox.container.alpha=0;
+        updateBox.infoButton.selected=NO;
         return;
     }
     if ([file getUpdateFileWithString:composedTag]) {
@@ -514,6 +560,7 @@
             updateBox.titleText.textColor=[UIColor redColor];
             updateBox.titleText.tag=tag+1100;
             updateBox.container.alpha=1;
+            updateBox.infoButton.selected=YES;
             NSString *peso=NSLocalizedString(@"Peso", nil);
             updateBox.updateText.text=[NSString stringWithFormat:@"%@ %@",peso,proyecto.peso];
             //updateBox.updateText.textColor=[UIColor orangeColor];
@@ -531,6 +578,7 @@
             updateBox.titleText.tag=tag+1100;
             updateBox.updateText.textColor=[UIColor whiteColor];
             updateBox.container.alpha=0;
+            updateBox.infoButton.selected=NO;
             UIButton *lebuttons = (UIButton *)[view viewWithTag:tag+1000];
             NSLog(@"Button punto tag %i",lebuttons.tag);
             lebuttons.alpha=1;
@@ -538,6 +586,7 @@
     }
     else{
         updateBox.container.alpha=0;
+        updateBox.infoButton.selected=NO;
         updateBox.titleText.text=NSLocalizedString(@"Descarga", nil);
         NSString *peso=NSLocalizedString(@"Peso", nil);
         updateBox.updateText.text=[NSString stringWithFormat:@"%@ %@",peso,proyecto.peso];
@@ -569,12 +618,12 @@
         updateBox.titleText.textColor=[UIColor greenColor];
     }
     /*else{
-        UIButton *button = (UIButton *)[scrollView viewWithTag:[number intValue]+1000];
-        button.alpha=1;
-        //NSLog(@"Updated %@ %@",number,[file getUpdateFile:[number intValue]]);
-        
-        [self performSelectorOnMainThread:@selector(irAlSiguienteViewController:) withObject:button waitUntilDone:YES];
-    }*/
+     UIButton *button = (UIButton *)[scrollView viewWithTag:[number intValue]+1000];
+     button.alpha=1;
+     //NSLog(@"Updated %@ %@",number,[file getUpdateFile:[number intValue]]);
+     
+     [self performSelectorOnMainThread:@selector(irAlSiguienteViewController:) withObject:button waitUntilDone:YES];
+     }*/
 }
 #pragma mark -
 #pragma mark Eventos para ir a otros viewcontrollers
@@ -583,7 +632,48 @@
     hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.labelText=NSLocalizedString(@"Cargando", nil);
     isOnMainMenu=NO;
-    [self performSelector:@selector(delayedAction:) withObject:sender afterDelay:0.3];    
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"dismiss" object:nil];
+    [self performSelector:@selector(delayedAction:) withObject:sender afterDelay:0.3];
+}
+- (void)irAlSlideshow:(UIButton*)sender{
+    
+    SlideshowViewController *ssVC=[[SlideshowViewController alloc]init];
+    ssVC.imagePathArray=[renderPathArray objectAtIndex:sender.tag-3500];
+    
+    SlideControlViewController *cVC=[[SlideControlViewController alloc]init];
+    cVC=[self.storyboard instantiateViewControllerWithIdentifier:@"SlideControl"];
+    if ([[UIScreen screens] count] > 1)
+    {
+        UIScreen *secondScreen = [[UIScreen screens] objectAtIndex:1];
+        NSString *availableModeString;
+        
+        for (int i = 0; i < secondScreen.availableModes.count; i++)
+        {
+            availableModeString = [NSString stringWithFormat:@"%f, %f",
+                                   ((UIScreenMode *)[secondScreen.availableModes objectAtIndex:i]).size.width,
+                                   ((UIScreenMode *)[secondScreen.availableModes objectAtIndex:i]).size.height];
+            
+            //[[[UIAlertView alloc] initWithTitle:@"Available Mode" message:availableModeString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            availableModeString = nil;
+        }
+        
+        // undocumented value 3 means no overscan compensation
+        secondScreen.overscanCompensation = 3;
+        self.secondWindow=nil;
+        self.secondWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, secondScreen.bounds.size.width, secondScreen.bounds.size.height)];
+        self.secondWindow.screen = secondScreen;
+        ssVC.window=self.secondWindow;
+        self.secondWindow.rootViewController = ssVC;
+        self.secondWindow.hidden = NO;
+        NSLog(@"Screen %f x %f",ssVC.window.screen.bounds.size.height,ssVC.window.screen.bounds.size.width);
+        cVC.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self.navigationController presentModalViewController:cVC animated:YES];
+
+    }
+    else{
+    
+        [self.navigationController pushViewController:ssVC animated:YES];
+    }
 }
 -(void)delayedAction:(UIButton*)sender{
     NSString *keyProyecto = [NSString stringWithFormat:@"%i",sender.tag-3000];
@@ -591,8 +681,8 @@
     if ([proyecto.data isEqualToString:@"0"]) return;
     ItemUrbanismo *itemUrbanismo = [proyecto.arrayItemsUrbanismo objectAtIndex:0];
     Analytic *analytic=[[Analytic alloc]init];
-    [analytic sendAnalyticWithProjectId:proyecto.idProyecto username:usuarioActual.usuario userId:usuarioActual.idUsuario andPass:usuarioActual.contrasena];
-
+    //[analytic sendAnalyticWithProjectId:proyecto.idProyecto username:usuarioActual.usuario userId:usuarioActual.idUsuario andPass:usuarioActual.contrasena];
+    
     if (itemUrbanismo.existe==1) {
         [self irAPlantaUrbanaVCConProyecto:proyecto];
     }
@@ -610,8 +700,8 @@
         }
         else{
             TipoDePiso *tipoDePiso=[grupo.arrayTiposDePiso objectAtIndex:0];
-                Producto *producto=[tipoDePiso.arrayProductos objectAtIndex:0];
-                [self irATiposDePlantasVCConProducto:producto];
+            Producto *producto=[tipoDePiso.arrayProductos objectAtIndex:0];
+            [self irATiposDePlantasVCConProducto:producto];
         }
     }
 }
@@ -661,9 +751,9 @@
     siVC.contrasena=usuarioActual.contrasena;
     siVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     siVC.modalPresentationStyle = UIModalPresentationCurrentContext;
-
+    
     [self.navigationController presentModalViewController:siVC animated:YES];
-
+    
     //[self.navigationController pushViewController:siVC animated:YES];
 }
 -(void)goToZoomView:(CustomButton*)button{

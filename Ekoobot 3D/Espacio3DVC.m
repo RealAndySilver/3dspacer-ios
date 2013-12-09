@@ -60,13 +60,13 @@
     lowerView=[[UIView alloc]init];
     lowerView.tag=100;
     lowerView.alpha=0;
-    lowerView.frame=CGRectMake(0, 610, self.view.frame.size.width, 140);
+    lowerView.frame=CGRectMake(0, 620, self.view.frame.size.width, 140);
     lowerView.backgroundColor=[UIColor clearColor];
     [lowerView setUserInteractionEnabled:YES];
     
     compassPlaceholder=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"brujula.png"]];
     //compassPlaceholder.frame=CGRectMake(lowerView.frame.size.width-80, -75, lowerView.frame.size.height/2, lowerView.frame.size.height/2);
-    compassPlaceholder.frame=CGRectMake(self.view.frame.size.width-80, 50, lowerView.frame.size.height/2, lowerView.frame.size.height/2);
+    compassPlaceholder.frame=CGRectMake(self.view.frame.size.width-80, 70, lowerView.frame.size.height/2, lowerView.frame.size.height/2);
 
     compassPlaceholder.backgroundColor=[UIColor clearColor];
     compassPlaceholder.layer.cornerRadius=lowerView.frame.size.height/4;
@@ -254,8 +254,8 @@
     [self animateViewFadeIn:lowerView];
 }
 -(void)toggleView:(UIButton*)button{
-    CGRect posInicial=CGRectMake(0, 610, self.view.frame.size.width, 140);
-    CGRect posFinal=CGRectMake(0, 720, self.view.frame.size.width, 150);
+    CGRect posInicial=CGRectMake(0, 620, self.view.frame.size.width, 140);
+    CGRect posFinal=CGRectMake(0, 740, self.view.frame.size.width, 150);
     float time=0.2;
     if (flag) {
         [UIView beginAnimations:nil context:NULL];

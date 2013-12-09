@@ -26,7 +26,10 @@
 #import "ZoomViewController.h"
 #import "NavAnimations.h"
 #import "Analytic.h"
+#import "SlideshowViewController.h"
+#import "SlideControlViewController.h"
 #import "ProyectoLite.h"
+
 @interface ListadoDeProyectosVC : UIViewController <UIScrollViewDelegate,UIAlertViewDelegate,UIDocumentInteractionControllerDelegate> {
     Usuario *usuarioActual;
     ProgressView *progressView;
@@ -34,16 +37,20 @@
     MBProgressHUD *hud;
     Usuario *usuarioCopia;
     NSMutableArray *scrollArray;
-    
+        
     //parametros para el server, son necesarios ya que se borran del usuario original
     NSString *nombreDeUsuario;
     NSString *passwordUsuario;
     
     NSMutableArray *arrayLiteDesdeFull;
+    
+    //Arreglo ordenado para guardar las rutas de los renders de la lista y poderlos visualizar en slideshow
+    NSMutableArray *renderPathArray;
+    
     BOOL alertIsPresent;
     BOOL isOnMainMenu;
 }
-
+@property(nonatomic,retain)UIWindow *secondWindow;
 @property(nonatomic,retain)Usuario *usuarioActual;
 @property(nonatomic,retain)Usuario *usuarioCopia;
 @property(nonatomic,retain)NSMutableArray *arrayLiteDesdeServer;

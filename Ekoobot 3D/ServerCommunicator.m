@@ -102,7 +102,11 @@
         NSDictionary * dictionary2=[[[[dictionary1 objectForKey:@"SOAP-ENV:Envelope"]objectForKey:@"SOAP-ENV:Body"]objectForKey:@"ns1:getDataResponse"]objectForKey:@"return"];
         resDic=[[NSMutableDictionary alloc]initWithDictionary:dictionary2];
         //NSLog(@"xml %@",resDic);
-        NSLog(@"xml %@",dictionary1);
+        NSError *error;
+        NSData *data=[NSJSONSerialization dataWithJSONObject:resDic options:NSJSONWritingPrettyPrinted error:&error];
+        NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+        NSLog(@"xml %@",str);
+        //NSLog(@"xml %@",dictionary1);
         [caller performSelector:@selector(receivedDataFromServer:) withObject:self];
     }
     

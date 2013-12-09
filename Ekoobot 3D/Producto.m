@@ -33,6 +33,7 @@
     idProducto = [dictionary objectForKey:@"id_producto"];
     nombre = [dictionary objectForKey:@"nombre"];
     norte = [dictionary objectForKey:@"norte"];
+    existe = [[dictionary objectForKey:@"existe"] boolValue];
     NSLog(@"Norte Pr= %@",norte);
 
     //NSLog(@"Dic %@",dictionary);

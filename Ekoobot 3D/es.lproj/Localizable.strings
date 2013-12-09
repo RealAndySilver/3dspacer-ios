@@ -25,9 +25,10 @@
 "Descarga"="Descarga el proyecto para visualizar";
 "Peso"="Tamaño:";
 "ErrorDescarga"="Error al descargar el proyecto. Por favor intente de nuevo.";
+"ErrorConexion"="Hay un problema con la conexión a internet. Por favor intente de nuevo.";
 
 "Cargando"="Cargando";
-"DescargaVideo"="Su video se está descargando. Por favor espere. Este proceso puede tardar un poco.";
+"DescargaVideo"="Descargando Video";
 
 "AreaTotal"="Área total:";
 

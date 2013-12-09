@@ -12,9 +12,13 @@
 #import "IAmCoder.h"
 #import "MBProgressHud.h"
 #import "Adjunto.h"
+#import <Foundation/Foundation.h>
 
 @interface VideoViewController : UIViewController{
     MBProgressHUD *hud;
+    NSMutableData *receivedData;
+    long long expectedBytes;
+    UIProgressView *progress;
 }
 @property (nonatomic)__strong MPMoviePlayerController *player;
 @property (nonatomic,retain)Adjunto *adjunto;

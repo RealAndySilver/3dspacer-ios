@@ -75,7 +75,7 @@
     //NSLog(@"Resultado %@",server.resDic );
     NSString *tempMethod=[NSString stringWithFormat:@"ns1:%@Response",methodName];
     NSString *response=[[server.resDic objectForKey:tempMethod]objectForKey:@"return"];
-    if ([response isEqualToString:@"success"]) {
+    if ([response isEqualToString:@"success"]) { 
         /*UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ProyectoEnviado", nil)
                                                         message:NSLocalizedString(@"ProyectoEnviadoExito", nil)
                                                        delegate:self

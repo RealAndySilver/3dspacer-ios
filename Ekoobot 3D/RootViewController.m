@@ -225,6 +225,7 @@
 -(void)receivedDataFromServer:(id)sender{
     sc=sender;
     if ([sc.resDic objectForKey:@"usuario"]) {
+        //NSLog(@"resDic: %@", sc.resDic);
         Usuario *usuario=[[Usuario alloc]initWithDictionary:[sc.resDic objectForKey:@"usuario"]];
         Usuario *usuarioCopia=[[Usuario alloc]initWithDictionary:[sc.resDic objectForKey:@"usuario"]];
         usuario.terminos=[[[sc.resDic objectForKey:@"system"]objectForKey:@"terminos"] stringByReplacingOccurrencesOfString:@"<br/>" withString:@"\n"];

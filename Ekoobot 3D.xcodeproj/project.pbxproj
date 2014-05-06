@@ -119,6 +119,15 @@
 		75EE5592183D198E00C52654 /* icon152.png in Resources */ = {isa = PBXBuildFile; fileRef = 75EE5590183D198E00C52654 /* icon152.png */; };
 		75EE5593183D198E00C52654 /* icon76.png in Resources */ = {isa = PBXBuildFile; fileRef = 75EE5591183D198E00C52654 /* icon76.png */; };
 		75FF14501652EA2700C39705 /* compassOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 75FF144F1652EA2700C39705 /* compassOn.png */; };
+		8B5C79131917FB81003941AD /* GLKitSpaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C79121917FB81003941AD /* GLKitSpaceViewController.m */; };
+		8B5C79151917FBB8003941AD /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B5C79141917FBB8003941AD /* GLKit.framework */; };
+		8B5C7919191804AB003941AD /* Skybox1Left.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B5C7918191804AB003941AD /* Skybox1Left.png */; };
+		8B5C791C19183231003941AD /* More3DScenesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C791B19183231003941AD /* More3DScenesView.m */; };
+		8B5C792119183BC1003941AD /* More3DScenesCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C792019183BC1003941AD /* More3DScenesCollectionViewCell.m */; };
+		8BC64FF119191BD40005548D /* CMMotionManager+Shared.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC64FF019191BD40005548D /* CMMotionManager+Shared.m */; };
+		8BC64FF4191941DB0005548D /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC64FF3191941DB0005548D /* UIImage+Resize.m */; };
+		8BC64FF71919974F0005548D /* PlanosDePlantaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC64FF61919974F0005548D /* PlanosDePlantaViewController.m */; };
+		8BC64FFA19199AC50005548D /* PlanosCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC64FF919199AC50005548D /* PlanosCollectionViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -303,6 +312,22 @@
 		75EE5590183D198E00C52654 /* icon152.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon152.png; sourceTree = "<group>"; };
 		75EE5591183D198E00C52654 /* icon76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon76.png; sourceTree = "<group>"; };
 		75FF144F1652EA2700C39705 /* compassOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compassOn.png; sourceTree = "<group>"; };
+		8B5C79111917FB81003941AD /* GLKitSpaceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLKitSpaceViewController.h; path = "New ViewControllers/GLKitSpaceViewController.h"; sourceTree = "<group>"; };
+		8B5C79121917FB81003941AD /* GLKitSpaceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GLKitSpaceViewController.m; path = "New ViewControllers/GLKitSpaceViewController.m"; sourceTree = "<group>"; };
+		8B5C79141917FBB8003941AD /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		8B5C7918191804AB003941AD /* Skybox1Left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Skybox1Left.png; path = Resources/Skybox1Left.png; sourceTree = "<group>"; };
+		8B5C791A19183231003941AD /* More3DScenesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = More3DScenesView.h; path = "New ViewControllers/Views/More3DScenesView.h"; sourceTree = "<group>"; };
+		8B5C791B19183231003941AD /* More3DScenesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = More3DScenesView.m; path = "New ViewControllers/Views/More3DScenesView.m"; sourceTree = "<group>"; };
+		8B5C791F19183BC1003941AD /* More3DScenesCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = More3DScenesCollectionViewCell.h; path = "New ViewControllers/Custom Cells/More3DScenesCollectionViewCell.h"; sourceTree = "<group>"; };
+		8B5C792019183BC1003941AD /* More3DScenesCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = More3DScenesCollectionViewCell.m; path = "New ViewControllers/Custom Cells/More3DScenesCollectionViewCell.m"; sourceTree = "<group>"; };
+		8BC64FEF19191BD40005548D /* CMMotionManager+Shared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CMMotionManager+Shared.h"; path = "New ViewControllers/Categories/CMMotionManager+Shared.h"; sourceTree = "<group>"; };
+		8BC64FF019191BD40005548D /* CMMotionManager+Shared.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CMMotionManager+Shared.m"; path = "New ViewControllers/Categories/CMMotionManager+Shared.m"; sourceTree = "<group>"; };
+		8BC64FF2191941DB0005548D /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Resize.h"; path = "New ViewControllers/Categories/UIImage+Resize.h"; sourceTree = "<group>"; };
+		8BC64FF3191941DB0005548D /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Resize.m"; path = "New ViewControllers/Categories/UIImage+Resize.m"; sourceTree = "<group>"; };
+		8BC64FF51919974F0005548D /* PlanosDePlantaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlanosDePlantaViewController.h; path = "New ViewControllers/PlanosDePlantaViewController.h"; sourceTree = "<group>"; };
+		8BC64FF61919974F0005548D /* PlanosDePlantaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlanosDePlantaViewController.m; path = "New ViewControllers/PlanosDePlantaViewController.m"; sourceTree = "<group>"; };
+		8BC64FF819199AC50005548D /* PlanosCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlanosCollectionViewCell.h; path = "New ViewControllers/Custom Cells/PlanosCollectionViewCell.h"; sourceTree = "<group>"; };
+		8BC64FF919199AC50005548D /* PlanosCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlanosCollectionViewCell.m; path = "New ViewControllers/Custom Cells/PlanosCollectionViewCell.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -310,6 +335,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B5C79151917FBB8003941AD /* GLKit.framework in Frameworks */,
 				7589F4A0167EBC77007CA511 /* libsqlite3.0.dylib in Frameworks */,
 				7510454B16275B5400BA12C6 /* MediaPlayer.framework in Frameworks */,
 				37319373158B864100B49F1E /* CoreLocation.framework in Frameworks */,
@@ -412,6 +438,7 @@
 		37E98A38153E0D70001B9BFE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8B5C79141917FBB8003941AD /* GLKit.framework */,
 				7589F49F167EBC77007CA511 /* libsqlite3.0.dylib */,
 				7510454A16275B5400BA12C6 /* MediaPlayer.framework */,
 				37E98A3D153E0D70001B9BFE /* CoreGraphics.framework */,
@@ -438,6 +465,8 @@
 				37E98A86153E24C3001B9BFE /* ViewControllers */,
 				7589C5AB15A4FC4E000C99AF /* Views */,
 				37319365158B842400B49F1E /* OpenGl */,
+				8B5C791E19183B80003941AD /* Custom Cells */,
+				8BC64FEE19191BA60005548D /* Categories */,
 			);
 			path = "Ekoobot 3D";
 			sourceTree = "<group>";
@@ -531,6 +560,7 @@
 		37E98A86153E24C3001B9BFE /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				8B5C790F1917FB21003941AD /* New ViewControllers */,
 				37E98A51153E0D71001B9BFE /* RootViewController.h */,
 				37E98A52153E0D71001B9BFE /* RootViewController.m */,
 				37E98A58153E0D71001B9BFE /* ListadoDeProyectosVC.h */,
@@ -578,6 +608,7 @@
 		37F1EBF71541D65D00426C48 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8B5C7918191804AB003941AD /* Skybox1Left.png */,
 				759A938417DE58EB00BAA4E0 /* ayuda.png */,
 				7586793B17E003FF001E6C82 /* ayuda_off.png */,
 				75A94B0517E011150045BE3D /* tv2.png */,
@@ -687,6 +718,49 @@
 			name = Analytics;
 			sourceTree = "<group>";
 		};
+		8B5C790F1917FB21003941AD /* New ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				8B5C79101917FB2F003941AD /* OpenGL */,
+				8BC64FF51919974F0005548D /* PlanosDePlantaViewController.h */,
+				8BC64FF61919974F0005548D /* PlanosDePlantaViewController.m */,
+			);
+			name = "New ViewControllers";
+			sourceTree = "<group>";
+		};
+		8B5C79101917FB2F003941AD /* OpenGL */ = {
+			isa = PBXGroup;
+			children = (
+				8B5C79111917FB81003941AD /* GLKitSpaceViewController.h */,
+				8B5C79121917FB81003941AD /* GLKitSpaceViewController.m */,
+				8B5C791A19183231003941AD /* More3DScenesView.h */,
+				8B5C791B19183231003941AD /* More3DScenesView.m */,
+			);
+			name = OpenGL;
+			sourceTree = "<group>";
+		};
+		8B5C791E19183B80003941AD /* Custom Cells */ = {
+			isa = PBXGroup;
+			children = (
+				8B5C791F19183BC1003941AD /* More3DScenesCollectionViewCell.h */,
+				8B5C792019183BC1003941AD /* More3DScenesCollectionViewCell.m */,
+				8BC64FF819199AC50005548D /* PlanosCollectionViewCell.h */,
+				8BC64FF919199AC50005548D /* PlanosCollectionViewCell.m */,
+			);
+			name = "Custom Cells";
+			sourceTree = "<group>";
+		};
+		8BC64FEE19191BA60005548D /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				8BC64FEF19191BD40005548D /* CMMotionManager+Shared.h */,
+				8BC64FF019191BD40005548D /* CMMotionManager+Shared.m */,
+				8BC64FF2191941DB0005548D /* UIImage+Resize.h */,
+				8BC64FF3191941DB0005548D /* UIImage+Resize.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -736,7 +810,7 @@
 				ORGANIZATIONNAME = Ekoomedia;
 				TargetAttributes = {
 					37E98A34153E0D70001B9BFE = {
-						DevelopmentTeam = 96G68N9225;
+						DevelopmentTeam = 9Y4G65DT7C;
 					};
 				};
 			};
@@ -800,6 +874,7 @@
 				75FF14501652EA2700C39705 /* compassOn.png in Resources */,
 				755F9F0E1653090C0002266B /* icon@2x.png in Resources */,
 				755F9F101653091B0002266B /* icon.png in Resources */,
+				8B5C7919191804AB003941AD /* Skybox1Left.png in Resources */,
 				75524125167937BF004BC471 /* compassIcon.png in Resources */,
 				755241271679388E004BC471 /* zoom1.png in Resources */,
 				7534B20B1682595B0005F7BC /* analytics.sqlite in Resources */,
@@ -859,10 +934,12 @@
 				37319352158B840E00B49F1E /* CC3Math.m in Sources */,
 				3731935A158B840E00B49F1E /* OpenGLView.m in Sources */,
 				3749926E1591464200686C44 /* TiposDePlantasVC.m in Sources */,
+				8B5C792119183BC1003941AD /* More3DScenesCollectionViewCell.m in Sources */,
 				3791F1FE159395570027D122 /* Espacio3DVC.m in Sources */,
 				37A49D5D15951E650055FAA5 /* ItemUrbanismo.m in Sources */,
 				3766D1151540F33B008B9437 /* TiposDePisosVC.m in Sources */,
 				37A49D6015951E890055FAA5 /* TipoDePiso.m in Sources */,
+				8BC64FFA19199AC50005548D /* PlanosCollectionViewCell.m in Sources */,
 				37A49D6315951EA20055FAA5 /* Producto.m in Sources */,
 				37A49D6615951EB70055FAA5 /* Planta.m in Sources */,
 				37A49D6915951ED50055FAA5 /* Espacio3D.m in Sources */,
@@ -874,20 +951,25 @@
 				752DCB0C15A7EB06002B732D /* CustomButton.m in Sources */,
 				7546A58215AF3A7F000F48E5 /* LoadingView.m in Sources */,
 				7518923C15BE1E76006B51B2 /* MBProgressHud.m in Sources */,
+				8B5C79131917FB81003941AD /* GLKitSpaceViewController.m in Sources */,
 				7515C67015E54D3600DFE029 /* FileSaver.m in Sources */,
 				75D49A8215ED2FF000A4F6BA /* IAmCoder.m in Sources */,
 				75E69F74160404F3005907F6 /* EraseViewController.m in Sources */,
+				8B5C791C19183231003941AD /* More3DScenesView.m in Sources */,
 				757D4DA31612491800F31913 /* NavController.m in Sources */,
 				75C8E937162387280094A609 /* UpdateView.m in Sources */,
 				751045561627726B00BA12C6 /* VideoViewController.m in Sources */,
 				75550747162F293A00479537 /* SendInfoViewController.m in Sources */,
+				8BC64FF4191941DB0005548D /* UIImage+Resize.m in Sources */,
 				7555074A162F2B6A00479537 /* SendInfoButton.m in Sources */,
 				75550750162F74B700479537 /* TermsViewController.m in Sources */,
 				7587C9CF1632182E00C66896 /* Adjunto.m in Sources */,
 				7575CA4A1676E6D20078E354 /* ZoomViewController.m in Sources */,
+				8BC64FF71919974F0005548D /* PlanosDePlantaViewController.m in Sources */,
 				7575CA581676EB5E0078E354 /* NavAnimations.m in Sources */,
 				7552410D1677D2C8004BC471 /* BrujulaViewController.m in Sources */,
 				755241121677E303004BC471 /* BrujulaView.m in Sources */,
+				8BC64FF119191BD40005548D /* CMMotionManager+Shared.m in Sources */,
 				7589F49B167EBA8E007CA511 /* SqlHandler.m in Sources */,
 				7589F49E167EBAFF007CA511 /* Analytic.m in Sources */,
 				75A1D2F916BB6C050013B48A /* ProyectoLite.m in Sources */,
@@ -1039,15 +1121,16 @@
 		37E98A77153E0D71001B9BFE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Sergio Garzon Gomez (4T5Y8G4YBX)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Sergio Garzon Gomez (4T5Y8G4YBX)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Diego Fernando Vidal Illera (9JA65WT89C)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Diego Fernando Vidal Illera (9JA65WT89C)";
+				COMPRESS_PNG_FILES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Ekoobot 3D/Ekoobot 3D-Prefix.pch";
 				INFOPLIST_FILE = "Ekoobot 3D/Ekoobot 3D-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B0E49AC0-C2E1-40C5-83EC-422A5A888485";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B0E49AC0-C2E1-40C5-83EC-422A5A888485";
+				PROVISIONING_PROFILE = "9B8B7950-F1F9-453D-B9C0-D16EA4D00DC7";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9B8B7950-F1F9-453D-B9C0-D16EA4D00DC7";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1056,8 +1139,9 @@
 		37E98A78153E0D71001B9BFE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Ekoomedia Ltda. (96G68N9225)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ekoomedia Ltda. (96G68N9225)";
+				COMPRESS_PNG_FILES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Ekoobot 3D/Ekoobot 3D-Prefix.pch";
 				INFOPLIST_FILE = "Ekoobot 3D/Ekoobot 3D-Info.plist";
@@ -1139,8 +1223,9 @@
 		75E995DD164AF28000C7452E /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Ekoomedia Ltda. (96G68N9225)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ekoomedia Ltda. (96G68N9225)";
+				COMPRESS_PNG_FILES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Ekoobot 3D/Ekoobot 3D-Prefix.pch";
 				INFOPLIST_FILE = "Ekoobot 3D/Ekoobot 3D-Info.plist";

@@ -25,6 +25,8 @@
 }
 
 - (void)viewDidLoad{
+    NSLog(@"Entré a PlantaUrbanaVC");
+    
     NavController *navController = (NavController *)self.navigationController;
     [navController setInterfaceOrientation:YES];
     self.automaticallyAdjustsScrollViewInsets=NO;

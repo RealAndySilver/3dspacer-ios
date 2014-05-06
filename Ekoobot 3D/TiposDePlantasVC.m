@@ -7,6 +7,7 @@
 //
 
 #import "TiposDePlantasVC.h"
+#import "GLKitSpaceViewController.h"
 
 @interface TiposDePlantasVC ()
 
@@ -23,6 +24,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSLog(@"entré a TiposDePlantasVC");
     //Se cargan y muestran todos los proyectos
     arrayNombresPlantas=[[NSMutableArray alloc]init];
     scrollArray=[[NSMutableArray alloc]init];
@@ -306,7 +308,7 @@
     [self performSelector:@selector(delayedAction:) withObject:sender afterDelay:0.2];
 }
 -(void)delayedAction:(CustomButton*)sender{
-    Planta *planta=[[Planta alloc]init];
+    /*Planta *planta=[[Planta alloc]init];
     planta = [producto.arrayPlantas objectAtIndex:sender.secondaryId];
     NSMutableArray *tempArray=planta.arrayEspacios3D;
     Espacio3D *espacio3D=[tempArray objectAtIndex:sender.tag];
@@ -317,7 +319,17 @@
     NavController *navController = (NavController *)self.navigationController;
     [navController setOrientationType:0];
     //[navController forceLandscapeFromLandscape];
-    [self.navigationController pushViewController:e3dVC animated:YES];
+    [self.navigationController pushViewController:e3dVC animated:YES];*/
+    
+    Planta *planta = producto.arrayPlantas[sender.secondaryId];
+    NSMutableArray *espacios3DArray = planta.arrayEspacios3D;
+    
+    GLKitSpaceViewController *glkitSpaceVC = [self.storyboard instantiateViewControllerWithIdentifier:@"GLKitSpace"];
+    //glkitSpaceVC.espacio3D = espacio3D;
+    glkitSpaceVC.espacioSeleccionado = sender.tag;
+    glkitSpaceVC.arregloDeEspacios3D = espacios3DArray;
+    
+    [self.navigationController pushViewController:glkitSpaceVC animated:YES];
 }
 #pragma mark - scroll tap
 - (void)handleDoubleTap:(UIGestureRecognizer *)recognizer {

@@ -22,6 +22,8 @@
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    NSLog(@"Entré a TiposDePisosVC");
+    
     //Se cargan y muestran todos los proyectos
     arrayNombrePisos=[[NSMutableArray alloc]init];
     scrollArray=[[NSMutableArray alloc]init];

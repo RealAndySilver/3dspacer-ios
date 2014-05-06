@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>DB450765-BA3F-4C8C-A103-7E44F0F348B9</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Ekoobot 3D</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>D4ADA9D8-9E5C-40E2-ADDE-22D4BB773B89</key>
+		<string>https://bitbucket.org/katsuyapr0/3dspacer.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Ekoobot 3D.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>D4ADA9D8-9E5C-40E2-ADDE-22D4BB773B89</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://bitbucket.org/katsuyapr0/3dspacer.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>D4ADA9D8-9E5C-40E2-ADDE-22D4BB773B89</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D4ADA9D8-9E5C-40E2-ADDE-22D4BB773B89</string>
+			<key>IDESourceControlWCCName</key>
+			<string>3dspacer</string>
+		</dict>
+	</array>
+</dict>
+</plist>

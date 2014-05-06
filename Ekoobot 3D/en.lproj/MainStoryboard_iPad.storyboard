@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4510" systemVersion="12F45" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="YPL-rb-3rc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="YPL-rb-3rc">
     <dependencies>
-        <deployment defaultVersion="1296" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
+        <deployment defaultVersion="1792" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
         <!--Nav Controller-->
@@ -54,6 +54,55 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="s6M-fG-vmp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-32" y="-808"/>
+        </scene>
+        <!--GLKit View Controller-->
+        <scene sceneID="idh-2V-njl">
+            <objects>
+                <glkViewController storyboardIdentifier="GLKitSpace" autoresizesArchivedViewToFullSize="NO" preferredFramesPerSecond="30" id="a8i-Ix-z0B" customClass="GLKitSpaceViewController" sceneMemberID="viewController">
+                    <glkView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" drawableDepthFormat="16" id="LsO-Md-L61">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                        <connections>
+                            <outlet property="delegate" destination="a8i-Ix-z0B" id="IWW-F9-gQQ"/>
+                        </connections>
+                    </glkView>
+                    <navigationItem key="navigationItem" id="e1T-Ap-vcS"/>
+                </glkViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Jot-Pu-lOw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-6288" y="389"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="n4u-wW-fsb">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="kKv-7Q-3Iv" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="SL9-JK-4gO">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="F6f-qO-dpR" kind="relationship" relationship="rootViewController" id="XMz-y2-gg2"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="X5B-DW-fDj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-7497" y="1241"/>
+        </scene>
+        <!--Planos De Planta View Controller-->
+        <scene sceneID="BlV-i1-APq">
+            <objects>
+                <viewController storyboardIdentifier="PlanosDePlanta" id="F6f-qO-dpR" customClass="PlanosDePlantaViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="OTp-Vl-zXb">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="GrQ-b3-Dab"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="m4r-ra-Hpq" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-6353" y="1289"/>
         </scene>
         <!--Espacio3DVC-->
         <scene sceneID="CPq-ux-IvE">

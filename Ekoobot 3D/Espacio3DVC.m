@@ -17,6 +17,7 @@
 
 - (void)viewDidLoad
 {
+    NSLog(@"entré al espacio 3D");
     [super viewDidLoad];
     loading=[[LoadingView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.height, self.view.frame.size.width)];
     [self.navigationController.view addSubview:loading];
@@ -94,6 +95,12 @@
     self.navigationItem.title=NSLocalizedString(@"Espacio3D", nil);
     Caras *face=[espacio3D.arrayCaras objectAtIndex:0];
     [self checkIfDownloadedWithFace:face];
+    NSLog(@"id de atrás: %@", face.idAtras);
+    NSLog(@"id de frente: %@", face.idFrente);
+    NSLog(@"id de abajo: %@", face.idAbajo);
+    NSLog(@"id de izquierda: %@", face.idIzquierda);
+    NSLog(@"id de derecha: %@", face.idDerecha);
+    NSLog(@"id de arriba: %@", face.idArriba);
     face.atras=[self pathForResourceWithName:@"Atras" andFace:face ID:face.idAtras];
     face.frente=[self pathForResourceWithName:@"Frente" andFace:face ID:face.idFrente];
     face.abajo=[self pathForResourceWithName:@"Abajo" andFace:face ID:face.idAbajo];
@@ -218,7 +225,6 @@
     [lowerScroll setShowsHorizontalScrollIndicator:NO];
     //lowerScroll.contentSize=CGSizeMake(lowerScroll.frame.size.width+1, 100);
     [lowerView addSubview:lowerScroll];
-    
     
     
     tituloEspacio=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 25)];
@@ -388,6 +394,13 @@
 -(void)start3DViewWithFaces:(Caras*)faces andFrame:(CGRect)frame space:(Espacio3D*)space{
     [view3D deleteTextures];
     [self checkIfDownloadedWithFace:faces];
+    NSLog(@"id de atrás: %@", faces.idAtras);
+    NSLog(@"id de frente: %@", faces.idFrente);
+    NSLog(@"id de abajo: %@", faces.idAbajo);
+    NSLog(@"id de izquierda: %@", faces.idIzquierda);
+    NSLog(@"id de derecha: %@", faces.idDerecha);
+    NSLog(@"id de arriba: %@", faces.idArriba);
+
     faces.atras=[self pathForResourceWithName:@"Atras" andFace:faces ID:faces.idAtras];
     faces.frente=[self pathForResourceWithName:@"Frente" andFace:faces ID:faces.idFrente];
     faces.abajo=[self pathForResourceWithName:@"Abajo" andFace:faces ID:faces.idAbajo];

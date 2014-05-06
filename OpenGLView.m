@@ -549,7 +549,7 @@ const GLubyte IndicesBottom[] = {
         if (_hasAccelerometer)
         {
             [_motionManager setDeviceMotionUpdateInterval:1/60];
-            [_motionManager startDeviceMotionUpdates];
+            //[_motionManager startDeviceMotionUpdates];
         }
         [_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
         isTouchEnabled=NO;

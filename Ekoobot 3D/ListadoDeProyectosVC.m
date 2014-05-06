@@ -22,6 +22,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSLog(@"Entré a listado de proyectos");
     //Se cargan y muestran todos los proyectos
     arrayDeTitulos = [[NSMutableArray alloc]init];
     arrayLiteDesdeFull=[[NSMutableArray alloc]init];

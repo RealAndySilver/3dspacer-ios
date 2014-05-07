@@ -7,6 +7,7 @@
 //
 
 #import "ListadoDeProyectosVC.h"
+#import "PlanosDePlantaViewController.h"
 
 @interface ListadoDeProyectosVC ()
 @end
@@ -730,11 +731,14 @@
     [self.navigationController pushViewController:peVC animated:NO];
 }
 - (void)irATiposDePlantasVCConProducto:(id)producto{
-    TiposDePlantasVC *tdpVC = [[TiposDePlantasVC alloc]init];
+    /*TiposDePlantasVC *tdpVC = [[TiposDePlantasVC alloc]init];
     tdpVC = [self.storyboard instantiateViewControllerWithIdentifier:@"TiposDePlantasVC"];
     tdpVC.producto=producto;
     [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
-    [self.navigationController pushViewController:tdpVC animated:NO];
+    [self.navigationController pushViewController:tdpVC animated:NO];*/
+    PlanosDePlantaViewController *planosDePlanta = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePlanta"];
+    planosDePlanta.producto = producto;
+    [self.navigationController pushViewController:planosDePlanta animated:YES];
 }
 
 -(void)alertViewAppear{

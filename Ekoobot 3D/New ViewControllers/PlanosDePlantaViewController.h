@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Producto.h"
 
 @interface PlanosDePlantaViewController : UIViewController
-
+@property (strong, nonatomic) Producto *producto;
 @end

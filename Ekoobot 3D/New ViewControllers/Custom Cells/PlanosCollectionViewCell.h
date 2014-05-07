@@ -7,8 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+@class PlanosCollectionViewCell;
+
+@protocol PlanoCollectionViewCellDelegate <NSObject>
+-(void)espacio3DButtonWasSelectedWithTag:(NSUInteger)tag inCell:(PlanosCollectionViewCell *)cell;
+@end
 
 @interface PlanosCollectionViewCell : UICollectionViewCell
 @property (strong, nonatomic) UIImageView *planoImageView;
-@property (strong, nonatomic) UIButton *espacioButton;
+@property (strong, nonatomic) UILabel *areaTotalLabel;
+@property (strong, nonatomic) UIButton *espacio3D1;
+@property (strong, nonatomic) UILabel *espacio3D1Label;
+@property (strong, nonatomic) id <PlanoCollectionViewCellDelegate> delegate;
 @end

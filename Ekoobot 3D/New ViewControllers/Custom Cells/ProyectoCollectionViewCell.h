@@ -7,7 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+@class ProyectoCollectionViewCell;
+
+@protocol ProyectoCollectionViewCellDelegate <NSObject>
+-(void)zoomButtonTappedInCell:(ProyectoCollectionViewCell *)cell;
+@end
 
 @interface ProyectoCollectionViewCell : UICollectionViewCell
 @property (strong, nonatomic) UIImageView *imageView;
+@property (strong, nonatomic) id <ProyectoCollectionViewCellDelegate> delegate;
 @end

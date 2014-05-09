@@ -128,6 +128,8 @@
 		8BC64FF4191941DB0005548D /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC64FF3191941DB0005548D /* UIImage+Resize.m */; };
 		8BC64FF71919974F0005548D /* PlanosDePlantaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC64FF61919974F0005548D /* PlanosDePlantaViewController.m */; };
 		8BC64FFA19199AC50005548D /* PlanosCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC64FF919199AC50005548D /* PlanosCollectionViewCell.m */; };
+		8BD2940F191D75500006AB2A /* PlanosDePisoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BD2940E191D75500006AB2A /* PlanosDePisoViewController.m */; };
+		8BD29412191D764E0006AB2A /* PisoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BD29411191D764E0006AB2A /* PisoCollectionViewCell.m */; };
 		A0E7A47A191C08E60067ED3D /* MainCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A479191C08E60067ED3D /* MainCarouselViewController.m */; };
 		A0E7A47F191C0B000067ED3D /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A47E191C0B000067ED3D /* iCarousel.m */; };
 		A0E7A482191C20550067ED3D /* ProyectoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A481191C20550067ED3D /* ProyectoViewController.m */; };
@@ -332,6 +334,10 @@
 		8BC64FF61919974F0005548D /* PlanosDePlantaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlanosDePlantaViewController.m; path = "New ViewControllers/PlanosDePlantaViewController.m"; sourceTree = "<group>"; };
 		8BC64FF819199AC50005548D /* PlanosCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlanosCollectionViewCell.h; path = "New ViewControllers/Custom Cells/PlanosCollectionViewCell.h"; sourceTree = "<group>"; };
 		8BC64FF919199AC50005548D /* PlanosCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlanosCollectionViewCell.m; path = "New ViewControllers/Custom Cells/PlanosCollectionViewCell.m"; sourceTree = "<group>"; };
+		8BD2940D191D75500006AB2A /* PlanosDePisoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlanosDePisoViewController.h; path = "New ViewControllers/PlanosDePisoViewController.h"; sourceTree = "<group>"; };
+		8BD2940E191D75500006AB2A /* PlanosDePisoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlanosDePisoViewController.m; path = "New ViewControllers/PlanosDePisoViewController.m"; sourceTree = "<group>"; };
+		8BD29410191D764E0006AB2A /* PisoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PisoCollectionViewCell.h; path = "New ViewControllers/Custom Cells/PisoCollectionViewCell.h"; sourceTree = "<group>"; };
+		8BD29411191D764E0006AB2A /* PisoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PisoCollectionViewCell.m; path = "New ViewControllers/Custom Cells/PisoCollectionViewCell.m"; sourceTree = "<group>"; };
 		A0E7A478191C08E60067ED3D /* MainCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainCarouselViewController.h; path = "New ViewControllers/MainCarouselViewController.h"; sourceTree = "<group>"; };
 		A0E7A479191C08E60067ED3D /* MainCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainCarouselViewController.m; path = "New ViewControllers/MainCarouselViewController.m"; sourceTree = "<group>"; };
 		A0E7A47D191C0B000067ED3D /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
@@ -737,6 +743,8 @@
 				8B5C79101917FB2F003941AD /* OpenGL */,
 				8BC64FF51919974F0005548D /* PlanosDePlantaViewController.h */,
 				8BC64FF61919974F0005548D /* PlanosDePlantaViewController.m */,
+				8BD2940D191D75500006AB2A /* PlanosDePisoViewController.h */,
+				8BD2940E191D75500006AB2A /* PlanosDePisoViewController.m */,
 				A0E7A478191C08E60067ED3D /* MainCarouselViewController.h */,
 				A0E7A479191C08E60067ED3D /* MainCarouselViewController.m */,
 				A0E7A480191C20550067ED3D /* ProyectoViewController.h */,
@@ -761,6 +769,8 @@
 			children = (
 				8B5C791F19183BC1003941AD /* More3DScenesCollectionViewCell.h */,
 				8B5C792019183BC1003941AD /* More3DScenesCollectionViewCell.m */,
+				8BD29410191D764E0006AB2A /* PisoCollectionViewCell.h */,
+				8BD29411191D764E0006AB2A /* PisoCollectionViewCell.m */,
 				8BC64FF819199AC50005548D /* PlanosCollectionViewCell.h */,
 				8BC64FF919199AC50005548D /* PlanosCollectionViewCell.m */,
 				A0E7A483191C28210067ED3D /* ProyectoCollectionViewCell.h */,
@@ -990,6 +1000,7 @@
 				752DCAFE15A77A8C002B732D /* Grupo.m in Sources */,
 				752DCB0C15A7EB06002B732D /* CustomButton.m in Sources */,
 				7546A58215AF3A7F000F48E5 /* LoadingView.m in Sources */,
+				8BD2940F191D75500006AB2A /* PlanosDePisoViewController.m in Sources */,
 				7518923C15BE1E76006B51B2 /* MBProgressHud.m in Sources */,
 				8B5C79131917FB81003941AD /* GLKitSpaceViewController.m in Sources */,
 				7515C67015E54D3600DFE029 /* FileSaver.m in Sources */,
@@ -1007,6 +1018,7 @@
 				7575CA4A1676E6D20078E354 /* ZoomViewController.m in Sources */,
 				8BC64FF71919974F0005548D /* PlanosDePlantaViewController.m in Sources */,
 				A0E7A485191C28210067ED3D /* ProyectoCollectionViewCell.m in Sources */,
+				8BD29412191D764E0006AB2A /* PisoCollectionViewCell.m in Sources */,
 				7575CA581676EB5E0078E354 /* NavAnimations.m in Sources */,
 				7552410D1677D2C8004BC471 /* BrujulaViewController.m in Sources */,
 				755241121677E303004BC471 /* BrujulaView.m in Sources */,

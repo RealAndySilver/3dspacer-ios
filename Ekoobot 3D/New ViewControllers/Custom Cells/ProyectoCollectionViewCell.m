@@ -8,6 +8,10 @@
 
 #import "ProyectoCollectionViewCell.h"
 
+@interface ProyectoCollectionViewCell()
+@property (strong, nonatomic) UIButton *zoomButton;
+@end
+
 @implementation ProyectoCollectionViewCell
 
 - (id)initWithFrame:(CGRect)frame
@@ -20,6 +24,13 @@
         self.imageView = [[UIImageView alloc] init];
         self.imageView.contentMode = UIViewContentModeScaleAspectFill;
         [self.contentView addSubview:self.imageView];
+        
+        //Zooom button
+        self.zoomButton = [[UIButton alloc] init];
+        [self.zoomButton setImage:[UIImage imageNamed:@"zoom.png"] forState:UIControlStateNormal];
+        [self.zoomButton addTarget:self action:@selector(zoomButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+        [self.contentView addSubview:self.zoomButton];
+        
     }
     return self;
 }
@@ -28,6 +39,13 @@
     [super layoutSubviews];
     CGRect contentRect = self.contentView.bounds;
     self.imageView.frame = CGRectMake(0.0, 0.0, contentRect.size.width, contentRect.size.height);
+    self.zoomButton.frame = CGRectMake(53, 540, 40, 40);
+}
+
+#pragma mark - Actions 
+
+-(void)zoomButtonTapped {
+    [self.delegate zoomButtonTappedInCell:self];
 }
 
 @end

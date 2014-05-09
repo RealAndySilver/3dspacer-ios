@@ -158,13 +158,14 @@
         [arrayLiteDesdeFull addObject:proyecto];
         
         NSMutableArray *arrayForRenderPath=[[NSMutableArray alloc]init];
+        NSLog(@"arrayForRenderPath: %@", arrayForRenderPath);
         [renderPathArray addObject:arrayForRenderPath];
         
         //[ProjectDownloader downloadProject:proyecto];
         [self paginaCreadaConObjeto:proyecto enPosicion:i];
         NSLog(@"Data del proyecto es %@",proyecto.data);
     }
-    NSLog(@"Arreglo de render paths %@",renderPathArray);
+    NSLog(@"///////////////////////////////////////////////////////////////Arreglo de render paths %@",renderPathArray);
     
 }
 -(void)removerObjetos{
@@ -466,8 +467,11 @@
     [boton addTarget:self action:@selector(irAlSiguienteViewController:) forControlEvents:UIControlEventTouchUpInside];
     boton.frame=CGRectMake(830, 560,170, 170);
     if ([proyecto.data isEqualToString:@"1"]) {
+        NSLog(@"///////////////////////////////////////////////la info del proyecto está descargado");
         [view addSubview:boton];
         [view bringSubviewToFront:boton];
+    } else {
+        NSLog(@"///////////////////////////////////////////////la info del proyecto no está descargada");
     }
 }
 - (void)insertarImagenBotonSlideShowEnPagina:(UIView*)view conProyecto:(Proyecto*)proyecto yPosicion:(int)posicion{
@@ -732,14 +736,14 @@
     [self.navigationController pushViewController:peVC animated:NO];
 }
 - (void)irATiposDePlantasVCConProducto:(id)producto{
-    /*TiposDePlantasVC *tdpVC = [[TiposDePlantasVC alloc]init];
+    TiposDePlantasVC *tdpVC = [[TiposDePlantasVC alloc]init];
     tdpVC = [self.storyboard instantiateViewControllerWithIdentifier:@"TiposDePlantasVC"];
     tdpVC.producto=producto;
     [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
-    [self.navigationController pushViewController:tdpVC animated:NO];*/
-    PlanosDePlantaViewController *planosDePlanta = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePlanta"];
+    [self.navigationController pushViewController:tdpVC animated:NO];
+    /*PlanosDePlantaViewController *planosDePlanta = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePlanta"];
     planosDePlanta.producto = producto;
-    [self.navigationController pushViewController:planosDePlanta animated:YES];
+    [self.navigationController pushViewController:planosDePlanta animated:YES];*/
 }
 
 -(void)alertViewAppear{

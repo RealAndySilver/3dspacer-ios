@@ -7,6 +7,8 @@
 //
 
 #import "PlantaUrbanaVC.h"
+#import "GLKitSpaceViewController.h"
+#import "PlanosDePisoViewController.h"
 
 @interface PlantaUrbanaVC ()
 
@@ -306,22 +308,33 @@
 
     if ([string rangeOfString:@"Urbanizationspaces"].location != NSNotFound) {
         NSLog(@"voy pa espacios...");
-        Espacio3DVC *e3DVC=[[Espacio3DVC alloc]init];
+        /*Espacio3DVC *e3DVC=[[Espacio3DVC alloc]init];
         e3DVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Espacio3DVC"];
         TipoDePiso *tipoDePiso=[grupo.arrayTiposDePiso objectAtIndex:0];
         Producto *producto=[tipoDePiso.arrayProductos objectAtIndex:0];
         Planta *planta=[producto.arrayPlantas objectAtIndex:0];
         e3DVC.espacio3D=[planta.arrayEspacios3D objectAtIndex:0];
-        [self.navigationController pushViewController:e3DVC animated:YES];
+        [self.navigationController pushViewController:e3DVC animated:YES];*/
+        
+        TipoDePiso *tipoDePiso = grupo.arrayTiposDePiso[0];
+        Producto *producto = tipoDePiso.arrayProductos[0];
+        Planta *planta = producto.arrayPlantas[0];
+        
+        GLKitSpaceViewController *glkKitSpaceViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"GLKitSpace"];
+        glkKitSpaceViewController.arregloDeEspacios3D = planta.arrayEspacios3D;
+        [self.navigationController pushViewController:glkKitSpaceViewController animated:YES];
     }
     else {
         if (grupo.existe==1) {
             TipoDePiso *tipoDePiso=[grupo.arrayTiposDePiso objectAtIndex:0];
             if (tipoDePiso.existe) {
-                TiposDePisosVC *tpVC=[[TiposDePisosVC alloc]init];
+                /*TiposDePisosVC *tpVC=[[TiposDePisosVC alloc]init];
                 tpVC=[self.storyboard instantiateViewControllerWithIdentifier:@"TiposDePisosVC"];
                 tpVC.grupo=grupo;
-                [self.navigationController pushViewController:tpVC animated:YES];
+                [self.navigationController pushViewController:tpVC animated:YES];*/
+                PlanosDePisoViewController *planosDePisoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePiso"];
+                planosDePisoVC.grupo = grupo;
+                [self.navigationController pushViewController:planosDePisoVC animated:YES];
             }
             else{
                 Producto *producto=[tipoDePiso.arrayProductos objectAtIndex:0];
@@ -341,12 +354,18 @@
                 tpVC.producto=producto;
                 [self.navigationController pushViewController:tpVC animated:YES];
             }
-            else{
-                Espacio3DVC *e3DVC=[[Espacio3DVC alloc]init];
+            else {
+                /*Espacio3DVC *e3DVC=[[Espacio3DVC alloc]init];
                 e3DVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Espacio3DVC"];
                 Planta *planta=[producto.arrayPlantas objectAtIndex:0];
                 e3DVC.espacio3D=[planta.arrayEspacios3D objectAtIndex:0];
-                [self.navigationController pushViewController:e3DVC animated:YES];
+                [self.navigationController pushViewController:e3DVC animated:YES];*/
+                
+                Planta *planta = producto.arrayPlantas[0];
+                
+                GLKitSpaceViewController *glkitSpaceVC = [self.storyboard instantiateViewControllerWithIdentifier:@"GLKitSpace"];
+                glkitSpaceVC.arregloDeEspacios3D = planta.arrayEspacios3D;
+                [self.navigationController pushViewController:glkitSpaceVC animated:YES];
             }
             
         }

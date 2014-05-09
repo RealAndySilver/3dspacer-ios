@@ -131,6 +131,7 @@
         
         UIImageView *projectImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 500.0, 500.0)];
         projectImageView.tag = 1;
+        projectImageView.clipsToBounds = YES;
         projectImageView.contentMode = UIViewContentModeScaleAspectFill;
         projectImageView.backgroundColor = [UIColor grayColor];
         [view addSubview:projectImageView];

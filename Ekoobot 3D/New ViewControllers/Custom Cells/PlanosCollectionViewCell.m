@@ -7,6 +7,7 @@
 //
 
 #import "PlanosCollectionViewCell.h"
+#import "Espacio3D.h"
 
 @interface PlanosCollectionViewCell() <UIScrollViewDelegate>
 @property (strong, nonatomic) UIButton *brujulaButton;
@@ -14,6 +15,41 @@
 @end
 
 @implementation PlanosCollectionViewCell
+
+#pragma mark - Setters
+
+-(void)removeAllPinsFromArray:(NSArray *)espacios3DArray {
+    for (int i = 0; i < 10; i++) {
+        if ([self.contentView viewWithTag:i + 1]) {
+            //Remove the pin button and it's label
+            [[self.contentView viewWithTag:i + 1] removeFromSuperview];
+            [[self.contentView viewWithTag:i + 10] removeFromSuperview];
+        }
+    }
+}
+
+-(void)setEspacios3DButtonsFromArray:(NSArray *)espacios3DArray {
+    for (int i = 0; i < [espacios3DArray count]; i++) {
+        if (![self.contentView viewWithTag:i + 1]) {
+            Espacio3D *espacio3D = espacios3DArray[i];
+            
+            //Pin Button
+            UIButton *pinButton = [[UIButton alloc] initWithFrame:CGRectMake([espacio3D.coordenadaX floatValue], [espacio3D.coordenadaY floatValue] - 30.0, 30.0, 30.0)];
+            [pinButton setImage:[UIImage imageNamed:@"pin.png"] forState:UIControlStateNormal];
+            [pinButton addTarget:self action:@selector(espacio3DButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+            pinButton.tag = i + 1;
+            [self.contentView addSubview:pinButton];
+            
+            //Button Label
+            UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(pinButton.frame.origin.x + pinButton.frame.size.width, pinButton.frame.origin.y, 100.0, 30.0)];
+            nameLabel.text = espacio3D.nombre;
+            nameLabel.tag = i + 10;
+            nameLabel.textColor = [UIColor whiteColor];
+            nameLabel.font = [UIFont boldSystemFontOfSize:13.0];
+            [self.contentView addSubview:nameLabel];
+        }
+    }
+}
 
 -(id)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
@@ -40,7 +76,7 @@
         [self.planoImageView addSubview:self.brujulaButton];
         
         //espacio 3d 1
-        self.espacio3D1 = [[UIButton alloc] init];
+        /*self.espacio3D1 = [[UIButton alloc] init];
         [self.espacio3D1 setBackgroundImage:[UIImage imageNamed:@"pin.png"] forState:UIControlStateNormal];
         self.espacio3D1.tag = 0;
         [self.espacio3D1 addTarget:self action:@selector(espacio3DButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -50,7 +86,7 @@
         self.espacio3D1Label = [[UILabel alloc] init];
         self.espacio3D1Label.textColor = [UIColor whiteColor];
         self.espacio3D1Label.font = [UIFont boldSystemFontOfSize:13.0];
-        [self.planoImageView addSubview:self.espacio3D1Label];
+        [self.planoImageView addSubview:self.espacio3D1Label];*/
         
         //Area total label
         self.areaTotalLabel = [[UILabel alloc] init];
@@ -80,7 +116,7 @@
 
 -(void)espacio3DButtonTapped:(UIButton *)sender {
     NSLog(@"seleccioné un espacio");
-    [self.delegate espacio3DButtonWasSelectedWithTag:sender.tag inCell:self];
+    [self.delegate espacio3DButtonWasSelectedWithTag:sender.tag - 1 inCell:self];
 }
 
 -(void)brujulaButtonTapped {

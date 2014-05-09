@@ -84,14 +84,16 @@
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     PlanosCollectionViewCell *cell = (PlanosCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"CellIdentifier" forIndexPath:indexPath];
     cell.delegate = self;
-    
     Planta *planta = self.producto.arrayPlantas[indexPath.item];
-    NSArray *espacios3DArray = planta.arrayEspacios3D;
-    Espacio3D *espacio3D1 = espacios3DArray[0];
+    //NSArray *espacios3DArray = planta.arrayEspacios3D;
+    [cell removeAllPinsFromArray:planta.arrayEspacios3D];
+    [cell setEspacios3DButtonsFromArray:planta.arrayEspacios3D];
     
-    cell.espacio3D1.frame = CGRectMake([espacio3D1.coordenadaX floatValue], [espacio3D1.coordenadaY floatValue] - 30.0, 30.0, 30.0);
-    cell.espacio3D1Label.text = espacio3D1.nombre;
-    cell.espacio3D1Label.frame = CGRectMake(cell.espacio3D1.frame.origin.x + cell.espacio3D1.frame.size.width, cell.espacio3D1.frame.origin.y, 100.0, 30.0);
+    //Espacio3D *espacio3D1 = espacios3DArray[0];
+    //cell.espacio3D1.frame = CGRectMake([espacio3D1.coordenadaX floatValue], [espacio3D1.coordenadaY floatValue] - 30.0, 30.0, 30.0);
+    //cell.espacio3D1Label.text = espacio3D1.nombre;
+    //cell.espacio3D1Label.frame = CGRectMake(cell.espacio3D1.frame.origin.x + cell.espacio3D1.frame.size.width, cell.espacio3D1.frame.origin.y, 100.0, 30.0);
+    
     cell.planoImageView.image = [self imageFromPlantaAtIndex:indexPath.item];
     
     NSString *replacedMt=[self.producto.area stringByReplacingOccurrencesOfString:@"mt2" withString:@"mt\u00B2"];

@@ -11,6 +11,7 @@
 
 @protocol PlanoCollectionViewCellDelegate <NSObject>
 -(void)espacio3DButtonWasSelectedWithTag:(NSUInteger)tag inCell:(PlanosCollectionViewCell *)cell;
+-(void)brujulaButtonWasTappedInCell:(PlanosCollectionViewCell *)cell;
 @end
 
 @interface PlanosCollectionViewCell : UICollectionViewCell

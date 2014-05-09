@@ -7,6 +7,7 @@
 //
 
 #import "RootViewController.h"
+#import "MainCarouselViewController.h"
 
 @interface RootViewController ()
 
@@ -110,7 +111,7 @@
 #pragma mark Accion de Boton
 
 - (void)irAlSiguienteViewConUsuario:(id)usuario yCopia:(id)copia{
-    NSLog(@"Aca toy");
+    /*NSLog(@"Aca toy");
     NavController *navController = (NavController *)self.navigationController;
     [navController setOrientationType:0];
     [navController forceLandscapeMode];
@@ -123,7 +124,19 @@
     lVC=[self.storyboard instantiateViewControllerWithIdentifier:@"ListadoDeProyectosVC"];
     lVC.usuarioActual=usuario;
     lVC.usuarioCopia=copia;
-    [self.navigationController pushViewController:lVC animated:NO];
+    [self.navigationController pushViewController:lVC animated:NO];*/
+    
+    NavController *navController = (NavController *)self.navigationController;
+    [navController setOrientationType:0];
+    [navController forceLandscapeMode];
+    CATransition *transition = [CATransition animation];
+    transition.duration = 0.3f;
+    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    [self.navigationController.view.layer addAnimation:transition forKey:nil];
+    
+    MainCarouselViewController *mainCarouselVC = [self.storyboard instantiateViewControllerWithIdentifier:@"MainCarousel"];
+    mainCarouselVC.usuario = usuario;
+    [self.navigationController pushViewController:mainCarouselVC animated:NO];
 }
 
 - (void)alertSimpleConTitulo:(NSString*)elTitulo yMensaje:(NSString*)mensaje{

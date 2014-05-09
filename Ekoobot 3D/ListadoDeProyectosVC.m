@@ -389,6 +389,7 @@
     [self performSelectorInBackground:@selector(threadTest:) withObject:dic];
 }
 -(void)threadTest:(NSMutableDictionary*)dic{
+    NSLog(@"entré a descargar el proyectooo");
     Proyecto *proyecto=[dic objectForKey:@"Project"];
     if ([proyecto.data isEqualToString:@"1"]) {
         [progressView setViewAlphaToOne];

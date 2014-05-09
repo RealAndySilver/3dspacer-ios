@@ -35,6 +35,9 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    x = 0;
+    y = 0;
+    z = -0.3272;
     self.view.tag = 1;
     self.navigationItem.title = @"3D Space";
     self.navigationController.navigationBarHidden = YES;
@@ -97,6 +100,10 @@
     showViewsTapGesture.cancelsTouchesInView = NO;
     showViewsTapGesture.delegate = self;
     [self.view addGestureRecognizer:showViewsTapGesture];
+    
+    //Pinch Gesture to amke zoom
+    UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(zoomIn:)];
+    [self.view addGestureRecognizer:pinchGesture];
 }
 
 #pragma mark - OpenGL Stuff
@@ -227,6 +234,21 @@
         }
         panPrevious = panLocation;
     }
+}
+
+-(void)zoomIn:(UIPinchGestureRecognizer *)pinchGesture {
+    /*const GLfloat factorEscalamiento = 0.02;
+    static GLfloat currentScale = 0;
+    static GLfloat lastScale = 0;
+    
+    currentScale += pinchGesture.scale - lastScale;
+    lastScale = pinchGesture.scale;
+    
+    if (currentScale > 1) z += currentScale * factorEscalamiento;
+    else if (currentScale < 1) z -= currentScale * factorEscalamiento;
+    if (z <= -0.3272) z = -0.3272;
+    pinchGesture.scale = 1.0;
+    NSLog(@"z:%f", z);*/
 }
 
 #pragma mark - Custom Methods

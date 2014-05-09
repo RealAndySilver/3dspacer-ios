@@ -8,8 +8,9 @@
 
 #import "PlanosCollectionViewCell.h"
 
-@interface PlanosCollectionViewCell()
+@interface PlanosCollectionViewCell() <UIScrollViewDelegate>
 @property (strong, nonatomic) UIButton *brujulaButton;
+@property (strong, nonatomic) UIScrollView *scrollView;
 @end
 
 @implementation PlanosCollectionViewCell
@@ -17,6 +18,12 @@
 -(id)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.contentView.backgroundColor = [UIColor clearColor];
+        //ScrollView
+        self.scrollView = [[UIScrollView alloc] init];
+        self.scrollView.minimumZoomScale = 1.0;
+        self.scrollView.maximumZoomScale = 2.0;
+        self.scrollView.delegate = self;
+        [self.contentView addSubview:self.scrollView];
         
         //Imageview
         self.planoImageView = [[UIImageView alloc] init];
@@ -24,11 +31,12 @@
         self.planoImageView.clipsToBounds = YES;
         self.planoImageView.contentMode = UIViewContentModeScaleAspectFit;
         self.planoImageView.userInteractionEnabled = YES;
-        [self.contentView addSubview:self.planoImageView];
+        [self.scrollView addSubview:self.planoImageView];
         
         //Brujula button
         self.brujulaButton = [[UIButton alloc] init];
         [self.brujulaButton setBackgroundImage:[UIImage imageNamed:@"compassOn.png"] forState:UIControlStateNormal];
+        [self.brujulaButton addTarget:self action:@selector(brujulaButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         [self.planoImageView addSubview:self.brujulaButton];
         
         //espacio 3d 1
@@ -50,6 +58,11 @@
         self.areaTotalLabel.textColor = [UIColor whiteColor];
         self.areaTotalLabel.font = [UIFont boldSystemFontOfSize:20.0];
         [self.contentView addSubview:self.areaTotalLabel];
+        
+        //Create a Double Tap Gesture Recognizer to make zoom
+        UITapGestureRecognizer *doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(makeZoom:)];
+        doubleTapGesture.numberOfTapsRequired = 2;
+        [self.planoImageView addGestureRecognizer:doubleTapGesture];
     }
     return self;
 }
@@ -57,7 +70,8 @@
 -(void)layoutSubviews {
     [super layoutSubviews];
     CGRect contentRect = self.contentView.bounds;
-    self.planoImageView.frame = CGRectMake(20.0, -10.0, contentRect.size.width - 40.0, contentRect.size.height - 60);
+    self.scrollView.frame = CGRectMake(20.0, -10.0, contentRect.size.width - 40.0, contentRect.size.height - 60);
+    self.planoImageView.frame = CGRectMake(0.0, 0.0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
     self.brujulaButton.frame = CGRectMake(self.planoImageView.frame.size.width - 100.0, 10.0, 80.0, 80.0);
     self.areaTotalLabel.frame = CGRectMake(contentRect.size.width/2.0 - 150.0, self.planoImageView.frame.origin.y + self.planoImageView.frame.size.height, 300.0, 44.0);
 }
@@ -67,6 +81,41 @@
 -(void)espacio3DButtonTapped:(UIButton *)sender {
     NSLog(@"seleccioné un espacio");
     [self.delegate espacio3DButtonWasSelectedWithTag:sender.tag inCell:self];
+}
+
+-(void)brujulaButtonTapped {
+    [self.delegate brujulaButtonWasTappedInCell:self];
+}
+
+-(void)makeZoom:(UITapGestureRecognizer *)recognizer {
+    NSLog(@"hice double tap");
+    if(self.scrollView.zoomScale>=1.0 && self.scrollView.zoomScale<=1.5){
+        CGPoint Pointview=[recognizer locationInView:self.scrollView];
+        CGFloat newZoomscal=3.0;
+        
+        newZoomscal=MIN(newZoomscal, 5.0);
+        
+        CGSize scrollViewSize=self.scrollView.bounds.size;
+        
+        CGFloat w=scrollViewSize.width/newZoomscal;
+        CGFloat h=scrollViewSize.height/newZoomscal;
+        CGFloat x= Pointview.x-(w/2.0);
+        CGFloat y = Pointview.y-(h/2.0);
+        
+        CGRect rectTozoom=CGRectMake(x, y, w, h);
+        [self.scrollView zoomToRect:rectTozoom animated:YES];
+        
+        [self.scrollView setZoomScale:2.0 animated:YES];
+    }
+    else{
+        [self.scrollView setZoomScale:1.0 animated:YES];
+    }
+}
+
+#pragma mark - UIScrollViewDelegate
+
+-(UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
+    return self.planoImageView;
 }
 
 @end

@@ -10,18 +10,36 @@
 #import "PlanosCollectionViewCell.h"
 #import "GLKitSpaceViewController.h"
 #import "MBProgressHud.h"
+#import "BrujulaViewController.h"
 
 @interface PlanosDePlantaViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PlanoCollectionViewCellDelegate>
 @property (strong, nonatomic) UICollectionView *collectionView;
 @property (assign, nonatomic) NSUInteger numeroDePlanta;
 @property (assign, nonatomic) NSUInteger numeroDeEspacio3D;
+@property (strong, nonatomic) UIPageControl *pageControl;
+@property (strong, nonatomic) NSMutableArray *nombresPlantasArray;
 @end
 
 @implementation PlanosDePlantaViewController
 
+#pragma mark - Lazy Instantiation
+
+-(NSMutableArray *)nombresPlantasArray {
+    if (!_nombresPlantasArray) {
+        _nombresPlantasArray = [[NSMutableArray alloc] initWithCapacity:[self.producto.arrayPlantas count]];
+        for (int i = 0; i < [self.producto.arrayPlantas count]; i++) {
+            Planta *planta = self.producto.arrayPlantas[i];
+            [_nombresPlantasArray addObject:planta.nombre];
+            NSLog(@"nombre de la planta: %@", planta.nombre);
+        }
+    }
+    return _nombresPlantasArray;
+}
+
+#pragma mark View Lifecycle
+
 -(void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = @"Título";
     self.view.backgroundColor = [UIColor colorWithWhite:0.15 alpha:1.0];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     [self setupUI];
@@ -30,9 +48,12 @@
 -(void)setupUI {
     CGRect screenFrame = CGRectMake(0.0, 0.0, 1024.0, 768.0);
     
+    //Setup CollectionView
     UICollectionViewFlowLayout *collectionViewFlowLayout = [[UICollectionViewFlowLayout alloc] init];
     collectionViewFlowLayout.itemSize = CGSizeMake(screenFrame.size.width, 650.0);
     collectionViewFlowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    collectionViewFlowLayout.minimumInteritemSpacing = 0;
+    collectionViewFlowLayout.minimumLineSpacing = 0;
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0, self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height, screenFrame.size.width, 670.0) collectionViewLayout:collectionViewFlowLayout];
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.delegate = self;
@@ -42,9 +63,19 @@
     self.collectionView.pagingEnabled = YES;
     [self.collectionView registerClass:[PlanosCollectionViewCell class] forCellWithReuseIdentifier:@"CellIdentifier"];
     [self.view addSubview:self.collectionView];
+    
+    //Setup PageControl
+    self.pageControl = [[UIPageControl alloc] init];
+    self.pageControl.numberOfPages = [self.producto.arrayPlantas count];
+    [self.view addSubview:self.pageControl];
 }
 
-#pragma mark - UICollectionViewDataSource 
+-(void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    self.pageControl.frame = CGRectMake(self.view.bounds.size.width/2.0 - 150.0, self.collectionView.frame.origin.y + self.collectionView.frame.size.height, 300.0, 30.0);
+}
+
+#pragma mark - UICollectionViewDataSource
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return [self.producto.arrayPlantas count];
@@ -53,6 +84,7 @@
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     PlanosCollectionViewCell *cell = (PlanosCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"CellIdentifier" forIndexPath:indexPath];
     cell.delegate = self;
+    
     Planta *planta = self.producto.arrayPlantas[indexPath.item];
     NSArray *espacios3DArray = planta.arrayEspacios3D;
     Espacio3D *espacio3D1 = espacios3DArray[0];
@@ -113,7 +145,31 @@
     [self.navigationController pushViewController:glkitSpaceVC animated:YES];
 }
 
+-(void)goToBrujulaVCForFloorAtIndex:(NSUInteger)index {
+    Planta *planta = self.producto.arrayPlantas[index];
+    
+    BrujulaViewController *brujulaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Brujula"];
+    UIImageView *floorImageView = [[UIImageView alloc] initWithImage:[self imageFromPlantaAtIndex:index]];
+    brujulaVC.externalImageView = floorImageView;
+    brujulaVC.gradosExtra = [planta.norte floatValue];
+    [self.navigationController pushViewController:brujulaVC animated:YES];
+}
+
+#pragma mark - UIScrollViewDelegate
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGFloat pageWidth = self.collectionView.frame.size.width;
+    self.pageControl.currentPage = round(self.collectionView.contentOffset.x / pageWidth);
+    self.navigationItem.title = self.nombresPlantasArray[self.pageControl.currentPage];
+}
+
 #pragma mark - PlanosCollectionViewCellDelegate
+
+-(void)brujulaButtonWasTappedInCell:(PlanosCollectionViewCell *)cell {
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    NSLog(@"burjula button tapped in cell: %d", indexPath.item);
+    [self goToBrujulaVCForFloorAtIndex:indexPath.item];
+}
 
 -(void)espacio3DButtonWasSelectedWithTag:(NSUInteger)tag inCell:(PlanosCollectionViewCell *)cell {
     NSLog(@"recibí la info del delegate");

@@ -73,21 +73,6 @@
             </objects>
             <point key="canvasLocation" x="-6288" y="389"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="n4u-wW-fsb">
-            <objects>
-                <navigationController definesPresentationContext="YES" id="kKv-7Q-3Iv" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="SL9-JK-4gO">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="F6f-qO-dpR" kind="relationship" relationship="rootViewController" id="XMz-y2-gg2"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="X5B-DW-fDj" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-7497" y="1241"/>
-        </scene>
         <!--Planos De Planta View Controller-->
         <scene sceneID="BlV-i1-APq">
             <objects>
@@ -103,6 +88,37 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="m4r-ra-Hpq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-6353" y="1289"/>
+        </scene>
+        <!--Main Carousel View Controller-->
+        <scene sceneID="yGV-bD-gsy">
+            <objects>
+                <viewController storyboardIdentifier="MainCarousel" id="aIK-u8-u7B" customClass="MainCarouselViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="AL5-IW-9Wr">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="xNq-UE-JHh"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jya-S2-S1d" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-6353" y="2185"/>
+        </scene>
+        <!--Proyecto View Controller-->
+        <scene sceneID="rF7-eq-TRA">
+            <objects>
+                <viewController storyboardIdentifier="Proyecto" id="PWS-G4-bZJ" customClass="ProyectoViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="CDX-az-78q">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UlP-8G-l7W" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-6355" y="3109"/>
         </scene>
         <!--Espacio3DVC-->
         <scene sceneID="CPq-ux-IvE">

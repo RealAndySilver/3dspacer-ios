@@ -128,6 +128,10 @@
 		8BC64FF4191941DB0005548D /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC64FF3191941DB0005548D /* UIImage+Resize.m */; };
 		8BC64FF71919974F0005548D /* PlanosDePlantaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC64FF61919974F0005548D /* PlanosDePlantaViewController.m */; };
 		8BC64FFA19199AC50005548D /* PlanosCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC64FF919199AC50005548D /* PlanosCollectionViewCell.m */; };
+		A0E7A47A191C08E60067ED3D /* MainCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A479191C08E60067ED3D /* MainCarouselViewController.m */; };
+		A0E7A47F191C0B000067ED3D /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A47E191C0B000067ED3D /* iCarousel.m */; };
+		A0E7A482191C20550067ED3D /* ProyectoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A481191C20550067ED3D /* ProyectoViewController.m */; };
+		A0E7A485191C28210067ED3D /* ProyectoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A484191C28210067ED3D /* ProyectoCollectionViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -328,6 +332,14 @@
 		8BC64FF61919974F0005548D /* PlanosDePlantaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlanosDePlantaViewController.m; path = "New ViewControllers/PlanosDePlantaViewController.m"; sourceTree = "<group>"; };
 		8BC64FF819199AC50005548D /* PlanosCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlanosCollectionViewCell.h; path = "New ViewControllers/Custom Cells/PlanosCollectionViewCell.h"; sourceTree = "<group>"; };
 		8BC64FF919199AC50005548D /* PlanosCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlanosCollectionViewCell.m; path = "New ViewControllers/Custom Cells/PlanosCollectionViewCell.m"; sourceTree = "<group>"; };
+		A0E7A478191C08E60067ED3D /* MainCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainCarouselViewController.h; path = "New ViewControllers/MainCarouselViewController.h"; sourceTree = "<group>"; };
+		A0E7A479191C08E60067ED3D /* MainCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainCarouselViewController.m; path = "New ViewControllers/MainCarouselViewController.m"; sourceTree = "<group>"; };
+		A0E7A47D191C0B000067ED3D /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
+		A0E7A47E191C0B000067ED3D /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
+		A0E7A480191C20550067ED3D /* ProyectoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProyectoViewController.h; path = "New ViewControllers/ProyectoViewController.h"; sourceTree = "<group>"; };
+		A0E7A481191C20550067ED3D /* ProyectoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProyectoViewController.m; path = "New ViewControllers/ProyectoViewController.m"; sourceTree = "<group>"; };
+		A0E7A483191C28210067ED3D /* ProyectoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProyectoCollectionViewCell.h; path = "New ViewControllers/Custom Cells/ProyectoCollectionViewCell.h"; sourceTree = "<group>"; };
+		A0E7A484191C28210067ED3D /* ProyectoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProyectoCollectionViewCell.m; path = "New ViewControllers/Custom Cells/ProyectoCollectionViewCell.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -456,6 +468,7 @@
 		37E98A3F153E0D70001B9BFE /* Ekoobot 3D */ = {
 			isa = PBXGroup;
 			children = (
+				A0E7A47B191C0AF30067ED3D /* Libraries */,
 				7589F495167EBA43007CA511 /* Analytics */,
 				7507BA5515B6FA470072ED48 /* ServerCommunicator */,
 				37E98A84153E24A1001B9BFE /* AppDelegate */,
@@ -724,6 +737,10 @@
 				8B5C79101917FB2F003941AD /* OpenGL */,
 				8BC64FF51919974F0005548D /* PlanosDePlantaViewController.h */,
 				8BC64FF61919974F0005548D /* PlanosDePlantaViewController.m */,
+				A0E7A478191C08E60067ED3D /* MainCarouselViewController.h */,
+				A0E7A479191C08E60067ED3D /* MainCarouselViewController.m */,
+				A0E7A480191C20550067ED3D /* ProyectoViewController.h */,
+				A0E7A481191C20550067ED3D /* ProyectoViewController.m */,
 			);
 			name = "New ViewControllers";
 			sourceTree = "<group>";
@@ -746,6 +763,8 @@
 				8B5C792019183BC1003941AD /* More3DScenesCollectionViewCell.m */,
 				8BC64FF819199AC50005548D /* PlanosCollectionViewCell.h */,
 				8BC64FF919199AC50005548D /* PlanosCollectionViewCell.m */,
+				A0E7A483191C28210067ED3D /* ProyectoCollectionViewCell.h */,
+				A0E7A484191C28210067ED3D /* ProyectoCollectionViewCell.m */,
 			);
 			name = "Custom Cells";
 			sourceTree = "<group>";
@@ -759,6 +778,24 @@
 				8BC64FF3191941DB0005548D /* UIImage+Resize.m */,
 			);
 			name = Categories;
+			sourceTree = "<group>";
+		};
+		A0E7A47B191C0AF30067ED3D /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				A0E7A47C191C0B000067ED3D /* iCarousel */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
+		A0E7A47C191C0B000067ED3D /* iCarousel */ = {
+			isa = PBXGroup;
+			children = (
+				A0E7A47D191C0B000067ED3D /* iCarousel.h */,
+				A0E7A47E191C0B000067ED3D /* iCarousel.m */,
+			);
+			name = iCarousel;
+			path = Libraries/iCarousel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -922,6 +959,7 @@
 				7507BA5A15B6FAFB0072ED48 /* XMLReader.m in Sources */,
 				37E98A46153E0D70001B9BFE /* main.m in Sources */,
 				37E98A4A153E0D70001B9BFE /* AppDelegate.m in Sources */,
+				A0E7A482191C20550067ED3D /* ProyectoViewController.m in Sources */,
 				37E98A53153E0D71001B9BFE /* RootViewController.m in Sources */,
 				37E98A5A153E0D71001B9BFE /* ListadoDeProyectosVC.m in Sources */,
 				37E98A7E153E2164001B9BFE /* Usuario.m in Sources */,
@@ -930,6 +968,7 @@
 				37F553F61540ED8200BB6A90 /* PlantaUrbanaVC.m in Sources */,
 				3731934F158B840E00B49F1E /* CC3Foundation.m in Sources */,
 				37319350158B840E00B49F1E /* CC3GLMatrix.m in Sources */,
+				A0E7A47A191C08E60067ED3D /* MainCarouselViewController.m in Sources */,
 				37319351158B840E00B49F1E /* CC3Kazmath.c in Sources */,
 				37319352158B840E00B49F1E /* CC3Math.m in Sources */,
 				3731935A158B840E00B49F1E /* OpenGLView.m in Sources */,
@@ -938,6 +977,7 @@
 				3791F1FE159395570027D122 /* Espacio3DVC.m in Sources */,
 				37A49D5D15951E650055FAA5 /* ItemUrbanismo.m in Sources */,
 				3766D1151540F33B008B9437 /* TiposDePisosVC.m in Sources */,
+				A0E7A47F191C0B000067ED3D /* iCarousel.m in Sources */,
 				37A49D6015951E890055FAA5 /* TipoDePiso.m in Sources */,
 				8BC64FFA19199AC50005548D /* PlanosCollectionViewCell.m in Sources */,
 				37A49D6315951EA20055FAA5 /* Producto.m in Sources */,
@@ -966,6 +1006,7 @@
 				7587C9CF1632182E00C66896 /* Adjunto.m in Sources */,
 				7575CA4A1676E6D20078E354 /* ZoomViewController.m in Sources */,
 				8BC64FF71919974F0005548D /* PlanosDePlantaViewController.m in Sources */,
+				A0E7A485191C28210067ED3D /* ProyectoCollectionViewCell.m in Sources */,
 				7575CA581676EB5E0078E354 /* NavAnimations.m in Sources */,
 				7552410D1677D2C8004BC471 /* BrujulaViewController.m in Sources */,
 				755241121677E303004BC471 /* BrujulaView.m in Sources */,

@@ -111,7 +111,7 @@
 #pragma mark Accion de Boton
 
 - (void)irAlSiguienteViewConUsuario:(id)usuario yCopia:(id)copia{
-    NSLog(@"Aca toy");
+    /*NSLog(@"Aca toy");
     NavController *navController = (NavController *)self.navigationController;
     [navController setOrientationType:0];
     [navController forceLandscapeMode];
@@ -124,9 +124,9 @@
     lVC=[self.storyboard instantiateViewControllerWithIdentifier:@"ListadoDeProyectosVC"];
     lVC.usuarioActual=usuario;
     lVC.usuarioCopia=copia;
-    [self.navigationController pushViewController:lVC animated:NO];
+    [self.navigationController pushViewController:lVC animated:NO];*/
     
-    /*NavController *navController = (NavController *)self.navigationController;
+    NavController *navController = (NavController *)self.navigationController;
     [navController setOrientationType:0];
     [navController forceLandscapeMode];
     CATransition *transition = [CATransition animation];
@@ -136,7 +136,7 @@
     
     MainCarouselViewController *mainCarouselVC = [self.storyboard instantiateViewControllerWithIdentifier:@"MainCarousel"];
     mainCarouselVC.usuario = usuario;
-    [self.navigationController pushViewController:mainCarouselVC animated:NO];*/
+    [self.navigationController pushViewController:mainCarouselVC animated:NO];
 }
 
 - (void)alertSimpleConTitulo:(NSString*)elTitulo yMensaje:(NSString*)mensaje{

@@ -19,22 +19,31 @@
 #import "UpdateView.h"
 #import "SlideshowViewController.h"
 #import "SlideControlViewController.h"
+#import "PlantaUrbanaVC.h"
+#import "PlanosDePisoViewController.h"
 
 @interface ProyectoViewController () <UICollectionViewDataSource, UICollectionViewDelegate, ProyectoCollectionViewCellDelegate>
 @property (strong, nonatomic) UICollectionView *collectionView;
 @property (strong, nonatomic) ProgressView *progressView;
 @property (strong, nonatomic) UIWindow *secondWindow;
+@property (strong, nonatomic) UIButton *enterButton;
 @end
 
 @implementation ProyectoViewController
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    self.automaticallyAdjustsScrollViewInsets = NO;
     self.view.backgroundColor = [UIColor blackColor];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLabelWithTag) name:@"updates" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLabelWithTag:) name:@"updates" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertViewAppear) name:@"alert" object:nil];
-    [self saveProjectAttachedImages];
+    //[self performSelectorInBackground:@selector(saveProjectAttachedImages) withObject:nil];
     [self setupUI];
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = NO;
 }
 
 -(void)setupUI {
@@ -63,11 +72,12 @@
     [self.view addSubview:self.collectionView];
     
     //Enter button
-    UIButton *enterButton = [[UIButton alloc] initWithFrame:CGRectMake(830, 560,170, 170)];
-    [enterButton setBackgroundImage:[UIImage imageNamed:NSLocalizedString(@"BotonEntrar", nil)] forState:UIControlStateNormal];
-    [enterButton addTarget:self action:@selector(showLoadingHUD) forControlEvents:UIControlEventTouchUpInside];
+    self.enterButton = [[UIButton alloc] initWithFrame:CGRectMake(830, 560,170, 170)];
+    [self.enterButton setBackgroundImage:[UIImage imageNamed:NSLocalizedString(@"BotonEntrar", nil)] forState:UIControlStateNormal];
+    [self.enterButton addTarget:self action:@selector(showLoadingHUD) forControlEvents:UIControlEventTouchUpInside];
+    self.enterButton.alpha = 0.0;
     if ([self.proyecto.data isEqualToString:@"1"]) {
-        [self.view addSubview:enterButton];
+        [self.view addSubview:self.enterButton];
     }
     
     //Project Logo ImageView
@@ -107,7 +117,7 @@
     [self.view addSubview:sendInfoButton];
     
     //Info Button
-    //[self mostrarInfoButtonConTag:1];
+    [self mostrarInfoButtonConTag:self.projectNumber + 2000];
     
     //Slideshow Button
     UIButton *slideshowButton = [[UIButton alloc] initWithFrame:CGRectMake(53, 480, 40, 40)];
@@ -150,9 +160,7 @@
             //updateBox.updateText.textColor=[UIColor orangeColor];
             if ([self.usuario.tipo isEqualToString:@"sellers"]) {
                 // Para poner botón de entrar para vendedores con el proyecto desactualizado //
-                UIButton *lebuttons = (UIButton *)[self.view viewWithTag:tag+1000];
-                NSLog(@"Button punto tag %i",lebuttons.tag);
-                lebuttons.alpha=1;
+                self.enterButton.alpha = 1.0;
             }
         }
         else{
@@ -163,9 +171,7 @@
             updateBox.updateText.textColor=[UIColor whiteColor];
             updateBox.container.alpha=0;
             updateBox.infoButton.selected=NO;
-            UIButton *lebuttons = (UIButton *)[self.view viewWithTag:tag+1000];
-            NSLog(@"Button punto tag %i",lebuttons.tag);
-            lebuttons.alpha=1;
+            self.enterButton.alpha = 1.0;
         }
     }
     else{
@@ -181,13 +187,17 @@
 #pragma mark - UICollectionViewDataSource
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return [self.proyecto.arrayAdjuntos count];
+    return [self.proyecto.arrayAdjuntos count] + 1; //Add 1 because of the main project image
 }
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     ProyectoCollectionViewCell *cell = (ProyectoCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"CellIdentifier" forIndexPath:indexPath];
     cell.delegate = self;
-    cell.imageView.image = [self projectAttachedImageAtIndex:indexPath.item];
+    if (indexPath.item == 0) {
+        cell.imageView.image = self.mainImage;
+    } else {
+        cell.imageView.image = [self projectAttachedImageAtIndex:indexPath.item - 1];
+    }
     return cell;
 }
 
@@ -249,9 +259,11 @@
 }
 
 -(void)updateProjectInfo {
+    self.navigationController.navigationBarHidden = YES;
+    
     NSMutableDictionary *dic=[[NSMutableDictionary alloc]init];
     [dic setObject:self.proyecto forKey:@"Project"];
-    [dic setObject:@1 forKey:@"Tag"];
+    [dic setObject:@(2000 + self.projectNumber) forKey:@"Tag"];
     [dic setObject:self.progressView forKey:@"Sender"];
     [dic setObject:self.usuario forKey:@"Usuario"];
     [self performSelectorInBackground:@selector(downloadProject:) withObject:dic];
@@ -277,13 +289,52 @@
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     
     ItemUrbanismo *itemUrbanismo = self.proyecto.arrayItemsUrbanismo[0];
-    Grupo *grupo = itemUrbanismo.arrayGrupos[0];
-    TipoDePiso *tipoDePiso = grupo.arrayTiposDePiso[0];
-    Producto *producto = tipoDePiso.arrayProductos[0];
     
-    PlanosDePlantaViewController *planosDePlanta = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePlanta"];
-    planosDePlanta.producto = producto;
-    [self.navigationController pushViewController:planosDePlanta animated:YES];
+    if ([self.proyecto.data isEqualToString:@"0"]) return;
+    
+    if (itemUrbanismo.existe==1) {
+        [self irAPlantaUrbanaVC];
+    }
+    else{
+        Grupo *grupo = itemUrbanismo.arrayGrupos[0];
+        if (grupo.existe == 1) {
+            TipoDePiso *tipoDePiso = grupo.arrayTiposDePiso[0];
+            if (tipoDePiso.existe == 1) {
+                [self irATiposDePisosVCConGrupo:grupo];
+            }
+            else{
+                Producto *producto = tipoDePiso.arrayProductos[0];
+                [self irATiposDePlantasVCConProducto:producto];
+            }
+        }
+        else{
+            TipoDePiso *tipoDePiso = grupo.arrayTiposDePiso[0];
+            Producto *producto = tipoDePiso.arrayProductos[0];
+            [self irATiposDePlantasVCConProducto:producto];
+        }
+    }
+}
+
+-(void)irAPlantaUrbanaVC {
+    PlantaUrbanaVC *plantaUrbanaVC = [[PlantaUrbanaVC alloc]init];
+    plantaUrbanaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlantaUrbanaVC"];
+    plantaUrbanaVC.proyecto = self.proyecto;
+    [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
+    [self.navigationController pushViewController:plantaUrbanaVC animated:NO];
+}
+
+-(void)irATiposDePisosVCConGrupo:(Grupo *)grupo {
+    PlanosDePisoViewController *planosDePiso = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePiso"];
+    planosDePiso.grupo = grupo;
+    [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
+    [self.navigationController pushViewController:planosDePiso animated:YES];
+}
+
+-(void)irATiposDePlantasVCConProducto:(Producto *)producto {
+    PlanosDePlantaViewController *planosDePlantaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePlanta"];
+    planosDePlantaVC.producto = producto;
+    [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
+    [self.navigationController pushViewController:planosDePlantaVC animated:YES];
 }
 
 #pragma mark - Custom Methods
@@ -361,10 +412,10 @@
             NSURL *urlImagen=[NSURL URLWithString:adjunto.imagen];
             NSData *data=[NSData dataWithContentsOfURL:urlImagen];
             UIImage *image = [UIImage imageWithData:data];
-            NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0f)];//1.0f = 100% quality
+            /*NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0f)];//1.0f = 100% quality
             if (image) {
                 [data2 writeToFile:jpegFilePath atomically:YES];
-            }
+            }*/
             return image;
 
         } else {
@@ -388,6 +439,12 @@
     }
 }
 
+-(NSString *)pathForMainImage {
+    NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+    NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cover%@%@.jpeg",docDir,self.proyecto.idProyecto,[IAmCoder encodeURL:self.proyecto.imagen]];
+    return jpegFilePath;
+}
+
 #pragma mark - ProyectoCollectionViewCellDelegate
 
 -(void)zoomButtonTappedInCell:(ProyectoCollectionViewCell *)cell {
@@ -395,13 +452,43 @@
     
     ZoomViewController *zoomVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Zoom"];
     [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
-    zoomVC.path = [self pathForProjectImageAtIndex:indexPath.item];
+    if (indexPath.item == 0) {
+        //Get Path for main image
+        zoomVC.path = [self pathForMainImage];
+    } else {
+        zoomVC.path = [self pathForProjectImageAtIndex:indexPath.item - 1];
+    }
     [self.navigationController pushViewController:zoomVC animated:NO];
 }
 
 #pragma mark - Notification Handlers
 
--(void)updateLabelWithTag {
+-(void)updateLabelWithTag:(NSNotification *)notification {
+    self.navigationController.navigationBarHidden = NO;
+    
+    NSDictionary *dictionary=notification.object;
+    NSNumber *number=[dictionary objectForKey:@"tag"];
+    NSString *ID=[dictionary objectForKey:@"id"];
+    
+    FileSaver *file=[[FileSaver alloc]init];
+    NSString *composedTag=[NSString stringWithFormat:@"%@%@",number,ID];
+    
+    [file getUpdateFileWithString:composedTag];
+    if ([file getUpdateFileWithString:composedTag]) {
+        UpdateView *updateBox = (UpdateView *)[self.view viewWithTag:[number intValue]+250];
+        NSLog(@"number li tag----> %i %@",updateBox.tag,updateBox.updateText);
+        NSString *actualizadoEl=NSLocalizedString(@"ActualizadoEl", nil);
+        updateBox.updateText.text=[NSString stringWithFormat:@"%@ %@",actualizadoEl,[file getUpdateFileWithString:composedTag]];
+        updateBox.container.alpha=0;
+        updateBox.titleText.textColor=[UIColor whiteColor];
+        self.enterButton.alpha=1;
+        //NSLog(@"Updated %@ %@",number,[file getUpdateFile:[number intValue]]);
+        
+        //[self performSelectorOnMainThread:@selector(irAlSiguienteViewController:) withObject:button waitUntilDone:YES];
+        updateBox.titleText.text=[NSString stringWithFormat:NSLocalizedString(@"UltimaVersion", nil)];
+        updateBox.titleText.textColor=[UIColor greenColor];
+    }
+    
     [self goToPlanosVC];
 }
 

@@ -9,6 +9,7 @@
 #import "PlantaUrbanaVC.h"
 #import "GLKitSpaceViewController.h"
 #import "PlanosDePisoViewController.h"
+#import "PlanosDePlantaViewController.h"
 
 @interface PlantaUrbanaVC ()
 
@@ -337,22 +338,32 @@
                 [self.navigationController pushViewController:planosDePisoVC animated:YES];
             }
             else{
-                Producto *producto=[tipoDePiso.arrayProductos objectAtIndex:0];
+                /*Producto *producto=[tipoDePiso.arrayProductos objectAtIndex:0];
                 TiposDePlantasVC *tpVC=[[TiposDePlantasVC alloc]init];
                 tpVC=[self.storyboard instantiateViewControllerWithIdentifier:@"TiposDePlantasVC"];
                 tpVC.producto=producto;
-                [self.navigationController pushViewController:tpVC animated:YES];
+                [self.navigationController pushViewController:tpVC animated:YES];*/
+                
+                Producto *producto = tipoDePiso.arrayProductos[0];
+                PlanosDePlantaViewController *planosDePlantaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePlanta"];
+                planosDePlantaVC.producto = producto;
+                [self.navigationController pushViewController:planosDePlantaVC animated:YES];
             }
             
         }
         else{
             TipoDePiso *tipoDePiso=[grupo.arrayTiposDePiso objectAtIndex:0];
             Producto *producto=[tipoDePiso.arrayProductos objectAtIndex:0];
-            TiposDePlantasVC *tpVC=[[TiposDePlantasVC alloc]init];
+            //TiposDePlantasVC *tpVC=[[TiposDePlantasVC alloc]init];
+            
             if (producto.existe) {
-                tpVC=[self.storyboard instantiateViewControllerWithIdentifier:@"TiposDePlantasVC"];
+                /*tpVC=[self.storyboard instantiateViewControllerWithIdentifier:@"TiposDePlantasVC"];
                 tpVC.producto=producto;
-                [self.navigationController pushViewController:tpVC animated:YES];
+                [self.navigationController pushViewController:tpVC animated:YES];*/
+                
+                PlanosDePlantaViewController *planosDePlantaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePlanta"];
+                planosDePlantaVC.producto = producto;
+                [self.navigationController pushViewController:planosDePlantaVC animated:YES];
             }
             else {
                 /*Espacio3DVC *e3DVC=[[Espacio3DVC alloc]init];

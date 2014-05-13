@@ -17,9 +17,6 @@
 @interface PlanosCollectionViewCell : UICollectionViewCell
 @property (strong, nonatomic) UIImageView *planoImageView;
 @property (strong, nonatomic) UILabel *areaTotalLabel;
-//@property (strong, nonatomic) UIButton *espacio3D1;
-//@property (strong, nonatomic) NSArray *espacios3DArray;
-//@property (strong, nonatomic) UILabel *espacio3D1Label;
 @property (strong, nonatomic) id <PlanoCollectionViewCellDelegate> delegate;
 
 -(void)setEspacios3DButtonsFromArray:(NSArray *)espacios3DArray;

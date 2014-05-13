@@ -7,7 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+@class PisoCollectionViewCell;
+
+@protocol PisoCollectionViewCellDelegate <NSObject>
+-(void)pinButtonWasSelectedWithIndex:(NSUInteger)index inCell:(PisoCollectionViewCell *)cell;
+-(void)brujulaButtonTappedInCell:(PisoCollectionViewCell *)cell;
+@end
 
 @interface PisoCollectionViewCell : UICollectionViewCell
 @property (strong, nonatomic) UIImageView *pisoImageView;
+@property (strong, nonatomic) id <PisoCollectionViewCellDelegate> delegate;
+
+-(void)setPinsButtonsFromArray:(NSArray *)pinsArray;
+-(void)removeAllPinsFromArray:(NSArray *)pinsArray;
 @end

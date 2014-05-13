@@ -154,7 +154,8 @@
     UIImageView *floorImageView = [[UIImageView alloc] initWithImage:[self imageFromPlantaAtIndex:index]];
     brujulaVC.externalImageView = floorImageView;
     brujulaVC.gradosExtra = [planta.norte floatValue];
-    [self.navigationController pushViewController:brujulaVC animated:YES];
+    [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
+    [self.navigationController pushViewController:brujulaVC animated:NO];
 }
 
 #pragma mark - UIScrollViewDelegate

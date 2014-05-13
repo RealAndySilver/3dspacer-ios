@@ -12,8 +12,9 @@
 #import <CoreLocation/CoreLocation.h>
 #import "UIImage+Resize.h"
 #import "MBProgressHud.h"
+#import "AcabadosView.h"
 
-@interface GLKitSpaceViewController () <More3DScenesViewDelegate, UIGestureRecognizerDelegate, CLLocationManagerDelegate>
+@interface GLKitSpaceViewController () <More3DScenesViewDelegate, UIGestureRecognizerDelegate, CLLocationManagerDelegate, AcabadosViewDelegate>
 @property (strong, nonatomic) GLKTextureInfo *cubemapTexture;
 @property (strong, nonatomic) GLKSkyboxEffect *skyboxEffect;
 @property (strong, nonatomic) UIImageView *brujula;
@@ -21,6 +22,7 @@
 @property (strong, nonatomic) UIImageView *compassOn;
 @property (strong, nonatomic) UIBarButtonItem *interactionTypeBarButton;
 @property (strong, nonatomic) More3DScenesView *more3DScenesView;
+@property (strong, nonatomic) AcabadosView *acabadosView;
 @property (strong, nonatomic) UIPanGestureRecognizer *panGesture;
 @property (strong, nonatomic) UIView *opacityView;
 @end
@@ -86,6 +88,11 @@
     self.more3DScenesView.titleLabel.text = ((Espacio3D *)self.arregloDeEspacios3D[self.espacioSeleccionado]).nombre;
     [self.view addSubview:self.more3DScenesView];
     [self.view bringSubviewToFront:self.more3DScenesView];
+    
+    //Add the 'Acabados' view
+    self.acabadosView = [[AcabadosView alloc] initWithFrame:CGRectMake(-180.0, 120.0, 150.0, 390.0)];
+    self.acabadosView.delegate = self;
+    [self.view addSubview:self.acabadosView];
 }
 
 -(void)createGestureRecognizers {
@@ -178,6 +185,7 @@
                          animations:^(){
                              [self.navigationController setNavigationBarHidden:NO animated:YES];
                              self.more3DScenesView.transform = CGAffineTransformMakeTranslation(0.0, -160.0);
+                             self.acabadosView.transform = CGAffineTransformMakeTranslation(178.0, 0.0);
                          } completion:^(BOOL finished){}];
         viewsAreVisible = YES;
     } else {
@@ -187,6 +195,7 @@
                          animations:^(){
                              [self.navigationController setNavigationBarHidden:YES animated:YES];
                              self.more3DScenesView.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+                             self.acabadosView.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
                          } completion:^(BOOL finished){}];
         viewsAreVisible = NO;
     }
@@ -227,9 +236,9 @@
         CGPoint panLocation = [recognizer locationInView:self.view];
         CGPoint panDelta = CGPointMake(panLocation.x - panPrevious.x, panLocation.y - panPrevious.y);
         if ((fabs(panDelta.y)) >= (fabs(panDelta.x))) {
-            rotXAxis += panDelta.y*0.01;
+            rotXAxis -= panDelta.y*0.01;
         } else {
-            rotZAxis += panDelta.x*0.01;
+            rotZAxis -= panDelta.x*0.01;
             [self rotateCompassWithRadians:rotZAxis];
         }
         panPrevious = panLocation;
@@ -372,6 +381,12 @@
                      }];
 }
 
+#pragma mark - AcabadosViewDelegate
+
+-(void)AcabadoWasSelectedAtIndex:(NSUInteger)index {
+    NSLog(@"Seleccioné el acabado en la posicion %d", index);
+}
+
 #pragma mark - More3DScenesViewDelegate
 
 -(void)sceneWasSelectedAtIndex:(NSUInteger)index inView:(More3DScenesView *)more3DScenesView {
@@ -389,8 +404,12 @@
 -(void)saveImage:(UIImage *)image withName:(NSString *)name identifier:(NSString *)identifier format:(NSString *)format{
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cara%@%@.%@", docDir, name, identifier, format];
-    NSData *imageData = [NSData dataWithData:UIImagePNGRepresentation(image)];
-    [imageData writeToFile:jpegFilePath atomically:YES];
+    
+    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
+    if (!fileExist) {
+        NSData *imageData = [NSData dataWithData:UIImagePNGRepresentation(image)];
+        [imageData writeToFile:jpegFilePath atomically:YES];
+    }
 }
 
 -(NSString*)pathForJPEGResourceWithName:(NSString*)name ID:(NSString*)ID{

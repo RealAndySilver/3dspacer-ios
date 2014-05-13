@@ -13,4 +13,6 @@
 @interface ProyectoViewController : UIViewController
 @property (strong, nonatomic) Proyecto *proyecto;
 @property (strong, nonatomic) Usuario *usuario;
+@property (strong, nonatomic) UIImage *mainImage;
+@property (assign, nonatomic) NSUInteger projectNumber;
 @end

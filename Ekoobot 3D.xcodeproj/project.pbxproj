@@ -119,11 +119,22 @@
 		75EE5592183D198E00C52654 /* icon152.png in Resources */ = {isa = PBXBuildFile; fileRef = 75EE5590183D198E00C52654 /* icon152.png */; };
 		75EE5593183D198E00C52654 /* icon76.png in Resources */ = {isa = PBXBuildFile; fileRef = 75EE5591183D198E00C52654 /* icon76.png */; };
 		75FF14501652EA2700C39705 /* compassOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 75FF144F1652EA2700C39705 /* compassOn.png */; };
+		8B0621E819217B670017DD20 /* CarouselBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B0621E619217B670017DD20 /* CarouselBackground.png */; };
+		8B0621E919217B670017DD20 /* CarouselBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B0621E719217B670017DD20 /* CarouselBackground@2x.png */; };
 		8B5C79131917FB81003941AD /* GLKitSpaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C79121917FB81003941AD /* GLKitSpaceViewController.m */; };
 		8B5C79151917FBB8003941AD /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B5C79141917FBB8003941AD /* GLKit.framework */; };
 		8B5C7919191804AB003941AD /* Skybox1Left.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B5C7918191804AB003941AD /* Skybox1Left.png */; };
 		8B5C791C19183231003941AD /* More3DScenesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C791B19183231003941AD /* More3DScenesView.m */; };
 		8B5C792119183BC1003941AD /* More3DScenesCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C792019183BC1003941AD /* More3DScenesCollectionViewCell.m */; };
+		8B9C828119227754008B3055 /* AcabadosView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C828019227754008B3055 /* AcabadosView.m */; };
+		8B9C828419227DC0008B3055 /* AcabadosCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C828319227DC0008B3055 /* AcabadosCollectionViewCell.m */; };
+		8B9C828619228288008B3055 /* Wood.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8B9C828519228288008B3055 /* Wood.jpg */; };
+		8B9C828C19228767008B3055 /* Add.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B9C828819228767008B3055 /* Add.png */; };
+		8B9C828D19228767008B3055 /* Delete.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B9C828919228767008B3055 /* Delete.png */; };
+		8B9C828E19228767008B3055 /* Message.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B9C828A19228767008B3055 /* Message.png */; };
+		8B9C828F19228767008B3055 /* Slideshow.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B9C828B19228767008B3055 /* Slideshow.png */; };
+		8B9C82921922B0EE008B3055 /* ProjectsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C82911922B0EE008B3055 /* ProjectsListViewController.m */; };
+		8B9C82941922CB4E008B3055 /* Download.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B9C82931922CB4E008B3055 /* Download.png */; };
 		8BC64FF119191BD40005548D /* CMMotionManager+Shared.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC64FF019191BD40005548D /* CMMotionManager+Shared.m */; };
 		8BC64FF4191941DB0005548D /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC64FF3191941DB0005548D /* UIImage+Resize.m */; };
 		8BC64FF71919974F0005548D /* PlanosDePlantaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC64FF61919974F0005548D /* PlanosDePlantaViewController.m */; };
@@ -318,6 +329,8 @@
 		75EE5590183D198E00C52654 /* icon152.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon152.png; sourceTree = "<group>"; };
 		75EE5591183D198E00C52654 /* icon76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon76.png; sourceTree = "<group>"; };
 		75FF144F1652EA2700C39705 /* compassOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compassOn.png; sourceTree = "<group>"; };
+		8B0621E619217B670017DD20 /* CarouselBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarouselBackground.png; path = Resources/iPad/CarouselBackground.png; sourceTree = "<group>"; };
+		8B0621E719217B670017DD20 /* CarouselBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "CarouselBackground@2x.png"; path = "Resources/iPad/CarouselBackground@2x.png"; sourceTree = "<group>"; };
 		8B5C79111917FB81003941AD /* GLKitSpaceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLKitSpaceViewController.h; path = "New ViewControllers/GLKitSpaceViewController.h"; sourceTree = "<group>"; };
 		8B5C79121917FB81003941AD /* GLKitSpaceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GLKitSpaceViewController.m; path = "New ViewControllers/GLKitSpaceViewController.m"; sourceTree = "<group>"; };
 		8B5C79141917FBB8003941AD /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
@@ -326,6 +339,18 @@
 		8B5C791B19183231003941AD /* More3DScenesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = More3DScenesView.m; path = "New ViewControllers/Views/More3DScenesView.m"; sourceTree = "<group>"; };
 		8B5C791F19183BC1003941AD /* More3DScenesCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = More3DScenesCollectionViewCell.h; path = "New ViewControllers/Custom Cells/More3DScenesCollectionViewCell.h"; sourceTree = "<group>"; };
 		8B5C792019183BC1003941AD /* More3DScenesCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = More3DScenesCollectionViewCell.m; path = "New ViewControllers/Custom Cells/More3DScenesCollectionViewCell.m"; sourceTree = "<group>"; };
+		8B9C827F19227754008B3055 /* AcabadosView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AcabadosView.h; path = "New ViewControllers/Views/AcabadosView.h"; sourceTree = "<group>"; };
+		8B9C828019227754008B3055 /* AcabadosView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AcabadosView.m; path = "New ViewControllers/Views/AcabadosView.m"; sourceTree = "<group>"; };
+		8B9C828219227DC0008B3055 /* AcabadosCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AcabadosCollectionViewCell.h; path = "New ViewControllers/Custom Cells/AcabadosCollectionViewCell.h"; sourceTree = "<group>"; };
+		8B9C828319227DC0008B3055 /* AcabadosCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AcabadosCollectionViewCell.m; path = "New ViewControllers/Custom Cells/AcabadosCollectionViewCell.m"; sourceTree = "<group>"; };
+		8B9C828519228288008B3055 /* Wood.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = Wood.jpg; path = Resources/TestImages/Wood.jpg; sourceTree = "<group>"; };
+		8B9C828819228767008B3055 /* Add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Add.png; sourceTree = "<group>"; };
+		8B9C828919228767008B3055 /* Delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Delete.png; sourceTree = "<group>"; };
+		8B9C828A19228767008B3055 /* Message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Message.png; sourceTree = "<group>"; };
+		8B9C828B19228767008B3055 /* Slideshow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Slideshow.png; sourceTree = "<group>"; };
+		8B9C82901922B0EE008B3055 /* ProjectsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProjectsListViewController.h; path = "New ViewControllers/ProjectsListViewController.h"; sourceTree = "<group>"; };
+		8B9C82911922B0EE008B3055 /* ProjectsListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProjectsListViewController.m; path = "New ViewControllers/ProjectsListViewController.m"; sourceTree = "<group>"; };
+		8B9C82931922CB4E008B3055 /* Download.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Download.png; sourceTree = "<group>"; };
 		8BC64FEF19191BD40005548D /* CMMotionManager+Shared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CMMotionManager+Shared.h"; path = "New ViewControllers/Categories/CMMotionManager+Shared.h"; sourceTree = "<group>"; };
 		8BC64FF019191BD40005548D /* CMMotionManager+Shared.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CMMotionManager+Shared.m"; path = "New ViewControllers/Categories/CMMotionManager+Shared.m"; sourceTree = "<group>"; };
 		8BC64FF2191941DB0005548D /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Resize.h"; path = "New ViewControllers/Categories/UIImage+Resize.h"; sourceTree = "<group>"; };
@@ -627,6 +652,7 @@
 		37F1EBF71541D65D00426C48 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8B0621E519217B4F0017DD20 /* New Resources */,
 				8B5C7918191804AB003941AD /* Skybox1Left.png */,
 				759A938417DE58EB00BAA4E0 /* ayuda.png */,
 				7586793B17E003FF001E6C82 /* ayuda_off.png */,
@@ -737,6 +763,17 @@
 			name = Analytics;
 			sourceTree = "<group>";
 		};
+		8B0621E519217B4F0017DD20 /* New Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8B9C828719228767008B3055 /* Icons */,
+				8B9C828519228288008B3055 /* Wood.jpg */,
+				8B0621E619217B670017DD20 /* CarouselBackground.png */,
+				8B0621E719217B670017DD20 /* CarouselBackground@2x.png */,
+			);
+			name = "New Resources";
+			sourceTree = "<group>";
+		};
 		8B5C790F1917FB21003941AD /* New ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -749,6 +786,8 @@
 				A0E7A479191C08E60067ED3D /* MainCarouselViewController.m */,
 				A0E7A480191C20550067ED3D /* ProyectoViewController.h */,
 				A0E7A481191C20550067ED3D /* ProyectoViewController.m */,
+				8B9C82901922B0EE008B3055 /* ProjectsListViewController.h */,
+				8B9C82911922B0EE008B3055 /* ProjectsListViewController.m */,
 			);
 			name = "New ViewControllers";
 			sourceTree = "<group>";
@@ -760,6 +799,8 @@
 				8B5C79121917FB81003941AD /* GLKitSpaceViewController.m */,
 				8B5C791A19183231003941AD /* More3DScenesView.h */,
 				8B5C791B19183231003941AD /* More3DScenesView.m */,
+				8B9C827F19227754008B3055 /* AcabadosView.h */,
+				8B9C828019227754008B3055 /* AcabadosView.m */,
 			);
 			name = OpenGL;
 			sourceTree = "<group>";
@@ -775,8 +816,23 @@
 				8BC64FF919199AC50005548D /* PlanosCollectionViewCell.m */,
 				A0E7A483191C28210067ED3D /* ProyectoCollectionViewCell.h */,
 				A0E7A484191C28210067ED3D /* ProyectoCollectionViewCell.m */,
+				8B9C828219227DC0008B3055 /* AcabadosCollectionViewCell.h */,
+				8B9C828319227DC0008B3055 /* AcabadosCollectionViewCell.m */,
 			);
 			name = "Custom Cells";
+			sourceTree = "<group>";
+		};
+		8B9C828719228767008B3055 /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				8B9C82931922CB4E008B3055 /* Download.png */,
+				8B9C828819228767008B3055 /* Add.png */,
+				8B9C828919228767008B3055 /* Delete.png */,
+				8B9C828A19228767008B3055 /* Message.png */,
+				8B9C828B19228767008B3055 /* Slideshow.png */,
+			);
+			name = Icons;
+			path = Resources/iPad/Icons;
 			sourceTree = "<group>";
 		};
 		8BC64FEE19191BA60005548D /* Categories */ = {
@@ -886,9 +942,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				37E98A44153E0D70001B9BFE /* InfoPlist.strings in Resources */,
+				8B9C82941922CB4E008B3055 /* Download.png in Resources */,
 				37E98A4D153E0D70001B9BFE /* MainStoryboard_iPhone.storyboard in Resources */,
 				37E98A50153E0D71001B9BFE /* MainStoryboard_iPad.storyboard in Resources */,
 				3731935B158B840E00B49F1E /* SimpleFragment.glsl in Resources */,
+				8B0621E919217B670017DD20 /* CarouselBackground@2x.png in Resources */,
 				3731935C158B840E00B49F1E /* SimpleVertex.glsl in Resources */,
 				7574E81E16029F7300974D7B /* downloading.jpg in Resources */,
 				7574E8211602A12100974D7B /* downloadBtn.png in Resources */,
@@ -908,27 +966,33 @@
 				7595184516360B8900336C0A /* Default-Landscape@2x~ipad.png in Resources */,
 				7595184916360BCA00336C0A /* Default-Portrait@2x~ipad.png in Resources */,
 				7595184B16360BE700336C0A /* Default-Landscape~ipad.png in Resources */,
+				8B9C828619228288008B3055 /* Wood.jpg in Resources */,
 				7595184D16360C0300336C0A /* Default-Portrait~ipad.png in Resources */,
 				75EE5592183D198E00C52654 /* icon152.png in Resources */,
 				755233A0163ACB4400D541DB /* recomendar.png in Resources */,
 				755233A5163AF21800D541DB /* enviar.png in Resources */,
 				755233AD163B3A8F00D541DB /* cancel.png in Resources */,
 				755233AF163B446A00D541DB /* brujula.png in Resources */,
+				8B9C828E19228767008B3055 /* Message.png in Resources */,
 				75879A2B1648523A00020A2B /* Localizable.strings in Resources */,
 				75E995BE164AABFE00C7452E /* botonEntrar-en.png in Resources */,
 				75E995C1164AAC6E00C7452E /* cancel-en.png in Resources */,
 				75E995C2164AAC6E00C7452E /* send-en.png in Resources */,
 				75FF14501652EA2700C39705 /* compassOn.png in Resources */,
 				755F9F0E1653090C0002266B /* icon@2x.png in Resources */,
+				8B0621E819217B670017DD20 /* CarouselBackground.png in Resources */,
+				8B9C828F19228767008B3055 /* Slideshow.png in Resources */,
 				755F9F101653091B0002266B /* icon.png in Resources */,
 				8B5C7919191804AB003941AD /* Skybox1Left.png in Resources */,
 				75524125167937BF004BC471 /* compassIcon.png in Resources */,
+				8B9C828C19228767008B3055 /* Add.png in Resources */,
 				755241271679388E004BC471 /* zoom1.png in Resources */,
 				7534B20B1682595B0005F7BC /* analytics.sqlite in Resources */,
 				75A1D30416BC53270013B48A /* zoom2.png in Resources */,
 				75DB354516BCC138007D00BB /* zoom3.png in Resources */,
 				759A937D17DE537E00BAA4E0 /* video.png in Resources */,
 				759A938117DE55C200BAA4E0 /* zoom.png in Resources */,
+				8B9C828D19228767008B3055 /* Delete.png in Resources */,
 				759A938317DE56D100BAA4E0 /* mensaje.png in Resources */,
 				759A938517DE58EB00BAA4E0 /* ayuda.png in Resources */,
 			);
@@ -979,6 +1043,7 @@
 				3731934F158B840E00B49F1E /* CC3Foundation.m in Sources */,
 				37319350158B840E00B49F1E /* CC3GLMatrix.m in Sources */,
 				A0E7A47A191C08E60067ED3D /* MainCarouselViewController.m in Sources */,
+				8B9C828419227DC0008B3055 /* AcabadosCollectionViewCell.m in Sources */,
 				37319351158B840E00B49F1E /* CC3Kazmath.c in Sources */,
 				37319352158B840E00B49F1E /* CC3Math.m in Sources */,
 				3731935A158B840E00B49F1E /* OpenGLView.m in Sources */,
@@ -992,6 +1057,7 @@
 				8BC64FFA19199AC50005548D /* PlanosCollectionViewCell.m in Sources */,
 				37A49D6315951EA20055FAA5 /* Producto.m in Sources */,
 				37A49D6615951EB70055FAA5 /* Planta.m in Sources */,
+				8B9C828119227754008B3055 /* AcabadosView.m in Sources */,
 				37A49D6915951ED50055FAA5 /* Espacio3D.m in Sources */,
 				37A49D6F159528820055FAA5 /* Variacion.m in Sources */,
 				37A49D72159528C40055FAA5 /* Caras.m in Sources */,
@@ -1011,6 +1077,7 @@
 				75C8E937162387280094A609 /* UpdateView.m in Sources */,
 				751045561627726B00BA12C6 /* VideoViewController.m in Sources */,
 				75550747162F293A00479537 /* SendInfoViewController.m in Sources */,
+				8B9C82921922B0EE008B3055 /* ProjectsListViewController.m in Sources */,
 				8BC64FF4191941DB0005548D /* UIImage+Resize.m in Sources */,
 				7555074A162F2B6A00479537 /* SendInfoButton.m in Sources */,
 				75550750162F74B700479537 /* TermsViewController.m in Sources */,

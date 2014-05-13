@@ -22,8 +22,8 @@
     for (int i = 0; i < 10; i++) {
         if ([self.contentView viewWithTag:i + 1]) {
             //Remove the pin button and it's label
-            [[self.contentView viewWithTag:i + 1] removeFromSuperview];
-            [[self.contentView viewWithTag:i + 10] removeFromSuperview];
+            [[self.planoImageView viewWithTag:i + 1] removeFromSuperview];
+            [[self.planoImageView viewWithTag:i + 10] removeFromSuperview];
         }
     }
 }
@@ -38,7 +38,7 @@
             [pinButton setImage:[UIImage imageNamed:@"pin.png"] forState:UIControlStateNormal];
             [pinButton addTarget:self action:@selector(espacio3DButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             pinButton.tag = i + 1;
-            [self.contentView addSubview:pinButton];
+            [self.planoImageView addSubview:pinButton];
             
             //Button Label
             UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(pinButton.frame.origin.x + pinButton.frame.size.width, pinButton.frame.origin.y, 100.0, 30.0)];
@@ -46,7 +46,7 @@
             nameLabel.tag = i + 10;
             nameLabel.textColor = [UIColor whiteColor];
             nameLabel.font = [UIFont boldSystemFontOfSize:13.0];
-            [self.contentView addSubview:nameLabel];
+            [self.planoImageView addSubview:nameLabel];
         }
     }
 }
@@ -75,19 +75,6 @@
         [self.brujulaButton addTarget:self action:@selector(brujulaButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         [self.planoImageView addSubview:self.brujulaButton];
         
-        //espacio 3d 1
-        /*self.espacio3D1 = [[UIButton alloc] init];
-        [self.espacio3D1 setBackgroundImage:[UIImage imageNamed:@"pin.png"] forState:UIControlStateNormal];
-        self.espacio3D1.tag = 0;
-        [self.espacio3D1 addTarget:self action:@selector(espacio3DButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self.planoImageView addSubview:self.espacio3D1];
-        
-        //espacio3d1 label
-        self.espacio3D1Label = [[UILabel alloc] init];
-        self.espacio3D1Label.textColor = [UIColor whiteColor];
-        self.espacio3D1Label.font = [UIFont boldSystemFontOfSize:13.0];
-        [self.planoImageView addSubview:self.espacio3D1Label];*/
-        
         //Area total label
         self.areaTotalLabel = [[UILabel alloc] init];
         self.areaTotalLabel.textAlignment = NSTextAlignmentCenter;
@@ -109,7 +96,7 @@
     self.scrollView.frame = CGRectMake(20.0, -10.0, contentRect.size.width - 40.0, contentRect.size.height - 60);
     self.planoImageView.frame = CGRectMake(0.0, 0.0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
     self.brujulaButton.frame = CGRectMake(self.planoImageView.frame.size.width - 100.0, 10.0, 80.0, 80.0);
-    self.areaTotalLabel.frame = CGRectMake(contentRect.size.width/2.0 - 150.0, self.planoImageView.frame.origin.y + self.planoImageView.frame.size.height, 300.0, 44.0);
+    self.areaTotalLabel.frame = CGRectMake(contentRect.size.width/2.0 - 150.0, self.planoImageView.frame.origin.y + self.planoImageView.frame.size.height - 10.0, 300.0, 44.0);
 }
 
 #pragma mark - Actions 

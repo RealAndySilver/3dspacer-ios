@@ -8,8 +8,13 @@
 
 #import "PlanosDePisoViewController.h"
 #import "PisoCollectionViewCell.h"
+#import "MBProgressHud.h"
+#import "PlanosDePlantaViewController.h"
+#import "GLKitSpaceViewController.h"
+#import "NavAnimations.h"
+#import "BrujulaViewController.h"
 
-@interface PlanosDePisoViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface PlanosDePisoViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PisoCollectionViewCellDelegate>
 @property (strong, nonatomic) UICollectionView *collectionView;
 @property (strong, nonatomic) NSMutableArray *arrayNombresPiso;
 @property (strong, nonatomic) UIPageControl *pageControl;
@@ -74,6 +79,10 @@
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     PisoCollectionViewCell *cell = (PisoCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"CellIdentifier" forIndexPath:indexPath];
+    cell.delegate = self;
+    TipoDePiso *tipoDePiso = self.grupo.arrayTiposDePiso[indexPath.row];
+    [cell removeAllPinsFromArray:tipoDePiso.arrayProductos];
+    [cell setPinsButtonsFromArray:tipoDePiso.arrayProductos];
     cell.pisoImageView.image = [self imageFromPisoAtIndex:indexPath.item];
     return cell;
 }
@@ -110,6 +119,41 @@
     CGFloat pageWidth = self.collectionView.frame.size.width;
     self.pageControl.currentPage = round(self.collectionView.contentOffset.x / pageWidth);
     self.navigationItem.title = self.arrayNombresPiso[self.pageControl.currentPage];
+}
+
+#pragma mark - PisoCollectionViewCellDelegate
+
+-(void)brujulaButtonTappedInCell:(PisoCollectionViewCell *)cell {
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    TipoDePiso *tipoDePiso = self.grupo.arrayTiposDePiso[indexPath.item];
+    
+    [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
+    BrujulaViewController *brujulaVC=[[BrujulaViewController alloc]init];
+    brujulaVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Brujula"];
+    brujulaVC.externalImageView = [[UIImageView alloc] initWithImage:[self imageFromPisoAtIndex:indexPath.item]];
+    brujulaVC.gradosExtra = [tipoDePiso.norte floatValue];
+    [self.navigationController pushViewController:brujulaVC animated:NO];
+}
+
+-(void)pinButtonWasSelectedWithIndex:(NSUInteger)index inCell:(PisoCollectionViewCell *)cell {
+    NSLog(@"toqué el pin en la posición: %d", index);
+    
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    TipoDePiso *tipoDePiso = self.grupo.arrayTiposDePiso[indexPath.item];
+    Producto *producto = tipoDePiso.arrayProductos[index - 1];
+    
+    if (producto.existe) {
+        PlanosDePlantaViewController *planosDePlantaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePlanta"];
+        planosDePlantaVC.producto = producto;
+        [self.navigationController pushViewController:planosDePlantaVC animated:YES];
+    } else {
+        GLKitSpaceViewController *glKitSpaceVC = [self.storyboard instantiateViewControllerWithIdentifier:@"GLKitSpace"];
+        
+        Planta *planta = producto.arrayPlantas[0];
+        glKitSpaceVC.arregloDeEspacios3D = planta.arrayEspacios3D;
+        glKitSpaceVC.espacioSeleccionado = index - 1;
+        [self .navigationController pushViewController:glKitSpaceVC animated:YES];
+    }
 }
 
 @end

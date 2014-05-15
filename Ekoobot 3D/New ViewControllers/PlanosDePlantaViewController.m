@@ -20,7 +20,9 @@
 @property (strong, nonatomic) NSMutableArray *nombresPlantasArray;
 @end
 
-@implementation PlanosDePlantaViewController
+@implementation PlanosDePlantaViewController {
+    CGRect screenBounds;
+}
 
 #pragma mark - Lazy Instantiation
 
@@ -40,21 +42,23 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    CGRect screen = [UIScreen mainScreen].bounds;
+    screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
     self.view.backgroundColor = [UIColor colorWithWhite:0.15 alpha:1.0];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     [self setupUI];
 }
 
 -(void)setupUI {
-    CGRect screenFrame = CGRectMake(0.0, 0.0, 1024.0, 768.0);
+    CGRect screenFrame = screenBounds;
     
     //Setup CollectionView
     UICollectionViewFlowLayout *collectionViewFlowLayout = [[UICollectionViewFlowLayout alloc] init];
-    collectionViewFlowLayout.itemSize = CGSizeMake(screenFrame.size.width, 650.0);
+    collectionViewFlowLayout.itemSize = CGSizeMake(screenFrame.size.width, screenFrame.size.height/1.1815);
     collectionViewFlowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     collectionViewFlowLayout.minimumInteritemSpacing = 0;
     collectionViewFlowLayout.minimumLineSpacing = 0;
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0, self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height, screenFrame.size.width, 670.0) collectionViewLayout:collectionViewFlowLayout];
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0, self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height, screenFrame.size.width, collectionViewFlowLayout.itemSize.height + 20.0) collectionViewLayout:collectionViewFlowLayout];
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -72,7 +76,11 @@
 
 -(void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
-    self.pageControl.frame = CGRectMake(self.view.bounds.size.width/2.0 - 150.0, self.collectionView.frame.origin.y + self.collectionView.frame.size.height, 300.0, 30.0);
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+         self.pageControl.frame = CGRectMake(self.view.bounds.size.width/2.0 - 150.0, self.collectionView.frame.origin.y + self.collectionView.frame.size.height, 300.0, 30.0);
+    } else {
+        self.pageControl.frame = CGRectMake(self.view.bounds.size.width/2.0 - 150.0, self.view.bounds.size.height - 30.0, 300.0, 30.0);
+    }
 }
 
 #pragma mark - UICollectionViewDataSource

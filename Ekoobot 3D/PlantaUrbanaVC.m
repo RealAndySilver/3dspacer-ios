@@ -97,6 +97,7 @@
     
     timer=[[NSTimer alloc]init];
     timer =[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(update) userInfo:nil repeats:YES];
+    
     brujula=[[BrujulaView alloc]initWithFrame:CGRectMake(self.view.frame.size.width-90, 80, 70, 70)];
     [self.view addSubview:brujula];
     [brujula changeState];

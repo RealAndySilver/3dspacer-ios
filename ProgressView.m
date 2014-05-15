@@ -39,27 +39,35 @@
     elView.alpha=1;
     UIImageView *backGround=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"downloading.jpg"]];
     backGround.frame=CGRectMake(-85, 0, self.frame.size.width+170, self.frame.size.height);
+    backGround.clipsToBounds = YES;
+    backGround.contentMode = UIViewContentModeScaleAspectFill;
     [elView addSubview:backGround];
     
     _loading=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 300, 70)];
-    _loading.center=CGPointMake(self.frame.size.width/2,self.frame.size.height/2+150);
+    _loading.center=CGPointMake(self.frame.size.width/2,self.frame.size.height/2+(self.frame.size.height/5.12));
     _loading.text=@"";
     _loading.font=[UIFont boldSystemFontOfSize:70];
     _loading.backgroundColor=[UIColor clearColor];
     _loading.textColor=[UIColor whiteColor];
-    _loading.textAlignment=UITextAlignmentCenter;
+    _loading.textAlignment=NSTextAlignmentCenter;
     UILabel *loadingLabel=[[UILabel alloc]init];
     loadingLabel.tag=12;
-    loadingLabel.frame=CGRectMake(0, 500, 500, 20);
-    loadingLabel.center=CGPointMake(self.frame.size.width/2, self.frame.size.height/2+170);
+    loadingLabel.frame=CGRectMake(0, self.frame.size.height/1.536, self.frame.size.width/1.536, 40);
+    loadingLabel.center=CGPointMake(self.frame.size.width/2, self.frame.size.height/2+(self.frame.size.height/4.5176));
     loadingLabel.text=NSLocalizedString(@"DescargandoProyecto", nil);
-    loadingLabel.font=[UIFont boldSystemFontOfSize:16];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        loadingLabel.font = [UIFont boldSystemFontOfSize:16];
+    } else {
+        loadingLabel.font = [UIFont boldSystemFontOfSize:13.0];
+    }
     loadingLabel.backgroundColor=[UIColor clearColor];
     loadingLabel.textColor=[UIColor grayColor];
-    loadingLabel.textAlignment=UITextAlignmentCenter;
+    loadingLabel.textAlignment=NSTextAlignmentCenter;
+    loadingLabel.numberOfLines = 0;
     progressBar=[[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleBar];
-    progressBar.frame=CGRectMake(0, 0, 500, 50);
-    progressBar.center=CGPointMake(self.frame.size.width/2, self.frame.size.height/2+200);
+    progressBar.frame=CGRectMake(0, 0, self.frame.size.width/1.536, 50);
+    progressBar.center=CGPointMake(self.frame.size.width/2, self.frame.size.height/2+(self.frame.size.height/3.84 + 10.0));
     [self addSubview:elView];
     [self addSubview:loadingLabel];
     [self addSubview:_loading];

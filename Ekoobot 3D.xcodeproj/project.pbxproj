@@ -929,7 +929,7 @@
 				ORGANIZATIONNAME = Ekoomedia;
 				TargetAttributes = {
 					37E98A34153E0D70001B9BFE = {
-						DevelopmentTeam = 9Y4G65DT7C;
+						DevelopmentTeam = 4U39LJL48R;
 					};
 				};
 			};
@@ -1277,7 +1277,7 @@
 		37E98A78153E0D71001B9BFE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COMPRESS_PNG_FILES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1361,7 +1361,7 @@
 		75E995DD164AF28000C7452E /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COMPRESS_PNG_FILES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

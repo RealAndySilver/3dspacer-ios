@@ -32,7 +32,13 @@
             Producto *product = pinsArray[i];
             
             //Pin Button
-            UIButton *pinButton = [[UIButton alloc] initWithFrame:CGRectMake([product.coordenadaX floatValue], [product.coordenadaY floatValue] - 30.0, 30.0, 30.0)];
+            CGRect pinButtonFrame;
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+                pinButtonFrame = CGRectMake([product.coordenadaX floatValue], [product.coordenadaY floatValue] - 30.0, 30.0, 30.0);
+            } else {
+                pinButtonFrame = CGRectMake((398*[product.coordenadaX floatValue])/1004.0, (230.0*[product.coordenadaY floatValue])/580.0 - 40.0, 25.0, 25.0);
+            }
+            UIButton *pinButton = [[UIButton alloc] initWithFrame:pinButtonFrame];
             pinButton.tag = i + 1;
             [pinButton setImage:[UIImage imageNamed:@"pin.png"] forState:UIControlStateNormal];
             [pinButton addTarget:self action:@selector(pinButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -59,21 +65,21 @@
         self.scrollView.minimumZoomScale = 1.0;
         self.scrollView.maximumZoomScale = 2.0;
         self.scrollView.delegate = self;
-        self.scrollView.backgroundColor = [UIColor clearColor];
+        self.scrollView.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:self.scrollView];
         
         //Piso ImageView
         self.pisoImageView = [[UIImageView alloc] init];
         self.pisoImageView.clipsToBounds = YES;
         self.pisoImageView.userInteractionEnabled = YES;
-        self.pisoImageView.contentMode = UIViewContentModeScaleAspectFill;
+        self.pisoImageView.contentMode = UIViewContentModeScaleAspectFit;
         [self.scrollView addSubview:self.pisoImageView];
         
         //Brujula button
         self.brujulaButton = [[UIButton alloc] init];
         [self.brujulaButton setBackgroundImage:[UIImage imageNamed:@"compassOn.png"] forState:UIControlStateNormal];
         [self.brujulaButton addTarget:self action:@selector(brujulaButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-        [self.pisoImageView addSubview:self.brujulaButton];
+        [self.contentView addSubview:self.brujulaButton];
         
         //Zoom gesture
         UITapGestureRecognizer *doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(makeZoom:)];
@@ -86,9 +92,14 @@
 -(void)layoutSubviews {
     [super layoutSubviews];
     CGRect contentRect = self.contentView.bounds;
-    self.scrollView.frame = CGRectMake(10.0, 10.0, contentRect.size.width - 20.0, contentRect.size.height - 20.0);
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        self.scrollView.frame = CGRectMake(10.0, 10.0, contentRect.size.width - 20.0, contentRect.size.height - 20.0);
+    } else {
+        self.scrollView.frame = CGRectMake(contentRect.size.width/2.0 - 199, 10.0, 398.0, contentRect.size.height - 20.0);
+    }
     self.pisoImageView.frame = CGRectMake(0.0, 0.0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
-    self.brujulaButton.frame = CGRectMake(self.pisoImageView.frame.size.width - 100.0, 10.0, 80.0, 80.0);
+    NSLog(@"frame piso: %@", NSStringFromCGRect(self.pisoImageView.frame));
+    self.brujulaButton.frame = CGRectMake(contentRect.size.width - 90.0, 10.0, 80.0, 80.0);
 }
 
 #pragma mark - Actions 

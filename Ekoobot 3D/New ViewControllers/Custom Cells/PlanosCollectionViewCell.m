@@ -34,7 +34,15 @@
             Espacio3D *espacio3D = espacios3DArray[i];
             
             //Pin Button
-            UIButton *pinButton = [[UIButton alloc] initWithFrame:CGRectMake([espacio3D.coordenadaX floatValue], [espacio3D.coordenadaY floatValue] - 30.0, 30.0, 30.0)];
+            CGRect pinButtonFrame;
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+                pinButtonFrame = CGRectMake([espacio3D.coordenadaX floatValue], [espacio3D.coordenadaY floatValue] - 30.0, 30.0, 30.0);
+            } else {
+                CGFloat xCoord = (350*[espacio3D.coordenadaX floatValue])/984.0 - 10.0;
+                CGFloat yCoord = (210*[espacio3D.coordenadaY floatValue])/590.0 - 20.0;
+                pinButtonFrame = CGRectMake(xCoord, yCoord, 25.0, 25.0);
+            }
+            UIButton *pinButton = [[UIButton alloc] initWithFrame:pinButtonFrame];
             [pinButton setImage:[UIImage imageNamed:@"pin.png"] forState:UIControlStateNormal];
             [pinButton addTarget:self action:@selector(espacio3DButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             pinButton.tag = i + 1;
@@ -73,13 +81,17 @@
         self.brujulaButton = [[UIButton alloc] init];
         [self.brujulaButton setBackgroundImage:[UIImage imageNamed:@"compassOn.png"] forState:UIControlStateNormal];
         [self.brujulaButton addTarget:self action:@selector(brujulaButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-        [self.planoImageView addSubview:self.brujulaButton];
+        [self.contentView addSubview:self.brujulaButton];
         
         //Area total label
         self.areaTotalLabel = [[UILabel alloc] init];
         self.areaTotalLabel.textAlignment = NSTextAlignmentCenter;
         self.areaTotalLabel.textColor = [UIColor whiteColor];
-        self.areaTotalLabel.font = [UIFont boldSystemFontOfSize:20.0];
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            self.areaTotalLabel.font = [UIFont boldSystemFontOfSize:20.0];
+        } else {
+            self.areaTotalLabel.font = [UIFont boldSystemFontOfSize:14.0];
+        }
         [self.contentView addSubview:self.areaTotalLabel];
         
         //Create a Double Tap Gesture Recognizer to make zoom
@@ -93,10 +105,20 @@
 -(void)layoutSubviews {
     [super layoutSubviews];
     CGRect contentRect = self.contentView.bounds;
-    self.scrollView.frame = CGRectMake(20.0, -10.0, contentRect.size.width - 40.0, contentRect.size.height - 60);
-    self.planoImageView.frame = CGRectMake(0.0, 0.0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
-    self.brujulaButton.frame = CGRectMake(self.planoImageView.frame.size.width - 100.0, 10.0, 80.0, 80.0);
-    self.areaTotalLabel.frame = CGRectMake(contentRect.size.width/2.0 - 150.0, self.planoImageView.frame.origin.y + self.planoImageView.frame.size.height - 10.0, 300.0, 44.0);
+    NSLog(@"frame del plano image view: %@", NSStringFromCGRect(self.planoImageView.frame));
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        self.scrollView.frame = CGRectMake(20.0, -10.0, contentRect.size.width - 40.0, contentRect.size.height - 60);
+        self.planoImageView.frame = CGRectMake(0.0, 0.0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
+        self.brujulaButton.frame = CGRectMake(self.planoImageView.frame.size.width - 100.0, 10.0, 80.0, 80.0);
+        self.areaTotalLabel.frame = CGRectMake(contentRect.size.width/2.0 - 150.0, self.planoImageView.frame.origin.y + self.planoImageView.frame.size.height - 10.0, 300.0, 44.0);
+
+    } else {
+        self.scrollView.frame = CGRectMake(contentRect.size.width/2.0 - 175.0, -10.0, 350.0, contentRect.size.height - 60.0);
+        self.planoImageView.frame = CGRectMake(0.0, 0.0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
+        self.brujulaButton.frame = CGRectMake(contentRect.size.width - 80.0, -10.0, 70.0, 70.0);
+        self.areaTotalLabel.frame = CGRectMake(10.0, self.planoImageView.frame.origin.y + self.planoImageView.frame.size.height - 4.0, 150.0, 20.0);
+        
+    }
 }
 
 #pragma mark - Actions 

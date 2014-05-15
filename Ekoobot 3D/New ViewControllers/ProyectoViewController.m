@@ -100,7 +100,7 @@
     [self.view addSubview:self.collectionView];
     
     //Enter button
-    self.enterButton = [[UIButton alloc] initWithFrame:CGRectMake(830, 560,170, 170)];
+    self.enterButton = [[UIButton alloc] initWithFrame:enterButtonFrame];
     [self.enterButton setBackgroundImage:[UIImage imageNamed:NSLocalizedString(@"BotonEntrar", nil)] forState:UIControlStateNormal];
     [self.enterButton addTarget:self action:@selector(showLoadingHUD) forControlEvents:UIControlEventTouchUpInside];
     self.enterButton.alpha = 0.0;

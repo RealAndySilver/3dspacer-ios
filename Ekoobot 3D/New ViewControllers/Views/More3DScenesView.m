@@ -30,7 +30,7 @@
         self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
         
         //Title label
-        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(frame.size.width/2.0 - 150.0, 0.0, 300.0, 30.0)];
+        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, frame.size.width, 30.0)];
         self.titleLabel.font = [UIFont systemFontOfSize:17.0];
         self.titleLabel.textColor = [UIColor whiteColor];
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -39,7 +39,11 @@
         //CollectionView Setup
         UICollectionViewFlowLayout *collectionViewFLowLayout = [[UICollectionViewFlowLayout alloc] init];
         collectionViewFLowLayout.itemSize = CGSizeMake(120.0, 120.0);
-        collectionViewFLowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            collectionViewFLowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        } else {
+            collectionViewFLowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
+        }
         self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0, 40.0, frame.size.width, frame.size.height - 60.0) collectionViewLayout:collectionViewFLowLayout];
         self.collectionView.delegate = self;
         self.collectionView.dataSource = self;

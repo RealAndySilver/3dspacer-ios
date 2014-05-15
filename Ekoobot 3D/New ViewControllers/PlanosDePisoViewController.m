@@ -20,7 +20,9 @@
 @property (strong, nonatomic) UIPageControl *pageControl;
 @end
 
-@implementation PlanosDePisoViewController
+@implementation PlanosDePisoViewController {
+    CGRect screenBounds;
+}
 
 #pragma mark - Lazy Instantiation 
 
@@ -37,18 +39,21 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    CGRect screen = [UIScreen mainScreen].bounds;
+    screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
     self.view.backgroundColor = [UIColor colorWithWhite:0.1 alpha:1.0];
     self.navigationItem.title = self.arrayNombresPiso[0];
     [self setupUI];
 }
 
 -(void)setupUI {
-    CGRect screenFrame = CGRectMake(0.0, 0.0, 1024.0, 768.0);
+    
+    CGRect screenFrame = screenBounds;
     
     //CollectioView Setup
     UICollectionViewFlowLayout *collectionViewFlowLayout = [[UICollectionViewFlowLayout alloc] init];
     collectionViewFlowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    collectionViewFlowLayout.itemSize = CGSizeMake(screenFrame.size.width, 600.0);
+    collectionViewFlowLayout.itemSize = CGSizeMake(screenFrame.size.width, screenFrame.size.height/1.28);
     collectionViewFlowLayout.minimumInteritemSpacing = 0;
     collectionViewFlowLayout.minimumInteritemSpacing = 0;
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0, 64.0, screenFrame.size.width, screenFrame.size.height - 64.0 - 50.0) collectionViewLayout:collectionViewFlowLayout];

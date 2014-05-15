@@ -333,6 +333,98 @@
             </objects>
             <point key="canvasLocation" x="516" y="527"/>
         </scene>
+        <!--Zoom View Controller-->
+        <scene sceneID="kpI-BD-0WK">
+            <objects>
+                <viewController storyboardIdentifier="Zoom" id="wTV-ND-DLG" customClass="ZoomViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="cUz-Ic-MBl">
+                        <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6p5-Uc-DRE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="508" y="938"/>
+        </scene>
+        <!--Planta UrbanaVC-->
+        <scene sceneID="Sge-QW-SC2">
+            <objects>
+                <viewController storyboardIdentifier="PlantaUrbanaVC" id="0Lo-FK-aPW" customClass="PlantaUrbanaVC" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="cgB-iE-xUE">
+                        <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4Sb-3x-ftt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1128" y="938"/>
+        </scene>
+        <!--Planos De Piso View Controller-->
+        <scene sceneID="qPJ-88-Afj">
+            <objects>
+                <viewController storyboardIdentifier="PlanosDePiso" id="8vi-aV-tWj" customClass="PlanosDePisoViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="0r9-FB-NX3">
+                        <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pwP-Ei-nr1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1728" y="938"/>
+        </scene>
+        <!--Planos De Planta View Controller-->
+        <scene sceneID="OgU-mj-0fQ">
+            <objects>
+                <viewController storyboardIdentifier="PlanosDePlanta" id="4jQ-Im-T5y" customClass="PlanosDePlantaViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="aVa-QD-Jq5">
+                        <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9dl-cz-cBq" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="516" y="1352"/>
+        </scene>
+        <!--GLKit View Controller-->
+        <scene sceneID="Z9x-go-MqI">
+            <objects>
+                <glkViewController storyboardIdentifier="GLKitSpace" autoresizesArchivedViewToFullSize="NO" preferredFramesPerSecond="30" id="cqT-VI-9JM" customClass="GLKitSpaceViewController" sceneMemberID="viewController">
+                    <glkView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" drawableDepthFormat="16" id="8SH-co-Qso">
+                        <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                        <connections>
+                            <outlet property="delegate" destination="cqT-VI-9JM" id="vv0-uu-KV0"/>
+                        </connections>
+                    </glkView>
+                </glkViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ou8-KV-LSL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="508" y="1764"/>
+        </scene>
+        <!--Brujula View Controller-->
+        <scene sceneID="WG5-tw-u5O">
+            <objects>
+                <viewController storyboardIdentifier="Brujula" id="GuK-X0-g5Q" customClass="BrujulaViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="c2h-zd-4ib">
+                        <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="X0c-gi-mqj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1128" y="1352"/>
+        </scene>
         <!--Slide Control View Controller-->
         <scene sceneID="EXp-2w-Hnp">
             <objects>

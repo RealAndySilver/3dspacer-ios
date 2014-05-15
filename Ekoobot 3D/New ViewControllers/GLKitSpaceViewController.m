@@ -31,12 +31,15 @@
     GLfloat x, y, z;
     GLfloat rotXAxis, rotYAxis, rotZAxis;
     BOOL compassIsOff;
+    CGRect screenBounds;
 }
 
 #pragma mark - View Lifecycle
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    CGRect screen = [UIScreen mainScreen].bounds;
+    screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
     x = 0;
     y = 0;
     z = -0.3272;
@@ -56,14 +59,14 @@
 }
 
 -(void)setupUI {
-    CGRect screenFrame = CGRectMake(0.0, 0.0, 1024.0, 768.0);
+    CGRect screenFrame = screenBounds;
     
     //Create a bar button item
     self.interactionTypeBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Toque" style:UIBarButtonItemStylePlain target:self action:@selector(setupInteractionType)];
     self.navigationItem.rightBarButtonItem = self.interactionTypeBarButton;
     
     //Compass Placeholder
-    self.compassPlaceholder = [[UIImageView alloc] initWithFrame:CGRectMake(screenFrame.size.width - 100.0, 100.0, 80.0, 80.0)];
+    self.compassPlaceholder = [[UIImageView alloc] initWithFrame:CGRectMake(screenFrame.size.width - 100.0, screenFrame.size.height/7.68, 80.0, 80.0)];
     self.compassPlaceholder.image = [UIImage imageNamed:@"brujula.png"];
     self.compassPlaceholder.userInteractionEnabled = YES;
     [self.view addSubview:self.compassPlaceholder];
@@ -82,7 +85,13 @@
     [self.compassPlaceholder addSubview:self.compassOn];
     
     //Add the Inferior view
-    self.more3DScenesView = [[More3DScenesView alloc] initWithFrame:CGRectMake(0.0, screenFrame.size.height - 30.0, screenFrame.size.width, 190.0)];
+    CGRect more3DScenesRect;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        more3DScenesRect = CGRectMake(0.0, screenFrame.size.height - 30.0, screenFrame.size.width, 190.0);
+    } else {
+        more3DScenesRect = CGRectMake(screenFrame.size.width - 160.0, screenFrame.size.height - 30.0, 160.0, 190.0);
+    }
+    self.more3DScenesView = [[More3DScenesView alloc] initWithFrame:more3DScenesRect];
     self.more3DScenesView.delegate = self;
     self.more3DScenesView.espacios3DArray = self.arregloDeEspacios3D;
     self.more3DScenesView.titleLabel.text = ((Espacio3D *)self.arregloDeEspacios3D[self.espacioSeleccionado]).nombre;
@@ -235,13 +244,17 @@
     } else {
         CGPoint panLocation = [recognizer locationInView:self.view];
         CGPoint panDelta = CGPointMake(panLocation.x - panPrevious.x, panLocation.y - panPrevious.y);
-        if ((fabs(panDelta.y)) >= (fabs(panDelta.x))) {
+        rotXAxis -= panDelta.y*0.01;
+        rotZAxis -= panDelta.x*0.01;
+        [self rotateCompassWithRadians:-rotZAxis];
+        panPrevious = panLocation;
+        /*if ((fabs(panDelta.y)) >= (fabs(panDelta.x))) {
             rotXAxis -= panDelta.y*0.01;
         } else {
             rotZAxis -= panDelta.x*0.01;
             [self rotateCompassWithRadians:-rotZAxis];
         }
-        panPrevious = panLocation;
+        panPrevious = panLocation;*/
     }
 }
 
@@ -299,11 +312,19 @@
 }
 
 -(void)startDeviceMotion {
+    CMAttitudeReferenceFrame attitude;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        attitude = CMAttitudeReferenceFrameXTrueNorthZVertical;
+    } else {
+        attitude = CMAttitudeReferenceFrameXArbitraryZVertical;
+    }
+    
     CMMotionManager *motionManager = [CMMotionManager sharedMotionManager];
     
     if (motionManager.deviceMotionAvailable) {
+        NSLog(@"** Entré a calcular valores del sensor ***");
         motionManager.deviceMotionUpdateInterval = 1.0/30.0;
-        [motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical toQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motion, NSError *error){
+        [motionManager startDeviceMotionUpdatesUsingReferenceFrame:attitude toQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motion, NSError *error){
             
             //NSLog(@"Attitude X:%f, Y:%f, Z:%f", motion.attitude.roll, motion.attitude.pitch, motion.attitude.yaw);
             rotXAxis = -motion.attitude.roll;
@@ -311,6 +332,8 @@
             rotZAxis = -motion.attitude.yaw;
             [self rotateCompassWithRadians:-rotZAxis];
         }];
+    } else {
+        NSLog(@"*** el sensor no está disponible ***");
     }
 }
 

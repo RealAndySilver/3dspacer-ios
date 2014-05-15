@@ -551,7 +551,8 @@ const GLubyte IndicesBottom[] = {
             [_motionManager setDeviceMotionUpdateInterval:1/60];
             [_motionManager startDeviceMotionUpdates];
         }
-        [_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
+        //[_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical];
+        [_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXMagneticNorthZVertical];
         isTouchEnabled=NO;
         
         UIPinchGestureRecognizer *twoFingerPinch =

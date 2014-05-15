@@ -13,27 +13,37 @@
 @property (strong, nonatomic) UITableView *numbersTableView;
 @end
 
-@implementation ProjectsListViewController
+@implementation ProjectsListViewController {
+    CGRect screenBounds;
+}
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    CGRect screen = [UIScreen mainScreen].bounds;
+    screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
     [self setupUI];
 }
 
 -(void)setupUI {
-    CGRect screenRect = CGRectMake(0.0, 0.0, 1024.0, 768.0);
+    CGRect screenRect = screenBounds;
     self.automaticallyAdjustsScrollViewInsets = NO;
     //Background ImageView
     UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:screenRect];
     backgroundImageView.image = [UIImage imageNamed:@"CarouselBackground.png"];
+    backgroundImageView.clipsToBounds = YES;
+    backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
     [self.view addSubview:backgroundImageView];
     
     //Screen title
-    UILabel *mainTitle = [[UILabel alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 - 200.0, 70.0, 400.0, 50.0)];
+    UILabel *mainTitle = [[UILabel alloc] initWithFrame:CGRectMake(0.0, screenRect.size.height/10.97, screenRect.size.width, screenRect.size.height/15.36)];
     mainTitle.text = @"Listado de Proyectos";
     mainTitle.textColor = [UIColor whiteColor];
     mainTitle.textAlignment = NSTextAlignmentCenter;
-    mainTitle.font = [UIFont boldSystemFontOfSize:30.0];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        mainTitle.font = [UIFont boldSystemFontOfSize:30.0];
+    } else {
+        mainTitle.font = [UIFont boldSystemFontOfSize:17.0];
+    }
     mainTitle.layer.shadowColor = [UIColor blackColor].CGColor;
     mainTitle.layer.shadowOffset = CGSizeMake(1.0, 1.0);
     mainTitle.layer.shadowOpacity = 0.6;
@@ -41,7 +51,7 @@
     [self.view addSubview:mainTitle];
     
     //Table view shadow view
-    UIView *shadowView = [[UIView alloc] initWithFrame:CGRectMake(150.0, 150.0, screenRect.size.width - 150.0, screenRect.size.height - 300.0)];
+    UIView *shadowView = [[UIView alloc] initWithFrame:CGRectMake(screenRect.size.width/6.82, screenRect.size.width/6.82, screenRect.size.width - screenRect.size.width/6.82, screenRect.size.height - screenRect.size.height/2.56)];
     shadowView.layer.shadowColor = [UIColor blackColor].CGColor;
     shadowView.layer.shadowOffset = CGSizeMake(4.0, 4.0);
     shadowView.layer.shadowOpacity = 0.6;
@@ -109,9 +119,23 @@
     UIButton *deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 + 24.0 + 15.0, screenRect.size.height - 80.0, 48.0, 48.0)];
     [deleteButton setBackgroundImage:[UIImage imageNamed:@"Delete.png"] forState:UIControlStateNormal];
     [self.view addSubview:deleteButton];
+    
+    //Exit Button
+    UIButton *exitButton = [[UIButton alloc] init];
+    CGRect buttonFrame;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        buttonFrame = CGRectMake(800.0, 80.0, 100.0, 30.0);
+    } else {
+        buttonFrame = CGRectMake(450.0, 20.0, 60.0, 30.0);
+    }
+    exitButton.frame = buttonFrame;
+    [exitButton setTitle:@"Salir" forState:UIControlStateNormal];
+    [exitButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [exitButton addTarget:self action:@selector(dismissVC) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:exitButton];
 }
 
-#pragma mark - UITableViewDataSource 
+#pragma mark - UITableViewDataSource
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return 20;
@@ -155,6 +179,10 @@
 }
 
 #pragma mark - Actions
+
+-(void)dismissVC {
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
 -(void)goUpInProjectList {
     if (self.projectsTableView.contentOffset.y > 0) {

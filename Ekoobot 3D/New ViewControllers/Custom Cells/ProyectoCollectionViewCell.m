@@ -39,7 +39,11 @@
     [super layoutSubviews];
     CGRect contentRect = self.contentView.bounds;
     self.imageView.frame = CGRectMake(0.0, 0.0, contentRect.size.width, contentRect.size.height);
-    self.zoomButton.frame = CGRectMake(53, 540, 40, 40);
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        self.zoomButton.frame = CGRectMake(53, 540, 40, 40);
+    } else {
+        self.zoomButton.frame = CGRectMake(10.0, 220.0, 40.0, 40.0);
+    }
 }
 
 #pragma mark - Actions 

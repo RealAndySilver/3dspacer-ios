@@ -44,17 +44,17 @@
 -(void)go:(id)sender{
     [rVC irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];
     [MBProgressHUD hideHUDForView:self.view animated:YES];
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(IBAction)decline:(id)sender{
     [rVC stopSpinner];
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 #pragma mark autorotation
 -(BOOL)shouldAutorotate{
     return YES;
 }
 -(NSUInteger)supportedInterfaceOrientations{
-        return UIInterfaceOrientationPortrait;
+        return UIInterfaceOrientationMaskPortrait;
 }
 @end

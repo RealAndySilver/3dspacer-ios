@@ -141,6 +141,8 @@
 		8BC64FFA19199AC50005548D /* PlanosCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC64FF919199AC50005548D /* PlanosCollectionViewCell.m */; };
 		8BD2940F191D75500006AB2A /* PlanosDePisoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BD2940E191D75500006AB2A /* PlanosDePisoViewController.m */; };
 		8BD29412191D764E0006AB2A /* PisoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BD29411191D764E0006AB2A /* PisoCollectionViewCell.m */; };
+		A029EADF1924250D00E57ECF /* LaunchImagePhoneR4.png in Resources */ = {isa = PBXBuildFile; fileRef = A029EADE1924250D00E57ECF /* LaunchImagePhoneR4.png */; };
+		A029EAE319242F5E00E57ECF /* HomeScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A029EAE219242F5E00E57ECF /* HomeScreenViewController.m */; };
 		A0E7A47A191C08E60067ED3D /* MainCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A479191C08E60067ED3D /* MainCarouselViewController.m */; };
 		A0E7A47F191C0B000067ED3D /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A47E191C0B000067ED3D /* iCarousel.m */; };
 		A0E7A482191C20550067ED3D /* ProyectoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A481191C20550067ED3D /* ProyectoViewController.m */; };
@@ -363,6 +365,9 @@
 		8BD2940E191D75500006AB2A /* PlanosDePisoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlanosDePisoViewController.m; path = "New ViewControllers/PlanosDePisoViewController.m"; sourceTree = "<group>"; };
 		8BD29410191D764E0006AB2A /* PisoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PisoCollectionViewCell.h; path = "New ViewControllers/Custom Cells/PisoCollectionViewCell.h"; sourceTree = "<group>"; };
 		8BD29411191D764E0006AB2A /* PisoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PisoCollectionViewCell.m; path = "New ViewControllers/Custom Cells/PisoCollectionViewCell.m"; sourceTree = "<group>"; };
+		A029EADE1924250D00E57ECF /* LaunchImagePhoneR4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LaunchImagePhoneR4.png; path = Resources/LaunchImagePhoneR4.png; sourceTree = "<group>"; };
+		A029EAE119242F5E00E57ECF /* HomeScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomeScreenViewController.h; path = "New ViewControllers/iPhone ViewControllers/HomeScreenViewController.h"; sourceTree = "<group>"; };
+		A029EAE219242F5E00E57ECF /* HomeScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HomeScreenViewController.m; path = "New ViewControllers/iPhone ViewControllers/HomeScreenViewController.m"; sourceTree = "<group>"; };
 		A0E7A478191C08E60067ED3D /* MainCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainCarouselViewController.h; path = "New ViewControllers/MainCarouselViewController.h"; sourceTree = "<group>"; };
 		A0E7A479191C08E60067ED3D /* MainCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainCarouselViewController.m; path = "New ViewControllers/MainCarouselViewController.m"; sourceTree = "<group>"; };
 		A0E7A47D191C0B000067ED3D /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
@@ -766,6 +771,7 @@
 		8B0621E519217B4F0017DD20 /* New Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A029EADE1924250D00E57ECF /* LaunchImagePhoneR4.png */,
 				8B9C828719228767008B3055 /* Icons */,
 				8B9C828519228288008B3055 /* Wood.jpg */,
 				8B0621E619217B670017DD20 /* CarouselBackground.png */,
@@ -777,6 +783,7 @@
 		8B5C790F1917FB21003941AD /* New ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				A029EAE019242F1300E57ECF /* iPhone ViewControllers */,
 				8B5C79101917FB2F003941AD /* OpenGL */,
 				8BC64FF51919974F0005548D /* PlanosDePlantaViewController.h */,
 				8BC64FF61919974F0005548D /* PlanosDePlantaViewController.m */,
@@ -844,6 +851,15 @@
 				8BC64FF3191941DB0005548D /* UIImage+Resize.m */,
 			);
 			name = Categories;
+			sourceTree = "<group>";
+		};
+		A029EAE019242F1300E57ECF /* iPhone ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				A029EAE119242F5E00E57ECF /* HomeScreenViewController.h */,
+				A029EAE219242F5E00E57ECF /* HomeScreenViewController.m */,
+			);
+			name = "iPhone ViewControllers";
 			sourceTree = "<group>";
 		};
 		A0E7A47B191C0AF30067ED3D /* Libraries */ = {
@@ -971,6 +987,7 @@
 				75EE5592183D198E00C52654 /* icon152.png in Resources */,
 				755233A0163ACB4400D541DB /* recomendar.png in Resources */,
 				755233A5163AF21800D541DB /* enviar.png in Resources */,
+				A029EADF1924250D00E57ECF /* LaunchImagePhoneR4.png in Resources */,
 				755233AD163B3A8F00D541DB /* cancel.png in Resources */,
 				755233AF163B446A00D541DB /* brujula.png in Resources */,
 				8B9C828E19228767008B3055 /* Message.png in Resources */,
@@ -1058,6 +1075,7 @@
 				37A49D6315951EA20055FAA5 /* Producto.m in Sources */,
 				37A49D6615951EB70055FAA5 /* Planta.m in Sources */,
 				8B9C828119227754008B3055 /* AcabadosView.m in Sources */,
+				A029EAE319242F5E00E57ECF /* HomeScreenViewController.m in Sources */,
 				37A49D6915951ED50055FAA5 /* Espacio3D.m in Sources */,
 				37A49D6F159528820055FAA5 /* Variacion.m in Sources */,
 				37A49D72159528C40055FAA5 /* Caras.m in Sources */,
@@ -1251,7 +1269,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				TARGETED_DEVICE_FAMILY = 2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1269,7 +1287,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				TARGETED_DEVICE_FAMILY = 2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1353,7 +1371,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				TARGETED_DEVICE_FAMILY = 2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Distribution;

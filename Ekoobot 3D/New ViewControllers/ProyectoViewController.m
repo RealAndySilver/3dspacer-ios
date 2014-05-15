@@ -29,10 +29,15 @@
 @property (strong, nonatomic) UIButton *enterButton;
 @end
 
-@implementation ProyectoViewController
+@implementation ProyectoViewController {
+    CGRect screenBounds;
+}
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    CGRect screen = [UIScreen mainScreen].bounds;
+    screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
+    
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.view.backgroundColor = [UIColor blackColor];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLabelWithTag:) name:@"updates" object:nil];
@@ -47,7 +52,30 @@
 }
 
 -(void)setupUI {
-    CGRect screenFrame = CGRectMake(0.0, 0.0, 1024.0, 768.0);
+    CGRect screenFrame = screenBounds;
+    
+    CGRect updateButtonFrame;
+    CGRect containerFrame;
+    CGRect slideshowButtonFrame;
+    CGRect sendInfoButtonFrame;
+    CGRect infoButtonFrame;
+    CGRect enterButtonFrame;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        updateButtonFrame = CGRectMake(16, 100 ,50, 50);
+        containerFrame = CGRectMake(55, 107, 265, 35);
+        slideshowButtonFrame = CGRectMake(53, 480, 40, 40);
+        sendInfoButtonFrame = CGRectMake(53, 600, 40, 40);
+        infoButtonFrame = CGRectMake(43, 660, 274, 40);
+        enterButtonFrame = CGRectMake(830, 560,170, 170);
+
+    } else {
+        updateButtonFrame = CGRectMake(10.0, 64.0, 40.0, 40.0);
+        containerFrame = CGRectMake(40.0, 66.0, 260.0, 35.0);
+        slideshowButtonFrame = CGRectMake(10.0, 120.0, 40.0, 40.0);
+        sendInfoButtonFrame = CGRectMake(10.0, slideshowButtonFrame.origin.y + slideshowButtonFrame.size.height + 10.0, 40.0, 40.0);
+        infoButtonFrame = CGRectMake(0.0, sendInfoButtonFrame.origin.y + sendInfoButtonFrame.size.height + 10.0 + 40.0 + 10.0, 274.0, 40.0);
+        enterButtonFrame = CGRectMake(screenFrame.size.width - 70.0, screenFrame.size.height - 70.0, 60.0, 60.0);
+    }
     
     //ProgressView
     self.progressView=[[ProgressView alloc]initWithFrame:CGRectMake(0, 0, self.navigationController.view.frame.size.height, self.navigationController.view.frame.size.width)];
@@ -81,12 +109,14 @@
     }
     
     //Project Logo ImageView
-    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(60, 140, 150, 150)];
-    logoImageView.image = [self getLogoImageFromProject];
-    [self.view addSubview:logoImageView];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(60, 140, 150, 150)];
+        logoImageView.image = [self getLogoImageFromProject];
+        [self.view addSubview:logoImageView];
+    }
     
     //UpdateButton Label
-    UIView *container=[[UIView alloc]initWithFrame:CGRectMake(55, 107, 265, 35)];
+    UIView *container=[[UIView alloc]initWithFrame:containerFrame];
     container.backgroundColor=[UIColor colorWithWhite:0.2 alpha:1];
     container.alpha=0.8;
     container.layer.cornerRadius = 10.0;
@@ -95,32 +125,32 @@
     container.layer.shadowRadius = 5;
     container.layer.shadowOpacity = 1.0;
     
-    UILabel *tituloProyecto = [[UILabel alloc]initWithFrame:CGRectMake(100, 97, 200, 50)];
+    UILabel *tituloProyecto = [[UILabel alloc]initWithFrame:CGRectMake(10.0, 0.0, container.frame.size.width, container.frame.size.height)];
     tituloProyecto.text = self.proyecto.nombre;
     tituloProyecto.backgroundColor=[UIColor clearColor];
     tituloProyecto.textColor=[UIColor whiteColor];
     tituloProyecto.adjustsFontSizeToFitWidth = YES;
     [tituloProyecto setFont:[UIFont fontWithName:@"Helvetica" size:26]];
+    [container addSubview:tituloProyecto];
     [self.view addSubview:container];
-    [self.view addSubview:tituloProyecto];
     
     //UpdateButton
-    UIButton *updateButton = [[UIButton alloc] initWithFrame:CGRectMake(25, 75,100, 100)];
-    [updateButton setImage:[UIImage imageNamed:@"downloadBtn"] forState:UIControlStateNormal];
+    UIButton *updateButton = [[UIButton alloc] initWithFrame:updateButtonFrame];
+    [updateButton setBackgroundImage:[UIImage imageNamed:@"downloadBtn"] forState:UIControlStateNormal];
     [updateButton addTarget:self action:@selector(updateProjectInfo) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:updateButton];
     
     //SendInfoButton
-    UIButton *sendInfoButton = [[UIButton alloc] initWithFrame:CGRectMake(53, 600, 40, 40)];
+    UIButton *sendInfoButton = [[UIButton alloc] initWithFrame:sendInfoButtonFrame];
     [sendInfoButton addTarget:self action:@selector(sendInfo) forControlEvents:UIControlEventTouchUpInside];
     [sendInfoButton setImage:[UIImage imageNamed:@"mensaje.png"] forState:UIControlStateNormal];
     [self.view addSubview:sendInfoButton];
     
     //Info Button
-    [self mostrarInfoButtonConTag:self.projectNumber + 2000];
+    [self mostrarInfoButtonConTag:self.projectNumber + 2000 frame:infoButtonFrame];
     
     //Slideshow Button
-    UIButton *slideshowButton = [[UIButton alloc] initWithFrame:CGRectMake(53, 480, 40, 40)];
+    UIButton *slideshowButton = [[UIButton alloc] initWithFrame:slideshowButtonFrame];
     [slideshowButton setImage:[UIImage imageNamed:NSLocalizedString(@"tv2.png", nil)] forState:UIControlStateNormal];
     [slideshowButton addTarget:self action:@selector(goToSlideShow) forControlEvents:UIControlEventTouchUpInside];
     if ([self.proyecto.arrayAdjuntos count] > 0) {
@@ -128,8 +158,8 @@
     }
 }
 
--(void)mostrarInfoButtonConTag:(NSUInteger)tag {
-    UpdateView *updateBox=[[UpdateView alloc]initWithFrame:CGRectMake(43, 660, 274, 40)];
+-(void)mostrarInfoButtonConTag:(NSUInteger)tag frame:(CGRect)frame{
+    UpdateView *updateBox=[[UpdateView alloc]initWithFrame:frame];
     updateBox.tag=tag+250;
     [self.view addSubview:updateBox];
     NSLog(@"update tag----> %i %@",updateBox.tag,updateBox);

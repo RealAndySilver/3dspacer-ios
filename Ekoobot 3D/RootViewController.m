@@ -8,6 +8,7 @@
 
 #import "RootViewController.h"
 #import "MainCarouselViewController.h"
+#import "HomeScreenViewController.h"
 
 @interface RootViewController ()
 
@@ -30,7 +31,12 @@
     passwordTF.delegate=self;
     sc=[[ServerCommunicator alloc]init];    
     sc.caller=self;
-    littleBoxView=[[UIView alloc]initWithFrame:CGRectMake(infoButton.frame.origin.x+40, infoButton.frame.origin.y-10,230, 190)];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        littleBoxView=[[UIView alloc]initWithFrame:CGRectMake(infoButton.frame.origin.x+40, infoButton.frame.origin.y-10,230, 190)];
+    } else {
+        littleBoxView=[[UIView alloc]initWithFrame:CGRectMake(infoButton.frame.origin.x - 230.0 - 10.0, infoButton.frame.origin.y-10,230, 190)];
+    }
     littleBoxView.backgroundColor=[UIColor viewFlipsideBackgroundColor];
     littleBoxView.layer.cornerRadius=10.0f;
     littleBoxView.layer.masksToBounds=YES;
@@ -134,9 +140,15 @@
     transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     [self.navigationController.view.layer addAnimation:transition forKey:nil];
     
-    MainCarouselViewController *mainCarouselVC = [self.storyboard instantiateViewControllerWithIdentifier:@"MainCarousel"];
-    mainCarouselVC.usuario = usuario;
-    [self.navigationController pushViewController:mainCarouselVC animated:NO];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        MainCarouselViewController *mainCarouselVC = [self.storyboard instantiateViewControllerWithIdentifier:@"MainCarousel"];
+        mainCarouselVC.usuario = usuario;
+        [self.navigationController pushViewController:mainCarouselVC animated:NO];
+    } else {
+        HomeScreenViewController *homeScreenVC = [self.storyboard instantiateViewControllerWithIdentifier:@"HomeScreen"];
+        homeScreenVC.usuario = usuario;
+        [self.navigationController pushViewController:homeScreenVC animated:NO];
+    }
 }
 
 - (void)alertSimpleConTitulo:(NSString*)elTitulo yMensaje:(NSString*)mensaje{
@@ -164,7 +176,8 @@
 
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
-    [self comprobarUsuario];
+    [textField resignFirstResponder];
+    //[self comprobarUsuario];
     return YES;
 }
 

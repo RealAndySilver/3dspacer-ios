@@ -239,7 +239,7 @@
             rotXAxis -= panDelta.y*0.01;
         } else {
             rotZAxis -= panDelta.x*0.01;
-            [self rotateCompassWithRadians:rotZAxis];
+            [self rotateCompassWithRadians:-rotZAxis];
         }
         panPrevious = panLocation;
     }
@@ -309,7 +309,7 @@
             rotXAxis = -motion.attitude.roll;
             rotYAxis = motion.attitude.pitch;
             rotZAxis = -motion.attitude.yaw;
-            [self rotateCompassWithRadians:rotZAxis];
+            [self rotateCompassWithRadians:-rotZAxis];
         }];
     }
 }

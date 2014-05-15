@@ -28,7 +28,7 @@
     infoButton.frame=CGRectMake(10, self.frame.size.height/2-20, 40, 40);
     container=[[UIView alloc]initWithFrame:CGRectMake(30, 0, self.frame.size.width, self.frame.size.height)];
     titleText=[[UILabel alloc]initWithFrame:CGRectMake(45, marginTop, self.frame.size.width-0, 12)];
-    titleText.textAlignment=UITextAlignmentLeft;
+    titleText.textAlignment=NSTextAlignmentLeft;
     titleText.textAlignment=NSTextAlignmentLeft;
     titleText.backgroundColor=[UIColor clearColor];
     titleText.textColor=[UIColor whiteColor];
@@ -36,7 +36,7 @@
     titleText.adjustsFontSizeToFitWidth = YES;
     updateText=[[UILabel alloc]initWithFrame:CGRectMake(45, marginTop+15, self.frame.size.width-45, 12)];
     updateText.textAlignment=NSTextAlignmentLeft;
-    updateText.textAlignment=UITextAlignmentLeft;
+    updateText.textAlignment=NSTextAlignmentLeft;
     updateText.backgroundColor=[UIColor clearColor];
     updateText.textColor=[UIColor whiteColor];
     [updateText setFont:[UIFont fontWithName:@"Helvetica" size:12]];

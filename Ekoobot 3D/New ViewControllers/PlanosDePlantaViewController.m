@@ -51,7 +51,6 @@
 
 -(void)setupUI {
     CGRect screenFrame = screenBounds;
-    
     //Setup CollectionView
     UICollectionViewFlowLayout *collectionViewFlowLayout = [[UICollectionViewFlowLayout alloc] init];
     collectionViewFlowLayout.itemSize = CGSizeMake(screenFrame.size.width, screenFrame.size.height/1.1815);
@@ -105,7 +104,8 @@
     cell.planoImageView.image = [self imageFromPlantaAtIndex:indexPath.item];
     
     NSString *replacedMt=[self.producto.area stringByReplacingOccurrencesOfString:@"mt2" withString:@"mt\u00B2"];
-    cell.areaTotalLabel.text = [NSString stringWithFormat:@"Área total: %@", replacedMt];
+    NSString *areatTotalString = NSLocalizedString(@"AreaTotal", nil);
+    cell.areaTotalLabel.text = [areatTotalString stringByAppendingString:replacedMt];
     return cell;
 }
 

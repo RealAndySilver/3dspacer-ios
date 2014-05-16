@@ -53,7 +53,11 @@
             nameLabel.text = espacio3D.nombre;
             nameLabel.tag = i + 10;
             nameLabel.textColor = [UIColor whiteColor];
-            nameLabel.font = [UIFont boldSystemFontOfSize:13.0];
+            nameLabel.font = [UIFont boldSystemFontOfSize:17.0];
+            nameLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+            nameLabel.layer.shadowOffset = CGSizeMake(1.0, 1.0);
+            nameLabel.layer.shadowOpacity = 1.0;
+            nameLabel.layer.shadowRadius = 1.0;
             [self.planoImageView addSubview:nameLabel];
         }
     }

@@ -48,8 +48,12 @@
             UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(pinButton.frame.origin.x + pinButton.frame.size.width, pinButton.frame.origin.y, 100.0, 30.0)];
             nameLabel.text = product.nombre;
             nameLabel.tag = i + 10;
-            nameLabel.textColor = [UIColor darkGrayColor];
-            nameLabel.font = [UIFont boldSystemFontOfSize:14.0];
+            nameLabel.textColor = [UIColor whiteColor];
+            nameLabel.font = [UIFont boldSystemFontOfSize:16.0];
+            nameLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+            nameLabel.layer.shadowOffset = CGSizeMake(1.0, 1.0);
+            nameLabel.layer.shadowOpacity = 1.0;
+            nameLabel.layer.shadowRadius = 1.0;
             [self.pisoImageView addSubview:nameLabel];
         }
     }
@@ -65,7 +69,7 @@
         self.scrollView.minimumZoomScale = 1.0;
         self.scrollView.maximumZoomScale = 2.0;
         self.scrollView.delegate = self;
-        self.scrollView.backgroundColor = [UIColor whiteColor];
+        self.scrollView.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:self.scrollView];
         
         //Piso ImageView
@@ -99,7 +103,7 @@
     }
     self.pisoImageView.frame = CGRectMake(0.0, 0.0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
     NSLog(@"frame piso: %@", NSStringFromCGRect(self.pisoImageView.frame));
-    self.brujulaButton.frame = CGRectMake(contentRect.size.width - 90.0, 10.0, 80.0, 80.0);
+    self.brujulaButton.frame = CGRectMake(contentRect.size.width - 85.0, 0.0, 70.0, 70.0);
 }
 
 #pragma mark - Actions 

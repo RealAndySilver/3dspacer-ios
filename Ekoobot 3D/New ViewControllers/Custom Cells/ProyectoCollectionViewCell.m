@@ -23,6 +23,7 @@
         
         self.imageView = [[UIImageView alloc] init];
         self.imageView.contentMode = UIViewContentModeScaleAspectFill;
+        self.imageView.clipsToBounds = YES;
         [self.contentView addSubview:self.imageView];
         
         //Zooom button

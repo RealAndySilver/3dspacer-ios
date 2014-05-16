@@ -96,6 +96,7 @@
     self.collectionView.alwaysBounceVertical = YES;
     self.collectionView.pagingEnabled = YES;
     self.collectionView.backgroundColor = [UIColor clearColor];
+    self.collectionView.contentInset = UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0);
     [self.collectionView registerClass:[ProyectoCollectionViewCell class] forCellWithReuseIdentifier:@"CellIdentifier"];
     [self.view addSubview:self.collectionView];
     

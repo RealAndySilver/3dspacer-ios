@@ -55,13 +55,21 @@
     collectionViewFlowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     collectionViewFlowLayout.itemSize = CGSizeMake(screenFrame.size.width, screenFrame.size.height/1.28);
     collectionViewFlowLayout.minimumInteritemSpacing = 0;
-    collectionViewFlowLayout.minimumInteritemSpacing = 0;
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0, 64.0, screenFrame.size.width, screenFrame.size.height - 64.0 - 50.0) collectionViewLayout:collectionViewFlowLayout];
+    collectionViewFlowLayout.minimumLineSpacing = 0;
+    
+    CGRect collectionViewFrame;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        collectionViewFrame = CGRectMake(0.0, 64.0, screenFrame.size.width, screenFrame.size.height - 64.0 - 50.0);
+    } else {
+        collectionViewFrame = CGRectMake(0.0, 10.0, screenFrame.size.width, screenFrame.size.height - 20.0);
+    }
+    self.collectionView = [[UICollectionView alloc] initWithFrame:collectionViewFrame collectionViewLayout:collectionViewFlowLayout];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = [UIColor clearColor];
     self.collectionView.pagingEnabled = YES;
     self.collectionView.showsHorizontalScrollIndicator = NO;
+    self.collectionView.contentInset = UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0);
     [self.collectionView registerClass:[PisoCollectionViewCell class] forCellWithReuseIdentifier:@"CellIdentifier"];
     [self.view addSubview:self.collectionView];
     
@@ -73,7 +81,11 @@
 
 -(void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
-    self.pageControl.frame = CGRectMake(self.view.bounds.size.width/2.0 - 150.0, self.view.bounds.size.height - 40.0, 300.0, 30.0);
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        self.pageControl.frame = CGRectMake(self.view.bounds.size.width/2.0 - 150.0, self.view.bounds.size.height - 45.0, 300.0, 30.0);
+    } else {
+        self.pageControl.frame = CGRectMake(self.view.bounds.size.width/2.0 - 150.0, self.view.bounds.size.height - 25.0, 300.0, 30.0);
+    }
 }
 
 #pragma mark - UICollectionViewDataSource

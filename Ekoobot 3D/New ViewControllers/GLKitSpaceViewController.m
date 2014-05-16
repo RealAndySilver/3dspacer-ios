@@ -32,19 +32,31 @@
     GLfloat rotXAxis, rotYAxis, rotZAxis;
     BOOL compassIsOff;
     CGRect screenBounds;
+    BOOL deviceIsLeftRotated;
 }
 
 #pragma mark - View Lifecycle
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification
+                                               object:[UIDevice currentDevice]];
+    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+    NSLog(@"device orientation: %d", deviceOrientation);
+    if (deviceOrientation == 3) {
+        deviceIsLeftRotated = YES;
+    } else {
+        deviceIsLeftRotated = NO;
+    }
+    
     CGRect screen = [UIScreen mainScreen].bounds;
     screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
     x = 0;
     y = 0;
     z = -0.3272;
     self.view.tag = 1;
-    self.navigationItem.title = @"3D Space";
+    self.navigationItem.title = NSLocalizedString(@"Espacio3D", nil);
     self.navigationController.navigationBarHidden = YES;
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     [self setupUI];
@@ -62,11 +74,17 @@
     CGRect screenFrame = screenBounds;
     
     //Create a bar button item
-    self.interactionTypeBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Toque" style:UIBarButtonItemStylePlain target:self action:@selector(setupInteractionType)];
+    self.interactionTypeBarButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Toque", nil) style:UIBarButtonItemStylePlain target:self action:@selector(setupInteractionType)];
     self.navigationItem.rightBarButtonItem = self.interactionTypeBarButton;
     
     //Compass Placeholder
-    self.compassPlaceholder = [[UIImageView alloc] initWithFrame:CGRectMake(screenFrame.size.width - 100.0, screenFrame.size.height/7.68, 80.0, 80.0)];
+    CGRect compassFrame;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        compassFrame = CGRectMake(screenFrame.size.width - 100.0, screenFrame.size.height/7.68, 80.0, 80.0);
+    } else {
+        compassFrame = CGRectMake(screenFrame.size.width - 70.0, 64.0, 50.0, 50.0);
+    }
+    self.compassPlaceholder = [[UIImageView alloc] initWithFrame:compassFrame];
     self.compassPlaceholder.image = [UIImage imageNamed:@"brujula.png"];
     self.compassPlaceholder.userInteractionEnabled = YES;
     [self.view addSubview:self.compassPlaceholder];
@@ -74,7 +92,7 @@
     //Indicador de la brújula
     UIImage *brujulaImage = [UIImage imageNamed:@"cursor.png"];
     self.brujula = [[UIImageView alloc] initWithImage:[brujulaImage flippedImageByAxis:MVImageFlipXAxis]];
-    self.brujula.frame = CGRectMake(self.compassPlaceholder.frame.size.width/2.0 - 10.0, 10.0, 20.0, self.compassPlaceholder.frame.size.height - 20.0);
+    self.brujula.frame = CGRectMake(self.compassPlaceholder.frame.size.width/2.0 - 10.0, 10.0, compassFrame.size.height/4.0, self.compassPlaceholder.frame.size.height - 20.0);
     self.brujula.center = CGPointMake(self.compassPlaceholder.frame.size.width/2.0, self.compassPlaceholder.frame.size.height/2.0);
     [self.compassPlaceholder addSubview:self.brujula];
     
@@ -99,7 +117,7 @@
     [self.view bringSubviewToFront:self.more3DScenesView];
     
     //Add the 'Acabados' view
-    self.acabadosView = [[AcabadosView alloc] initWithFrame:CGRectMake(-180.0, 120.0, 150.0, 390.0)];
+    self.acabadosView = [[AcabadosView alloc] initWithFrame:CGRectMake(-180.0, 120.0, 150.0, screenFrame.size.height - 120.0)];
     self.acabadosView.delegate = self;
     [self.view addSubview:self.acabadosView];
 }
@@ -130,7 +148,7 @@
     view.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     [EAGLContext setCurrentContext:view.context];
     
-    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClearColor(1.0, 1.0, 1.0, 1.0);
   
     [self resizeCubeImages];
     /*NSArray *skyboxArray = @[[self pathForJPEGResourceWithName:@"Derecha" ID:@"Spaces_16_2013-01-30 19:40:28"],
@@ -161,7 +179,7 @@
     self.skyboxEffect.label = @"SkyboxEffect";
     self.skyboxEffect.textureCubeMap.name = self.cubemapTexture.name;
     self.skyboxEffect.textureCubeMap.target = self.cubemapTexture.target;
-    self.skyboxEffect.transform.projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), 1.333, 1.0, 100.0);
+    self.skyboxEffect.transform.projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), screenBounds.size.width/screenBounds.size.height, 1.0, 100.0);
     self.skyboxEffect.transform.modelviewMatrix = GLKMatrix4MakeScale(10.0, 10.0, 10.0);
 }
 
@@ -216,12 +234,12 @@
         //Activate panning interaction
         [self.view addGestureRecognizer:self.panGesture];
         [self stopDeviceMotion];
-        self.interactionTypeBarButton.title = @"3D";
+        self.interactionTypeBarButton.title = NSLocalizedString(@"3D", nil);
         panningInteractionEnabled = YES;
     } else {
         [self.view removeGestureRecognizer:self.panGesture];
         [self startDeviceMotion];
-        self.interactionTypeBarButton.title = @"Toque";
+        self.interactionTypeBarButton.title = NSLocalizedString(@"Toque", nil);
         panningInteractionEnabled = NO;
     }
 }
@@ -244,17 +262,16 @@
     } else {
         CGPoint panLocation = [recognizer locationInView:self.view];
         CGPoint panDelta = CGPointMake(panLocation.x - panPrevious.x, panLocation.y - panPrevious.y);
-        rotXAxis -= panDelta.y*0.01;
-        rotZAxis -= panDelta.x*0.01;
+        rotXAxis -= panDelta.y*0.004;
+        if (rotXAxis < - 2.90) {
+            rotXAxis = -2.90;
+        } else if (rotXAxis > 0) {
+            rotXAxis = 0;
+        }
+        rotZAxis -= panDelta.x*0.004;
+        NSLog(@"rot x: %f, rot y: %f, rot z: %f", rotXAxis, rotYAxis, rotZAxis);
         [self rotateCompassWithRadians:-rotZAxis];
         panPrevious = panLocation;
-        /*if ((fabs(panDelta.y)) >= (fabs(panDelta.x))) {
-            rotXAxis -= panDelta.y*0.01;
-        } else {
-            rotZAxis -= panDelta.x*0.01;
-            [self rotateCompassWithRadians:-rotZAxis];
-        }
-        panPrevious = panLocation;*/
     }
 }
 
@@ -313,23 +330,31 @@
 
 -(void)startDeviceMotion {
     CMAttitudeReferenceFrame attitude;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+    CMMotionManager *motionManager = [CMMotionManager sharedMotionManager];
+    
+    if (motionManager.magnetometerAvailable) {
+        NSLog(@"*** El magnetómetro está disponible ***");
         attitude = CMAttitudeReferenceFrameXTrueNorthZVertical;
     } else {
+        NSLog(@"*** El magnetómetro no está disponible ***");
         attitude = CMAttitudeReferenceFrameXArbitraryZVertical;
+        [self.compassPlaceholder removeFromSuperview];
     }
-    
-    CMMotionManager *motionManager = [CMMotionManager sharedMotionManager];
     
     if (motionManager.deviceMotionAvailable) {
         NSLog(@"** Entré a calcular valores del sensor ***");
         motionManager.deviceMotionUpdateInterval = 1.0/30.0;
         [motionManager startDeviceMotionUpdatesUsingReferenceFrame:attitude toQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motion, NSError *error){
-            
-            //NSLog(@"Attitude X:%f, Y:%f, Z:%f", motion.attitude.roll, motion.attitude.pitch, motion.attitude.yaw);
-            rotXAxis = -motion.attitude.roll;
-            rotYAxis = motion.attitude.pitch;
-            rotZAxis = -motion.attitude.yaw;
+            if (deviceIsLeftRotated) {
+                rotXAxis = motion.attitude.roll;
+                rotZAxis = -motion.attitude.yaw - M_PI;
+                rotYAxis = -motion.attitude.pitch;
+            } else {
+                rotXAxis = -motion.attitude.roll;
+                rotZAxis = -motion.attitude.yaw;
+                rotYAxis = motion.attitude.pitch;
+            }
+            NSLog(@"Attitude X:%f, Y:%f, Z:%f", rotXAxis, rotYAxis, rotZAxis);
             [self rotateCompassWithRadians:-rotZAxis];
         }];
     } else {
@@ -386,7 +411,7 @@
     self.cubemapTexture = [GLKTextureLoader cubeMapWithContentsOfFiles:skyboxArray options:nil error:NULL];
     self.skyboxEffect.textureCubeMap.name = self.cubemapTexture.name;
     self.skyboxEffect.textureCubeMap.target = self.cubemapTexture.target;
-    self.skyboxEffect.transform.projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), 1.333, 1.0, 100.0);
+    self.skyboxEffect.transform.projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), screenBounds.size.width/screenBounds.size.height, 1.0, 100.0);
     self.skyboxEffect.transform.modelviewMatrix = GLKMatrix4MakeScale(10.0, 10.0, 10.0);
     [self removeOpacityView];
 }
@@ -445,6 +470,26 @@
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cara%@%@.png",docDir,name,ID];
     return jpegFilePath;
+}
+
+#pragma mark - Device Orientation Notification
+
+- (void) orientationChanged:(NSNotification *)note
+{
+    UIDevice * device = note.object;
+    switch(device.orientation)
+    {
+        case UIDeviceOrientationLandscapeLeft:
+            deviceIsLeftRotated = YES;
+            break;
+            
+        case UIDeviceOrientationLandscapeRight:
+            deviceIsLeftRotated = NO;
+            break;
+            
+        default:
+            break;
+    };
 }
 
 @end

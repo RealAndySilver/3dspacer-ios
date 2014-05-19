@@ -33,6 +33,7 @@
     BOOL compassIsOff;
     CGRect screenBounds;
     BOOL deviceIsLeftRotated;
+    GLfloat rotationFactor;
 }
 
 #pragma mark - View Lifecycle
@@ -55,6 +56,11 @@
     x = 0;
     y = 0;
     z = -0.3272;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        rotationFactor = 0.002;
+    } else {
+        rotationFactor = 0.004;
+    }
     self.view.tag = 1;
     self.navigationItem.title = NSLocalizedString(@"Espacio3D", nil);
     self.navigationController.navigationBarHidden = YES;
@@ -79,11 +85,18 @@
     
     //Compass Placeholder
     CGRect compassFrame;
+    CGRect more3DScenesRect;
+    CGRect acabadosViewFrame;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        more3DScenesRect = CGRectMake(0.0, screenFrame.size.height - 30.0, screenFrame.size.width, 190.0);
         compassFrame = CGRectMake(screenFrame.size.width - 100.0, screenFrame.size.height/7.68, 80.0, 80.0);
+        acabadosViewFrame = CGRectMake(-180.0, 120.0, 150.0, 400.0);
     } else {
+        more3DScenesRect = CGRectMake(screenFrame.size.width - 160.0, screenFrame.size.height - 30.0, 160.0, 190.0);
         compassFrame = CGRectMake(screenFrame.size.width - 70.0, 64.0, 50.0, 50.0);
+        acabadosViewFrame = CGRectMake(-180.0, 120.0, 150.0, screenFrame.size.height - 120.0);
     }
+    
     self.compassPlaceholder = [[UIImageView alloc] initWithFrame:compassFrame];
     self.compassPlaceholder.image = [UIImage imageNamed:@"brujula.png"];
     self.compassPlaceholder.userInteractionEnabled = YES;
@@ -103,12 +116,6 @@
     [self.compassPlaceholder addSubview:self.compassOn];
     
     //Add the Inferior view
-    CGRect more3DScenesRect;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        more3DScenesRect = CGRectMake(0.0, screenFrame.size.height - 30.0, screenFrame.size.width, 190.0);
-    } else {
-        more3DScenesRect = CGRectMake(screenFrame.size.width - 160.0, screenFrame.size.height - 30.0, 160.0, 190.0);
-    }
     self.more3DScenesView = [[More3DScenesView alloc] initWithFrame:more3DScenesRect];
     self.more3DScenesView.delegate = self;
     self.more3DScenesView.espacios3DArray = self.arregloDeEspacios3D;
@@ -117,7 +124,7 @@
     [self.view bringSubviewToFront:self.more3DScenesView];
     
     //Add the 'Acabados' view
-    self.acabadosView = [[AcabadosView alloc] initWithFrame:CGRectMake(-180.0, 120.0, 150.0, screenFrame.size.height - 120.0)];
+    self.acabadosView = [[AcabadosView alloc] initWithFrame:acabadosViewFrame];
     self.acabadosView.delegate = self;
     [self.view addSubview:self.acabadosView];
 }
@@ -262,13 +269,13 @@
     } else {
         CGPoint panLocation = [recognizer locationInView:self.view];
         CGPoint panDelta = CGPointMake(panLocation.x - panPrevious.x, panLocation.y - panPrevious.y);
-        rotXAxis -= panDelta.y*0.004;
+        rotXAxis -= panDelta.y*rotationFactor;
         if (rotXAxis < - 2.90) {
             rotXAxis = -2.90;
         } else if (rotXAxis > 0) {
             rotXAxis = 0;
         }
-        rotZAxis -= panDelta.x*0.004;
+        rotZAxis -= panDelta.x*rotationFactor;
         NSLog(@"rot x: %f, rot y: %f, rot z: %f", rotXAxis, rotYAxis, rotZAxis);
         [self rotateCompassWithRadians:-rotZAxis];
         panPrevious = panLocation;
@@ -354,7 +361,7 @@
                 rotZAxis = -motion.attitude.yaw;
                 rotYAxis = motion.attitude.pitch;
             }
-            NSLog(@"Attitude X:%f, Y:%f, Z:%f", rotXAxis, rotYAxis, rotZAxis);
+            //NSLog(@"Attitude X:%f, Y:%f, Z:%f", rotXAxis, rotYAxis, rotZAxis);
             [self rotateCompassWithRadians:-rotZAxis];
         }];
     } else {

@@ -136,10 +136,10 @@
     [self.view addSubview:container];
     
     //UpdateButton
-    UIButton *updateButton = [[UIButton alloc] initWithFrame:updateButtonFrame];
+    /*UIButton *updateButton = [[UIButton alloc] initWithFrame:updateButtonFrame];
     [updateButton setBackgroundImage:[UIImage imageNamed:@"downloadBtn"] forState:UIControlStateNormal];
     [updateButton addTarget:self action:@selector(updateProjectInfo) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:updateButton];
+    [self.view addSubview:updateButton];*/
     
     //SendInfoButton
     UIButton *sendInfoButton = [[UIButton alloc] initWithFrame:sendInfoButtonFrame];

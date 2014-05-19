@@ -16,6 +16,8 @@
 #import "ProjectDownloader.h"
 #import "MBProgressHud.h"
 #import "ProjectsListViewController.h"
+#import "TermsViewController.h"
+#import "ProgressView.h"
 
 @interface MainCarouselViewController () <iCarouselDataSource, iCarouselDelegate, UIAlertViewDelegate>
 @property (strong, nonatomic) iCarousel *carousel;
@@ -24,9 +26,15 @@
 @property (strong, nonatomic) UIPageControl *pageControl;
 @property (strong, nonatomic) UIWindow *secondWindow;
 @property (strong, nonatomic) UIButton *slideShowButton;
+@property (strong, nonatomic) UIButton *messageButton;
+@property (strong, nonatomic) UIButton *deleteButton;
+@property (strong, nonatomic) UIButton *logoutButton;
+@property (strong, nonatomic) ProgressView *progressView;
 @end
 
-@implementation MainCarouselViewController
+@implementation MainCarouselViewController {
+    NSUInteger projectToDownloadIndex;
+}
 
 #pragma mark - Lazy Instantiation
 
@@ -45,6 +53,8 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFinished:) name:@"updates" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertViewAppear) name:@"alert" object:nil];
     [self performSelectorInBackground:@selector(saveMainProjectImages) withObject:nil];
     self.navigationItem.title = @"Página Principal";
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
@@ -97,39 +107,39 @@
     ekoomediaLogo.contentMode = UIViewContentModeScaleAspectFit;
     [self.view addSubview:ekoomediaLogo];
     
-    //Logout button
-    UIButton *logoutButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, 30.0, 100.0, 44.0)];
-    [logoutButton setTitle:NSLocalizedString(@"CerrarSesion", nil) forState:UIControlStateNormal];
-    [logoutButton addTarget:self action:@selector(showLogoutAlert) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:logoutButton];
-    
     //Delete button
-    UIButton *deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 - 15.0 - 48.0 - 30.0 - 48.0, screenRect.size.height - 80.0, 48.0, 48.0)];
-    [deleteButton setBackgroundImage:[UIImage imageNamed:@"Delete.png"] forState:UIControlStateNormal];
-    [self.view addSubview:deleteButton];
+    self.deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 - 15.0 - 48.0, screenRect.size.height - 80.0, 48.0, 48.0)];
+    [self.deleteButton setBackgroundImage:[UIImage imageNamed:@"Delete.png"] forState:UIControlStateNormal];
+    [self.view addSubview:self.deleteButton];
     
     //Meesage button
-    UIButton *messageButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 - 15.0 - 48.0, screenRect.size.height - 80.0, 48.0, 48.0)];
-    [messageButton setBackgroundImage:[UIImage imageNamed:@"Message.png"] forState:UIControlStateNormal];
-    [messageButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:messageButton];
-    
-    //Add button
-    UIButton *addButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 + 15.0, screenRect.size.height - 80.0, 48.0, 48.0)];
-    [addButton setBackgroundImage:[UIImage imageNamed:@"Add.png"] forState:UIControlStateNormal];
-    [addButton addTarget:self action:@selector(goToProjectsList) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:addButton];
+    self.messageButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 - 15.0 - 48.0 - 30.0 - 48.0, screenRect.size.height - 80.0, 48.0, 48.0)];
+    [self.messageButton setBackgroundImage:[UIImage imageNamed:@"Message.png"] forState:UIControlStateNormal];
+    [self.messageButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.messageButton];
     
     //Slideshow button
-    self.slideShowButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 + 15.0 + 48.0 + 30.0, screenRect.size.height - 80.0, 48.0, 48.0)];
+    self.slideShowButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 + 15.0, screenRect.size.height - 80.0, 48.0, 48.0)];
     [self.slideShowButton setBackgroundImage:[UIImage imageNamed:@"Slideshow.png"] forState:UIControlStateNormal];
     [self.slideShowButton addTarget:self action:@selector(startSlideshowProcess) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.slideShowButton];
+    
+    //Add button
+    self.logoutButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 + 48.0 + 30.0, screenRect.size.height - 80.0, 48.0, 48.0)];
+    [self.logoutButton setBackgroundImage:[UIImage imageNamed:@"Add.png"] forState:UIControlStateNormal];
+    [self.logoutButton addTarget:self action:@selector(showLogoutAlert) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.logoutButton];
     
     Proyecto *proyecto = self.usuario.arrayProyectos[0];
     if (![proyecto.arrayAdjuntos count] > 0) {
         self.slideShowButton.hidden = YES;
     }
+    
+    //ProgressView
+    self.progressView=[[ProgressView alloc]initWithFrame:CGRectMake(0, 0, self.navigationController.view.frame.size.height, self.navigationController.view.frame.size.width)];
+    
+    [self.navigationController.view addSubview:self.progressView];
+    [self.view bringSubviewToFront:self.progressView];
 }
 
 -(void)viewWillLayoutSubviews {
@@ -158,6 +168,31 @@
                 [data2 writeToFile:jpegFilePath atomically:YES];
             }
         }
+    }
+}
+
+-(UIImage *)getLogoImageFromProjectAtIndex:(NSUInteger)index {
+    Proyecto *proyecto = self.usuario.arrayProyectos[index];
+    
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *jpegFilePath = [NSString stringWithFormat:@"%@/logo%@%@",docDir,proyecto.idProyecto,[IAmCoder encodeURL:proyecto.logo]];
+    [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
+    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
+    
+    if (!fileExists) {
+        //NSLog(@"no existe proj img %@",jpegFilePath);
+        NSURL *urlImagen=[NSURL URLWithString:proyecto.logo];
+        NSData *data=[NSData dataWithContentsOfURL:urlImagen];
+        UIImage *image = [UIImage imageWithData:data];
+        NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0f)];//1.0f = 100% quality
+        if (image) {
+            [data2 writeToFile:jpegFilePath atomically:YES];
+        }
+        return image;
+    }
+    else {
+        UIImage *image = [UIImage imageWithContentsOfFile:jpegFilePath];
+        return image;
     }
 }
 
@@ -356,7 +391,79 @@
     [self.navigationController pushViewController:projectsListVC animated:YES];
 }
 
-#pragma mark - iCarouselDataSource 
+-(void)goToTermsVC {
+    TermsViewController *termsVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Terms"];
+    termsVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    termsVC.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentViewController:termsVC animated:YES completion:nil];
+}
+
+#pragma mark - Project Download 
+
+-(void)updateProjectAtIndex:(NSUInteger)index {
+    projectToDownloadIndex = index;
+    Proyecto *proyecto = self.usuario.arrayProyectos[projectToDownloadIndex];
+    
+    self.navigationController.navigationBarHidden = YES;
+
+    NSMutableDictionary *dic=[[NSMutableDictionary alloc]init];
+    [dic setObject:proyecto forKey:@"Project"];
+    [dic setObject:@(2000 + projectToDownloadIndex) forKey:@"Tag"];
+    [dic setObject:self.progressView forKey:@"Sender"];
+    [dic setObject:self.usuario forKey:@"Usuario"];
+    [self performSelectorInBackground:@selector(downloadProject:) withObject:dic];
+}
+
+-(void)updateProject:(UIButton *)downloadButton {
+    projectToDownloadIndex = downloadButton.tag - 1000;
+    Proyecto *proyecto = self.usuario.arrayProyectos[projectToDownloadIndex];
+    
+    self.navigationController.navigationBarHidden = YES;
+    
+    NSMutableDictionary *dic=[[NSMutableDictionary alloc]init];
+    [dic setObject:proyecto forKey:@"Project"];
+    [dic setObject:@(2000 + projectToDownloadIndex) forKey:@"Tag"];
+    [dic setObject:self.progressView forKey:@"Sender"];
+    [dic setObject:self.usuario forKey:@"Usuario"];
+    [self performSelectorInBackground:@selector(downloadProject:) withObject:dic];
+}
+
+-(void)downloadProject:(NSMutableDictionary*)dic{
+    NSLog(@"entré a descargar el proyectooo");
+    Proyecto *proyecto=[dic objectForKey:@"Project"];
+    if ([proyecto.data isEqualToString:@"1"]) {
+        [self.progressView setViewAlphaToOne];
+        [ProjectDownloader downloadProject:[dic objectForKey:@"Project"] yTag:[[dic objectForKey:@"Tag"]intValue] sender:self.progressView usuario:[dic objectForKey:@"Usuario"]];
+        [self.progressView setViewAlphaToCero];
+    }
+}
+
+-(BOOL)userCanPassToProjectAtIndex:(NSUInteger)index {
+    
+    FileSaver *fileSaver = [[FileSaver alloc] init];
+    Proyecto *proyecto = self.usuario.arrayProyectos[index];
+    NSUInteger tag = 2000 + index;
+    NSString *composedTag=[NSString stringWithFormat:@"%i%@",tag,proyecto.idProyecto];
+    if ([proyecto.data isEqualToString:@"0"]) {
+        return NO;
+    }
+    
+    if ([fileSaver getUpdateFileWithString:composedTag]) {
+        if (![proyecto.actualizado isEqualToString:[fileSaver getUpdateFileWithString:composedTag]]) {
+            if ([self.usuario.tipo isEqualToString:@"sellers"]) {
+                return YES;
+            } else {
+                return NO;
+            }
+        } else {
+            return YES;
+        }
+    } else {
+        return NO;
+    }
+}
+
+#pragma mark - iCarouselDataSource
 
 -(NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel {
     return [self.usuario.arrayProyectos count];
@@ -370,6 +477,7 @@
         view.layer.shadowOpacity = 0.9;
         view.layer.shadowRadius = 5.0;
         
+        //Main Project ImageView
         UIImageView *projectImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 530.0)];
         projectImageView.tag = 1;
         projectImageView.clipsToBounds = YES;
@@ -378,9 +486,32 @@
         projectImageView.layer.borderColor = [UIColor whiteColor].CGColor;
         projectImageView.layer.borderWidth = 4.0;
         
+        //Project Logo ImageView
+        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(view.frame.size.width - 104.0, view.frame.size.height - 104.0, 100.0, 100.0)];
+        logoImageView.backgroundColor = [UIColor darkGrayColor];
+        logoImageView.clipsToBounds = YES;
+        logoImageView.contentMode = UIViewContentModeScaleAspectFit;
+        logoImageView.tag = 2;
+        
+        //Project Terms and Conditions button
+        UIButton *termsAndConditionsButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+        termsAndConditionsButton.frame = CGRectMake(view.frame.size.width - 50.0, 10.0, 40.0, 40.0);
+        [termsAndConditionsButton addTarget:self action:@selector(goToTermsVC) forControlEvents:UIControlEventTouchUpInside];
+        
+        //Add subviews
         [view addSubview:projectImageView];
+        [view addSubview:logoImageView];
+        [view addSubview:termsAndConditionsButton];
     }
     
+    //Download button
+    UIButton *downloadButton = [[UIButton alloc] initWithFrame:CGRectMake(view.frame.size.width/2.0 - 80.0, 0.0, 160.0, 160.0)];
+    [downloadButton setBackgroundImage:[UIImage imageNamed:@"downloadBtn.png"] forState:UIControlStateNormal];
+    downloadButton.tag = 1000 + index;
+    [downloadButton addTarget:self action:@selector(updateProject:) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:downloadButton];
+    
+    ((UIImageView *)[view viewWithTag:2]).image = [self getLogoImageFromProjectAtIndex:index];
     ((UIImageView *)[view viewWithTag:1]).image = [self imageFromProyectAtIndex:index];
     return view;
 }
@@ -417,7 +548,13 @@
 }
 
 -(void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index {
-    [self startProjectImageSavingProcessAtIndex:index];
+    
+    BOOL userCanGoToProjectDetails = [self userCanPassToProjectAtIndex:index];
+    if (userCanGoToProjectDetails) {
+        [self startProjectImageSavingProcessAtIndex:index];
+    } else {
+        [self updateProjectAtIndex:index];
+    }
 }
 
 -(void)carouselDidEndScrollingAnimation:(iCarousel *)carousel {
@@ -428,6 +565,31 @@
     } else {
         self.slideShowButton.hidden = YES;
     }
+    
+    BOOL projectIsDownloaded = [self userCanPassToProjectAtIndex:carousel.currentItemIndex];
+    NSLog(@"%hhd", projectIsDownloaded);
+    if (projectIsDownloaded) {
+        [UIView animateWithDuration:0.3
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^(){
+                             self.deleteButton.alpha = 1.0;
+                             self.slideShowButton.alpha = 1.0;
+                             self.messageButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+                             self.logoutButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+                         } completion:^(BOOL finished){}];
+        
+    } else {
+        [UIView animateWithDuration:0.3
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^(){
+                             self.deleteButton.alpha = 0.0;
+                             self.slideShowButton.alpha = 0.0;
+                             self.messageButton.transform = CGAffineTransformMakeTranslation(30.0 + 48.0, 0.0);
+                             self.logoutButton.transform = CGAffineTransformMakeTranslation(-15.0-48.0, 0.0);
+                         } completion:^(BOOL finished){}];
+    }
 }
 
 #pragma mark - iCarouselDelegate
@@ -436,6 +598,17 @@
     NSLog(@"Scrolling");
     self.projectNameLabel.text = self.projectsNamesArray[carousel.currentItemIndex];
     self.pageControl.currentPage = carousel.currentItemIndex;
+}
+
+#pragma mark - Notification Handlers
+
+-(void)downloadFinished:(NSNotification *)notification {
+    [self startProjectImageSavingProcessAtIndex:projectToDownloadIndex];
+}
+
+-(void)alertViewAppear {
+    NSString *message=NSLocalizedString(@"ErrorDescarga", nil);
+    [[[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil] show];
 }
 
 @end

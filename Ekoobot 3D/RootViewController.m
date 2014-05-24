@@ -184,6 +184,9 @@
 #pragma mark -
 #pragma mark Comprobacion de usuario
 - (void)comprobarUsuario{
+    NSLog(@"TS70: %@", [IAmCoder dateString]);
+    NSLog(@"Token: %@", [IAmCoder hash256:[NSString stringWithFormat:@"%@~%@~%@", @"demo", @"1234", [IAmCoder dateString]]]);
+    
     contrasenaString=passwordTF.text;
     usuarioString=usuarioTF.text;
     loginButton.enabled=NO;
@@ -280,7 +283,7 @@
             tVC.usuario=usuario;
             tVC.usuarioCopia=usuarioCopia;
             tVC.VC=self;
-            [self.navigationController presentModalViewController:tVC animated:YES];
+            [self.navigationController presentViewController:tVC animated:YES completion:nil];
         }
         else{
             [self irAlSiguienteViewConUsuario:usuario yCopia:usuarioCopia];

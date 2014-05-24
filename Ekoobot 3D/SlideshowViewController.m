@@ -39,8 +39,12 @@
     [slideshow setTransitionDuration:2]; // Transition duration
     [slideshow setTransitionType:KASlideShowTransitionFade]; // Choose a transition type (fade or slide)
     [slideshow setImagesContentMode:UIViewContentModeScaleAspectFill]; // Choose a content mode for images to display
-    for (NSString *path in imagePathArray) {
+    /*for (NSString *path in imagePathArray) {
         [slideshow addImage:[UIImage imageWithContentsOfFile:path]];
+    }*/
+    
+    for (UIImage *renderImage in self.imagesArray) {
+        [slideshow addImage:renderImage];
     }
     if(!window.bounds.size.width>0){
         [slideshow start];

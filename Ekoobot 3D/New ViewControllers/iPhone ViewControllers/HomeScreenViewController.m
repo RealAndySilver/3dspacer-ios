@@ -333,7 +333,29 @@
     dispatch_queue_t ImageSaving = dispatch_queue_create("ImageSaving", NULL);
     dispatch_async(ImageSaving, ^(){
         [self saveMainProjectImagesInBackground];
+        [self saveProjectLogoImagesInBackground];
     });
+}
+
+-(void)saveProjectLogoImagesInBackground {
+    for (int i = 0; i < [self.usuario.arrayProyectos count]; i++) {
+        Proyecto *proyecto = self.usuario.arrayProyectos[i];
+        
+        NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        NSString *jpegFilePath = [NSString stringWithFormat:@"%@/logo%@%@",docDir,proyecto.idProyecto,[IAmCoder encodeURL:proyecto.logo]];
+        [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
+        BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
+        
+        if (!fileExists) {
+            NSURL *urlImagen=[NSURL URLWithString:proyecto.logo];
+            NSData *data=[NSData dataWithContentsOfURL:urlImagen];
+            UIImage *image = [UIImage imageWithData:data];
+            NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0f)];//1.0f = 100% quality
+            if (image) {
+                [data2 writeToFile:jpegFilePath atomically:YES];
+            }
+        }
+    }
 }
 
 -(void)saveMainProjectImagesInBackground {
@@ -363,6 +385,7 @@
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     
     if (!fileExists) {
+        NSLog(@"No existe la imagen en el documents directory así que la convertiré desde NSData");
         NSURL *urlImagen=[NSURL URLWithString:proyecto.imagen];
         NSData *data=[NSData dataWithContentsOfURL:urlImagen];
         UIImage *image = [UIImage imageWithData:data];
@@ -413,6 +436,27 @@
     [self performSelectorInBackground:@selector(downloadProject:) withObject:dic];
 }
 
+-(UIImage *)getLogoImageFromProjectAtIndex:(NSUInteger)index {
+    Proyecto *proyecto = self.usuario.arrayProyectos[index];
+    
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *jpegFilePath = [NSString stringWithFormat:@"%@/logo%@%@",docDir,proyecto.idProyecto,[IAmCoder encodeURL:proyecto.logo]];
+    [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
+    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
+    
+    if (!fileExists) {
+        //NSLog(@"no existe proj img %@",jpegFilePath);
+        NSURL *urlImagen = [NSURL URLWithString:proyecto.logo];
+        NSData *data = [NSData dataWithContentsOfURL:urlImagen];
+        UIImage *image = [UIImage imageWithData:data];
+        return image;
+    }
+    else {
+        UIImage *image = [UIImage imageWithContentsOfFile:jpegFilePath];
+        return image;
+    }
+}
+
 #pragma mark - iCarouselDataSource
 
 -(NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel {
@@ -442,8 +486,17 @@
         projectNameLabel.layer.shadowOpacity = 0.6;
         projectNameLabel.layer.shadowRadius = 2.0;
         
+        //Project Logo ImageView
+        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(view.frame.size.width - 82.0, view.frame.size.height - 82.0, 80.0, 80.0)];
+        logoImageView.backgroundColor = [UIColor darkGrayColor];
+        logoImageView.clipsToBounds = YES;
+        logoImageView.contentMode = UIViewContentModeScaleAspectFit;
+        logoImageView.tag = 3;
+        
+        //Add subviews
         [view addSubview:projectImageView];
         [view addSubview:projectNameLabel];
+        [view addSubview:logoImageView];
     }
     
     //Download button
@@ -455,6 +508,8 @@
     
     ((UIImageView *)[view viewWithTag:1]).image = [self projectImageAtIndex:index];
     ((UILabel *)[view viewWithTag:2]).text = self.projectNamesArray[index];
+    ((UIImageView *)[view viewWithTag:3]).image = [self getLogoImageFromProjectAtIndex:index];
+
     return view;
 }
 

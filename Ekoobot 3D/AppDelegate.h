@@ -12,10 +12,10 @@
 #import <CoreMotion/CoreMotion.h>
 #import "SqlHandler.h"
 @interface AppDelegate : UIResponder <UIApplicationDelegate>{
-    ServerCommunicator *server;
-    NSString *methodName;
-    int test;
-    CMMotionManager *motionManager;
+    //ServerCommunicator *server;
+    //NSString *methodName;
+    //int test;
+    //CMMotionManager *motionManager;
 }
 
 @property (strong, nonatomic) UIWindow *window;

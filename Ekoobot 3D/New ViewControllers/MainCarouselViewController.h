@@ -11,4 +11,5 @@
 
 @interface MainCarouselViewController : UIViewController
 @property (strong, nonatomic) Usuario *usuario;
+@property (strong, nonatomic) NSArray *userProjectsArray;
 @end

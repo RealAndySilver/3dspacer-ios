@@ -7,13 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ServerCommunicator.h"
 #import "FileSaver.h"
 #import "Usuario.h"
 #import "NavController.h"
 #import "IAmCoder.h"
+//#import "ServerCommunicator.h"
+
 @interface SendInfoViewController : UIViewController<UIAlertViewDelegate,UITextFieldDelegate,UITextViewDelegate>{
-    ServerCommunicator *server;
+    //ServerCommunicator *server;
     IBOutlet UILabel *tituloProyectoLabel;
     IBOutlet UITextField *nombreTF;
     IBOutlet UITextField *emailTF;
@@ -29,4 +30,5 @@
 }
 @property(nonatomic,retain)NSString *nombreProyecto,*usuario,*contrasena,*proyectoID;
 @property(nonatomic,retain)Usuario *currentUser;
+@property (strong, nonatomic) NSString *userType;
 @end

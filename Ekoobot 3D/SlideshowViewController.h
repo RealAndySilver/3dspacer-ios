@@ -12,6 +12,7 @@
     KASlideShow *slideshow;
 }
 @property(nonatomic,retain)NSArray *imagePathArray;
+@property (strong, nonatomic) NSArray *imagesArray;
 @property(nonatomic,retain)UIWindow *window;
 
 @end

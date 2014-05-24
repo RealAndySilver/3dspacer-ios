@@ -25,6 +25,7 @@
 @property (strong, nonatomic) AcabadosView *acabadosView;
 @property (strong, nonatomic) UIPanGestureRecognizer *panGesture;
 @property (strong, nonatomic) UIView *opacityView;
+@property (strong, nonatomic) NSTimer *inertiaTimer;
 @end
 
 @implementation GLKitSpaceViewController {
@@ -34,6 +35,7 @@
     CGRect screenBounds;
     BOOL deviceIsLeftRotated;
     GLfloat rotationFactor;
+    CGPoint movementVector;
 }
 
 #pragma mark - View Lifecycle
@@ -74,6 +76,8 @@
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self stopDeviceMotion];
+    [self.inertiaTimer invalidate];
+    self.inertiaTimer = nil;
 }
 
 -(void)setupUI {
@@ -263,10 +267,14 @@
 
 -(void)rotateScene:(UIPanGestureRecognizer *)recognizer {
     static CGPoint panPrevious;
+    static CGPoint point1;
     if (recognizer.state == UIGestureRecognizerStateBegan) {
+        [self.inertiaTimer invalidate];
+        self.inertiaTimer = nil;
+        
         panPrevious = [recognizer locationInView:self.view];
         
-    } else {
+    } else if (recognizer.state != UIGestureRecognizerStateEnded){
         CGPoint panLocation = [recognizer locationInView:self.view];
         CGPoint panDelta = CGPointMake(panLocation.x - panPrevious.x, panLocation.y - panPrevious.y);
         rotXAxis -= panDelta.y*rotationFactor;
@@ -278,7 +286,34 @@
         rotZAxis -= panDelta.x*rotationFactor;
         NSLog(@"rot x: %f, rot y: %f, rot z: %f", rotXAxis, rotYAxis, rotZAxis);
         [self rotateCompassWithRadians:-rotZAxis];
+        point1 = panPrevious;
         panPrevious = panLocation;
+        
+    } else if (recognizer.state == UIGestureRecognizerStateEnded) {
+        CGPoint point2 = [recognizer locationInView:self.view];
+        NSLog(@"Point 1: %@", NSStringFromCGPoint(point1));
+        NSLog(@"Point 2: %@", NSStringFromCGPoint(point2));
+        movementVector = CGPointMake(point2.x - point1.x, point2.y - point1.y);
+        NSLog(@"Vector: %@", NSStringFromCGPoint(movementVector));
+        [self stopSceneRotationWithInertia];
+    }
+}
+
+-(void)stopSceneRotationWithInertia {
+    self.inertiaTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/30.0 target:self selector:@selector(calculateSceneRotationValues) userInfo:nil repeats:YES];
+}
+
+-(void)calculateSceneRotationValues {
+    NSLog(@"calculando valores de rotacion %@", NSStringFromCGPoint(movementVector));
+    rotXAxis -= movementVector.y*rotationFactor;
+    rotZAxis -= movementVector.x*rotationFactor;
+    
+    movementVector.x = movementVector.x/1.2;
+    movementVector.y = movementVector.y/1.2;
+    
+    if (fabs(movementVector.x) < 0.1 && fabs(movementVector.y) < 0.1) {
+        [self.inertiaTimer invalidate];
+        self.inertiaTimer = nil;
     }
 }
 
@@ -341,7 +376,7 @@
     
     if (motionManager.magnetometerAvailable) {
         NSLog(@"*** El magnetómetro está disponible ***");
-        attitude = CMAttitudeReferenceFrameXTrueNorthZVertical;
+        attitude = CMAttitudeReferenceFrameXMagneticNorthZVertical;
     } else {
         NSLog(@"*** El magnetómetro no está disponible ***");
         attitude = CMAttitudeReferenceFrameXArbitraryZVertical;

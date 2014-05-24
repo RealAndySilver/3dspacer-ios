@@ -13,13 +13,19 @@
 #import "SendInfoViewController.h"
 #import "SlideshowViewController.h"
 #import "SlideControlViewController.h"
-#import "ProjectDownloader.h"
+//#import "ProjectDownloader.h"
 #import "MBProgressHud.h"
 #import "ProjectsListViewController.h"
-#import "TermsViewController.h"
+//#import "TermsViewController.h"
 #import "ProgressView.h"
+#import "Project+AddOn.h"
+#import "TermsAndConditionsViewController.h"
+#import "UserInfo.h"
+#import "ServerCommunicator.h"
+#import "NSArray+NullReplacement.h"
+#import "Render+AddOns.h"
 
-@interface MainCarouselViewController () <iCarouselDataSource, iCarouselDelegate, UIAlertViewDelegate>
+@interface MainCarouselViewController () <iCarouselDataSource, iCarouselDelegate, UIAlertViewDelegate, ServerCommunicatorDelegate>
 @property (strong, nonatomic) iCarousel *carousel;
 @property (strong, nonatomic) UILabel *projectNameLabel;
 @property (strong, nonatomic) NSMutableArray *projectsNamesArray;
@@ -30,6 +36,8 @@
 @property (strong, nonatomic) UIButton *deleteButton;
 @property (strong, nonatomic) UIButton *logoutButton;
 @property (strong, nonatomic) ProgressView *progressView;
+@property (strong, nonatomic) NSArray *rendersArray;
+@property (strong, nonatomic) UIManagedDocument *databaseDocument;
 @end
 
 @implementation MainCarouselViewController {
@@ -39,11 +47,20 @@
 #pragma mark - Lazy Instantiation
 
 -(NSMutableArray *)projectsNamesArray {
-    if (!_projectsNamesArray) {
+    /*if (!_projectsNamesArray) {
         _projectsNamesArray = [NSMutableArray arrayWithCapacity:[self.usuario.arrayProyectos count]];
         for (int i = 0; i < [self.usuario.arrayProyectos count]; i++) {
             Proyecto *proyecto = self.usuario.arrayProyectos[i];
             [_projectsNamesArray addObject:proyecto.nombre];
+        }
+    }
+    return _projectsNamesArray;*/
+    
+    if (!_projectsNamesArray) {
+        _projectsNamesArray = [[NSMutableArray alloc] initWithCapacity:[self.userProjectsArray count]];
+        for (int i = 0; i < [self.userProjectsArray count]; i++) {
+            Project *project = self.userProjectsArray[i];
+            [_projectsNamesArray addObject:project.name];
         }
     }
     return _projectsNamesArray;
@@ -53,11 +70,9 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFinished:) name:@"updates" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertViewAppear) name:@"alert" object:nil];
-    [self performSelectorInBackground:@selector(saveMainProjectImages) withObject:nil];
-    self.navigationItem.title = @"Página Principal";
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFinished:) name:@"updates" object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertViewAppear) name:@"alert" object:nil];
+    //[self performSelectorInBackground:@selector(saveMainProjectImages) withObject:nil];
     self.view.backgroundColor = [UIColor grayColor];
     [self setupUI];
 }
@@ -92,15 +107,6 @@
     self.projectNameLabel.font = [UIFont boldSystemFontOfSize:25.0];
     [self.view addSubview:self.projectNameLabel];
     
-    //PageControl setup
-    /*self.pageControl = [[UIPageControl alloc] init];
-    self.pageControl.numberOfPages = [self.usuario.arrayProyectos count];
-    [self.view addSubview:self.pageControl];*/
-    
-    //Logout button
-    /*UIBarButtonItem *logoutBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(showLogoutAlert)];
-    self.navigationItem.leftBarButtonItem = logoutBarButton;*/
-    
     //Ekoomedia Logo
     UIImageView *ekoomediaLogo = [[UIImageView alloc] initWithFrame:CGRectMake(screenRect.size.width - 100.0, 20.0, 80.0, 80.0)];
     ekoomediaLogo.image = [UIImage imageNamed:@"logo.png"];
@@ -130,16 +136,16 @@
     [self.logoutButton addTarget:self action:@selector(showLogoutAlert) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.logoutButton];
     
-    Proyecto *proyecto = self.usuario.arrayProyectos[0];
+    /*Proyecto *proyecto = self.usuario.arrayProyectos[0];
     if (![proyecto.arrayAdjuntos count] > 0) {
         self.slideShowButton.hidden = YES;
-    }
+    }*/
     
     //ProgressView
-    self.progressView=[[ProgressView alloc]initWithFrame:CGRectMake(0, 0, self.navigationController.view.frame.size.height, self.navigationController.view.frame.size.width)];
+    /*self.progressView=[[ProgressView alloc]initWithFrame:CGRectMake(0, 0, self.navigationController.view.frame.size.height, self.navigationController.view.frame.size.width)];
     
     [self.navigationController.view addSubview:self.progressView];
-    [self.view bringSubviewToFront:self.progressView];
+    [self.view bringSubviewToFront:self.progressView];*/
 }
 
 -(void)viewWillLayoutSubviews {
@@ -151,7 +157,7 @@
 
 #pragma mark - Custom methods 
 
--(void)saveMainProjectImages {
+/*-(void)saveMainProjectImages {
     for (int i = 0; i < [self.usuario.arrayProyectos count]; i++) {
         Proyecto *proyecto = self.usuario.arrayProyectos[i];
         NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
@@ -169,10 +175,10 @@
             }
         }
     }
-}
+}*/
 
 -(UIImage *)getLogoImageFromProjectAtIndex:(NSUInteger)index {
-    Proyecto *proyecto = self.usuario.arrayProyectos[index];
+    /*Proyecto *proyecto = self.usuario.arrayProyectos[index];
     
     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/logo%@%@",docDir,proyecto.idProyecto,[IAmCoder encodeURL:proyecto.logo]];
@@ -193,11 +199,14 @@
     else {
         UIImage *image = [UIImage imageWithContentsOfFile:jpegFilePath];
         return image;
-    }
+    }*/
+    
+    Project *project = self.userProjectsArray[index];
+    return [project projectLogoImage];
 }
 
 -(UIImage *)imageFromProyectAtIndex:(NSUInteger)index {
-    Proyecto *proyecto = self.usuario.arrayProyectos[index];
+    /*Proyecto *proyecto = self.usuario.arrayProyectos[index];
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cover%@%@.jpeg",docDir,proyecto.idProyecto,[IAmCoder encodeURL:proyecto.imagen]];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
@@ -207,19 +216,21 @@
         NSURL *urlImagen=[NSURL URLWithString:proyecto.imagen];
         NSData *data=[NSData dataWithContentsOfURL:urlImagen];
         UIImage *image = [UIImage imageWithData:data];
-        /*NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0f)];//1.0f = 100% quality
+        NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0f)];//1.0f = 100% quality
         if (image) {
             [data2 writeToFile:jpegFilePath atomically:YES];
-        }*/
+        }
         return image;
     }
     else {
         UIImage *image = [UIImage imageWithContentsOfFile:jpegFilePath];
         return image;
-    }
+    }*/
+    Project *project = self.userProjectsArray[index];
+    return [project projectMainImage];
 }
 
--(NSArray *)arrayOfImagePathsFromProjectAtIndex:(NSUInteger)index {
+/*-(NSArray *)arrayOfImagePathsFromProjectAtIndex:(NSUInteger)index {
     NSMutableArray *projectImagesArray = [[NSMutableArray alloc] init];
     Proyecto *proyecto = self.usuario.arrayProyectos[index];
     
@@ -234,23 +245,23 @@
                 [projectImagesArray addObject:jpegFilePath];
             } else {
                 
-                /*NSURL *urlImagen=[NSURL URLWithString:adjunto.imagen];
+                NSURL *urlImagen=[NSURL URLWithString:adjunto.imagen];
                 NSData *data=[NSData dataWithContentsOfURL:urlImagen];
                 UIImage *image = [UIImage imageWithData:data];
                 NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0f)];//1.0f = 100% quality
                 if (image) {
                     [data2 writeToFile:jpegFilePath atomically:YES];
                     [projectImagesArray addObject:jpegFilePath];
-                }*/
+                }
             }
         }
     }
     return projectImagesArray;
-}
+}*/
 
 #pragma mark - Actions 
 
--(void)startProjectImageSavingProcessAtIndex:(NSUInteger)index {
+/*-(void)startProjectImageSavingProcessAtIndex:(NSUInteger)index {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     dispatch_queue_t imageSavingTask = dispatch_queue_create("ProjectImageSaving", NULL);
     dispatch_async(imageSavingTask, ^(){
@@ -260,11 +271,11 @@
             [self goToProjectAtIndex:index];
         });
     });
-}
+}*/
 
 -(void)startSlideshowProcess {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    NSUInteger projectIndex = self.carousel.currentItemIndex;
+    /*NSUInteger projectIndex = self.carousel.currentItemIndex;
     
     dispatch_queue_t imageSavingTask = dispatch_queue_create("ImageSaving", NULL);
     dispatch_async(imageSavingTask, ^(){
@@ -273,10 +284,12 @@
             [MBProgressHUD hideHUDForView:self.view animated:YES];
             [self goToSlideshow];
         });
-    });
+    });*/
+    
+    [self getRendersFromServer];
 }
 
--(void)saveProjectImagesInBackgroundAtIndex:(NSUInteger)index {
+/*-(void)saveProjectImagesInBackgroundAtIndex:(NSUInteger)index {
     Proyecto *proyecto = self.usuario.arrayProyectos[index];
     
     for (int i = 0; i < [proyecto.arrayAdjuntos count]; i++) {
@@ -300,12 +313,13 @@
             }
         }
     }
-}
+}*/
 
 -(void)goToSlideshow {
     SlideshowViewController *ssVC=[[SlideshowViewController alloc]init];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    ssVC.imagePathArray = [self arrayOfImagePathsFromProjectAtIndex:self.carousel.currentItemIndex];
+    //ssVC.imagePathArray = [self arrayOfImagePathsFromProjectAtIndex:self.carousel.currentItemIndex];
+    ssVC.imagesArray = nil;
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     NSLog(@"slideshow images paths arra: %@", ssVC.imagePathArray);
     //ssVC.imagePathArray = [renderPathArray objectAtIndex:sender.tag-3500];
@@ -347,8 +361,7 @@
 }
 
 -(void)sendMessage {
-    Proyecto *proyecto = self.usuario.arrayProyectos[self.carousel.currentItemIndex];
-    
+    /*Proyecto *proyecto = self.usuario.arrayProyectos[self.carousel.currentItemIndex];
     SendInfoViewController *sendInfoVC=[[SendInfoViewController alloc]init];
     sendInfoVC=[self.storyboard instantiateViewControllerWithIdentifier:@"SendInfo"];
     sendInfoVC.nombreProyecto = proyecto.nombre;
@@ -358,7 +371,18 @@
     sendInfoVC.contrasena = self.usuario.contrasena;
     sendInfoVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     sendInfoVC.modalPresentationStyle = UIModalPresentationCurrentContext;
+    [self.navigationController presentViewController:sendInfoVC animated:YES completion:nil];*/
     
+    
+    Project *project = self.userProjectsArray[self.carousel.currentItemIndex];
+    SendInfoViewController *sendInfoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SendInfo"];
+    sendInfoVC.nombreProyecto = project.name;
+    sendInfoVC.proyectoID = [NSString stringWithFormat:@"%d", [project.identifier intValue]];
+    sendInfoVC.usuario = [UserInfo sharedInstance].userName;
+    sendInfoVC.contrasena = [UserInfo sharedInstance].password;
+    sendInfoVC.userType = @"sellers"; // ***********************************Corregir estoooooooooo******************************************//
+    sendInfoVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    sendInfoVC.modalPresentationStyle = UIModalPresentationCurrentContext;
     [self.navigationController presentViewController:sendInfoVC animated:YES completion:nil];
 }
 
@@ -392,10 +416,13 @@
 }
 
 -(void)goToTermsVC {
-    TermsViewController *termsVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Terms"];
-    termsVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-    termsVC.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:termsVC animated:YES completion:nil];
+    Project *project = self.userProjectsArray[self.carousel.currentItemIndex];
+    
+    TermsAndConditionsViewController *termsAndConditionsVC = [self.storyboard instantiateViewControllerWithIdentifier:@"TermsAndConditions"];
+    termsAndConditionsVC.termsString = project.terms;
+    termsAndConditionsVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    termsAndConditionsVC.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentViewController:termsAndConditionsVC animated:YES completion:nil];
 }
 
 #pragma mark - Project Download 
@@ -428,7 +455,7 @@
     [self performSelectorInBackground:@selector(downloadProject:) withObject:dic];
 }
 
--(void)downloadProject:(NSMutableDictionary*)dic{
+/*-(void)downloadProject:(NSMutableDictionary*)dic{
     NSLog(@"entré a descargar el proyectooo");
     Proyecto *proyecto=[dic objectForKey:@"Project"];
     if ([proyecto.data isEqualToString:@"1"]) {
@@ -436,7 +463,7 @@
         [ProjectDownloader downloadProject:[dic objectForKey:@"Project"] yTag:[[dic objectForKey:@"Tag"]intValue] sender:self.progressView usuario:[dic objectForKey:@"Usuario"]];
         [self.progressView setViewAlphaToCero];
     }
-}
+}*/
 
 -(BOOL)userCanPassToProjectAtIndex:(NSUInteger)index {
     
@@ -463,10 +490,151 @@
     }
 }
 
+#pragma mark - Server Stuff
+
+-(void)getRendersFromServer {
+    Project *project = self.userProjectsArray[self.carousel.currentItemIndex];
+    NSString *projectID = [NSString stringWithFormat:@"%d", [project.identifier intValue]];
+    
+    ServerCommunicator *serverCommunicator = [[ServerCommunicator alloc] init];
+    serverCommunicator.delegate = self;
+    [serverCommunicator callServerWithGETMethod:@"getProjectById" andParameter:projectID];
+}
+
+-(void)receivedDataFromServer:(NSDictionary *)dictionary withMethodName:(NSString *)methodName {
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    
+    if ([methodName isEqualToString:@"getProjectById"]) {
+        if (dictionary) {
+            NSLog(@"Llegó respuesta del getProjectByID");
+            if (dictionary[@"code"]) {
+                NSLog(@"Ocurrió algún error y no se devolvió la info");
+            } else {
+                NSLog(@"Respuesta del getProjectByID: %@", dictionary);
+                NSArray *arrayWithNulls = dictionary[@"renders"];
+                self.rendersArray = [arrayWithNulls arrayByReplacingNullsWithBlanks];
+                [self startSavingRenderImagesInCoreData];
+            }
+        } else {
+            NSLog(@"NO llegó respuesta del getProjectById");
+        }
+    } else {
+        NSLog(@"La respuesta no corresponde con los métodos enviados");
+    }
+}
+
+-(void)serverError:(NSError *)error {
+    NSLog(@"error en el server");
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+}
+
+#pragma mark - CoreData Stuff
+
+-(void)startSavingRenderImagesInCoreData {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    //Get the Datababase Document path
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSURL *documentsDirectory = [[fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject];
+    NSString *documentName = @"MyDocument";
+    NSURL *url = [documentsDirectory URLByAppendingPathComponent:documentName];
+    self.databaseDocument = [[UIManagedDocument alloc] initWithFileURL:url];
+    
+    //Check if the document exist
+    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:[url path]];
+    if (fileExist) {
+        //Open The Database Document
+        [self.databaseDocument openWithCompletionHandler:^(BOOL success){
+            if (success) {
+                [self databaseDocumentIsReadyForRendersSaving];
+            } else {
+                NSLog(@"Could not open the document at %@", url);
+            }
+        }];
+    } else {
+        //The documents does not exist on disk, so create it
+        [self.databaseDocument saveToURL:self.databaseDocument.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success){
+            if (success) {
+                [self databaseDocumentIsReadyForRendersSaving];
+            } else {
+                NSLog(@"Could not open the document at %@", url);
+            }
+        }];
+    }
+}
+
+-(void)databaseDocumentIsReadyForRendersSaving {
+    if (self.databaseDocument.documentState == UIDocumentStateNormal) {
+        //Start using the document
+        NSManagedObjectContext *context = self.databaseDocument.managedObjectContext;
+        NSMutableArray *rendersArray = [[NSMutableArray alloc] initWithCapacity:[self.rendersArray count]]; //Of Renders
+        for (int i = 0; i < [self.rendersArray count]; i++) {
+            NSDictionary *renderInfoDic = self.rendersArray[i];
+            Render *render = [Render renderWithServerInfo:renderInfoDic inManagedObjectContext:context];
+            [rendersArray addObject:render];
+        }
+        [self goToSlideshowWithRendersArray:rendersArray];
+    }
+}
+
+-(void)goToSlideshowWithRendersArray:(NSMutableArray *)rendersArray {
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    
+    NSMutableArray *renderImagesArray = [NSMutableArray arrayWithCapacity:[rendersArray count]];
+    for (int i = 0; i < [rendersArray count]; i++) {
+        Render *render = rendersArray[i];
+        [renderImagesArray addObject:[render renderImage]];
+    }
+    
+    SlideshowViewController *ssVC=[[SlideshowViewController alloc]init];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    //ssVC.imagePathArray = [self arrayOfImagePathsFromProjectAtIndex:self.carousel.currentItemIndex];
+    ssVC.imagesArray = renderImagesArray;
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    NSLog(@"slideshow images paths arra: %@", ssVC.imagePathArray);
+    //ssVC.imagePathArray = [renderPathArray objectAtIndex:sender.tag-3500];
+    SlideControlViewController *cVC=[[SlideControlViewController alloc]init];
+    cVC=[self.storyboard instantiateViewControllerWithIdentifier:@"SlideControl"];
+    if ([[UIScreen screens] count] > 1)
+    {
+        UIScreen *secondScreen = [[UIScreen screens] objectAtIndex:1];
+        NSString *availableModeString;
+        
+        for (int i = 0; i < secondScreen.availableModes.count; i++)
+        {
+            availableModeString = [NSString stringWithFormat:@"%f, %f",
+                                   ((UIScreenMode *)[secondScreen.availableModes objectAtIndex:i]).size.width,
+                                   ((UIScreenMode *)[secondScreen.availableModes objectAtIndex:i]).size.height];
+            
+            //[[[UIAlertView alloc] initWithTitle:@"Available Mode" message:availableModeString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            availableModeString = nil;
+        }
+        
+        // undocumented value 3 means no overscan compensation
+        secondScreen.overscanCompensation = 3;
+        self.secondWindow=nil;
+        self.secondWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, secondScreen.bounds.size.width, secondScreen.bounds.size.height)];
+        self.secondWindow.screen = secondScreen;
+        ssVC.window=self.secondWindow;
+        self.secondWindow.rootViewController = ssVC;
+        self.secondWindow.hidden = NO;
+        NSLog(@"Screen %f x %f",ssVC.window.screen.bounds.size.height,ssVC.window.screen.bounds.size.width);
+        cVC.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self.navigationController presentViewController:cVC animated:YES completion:nil];
+        
+    }
+    else{
+        
+        [self.navigationController pushViewController:ssVC animated:YES];
+    }
+}
+
+
 #pragma mark - iCarouselDataSource
 
 -(NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel {
-    return [self.usuario.arrayProyectos count];
+    //return [self.usuario.arrayProyectos count];
+    return [self.userProjectsArray count];
 }
 
 -(UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index reusingView:(UIView *)view {
@@ -549,16 +717,16 @@
 
 -(void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index {
     
-    BOOL userCanGoToProjectDetails = [self userCanPassToProjectAtIndex:index];
+    /*BOOL userCanGoToProjectDetails = [self userCanPassToProjectAtIndex:index];
     if (userCanGoToProjectDetails) {
         [self startProjectImageSavingProcessAtIndex:index];
     } else {
         [self updateProjectAtIndex:index];
-    }
+    }*/
 }
 
 -(void)carouselDidEndScrollingAnimation:(iCarousel *)carousel {
-    NSLog(@"terminé de moverme");
+    /*NSLog(@"terminé de moverme");
     Proyecto *proyecto = self.usuario.arrayProyectos[carousel.currentItemIndex];
     if ([proyecto.arrayAdjuntos count] > 0) {
         self.slideShowButton.hidden = NO;
@@ -589,7 +757,7 @@
                              self.messageButton.transform = CGAffineTransformMakeTranslation(30.0 + 48.0, 0.0);
                              self.logoutButton.transform = CGAffineTransformMakeTranslation(-15.0-48.0, 0.0);
                          } completion:^(BOOL finished){}];
-    }
+    }*/
 }
 
 #pragma mark - iCarouselDelegate
@@ -602,13 +770,13 @@
 
 #pragma mark - Notification Handlers
 
--(void)downloadFinished:(NSNotification *)notification {
+/*-(void)downloadFinished:(NSNotification *)notification {
     [self startProjectImageSavingProcessAtIndex:projectToDownloadIndex];
 }
 
 -(void)alertViewAppear {
     NSString *message=NSLocalizedString(@"ErrorDescarga", nil);
     [[[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil] show];
-}
+}*/
 
 @end

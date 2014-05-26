@@ -721,11 +721,11 @@
     return dateInStringFormated;
 }
 - (void)irAPlantaUrbanaVCConProyecto:(id)proyecto{
-    PlantaUrbanaVC *pgVC = [[PlantaUrbanaVC alloc]init];
+    /*PlantaUrbanaVC *pgVC = [[PlantaUrbanaVC alloc]init];
     pgVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlantaUrbanaVC"];
     pgVC.proyecto = proyecto;
     [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
-    [self.navigationController pushViewController:pgVC animated:NO];
+    [self.navigationController pushViewController:pgVC animated:NO];*/
 }
 - (void)irATiposDePisosVCConGrupo:(id)grupo{
     TiposDePisosVC *peVC = [[TiposDePisosVC alloc]init];
@@ -767,14 +767,14 @@
     //[self.navigationController pushViewController:siVC animated:YES];
 }
 -(void)goToZoomView:(CustomButton*)button{
-    NSLog(@"Touched %@",button.path);
+    /*NSLog(@"Touched %@",button.path);
     //NSString *path=button.path;
     //[self loadLocalDocument:button.path inView:nil];
     [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
     ZoomViewController *zVC=[[ZoomViewController alloc]init];
     zVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Zoom"];
     zVC.path=button.path;
-    [self.navigationController pushViewController:zVC animated:NO];
+    [self.navigationController pushViewController:zVC animated:NO];*/
 }
 
 #pragma mark document interaction

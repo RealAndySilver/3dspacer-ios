@@ -13,6 +13,9 @@
 #import "UIImage+Resize.h"
 #import "MBProgressHud.h"
 #import "AcabadosView.h"
+#import "Finish.h"
+#import "Space.h"
+#import "FinishImage+AddOns.h"
 
 @interface GLKitSpaceViewController () <More3DScenesViewDelegate, UIGestureRecognizerDelegate, CLLocationManagerDelegate, AcabadosViewDelegate>
 @property (strong, nonatomic) GLKTextureInfo *cubemapTexture;
@@ -26,6 +29,10 @@
 @property (strong, nonatomic) UIPanGestureRecognizer *panGesture;
 @property (strong, nonatomic) UIView *opacityView;
 @property (strong, nonatomic) NSTimer *inertiaTimer;
+
+@property (strong, nonatomic) NSMutableArray *finishesArray;
+@property (strong, nonatomic) NSMutableArray *finishesImagesArray;
+@property (strong, nonatomic) NSMutableDictionary *carasIds;
 @end
 
 @implementation GLKitSpaceViewController {
@@ -38,10 +45,108 @@
     CGPoint movementVector;
 }
 
+#pragma mark - Lazy Instantiation 
+
+-(NSMutableDictionary *)carasIds {
+    if (!_carasIds) {
+        _carasIds = [[NSMutableDictionary alloc] init];
+        for (int i = 0; i < [self.finishesImagesArray count]; i++) {
+            FinishImage *finishImage = self.finishesImagesArray[i];
+            if ([finishImage.type isEqualToString:@"back"]) {
+                [_carasIds setObject:finishImage.identifier forKey:@"back"];
+            } else if ([finishImage.type isEqualToString:@"top"]) {
+                [_carasIds setObject:finishImage.identifier forKey:@"top"];
+            } else if ([finishImage.type isEqualToString:@"down"]) {
+                [_carasIds setObject:finishImage.identifier forKey:@"down"];
+            } else if ([finishImage.type isEqualToString:@"left"]) {
+                [_carasIds setObject:finishImage.identifier forKey:@"left"];
+            } else if ([finishImage.type isEqualToString:@"right"]) {
+                [_carasIds setObject:finishImage.identifier forKey:@"right"];
+            } else if ([finishImage.type isEqualToString:@"front"]) {
+                [_carasIds setObject:finishImage.identifier forKey:@"front"];
+            }
+        }
+    }
+    return _carasIds;
+}
+
+-(NSMutableArray *)finishesImagesArray {
+    Finish *finish = self.finishesArray[0];
+    
+    if (!_finishesImagesArray) {
+        _finishesImagesArray = [[NSMutableArray alloc] init];
+        for (int i = 0; i < [self.projectDic[@"finishImages"] count]; i++) {
+            FinishImage *finishImage = self.projectDic[@"finishImages"][i];
+            if ([finishImage.finish isEqualToString:finish.identifier]) {
+                [_finishesImagesArray addObject:finishImage];
+            }
+        }
+    }
+    return _finishesImagesArray;
+}
+
+-(void)setupFinishesArray {
+    Space *space = self.arregloDeEspacios3D[self.espacioSeleccionado];
+    NSLog(@"número de acabados en el proyecto: %d", [self.projectDic[@"finishes"] count]);
+    self.finishesArray = [[NSMutableArray alloc] init];
+    for (int i = 0; i < [self.projectDic[@"finishes"] count]; i++) {
+        Finish *finish = self.projectDic[@"finishes"][i];
+        if ([finish.space isEqualToString:space.identifier]) {
+            [self.finishesArray addObject:finish];
+        }
+    }
+}
+
+-(void)changeFinishesArray {
+    [self.finishesArray removeAllObjects];
+    
+    Space *space = self.arregloDeEspacios3D[self.espacioSeleccionado];
+    NSLog(@"número de acabados en el proyecto: %d", [self.projectDic[@"finishes"] count]);
+    for (int i = 0; i < [self.projectDic[@"finishes"] count]; i++) {
+        Finish *finish = self.projectDic[@"finishes"][i];
+        if ([finish.space isEqualToString:space.identifier]) {
+            [self.finishesArray addObject:finish];
+        }
+    }
+}
+
+-(void)changeFinishesImagesArray {
+    [self.finishesImagesArray removeAllObjects];
+    
+    Finish *finish = self.finishesArray[0];
+    
+    for (int i = 0; i < [self.projectDic[@"finishImages"] count]; i++) {
+        FinishImage *finishImage = self.projectDic[@"finishImages"][i];
+        if ([finishImage.finish isEqualToString:finish.identifier]) {
+            [self.finishesImagesArray addObject:finishImage];
+        }
+    }
+}
+
+-(void)changeCarasIds {
+    for (int i = 0; i < [self.finishesImagesArray count]; i++) {
+        FinishImage *finishImage = self.finishesImagesArray[i];
+        if ([finishImage.type isEqualToString:@"back"]) {
+            [_carasIds setObject:finishImage.identifier forKey:@"back"];
+        } else if ([finishImage.type isEqualToString:@"top"]) {
+            [_carasIds setObject:finishImage.identifier forKey:@"top"];
+        } else if ([finishImage.type isEqualToString:@"down"]) {
+            [_carasIds setObject:finishImage.identifier forKey:@"down"];
+        } else if ([finishImage.type isEqualToString:@"left"]) {
+            [_carasIds setObject:finishImage.identifier forKey:@"left"];
+        } else if ([finishImage.type isEqualToString:@"right"]) {
+            [_carasIds setObject:finishImage.identifier forKey:@"right"];
+        } else if ([finishImage.type isEqualToString:@"front"]) {
+            [_carasIds setObject:finishImage.identifier forKey:@"front"];
+        }
+    }
+}
+
 #pragma mark - View Lifecycle
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    [self setupFinishesArray];
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification
                                                object:[UIDevice currentDevice]];
@@ -123,7 +228,9 @@
     self.more3DScenesView = [[More3DScenesView alloc] initWithFrame:more3DScenesRect];
     self.more3DScenesView.delegate = self;
     self.more3DScenesView.espacios3DArray = self.arregloDeEspacios3D;
-    self.more3DScenesView.titleLabel.text = ((Espacio3D *)self.arregloDeEspacios3D[self.espacioSeleccionado]).nombre;
+    NSLog(@"numero de espacios 3D en glkit: %d", [self.arregloDeEspacios3D count]);
+    Space *space = self.arregloDeEspacios3D[self.espacioSeleccionado];
+    self.more3DScenesView.titleLabel.text = space.name;
     [self.view addSubview:self.more3DScenesView];
     [self.view bringSubviewToFront:self.more3DScenesView];
     
@@ -169,14 +276,14 @@
                              [self pathForJPEGResourceWithName:@"Atras" ID:@"Spaces_13_2013-01-30 19:40:28"],
                              [self pathForJPEGResourceWithName:@"Frente" ID:@"Spaces_15_2013-01-30 19:40:28"]];*/
     
-    Espacio3D *espacio3D = self.arregloDeEspacios3D[self.espacioSeleccionado];
-    Caras *caras = espacio3D.arrayCaras[0];
-    NSArray *skyboxArray = @[[self pathForPNGResourceWithName:@"FlippedDerecha" ID:caras.idDerecha],
-                             [self pathForPNGResourceWithName:@"FlippedIzquierda" ID:caras.idIzquierda],
-                             [self pathForPNGResourceWithName:@"FlippedFrente" ID:caras.idFrente],
-                             [self pathForPNGResourceWithName:@"FlippedAtras" ID:caras.idAtras],
-                             [self pathForPNGResourceWithName:@"FlippedArriba" ID:caras.idArriba],
-                             [self pathForPNGResourceWithName:@"FlippedAbajo" ID:caras.idAbajo]];
+    //Espacio3D *espacio3D = self.arregloDeEspacios3D[self.espacioSeleccionado];
+    //Caras *caras = espacio3D.arrayCaras[0];
+    NSArray *skyboxArray = @[[self pathForPNGResourceWithName:@"FlippedDerecha" ID:self.carasIds[@"right"]],
+                             [self pathForPNGResourceWithName:@"FlippedIzquierda" ID:self.carasIds[@"left"]],
+                             [self pathForPNGResourceWithName:@"FlippedFrente" ID:self.carasIds[@"front"]],
+                             [self pathForPNGResourceWithName:@"FlippedAtras" ID:self.carasIds[@"back"]],
+                             [self pathForPNGResourceWithName:@"FlippedArriba" ID:self.carasIds[@"top"]],
+                             [self pathForPNGResourceWithName:@"FlippedAbajo" ID:self.carasIds[@"down"]]];
     
     NSError *error;
     NSDictionary *options = @{GLKTextureLoaderOriginBottomLeft: @NO};
@@ -335,7 +442,52 @@
 #pragma mark - Custom Methods
 
 -(void)resizeCubeImages {
-    Espacio3D *espacio3D = self.arregloDeEspacios3D[self.espacioSeleccionado];
+    NSLog(@"entré a resize cube images");
+    UIImage *theImage;
+    NSLog(@"*** Número de imágenes para el acabado seleccionado: %d", [self.finishesImagesArray count]);
+    for (int i = 0; i < [self.finishesImagesArray count]; i++) {
+        FinishImage *finishImage = self.finishesImagesArray[i];
+        
+        if ([finishImage.type isEqualToString:@"back"]) {
+            theImage = [finishImage finishImage];
+            theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
+            [self saveImage:theImage withName:@"FlippedAtras" identifier:finishImage.identifier format:@"png"];
+        
+        } else if ([finishImage.type isEqualToString:@"left"]) {
+            theImage = [finishImage finishImage];
+            theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
+            theImage = [theImage rotateImage:theImage onDegrees:90.0];
+            theImage = [theImage flippedImageByAxis:MVImageFlipYAxis];
+            [self saveImage:theImage withName:@"FlippedIzquierda" identifier:finishImage.identifier format:@"png"];
+        
+        } else if ([finishImage.type isEqualToString:@"front"]) {
+            theImage = [finishImage finishImage];
+            theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
+            theImage = [theImage flippedImageByAxis:MVImageFlipYAxis];
+            [self saveImage:theImage withName:@"FlippedFrente" identifier:finishImage.identifier format:@"png"];
+
+        } else if ([finishImage.type isEqualToString:@"right"]) {
+            theImage = [finishImage finishImage];
+            theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
+            theImage = [theImage rotateImage:theImage onDegrees:90.0];
+            theImage = [theImage flippedImageByAxis:MVImageFlipXAxisAndYAxis];
+            [self saveImage:theImage withName:@"FlippedDerecha" identifier:finishImage.identifier format:@"png"];
+
+        } else if ([finishImage.type isEqualToString:@"top"]) {
+            theImage = [finishImage finishImage];
+            theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
+            theImage = [theImage flippedImageByAxis:MVImageFlipXAxisAndYAxis];
+            [self saveImage:theImage withName:@"FlippedArriba" identifier:finishImage.identifier format:@"png"];
+        
+        } else if ([finishImage.type isEqualToString:@"down"]) {
+            theImage = [finishImage finishImage];
+            theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
+            theImage = [theImage flippedImageByAxis:MVImageFlipYAxis];
+            [self saveImage:theImage withName:@"FlippedAbajo" identifier:finishImage.identifier format:@"png"];
+        }
+    }
+    
+    /*Espacio3D *espacio3D = self.arregloDeEspacios3D[self.espacioSeleccionado];
     Caras *caras = espacio3D.arrayCaras[0];
     
     UIImage *image = [UIImage imageWithContentsOfFile:[self pathForJPEGResourceWithName:@"Frente" ID:caras.idFrente]];
@@ -367,7 +519,7 @@
     
     image = [UIImage imageWithContentsOfFile:[self pathForJPEGResourceWithName:@"Atras" ID:caras.idAtras]];
     resizeImage = [UIImage imageWithImage:image scaledToSize:CGSizeMake(512.0, 512.0)];
-    [self saveImage:resizeImage withName:@"FlippedAtras" identifier:caras.idAtras format:@"png"];
+    [self saveImage:resizeImage withName:@"FlippedAtras" identifier:caras.idAtras format:@"png"];*/
 }
 
 -(void)startDeviceMotion {
@@ -435,6 +587,9 @@
                      animations:^(){
                          self.opacityView.alpha = 0.75;
                      } completion:^(BOOL finished){
+                         [self changeFinishesArray];
+                         [self changeFinishesImagesArray];
+                         [self changeCarasIds];
                          [self changeCubeImages];
                      }];
 }
@@ -442,14 +597,12 @@
 -(void)changeCubeImages {
     [self resizeCubeImages];
     
-    Espacio3D *espacio3D = self.arregloDeEspacios3D[self.espacioSeleccionado];
-    Caras *caras = espacio3D.arrayCaras[0];
-    NSArray *skyboxArray = @[[self pathForPNGResourceWithName:@"FlippedDerecha" ID:caras.idDerecha],
-                             [self pathForPNGResourceWithName:@"FlippedIzquierda" ID:caras.idIzquierda],
-                             [self pathForPNGResourceWithName:@"FlippedFrente" ID:caras.idFrente],
-                             [self pathForPNGResourceWithName:@"FlippedAtras" ID:caras.idAtras],
-                             [self pathForPNGResourceWithName:@"FlippedArriba" ID:caras.idArriba],
-                             [self pathForPNGResourceWithName:@"FlippedAbajo" ID:caras.idAbajo]];
+    NSArray *skyboxArray = @[[self pathForPNGResourceWithName:@"FlippedDerecha" ID:self.carasIds[@"right"]],
+                             [self pathForPNGResourceWithName:@"FlippedIzquierda" ID:self.carasIds[@"left"]],
+                             [self pathForPNGResourceWithName:@"FlippedFrente" ID:self.carasIds[@"front"]],
+                             [self pathForPNGResourceWithName:@"FlippedAtras" ID:self.carasIds[@"back"]],
+                             [self pathForPNGResourceWithName:@"FlippedArriba" ID:self.carasIds[@"top"]],
+                             [self pathForPNGResourceWithName:@"FlippedAbajo" ID:self.carasIds[@"down"]]];
     self.cubemapTexture = [GLKTextureLoader cubeMapWithContentsOfFiles:skyboxArray options:nil error:NULL];
     self.skyboxEffect.textureCubeMap.name = self.cubemapTexture.name;
     self.skyboxEffect.textureCubeMap.target = self.cubemapTexture.target;
@@ -483,7 +636,8 @@
     NSLog(@"Escena seleccionada: %d", index);
     if (self.espacioSeleccionado != index) {
         self.espacioSeleccionado = index;
-        self.more3DScenesView.titleLabel.text = ((Espacio3D *)self.arregloDeEspacios3D[index]).nombre;
+        Space *space = self.arregloDeEspacios3D[self.espacioSeleccionado];
+        self.more3DScenesView.titleLabel.text = space.name;
         [self showLoadingOpacityView];
     }
     [self toggleComplementaryViews];

@@ -15,5 +15,6 @@
     UIScrollView *scrollViewImagen;
     UIImageView *imageViewZoomImage;
 }
-@property(nonatomic)NSString *path;
+//@property(nonatomic)NSString *path;
+@property (strong, nonatomic) UIImage *zoomImage;
 @end

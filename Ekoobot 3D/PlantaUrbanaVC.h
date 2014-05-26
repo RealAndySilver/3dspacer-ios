@@ -20,7 +20,7 @@
 #import "BrujulaView.h"
 
 @interface PlantaUrbanaVC : UIViewController<UIScrollViewDelegate> {
-    Proyecto *proyecto;
+    //Proyecto *proyecto;
     UIImageView *imageViewUrbanismo;
     IBOutlet UIActivityIndicatorView *spinner;
     MBProgressHUD *hud;
@@ -34,7 +34,8 @@
     float diferenciaRotacion;
     float adicionalGrados;
 }
-@property Proyecto *proyecto;
+//@property Proyecto *proyecto;
+@property (strong, nonatomic) NSDictionary *projectDic;
 @property(nonatomic,retain)UIScrollView *scrollViewUrbanismo;
 
 @end

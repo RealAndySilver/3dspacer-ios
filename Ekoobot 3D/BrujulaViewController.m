@@ -7,6 +7,7 @@
 //
 
 #import "BrujulaViewController.h"
+#import "CMMotionManager+Shared.h"
 
 @interface BrujulaViewController ()
 
@@ -44,14 +45,24 @@
     minimumZoomScale=1;
     [self loadScrollView];
     
-    _motionManager = [self motionManager];    
-    [_motionManager setDeviceMotionUpdateInterval:1/60];
-    [_motionManager startDeviceMotionUpdates];
-    [_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXMagneticNorthZVertical];
+    CMMotionManager *motionManager = [CMMotionManager sharedMotionManager];
+    if (motionManager.isDeviceMotionAvailable) {
+        motionManager.deviceMotionUpdateInterval = 1.0/30.0;
+        [motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXMagneticNorthZVertical
+                                                           toQueue:[NSOperationQueue mainQueue]
+                                                       withHandler:^(CMDeviceMotion *motion, NSError *error){
+                                                           attitude = motion.attitude;
+                                                           [self update];
+                                                       }];
+    }
+    //_motionManager = [self motionManager];
+    //[_motionManager setDeviceMotionUpdateInterval:1/60];
+    //[_motionManager startDeviceMotionUpdates];
+    //[_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXMagneticNorthZVertical];
     
     zoomCheck=YES;
-    timer=[[NSTimer alloc]init];
-    timer =[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(update) userInfo:nil repeats:YES];
+    /*timer=[[NSTimer alloc]init];
+    timer =[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(update) userInfo:nil repeats:YES];*/
     brujula=[[BrujulaView alloc]initWithFrame:CGRectMake(self.view.frame.size.height-80, 60, 70, 70)];
     [self.view addSubview:brujula];
     //[self.navigationItem setHidesBackButton:YES];
@@ -59,8 +70,8 @@
 }
 -(void)update{
     if (brujula.isOn) {
-        _motionManager.showsDeviceMovementDisplay = YES;
-        attitude = _motionManager.deviceMotion.attitude;
+        //_motionManager.showsDeviceMovementDisplay = YES;
+        //attitude = _motionManager.deviceMotion.attitude;
         CGAffineTransform swingTransform = CGAffineTransformIdentity;
         swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)+diferenciaRotacion]-adicionalGrados);
         CGAffineTransform swingTransform2 = CGAffineTransformIdentity;
@@ -70,7 +81,7 @@
     }
     else{
         [self.navigationController popViewControllerAnimated:YES];
-        _motionManager.showsDeviceMovementDisplay = NO;
+        //_motionManager.showsDeviceMovementDisplay = NO;
         CGAffineTransform swingTransform = CGAffineTransformIdentity;
         swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(0)]);
         scrollViewImagen.transform = swingTransform;
@@ -93,12 +104,13 @@
     //[scrollViewUrbanismo setZoomScale:0.3 animated:NO];
 }
 -(void)viewWillDisappear:(BOOL)animated{
-    _motionManager.showsDeviceMovementDisplay = NO;
+    //_motionManager.showsDeviceMovementDisplay = NO;
     [timer invalidate];
     timer = nil;
     //[_motionManager stopMagnetometerUpdates];
     //[_motionManager stopDeviceMotionUpdates];
     //_motionManager=nil;
+    [[CMMotionManager sharedMotionManager] stopDeviceMotionUpdates];
     attitude=nil;
     NavController *navController = (NavController *)self.navigationController;
     [navController setInterfaceOrientation:YES];

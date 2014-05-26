@@ -8,7 +8,7 @@
 
 #import "More3DScenesView.h"
 #import "More3DScenesCollectionViewCell.h"
-#import "Espacio3D.h"
+#import "Space.h"
 
 @interface More3DScenesView() <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (strong, nonatomic) UICollectionView *collectionView;
@@ -63,10 +63,11 @@
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     More3DScenesCollectionViewCell *cell = (More3DScenesCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"CellIdentifier" forIndexPath:indexPath];
-    Espacio3D *espacio3D = self.espacios3DArray[indexPath.item];
-    Caras *caras = espacio3D.arrayCaras[0];
-    cell.sceneImageView.image = [UIImage imageWithContentsOfFile:[self pathForJPEGResourceWithName:@"Atras" ID:caras.idAtras]];
-    cell.sceneNameLabel.text = espacio3D.nombre;
+    //Espacio3D *espacio3D = self.espacios3DArray[indexPath.item];
+    //Caras *caras = espacio3D.arrayCaras[0];
+    //cell.sceneImageView.image = [UIImage imageWithContentsOfFile:[self pathForJPEGResourceWithName:@"Atras" ID:caras.idAtras]];
+    Space *space = self.espacios3DArray[indexPath.item];
+    cell.sceneNameLabel.text = space.name;
     return cell;
 }
 

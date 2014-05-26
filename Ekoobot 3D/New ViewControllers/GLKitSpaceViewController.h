@@ -8,10 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
-#import "Espacio3D.h"
 
 @interface GLKitSpaceViewController : GLKViewController
-//@property (strong, nonatomic) Espacio3D *espacio3D;
 @property (strong, nonatomic) NSMutableArray *arregloDeEspacios3D;
 @property (assign, nonatomic) NSUInteger espacioSeleccionado;
+@property (strong, nonatomic) NSDictionary *projectDic;
 @end

@@ -64,14 +64,14 @@
 #pragma mark - Server Stuff
 
 -(void)getProjectsForUser {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.spinner startAnimating];
     ServerCommunicator *serverCommunicator = [[ServerCommunicator alloc] init];
     serverCommunicator.delegate = self;
     [serverCommunicator callServerWithGETMethod:@"getProjectsByUser" andParameter:@""];
 }
 
 -(void)receivedDataFromServer:(NSDictionary *)dictionary withMethodName:(NSString *)methodName {
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [self.spinner stopAnimating];
     
     if ([methodName isEqualToString:@"getProjectsByUser"]) {
         if (dictionary) {
@@ -93,14 +93,15 @@
 }
 
 -(void)serverError:(NSError *)error {
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [self.spinner stopAnimating];
+    
     NSLog(@"Error en el servidor: %@ %@", error, [error localizedDescription]);
 }
 
 #pragma mark - CoreData Stuff
 
 -(void)startCoreDataSavingProcess {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.spinner startAnimating];
     
     //Get the Datababase Document path
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -162,7 +163,7 @@
 }
 
 -(void)goToHomeScreenVCWithProjectsArray:(NSMutableArray *)projectsArray {
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [self.spinner stopAnimating];
     
     LoginViewController *loginVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Login"];
     MainCarouselViewController *mainCarousel = [self.storyboard instantiateViewControllerWithIdentifier:@"MainCarousel"];

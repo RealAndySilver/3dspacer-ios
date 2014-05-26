@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Producto.h"
+@class Product;
 
 @interface PlanosDePlantaViewController : UIViewController
-@property (strong, nonatomic) Producto *producto;
+@property (strong, nonatomic) NSDictionary *projectDic;
+@property (strong, nonatomic) Product *product;
 @end

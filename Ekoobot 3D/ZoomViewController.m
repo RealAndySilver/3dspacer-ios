@@ -13,7 +13,6 @@
 @end
 
 @implementation ZoomViewController
-@synthesize path;
 
 - (void)viewDidLoad{
     [super viewDidLoad];
@@ -55,7 +54,8 @@
     scrollViewImagen.clipsToBounds = YES;
     [scrollViewImagen setDelegate:self];
     imageViewZoomImage=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, scrollViewImagen.frame.size.width, scrollViewImagen.frame.size.height)];
-    imageViewZoomImage.image=[UIImage imageWithContentsOfFile:path];
+    //imageViewZoomImage.image=[UIImage imageWithContentsOfFile:path];
+    imageViewZoomImage.image = self.zoomImage;
     imageViewZoomImage.contentMode = UIViewContentModeScaleAspectFill;
     [scrollViewImagen addSubview:imageViewZoomImage];
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];

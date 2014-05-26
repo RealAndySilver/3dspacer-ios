@@ -2,7 +2,7 @@
 //  Urbanization.m
 //  Ekoobot 3D
 //
-//  Created by Diego Vidal on 23/05/14.
+//  Created by Diego Vidal on 26/05/14.
 //  Copyright (c) 2014 Ekoomedia. All rights reserved.
 //
 
@@ -11,15 +11,15 @@
 
 @implementation Urbanization
 
-@dynamic identifier;
-@dynamic imageURL;
-@dynamic miniURL;
-@dynamic imageWidth;
-@dynamic imageHeight;
-@dynamic northDegrees;
 @dynamic enabled;
-@dynamic lastUpdate;
-@dynamic project;
+@dynamic identifier;
 @dynamic imageData;
+@dynamic imageHeight;
+@dynamic imageURL;
+@dynamic imageWidth;
+@dynamic lastUpdate;
+@dynamic miniURL;
+@dynamic northDegrees;
+@dynamic project;
 
 @end

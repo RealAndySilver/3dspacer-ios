@@ -7,7 +7,7 @@
 //
 
 #import "PlanosCollectionViewCell.h"
-#import "Espacio3D.h"
+#import "Space.h"
 
 @interface PlanosCollectionViewCell() <UIScrollViewDelegate>
 @property (strong, nonatomic) UIButton *brujulaButton;
@@ -28,18 +28,18 @@
     }
 }
 
--(void)setEspacios3DButtonsFromArray:(NSArray *)espacios3DArray {
-    for (int i = 0; i < [espacios3DArray count]; i++) {
+-(void)setEspacios3DButtonsFromArray:(NSArray *)spacesArray {
+    for (int i = 0; i < [spacesArray count]; i++) {
         if (![self.contentView viewWithTag:i + 1]) {
-            Espacio3D *espacio3D = espacios3DArray[i];
+            Space *space = spacesArray[i];
             
             //Pin Button
             CGRect pinButtonFrame;
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-                pinButtonFrame = CGRectMake([espacio3D.coordenadaX floatValue], [espacio3D.coordenadaY floatValue] - 30.0, 30.0, 30.0);
+                pinButtonFrame = CGRectMake([space.xCoord floatValue], [space.yCoord floatValue] - 30.0, 30.0, 30.0);
             } else {
-                CGFloat xCoord = (350*[espacio3D.coordenadaX floatValue])/984.0 - 10.0;
-                CGFloat yCoord = (210*[espacio3D.coordenadaY floatValue])/590.0 - 20.0;
+                CGFloat xCoord = (350*[space.xCoord floatValue])/984.0 - 10.0;
+                CGFloat yCoord = (210*[space.yCoord floatValue])/590.0 - 20.0;
                 pinButtonFrame = CGRectMake(xCoord, yCoord, 25.0, 25.0);
             }
             UIButton *pinButton = [[UIButton alloc] initWithFrame:pinButtonFrame];
@@ -50,7 +50,7 @@
             
             //Button Label
             UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(pinButton.frame.origin.x + pinButton.frame.size.width, pinButton.frame.origin.y, 100.0, 30.0)];
-            nameLabel.text = espacio3D.nombre;
+            nameLabel.text = space.name;
             nameLabel.tag = i + 10;
             nameLabel.textColor = [UIColor whiteColor];
             nameLabel.font = [UIFont boldSystemFontOfSize:17.0];

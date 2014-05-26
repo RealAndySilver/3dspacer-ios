@@ -11,6 +11,9 @@
 #import "GLKitSpaceViewController.h"
 #import "MBProgressHud.h"
 #import "BrujulaViewController.h"
+#import "Plant+AddOns.h"
+#import "Product.h"
+#import "Space.h"
 
 @interface PlanosDePlantaViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PlanoCollectionViewCellDelegate>
 @property (strong, nonatomic) UICollectionView *collectionView;
@@ -18,6 +21,8 @@
 @property (assign, nonatomic) NSUInteger numeroDeEspacio3D;
 @property (strong, nonatomic) UIPageControl *pageControl;
 @property (strong, nonatomic) NSMutableArray *nombresPlantasArray;
+@property (strong, nonatomic) NSMutableArray *plantsArray;
+@property (strong, nonatomic) NSArray *spacesArray;
 @end
 
 @implementation PlanosDePlantaViewController {
@@ -26,13 +31,32 @@
 
 #pragma mark - Lazy Instantiation
 
+-(NSArray *)spacesArray {
+    if (!_spacesArray) {
+        _spacesArray = self.projectDic[@"spaces"];
+    }
+    return _spacesArray;
+}
+
+-(NSMutableArray *)plantsArray {
+    if (!_plantsArray) {
+        _plantsArray = [[NSMutableArray alloc] init];
+        for (int i = 0; i < [self.projectDic[@"plants"] count]; i++) {
+            Plant *plant = self.projectDic[@"plants"][i];
+            if ([plant.product isEqualToString:self.product.identifier]) {
+                [_plantsArray addObject:plant];
+            }
+        }
+    }
+    return _plantsArray;
+}
+
 -(NSMutableArray *)nombresPlantasArray {
     if (!_nombresPlantasArray) {
-        _nombresPlantasArray = [[NSMutableArray alloc] initWithCapacity:[self.producto.arrayPlantas count]];
-        for (int i = 0; i < [self.producto.arrayPlantas count]; i++) {
-            Planta *planta = self.producto.arrayPlantas[i];
-            [_nombresPlantasArray addObject:planta.nombre];
-            NSLog(@"nombre de la planta: %@", planta.nombre);
+        _nombresPlantasArray = [[NSMutableArray alloc] initWithCapacity:[self.plantsArray count]];
+        for (int i = 0; i < [self.plantsArray count]; i++) {
+            Plant *plant = self.plantsArray[i];
+            [_nombresPlantasArray addObject:plant.name];
         }
     }
     return _nombresPlantasArray;
@@ -69,7 +93,7 @@
     
     //Setup PageControl
     self.pageControl = [[UIPageControl alloc] init];
-    self.pageControl.numberOfPages = [self.producto.arrayPlantas count];
+    self.pageControl.numberOfPages = [self.plantsArray count];
     [self.view addSubview:self.pageControl];
 }
 
@@ -85,25 +109,29 @@
 #pragma mark - UICollectionViewDataSource
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return [self.producto.arrayPlantas count];
+    return [self.plantsArray count];
 }
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     PlanosCollectionViewCell *cell = (PlanosCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"CellIdentifier" forIndexPath:indexPath];
     cell.delegate = self;
-    Planta *planta = self.producto.arrayPlantas[indexPath.item];
-    //NSArray *espacios3DArray = planta.arrayEspacios3D;
-    [cell removeAllPinsFromArray:planta.arrayEspacios3D];
-    [cell setEspacios3DButtonsFromArray:planta.arrayEspacios3D];
+    //Planta *planta = self.producto.arrayPlantas[indexPath.item];
+    Plant *plant = self.plantsArray[indexPath.item];
+    cell.planoImageView.image = [plant plantImage];
     
-    //Espacio3D *espacio3D1 = espacios3DArray[0];
-    //cell.espacio3D1.frame = CGRectMake([espacio3D1.coordenadaX floatValue], [espacio3D1.coordenadaY floatValue] - 30.0, 30.0, 30.0);
-    //cell.espacio3D1Label.text = espacio3D1.nombre;
-    //cell.espacio3D1Label.frame = CGRectMake(cell.espacio3D1.frame.origin.x + cell.espacio3D1.frame.size.width, cell.espacio3D1.frame.origin.y, 100.0, 30.0);
+    NSMutableArray *pinsArrayForPlant = [[NSMutableArray alloc] init];
+    for (int i = 0; i < [self.spacesArray count]; i++) {
+        Space *space = self.spacesArray[i];
+        if ([space.plant isEqualToString:plant.identifier]) {
+            [pinsArrayForPlant addObject:space];
+        }
+    }
     
-    cell.planoImageView.image = [self imageFromPlantaAtIndex:indexPath.item];
+    [cell removeAllPinsFromArray:pinsArrayForPlant];
+    [cell setEspacios3DButtonsFromArray:pinsArrayForPlant];
     
-    NSString *replacedMt=[self.producto.area stringByReplacingOccurrencesOfString:@"mt2" withString:@"mt\u00B2"];
+    
+    NSString *replacedMt=[self.product.area stringByReplacingOccurrencesOfString:@"mt2" withString:@"mt\u00B2"];
     NSString *areatTotalString = NSLocalizedString(@"AreaTotal", nil);
     cell.areaTotalLabel.text = [areatTotalString stringByAppendingString:replacedMt];
     return cell;
@@ -111,7 +139,7 @@
 
 #pragma mark - Custom Methods
 
--(UIImage *)imageFromPlantaAtIndex:(NSUInteger)index {
+/*-(UIImage *)imageFromPlantaAtIndex:(NSUInteger)index {
     Planta *planta = self.producto.arrayPlantas[index];
     
     //Access the image path at the documents directory
@@ -140,10 +168,10 @@
         UIImage *plantaImage = [UIImage imageWithContentsOfFile:jpegFilePath];
         return plantaImage;
     }
-}
+}*/
 
 -(void)goToGLKitView {
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    /*[MBProgressHUD hideHUDForView:self.view animated:YES];
     
     Planta *planta = self.producto.arrayPlantas[self.numeroDePlanta];
     NSMutableArray *espacios3DArray = planta.arrayEspacios3D;
@@ -152,16 +180,16 @@
     glkitSpaceVC.espacioSeleccionado = self.numeroDeEspacio3D;
     glkitSpaceVC.arregloDeEspacios3D = espacios3DArray;
     
-    [self.navigationController pushViewController:glkitSpaceVC animated:YES];
+    [self.navigationController pushViewController:glkitSpaceVC animated:YES];*/
 }
 
 -(void)goToBrujulaVCForFloorAtIndex:(NSUInteger)index {
-    Planta *planta = self.producto.arrayPlantas[index];
+    Plant *plant = self.plantsArray[index];
     
     BrujulaViewController *brujulaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Brujula"];
-    UIImageView *floorImageView = [[UIImageView alloc] initWithImage:[self imageFromPlantaAtIndex:index]];
+    UIImageView *floorImageView = [[UIImageView alloc] initWithImage:[plant plantImage]];
     brujulaVC.externalImageView = floorImageView;
-    brujulaVC.gradosExtra = [planta.norte floatValue];
+    brujulaVC.gradosExtra = [plant.northDegs floatValue];
     [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
     [self.navigationController pushViewController:brujulaVC animated:NO];
 }
@@ -183,7 +211,7 @@
 }
 
 -(void)espacio3DButtonWasSelectedWithTag:(NSUInteger)tag inCell:(PlanosCollectionViewCell *)cell {
-    NSLog(@"recibí la info del delegate");
+    /*NSLog(@"recibí la info del delegate");
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
     NSLog(@"indexpath de la celda: %d", indexPath.item);
     
@@ -191,7 +219,25 @@
     self.numeroDeEspacio3D = tag;
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [self performSelector:@selector(goToGLKitView) withObject:nil afterDelay:0.3];
+    [self performSelector:@selector(goToGLKitView) withObject:nil afterDelay:0.3];*/
+    
+    self.numeroDeEspacio3D = tag;
+    
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    Plant *plant = self.plantsArray[indexPath.item];
+    NSMutableArray *spacesArrayForPlant = [[NSMutableArray alloc] init];
+    for (int i = 0; i < [self.spacesArray count]; i++) {
+        Space *space = self.spacesArray[i];
+        if ([space.plant isEqualToString:plant.identifier]) {
+            [spacesArrayForPlant addObject:space];
+        }
+    }
+    NSLog(@"número de espacios en esta planta: %d", [spacesArrayForPlant count]);
+    GLKitSpaceViewController *glkitSpaceVC = [self.storyboard instantiateViewControllerWithIdentifier:@"GLKitSpace"];
+    glkitSpaceVC.espacioSeleccionado = self.numeroDeEspacio3D;
+    glkitSpaceVC.arregloDeEspacios3D = spacesArrayForPlant;
+    glkitSpaceVC.projectDic = self.projectDic;
+    [self.navigationController pushViewController:glkitSpaceVC animated:YES];
 }
 
 @end

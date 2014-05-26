@@ -266,12 +266,12 @@
 }
 
 -(void)goToProjectAtIndex:(NSUInteger)index {
-    ProyectoViewController *proyectoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Proyecto"];
+    /*ProyectoViewController *proyectoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Proyecto"];
     proyectoVC.proyecto = self.usuario.arrayProyectos[index];
     proyectoVC.usuario = self.usuario;
     proyectoVC.mainImage = [self projectImageAtIndex:index];
     proyectoVC.projectNumber = index;
-    [self.navigationController pushViewController:proyectoVC animated:YES];
+    [self.navigationController pushViewController:proyectoVC animated:YES];*/
 }
 
 -(NSArray *)arrayOfImagePathsFromProjectAtIndex:(NSUInteger)index {

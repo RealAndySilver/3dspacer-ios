@@ -13,11 +13,16 @@
 #import "GLKitSpaceViewController.h"
 #import "NavAnimations.h"
 #import "BrujulaViewController.h"
+#import "Floor+AddOns.h"
+#import "Product.h"
+#import "Group.h"
 
 @interface PlanosDePisoViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PisoCollectionViewCellDelegate>
 @property (strong, nonatomic) UICollectionView *collectionView;
 @property (strong, nonatomic) NSMutableArray *arrayNombresPiso;
 @property (strong, nonatomic) UIPageControl *pageControl;
+@property (strong, nonatomic) NSMutableArray *floorsArray;
+@property (strong, nonatomic) NSArray *productsArray;
 @end
 
 @implementation PlanosDePisoViewController {
@@ -26,12 +31,41 @@
 
 #pragma mark - Lazy Instantiation 
 
+-(NSArray *)productsArray {
+    if (!_productsArray) {
+        _productsArray = self.projectDic[@"products"];
+    }
+    return _productsArray;
+}
+
+-(NSMutableArray *)floorsArray {
+    if (!_floorsArray) {
+        _floorsArray = [[NSMutableArray alloc] init];
+        for (int i = 0; i < [self.projectDic[@"floors"] count]; i++) {
+            Floor *floor = self.projectDic[@"floors"][i];
+            if ([floor.group isEqualToString:self.group.identifier]) {
+                [_floorsArray addObject:floor];
+            }
+        }
+    }
+    return _floorsArray;
+}
+
 -(NSMutableArray *)arrayNombresPiso {
-    if (!_arrayNombresPiso) {
+    /*if (!_arrayNombresPiso) {
         _arrayNombresPiso = [[NSMutableArray alloc] init];
         for (int i = 0; i < [self.grupo.arrayTiposDePiso count]; i++) {
             TipoDePiso *tipoDePiso = self.grupo.arrayTiposDePiso[i];
             [_arrayNombresPiso addObject:tipoDePiso.nombre];
+        }
+    }
+    return _arrayNombresPiso;*/
+    
+    if (!_arrayNombresPiso) {
+        _arrayNombresPiso = [[NSMutableArray alloc] initWithCapacity:[self.floorsArray count]];
+        for (int i = 0; i < [self.floorsArray count]; i++) {
+            Floor *floor = self.floorsArray[i];
+            [_arrayNombresPiso addObject:floor.name];
         }
     }
     return _arrayNombresPiso;
@@ -75,7 +109,8 @@
     
     //PageControl Setup
     self.pageControl = [[UIPageControl alloc] init];
-    self.pageControl.numberOfPages = [self.grupo.arrayTiposDePiso count];
+    self.pageControl.numberOfPages = [self.floorsArray count];
+    //self.pageControl.numberOfPages = [self.grupo.arrayTiposDePiso count];
     [self.view addSubview:self.pageControl];
 }
 
@@ -91,22 +126,32 @@
 #pragma mark - UICollectionViewDataSource
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return [self.grupo.arrayTiposDePiso count];
+    return [self.floorsArray count];
 }
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     PisoCollectionViewCell *cell = (PisoCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"CellIdentifier" forIndexPath:indexPath];
     cell.delegate = self;
-    TipoDePiso *tipoDePiso = self.grupo.arrayTiposDePiso[indexPath.row];
-    [cell removeAllPinsFromArray:tipoDePiso.arrayProductos];
-    [cell setPinsButtonsFromArray:tipoDePiso.arrayProductos];
-    cell.pisoImageView.image = [self imageFromPisoAtIndex:indexPath.item];
+    Floor *floor = self.floorsArray[indexPath.item];
+    cell.pisoImageView.image = [floor floorImage];
+    
+    NSMutableArray *pinsArrayForFloor = [[NSMutableArray alloc] init];
+    for (int i = 0; i < [self.productsArray count]; i++) {
+        Product *product = self.productsArray[i];
+        if ([product.floor isEqualToString:floor.identifier]) {
+            [pinsArrayForFloor addObject:product];
+        }
+    }
+    
+    [cell removeAllPinsFromArray:pinsArrayForFloor];
+    [cell setPinsButtonsFromArray:pinsArrayForFloor];
+    
     return cell;
 }
 
 #pragma mark - Custom Methods
 
--(UIImage *)imageFromPisoAtIndex:(NSUInteger)index {
+/*-(UIImage *)imageFromPisoAtIndex:(NSUInteger)index {
     TipoDePiso *tipoDePiso = self.grupo.arrayTiposDePiso[index];
     
     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
@@ -128,7 +173,7 @@
         UIImage *image = [UIImage imageWithContentsOfFile:jpegFilePath];
         return image;
     }
-}
+}*/
 
 #pragma mark - UIScrollViewDelegate
 
@@ -142,13 +187,14 @@
 
 -(void)brujulaButtonTappedInCell:(PisoCollectionViewCell *)cell {
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-    TipoDePiso *tipoDePiso = self.grupo.arrayTiposDePiso[indexPath.item];
+    //TipoDePiso *tipoDePiso = self.grupo.arrayTiposDePiso[indexPath.item];
+    Floor *floor = self.floorsArray[indexPath.item];
     
     [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
     BrujulaViewController *brujulaVC=[[BrujulaViewController alloc]init];
     brujulaVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Brujula"];
-    brujulaVC.externalImageView = [[UIImageView alloc] initWithImage:[self imageFromPisoAtIndex:indexPath.item]];
-    brujulaVC.gradosExtra = [tipoDePiso.norte floatValue];
+    brujulaVC.externalImageView = [[UIImageView alloc] initWithImage:[floor floorImage]];
+    brujulaVC.gradosExtra = [floor.northDegrees floatValue];
     [self.navigationController pushViewController:brujulaVC animated:NO];
 }
 
@@ -156,10 +202,27 @@
     NSLog(@"toqué el pin en la posición: %d", index);
     
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-    TipoDePiso *tipoDePiso = self.grupo.arrayTiposDePiso[indexPath.item];
-    Producto *producto = tipoDePiso.arrayProductos[index - 1];
+    //TipoDePiso *tipoDePiso = self.grupo.arrayTiposDePiso[indexPath.item];
+    //Producto *producto = tipoDePiso.arrayProductos[index - 1];
     
-    if (producto.existe) {
+    Floor *floor = self.floorsArray[indexPath.item];
+    NSMutableArray *productsArrayForFloor = [[NSMutableArray alloc] init];
+    for (int i = 0; i < [self.productsArray count]; i++) {
+        Product *product = self.productsArray[i];
+        if ([product.floor isEqualToString:floor.identifier]) {
+            [productsArrayForFloor addObject:product];
+        }
+    }
+    Product *product = productsArrayForFloor[index - 1];
+    
+    if ([product.enabled boolValue]) {
+        PlanosDePlantaViewController *planosDePlantaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePlanta"];
+        planosDePlantaVC.projectDic = self.projectDic;
+        planosDePlantaVC.product = product;
+        [self.navigationController pushViewController:planosDePlantaVC animated:YES];
+    }
+    
+    /*if (producto.existe) {
         PlanosDePlantaViewController *planosDePlantaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePlanta"];
         planosDePlantaVC.producto = producto;
         [self.navigationController pushViewController:planosDePlantaVC animated:YES];
@@ -170,7 +233,7 @@
         glKitSpaceVC.arregloDeEspacios3D = planta.arrayEspacios3D;
         glKitSpaceVC.espacioSeleccionado = index - 1;
         [self .navigationController pushViewController:glKitSpaceVC animated:YES];
-    }
+    }*/
 }
 
 @end

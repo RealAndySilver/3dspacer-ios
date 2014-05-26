@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Grupo.h"
+@class Group;
 
 @interface PlanosDePisoViewController : UIViewController
-@property (strong, nonatomic) Grupo *grupo;
+//@property (strong, nonatomic) Grupo *grupo;
+@property (strong, nonatomic) NSDictionary *projectDic;
+@property (strong, nonatomic) Group *group;
 @end

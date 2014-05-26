@@ -7,7 +7,7 @@
 //
 
 #import "PisoCollectionViewCell.h"
-#import "Producto.h"
+#import "Product.h"
 
 @interface PisoCollectionViewCell() <UIScrollViewDelegate>
 @property (strong, nonatomic) UIButton *brujulaButton;
@@ -29,14 +29,14 @@
 -(void)setPinsButtonsFromArray:(NSArray *)pinsArray {
     for (int i = 0; i < [pinsArray count]; i++) {
         if (![self.contentView viewWithTag:i + 1]) {
-            Producto *product = pinsArray[i];
+            Product *product = pinsArray[i];
             
             //Pin Button
             CGRect pinButtonFrame;
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-                pinButtonFrame = CGRectMake([product.coordenadaX floatValue], [product.coordenadaY floatValue] - 30.0, 30.0, 30.0);
+                pinButtonFrame = CGRectMake([product.xCoord floatValue], [product.yCoord floatValue] - 30.0, 30.0, 30.0);
             } else {
-                pinButtonFrame = CGRectMake((398*[product.coordenadaX floatValue])/1004.0, (230.0*[product.coordenadaY floatValue])/580.0 - 40.0, 25.0, 25.0);
+                pinButtonFrame = CGRectMake((398*[product.xCoord floatValue])/1004.0, (230.0*[product.yCoord floatValue])/580.0 - 40.0, 25.0, 25.0);
             }
             UIButton *pinButton = [[UIButton alloc] initWithFrame:pinButtonFrame];
             pinButton.tag = i + 1;
@@ -46,7 +46,7 @@
             
             //Button Label
             UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(pinButton.frame.origin.x + pinButton.frame.size.width, pinButton.frame.origin.y, 100.0, 30.0)];
-            nameLabel.text = product.nombre;
+            nameLabel.text = product.name;
             nameLabel.tag = i + 10;
             nameLabel.textColor = [UIColor whiteColor];
             nameLabel.font = [UIFont boldSystemFontOfSize:16.0];

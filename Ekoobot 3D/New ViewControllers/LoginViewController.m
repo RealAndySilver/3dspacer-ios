@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextfield;
 @property (strong, nonatomic) UIManagedDocument *databaseDocument;
 @property (strong, nonatomic) NSArray *userProjectsArray;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
 @property (strong, nonatomic) NSArray *rendersArray;
 @end
 
@@ -33,6 +34,7 @@
 }
 
 -(void)setupUI {
+    self.spinner.hidden = YES;
     //Textfields
     self.usernameTextfield.delegate = self;
     self.passwordTextfield.delegate = self;
@@ -44,9 +46,11 @@
 #pragma mark - Server Stuff
 
 -(void)login {
+    self.spinner.hidden = NO;
+    [self.spinner startAnimating];
+    
     [UserInfo sharedInstance].userName = self.usernameTextfield.text;
     [UserInfo sharedInstance].password = self.passwordTextfield.text;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     ServerCommunicator *serverCommunicator = [[ServerCommunicator alloc] init];
     serverCommunicator.delegate = self;
@@ -54,7 +58,7 @@
 }
 
 -(void)receivedDataFromServer:(NSDictionary *)dictionary withMethodName:(NSString *)methodName {
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [self.spinner stopAnimating];
     
     if ([methodName isEqualToString:@"getProjectsByUser"]) {
         if (dictionary) {
@@ -77,14 +81,15 @@
 }
 
 -(void)serverError:(NSError *)error {
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [self.spinner stopAnimating];
+    
     NSLog(@"Error en el servidor: %@ %@", error, [error localizedDescription]);
 }
 
 #pragma mark - CoreData Stuff
 
 -(void)startCoreDataSavingProcess {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.spinner startAnimating];
     
     //Get the Datababase Document path
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -158,7 +163,7 @@
 }
 
 -(void)goToHomeScreenVCWithProjectsArray:(NSMutableArray *)projectsArray {
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [self.spinner stopAnimating];
     
     NavController *navController = (NavController *)self.navigationController;
     [navController setOrientationType:0];

@@ -169,6 +169,10 @@
 		A0E7A47F191C0B000067ED3D /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A47E191C0B000067ED3D /* iCarousel.m */; };
 		A0E7A482191C20550067ED3D /* ProyectoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A481191C20550067ED3D /* ProyectoViewController.m */; };
 		A0E7A485191C28210067ED3D /* ProyectoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A484191C28210067ED3D /* ProyectoCollectionViewCell.m */; };
+		A0EC179B1932AC72002D4021 /* Finish.m in Sources */ = {isa = PBXBuildFile; fileRef = A0EC179A1932AC72002D4021 /* Finish.m */; };
+		A0EC179E1932ACC5002D4021 /* Finish+AddOns.m in Sources */ = {isa = PBXBuildFile; fileRef = A0EC179D1932ACC5002D4021 /* Finish+AddOns.m */; };
+		A0EC17A21932B15B002D4021 /* FinishImage.m in Sources */ = {isa = PBXBuildFile; fileRef = A0EC17A11932B15B002D4021 /* FinishImage.m */; };
+		A0EC17A61932B189002D4021 /* FinishImage+AddOns.m in Sources */ = {isa = PBXBuildFile; fileRef = A0EC17A51932B189002D4021 /* FinishImage+AddOns.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -444,6 +448,14 @@
 		A0E7A481191C20550067ED3D /* ProyectoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProyectoViewController.m; path = "New ViewControllers/ProyectoViewController.m"; sourceTree = "<group>"; };
 		A0E7A483191C28210067ED3D /* ProyectoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProyectoCollectionViewCell.h; path = "New ViewControllers/Custom Cells/ProyectoCollectionViewCell.h"; sourceTree = "<group>"; };
 		A0E7A484191C28210067ED3D /* ProyectoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProyectoCollectionViewCell.m; path = "New ViewControllers/Custom Cells/ProyectoCollectionViewCell.m"; sourceTree = "<group>"; };
+		A0EC17991932AC72002D4021 /* Finish.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Finish.h; path = "New ViewControllers/CoreData/CoreDataObjects/Finish.h"; sourceTree = "<group>"; };
+		A0EC179A1932AC72002D4021 /* Finish.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Finish.m; path = "New ViewControllers/CoreData/CoreDataObjects/Finish.m"; sourceTree = "<group>"; };
+		A0EC179C1932ACC5002D4021 /* Finish+AddOns.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Finish+AddOns.h"; path = "New ViewControllers/CoreData/CoreDataObjects/Finish+AddOns.h"; sourceTree = "<group>"; };
+		A0EC179D1932ACC5002D4021 /* Finish+AddOns.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Finish+AddOns.m"; path = "New ViewControllers/CoreData/CoreDataObjects/Finish+AddOns.m"; sourceTree = "<group>"; };
+		A0EC17A01932B15B002D4021 /* FinishImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FinishImage.h; path = "New ViewControllers/CoreData/CoreDataObjects/FinishImage.h"; sourceTree = "<group>"; };
+		A0EC17A11932B15B002D4021 /* FinishImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FinishImage.m; path = "New ViewControllers/CoreData/CoreDataObjects/FinishImage.m"; sourceTree = "<group>"; };
+		A0EC17A41932B189002D4021 /* FinishImage+AddOns.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "FinishImage+AddOns.h"; path = "New ViewControllers/CoreData/CoreDataObjects/FinishImage+AddOns.h"; sourceTree = "<group>"; };
+		A0EC17A51932B189002D4021 /* FinishImage+AddOns.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "FinishImage+AddOns.m"; path = "New ViewControllers/CoreData/CoreDataObjects/FinishImage+AddOns.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -928,6 +940,8 @@
 			isa = PBXGroup;
 			children = (
 				A09E56DA192F9C3A0099B458 /* Model.xcdatamodeld */,
+				A0EC17A31932B162002D4021 /* FinishImage */,
+				A0EC179F1932ACCC002D4021 /* Finish */,
 				A09E573C19302B9A0099B458 /* Space */,
 				A09E5738193028AF0099B458 /* Plant */,
 				A09E572E1930257F0099B458 /* Product */,
@@ -1066,6 +1080,28 @@
 			);
 			name = iCarousel;
 			path = Libraries/iCarousel;
+			sourceTree = "<group>";
+		};
+		A0EC179F1932ACCC002D4021 /* Finish */ = {
+			isa = PBXGroup;
+			children = (
+				A0EC17991932AC72002D4021 /* Finish.h */,
+				A0EC179A1932AC72002D4021 /* Finish.m */,
+				A0EC179C1932ACC5002D4021 /* Finish+AddOns.h */,
+				A0EC179D1932ACC5002D4021 /* Finish+AddOns.m */,
+			);
+			name = Finish;
+			sourceTree = "<group>";
+		};
+		A0EC17A31932B162002D4021 /* FinishImage */ = {
+			isa = PBXGroup;
+			children = (
+				A0EC17A01932B15B002D4021 /* FinishImage.h */,
+				A0EC17A11932B15B002D4021 /* FinishImage.m */,
+				A0EC17A41932B189002D4021 /* FinishImage+AddOns.h */,
+				A0EC17A51932B189002D4021 /* FinishImage+AddOns.m */,
+			);
+			name = FinishImage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1234,6 +1270,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A0EC179B1932AC72002D4021 /* Finish.m in Sources */,
 				37E98A46153E0D70001B9BFE /* main.m in Sources */,
 				A09E56DF192F9CE60099B458 /* Project.m in Sources */,
 				37E98A4A153E0D70001B9BFE /* AppDelegate.m in Sources */,
@@ -1247,6 +1284,7 @@
 				37E98A8C153E27CE001B9BFE /* ComprobarUsuario.m in Sources */,
 				37F553F61540ED8200BB6A90 /* PlantaUrbanaVC.m in Sources */,
 				3731934F158B840E00B49F1E /* CC3Foundation.m in Sources */,
+				A0EC17A21932B15B002D4021 /* FinishImage.m in Sources */,
 				37319350158B840E00B49F1E /* CC3GLMatrix.m in Sources */,
 				A0E7A47A191C08E60067ED3D /* MainCarouselViewController.m in Sources */,
 				8B9C828419227DC0008B3055 /* AcabadosCollectionViewCell.m in Sources */,
@@ -1299,8 +1337,10 @@
 				75550747162F293A00479537 /* SendInfoViewController.m in Sources */,
 				8B9C82921922B0EE008B3055 /* ProjectsListViewController.m in Sources */,
 				8BC64FF4191941DB0005548D /* UIImage+Resize.m in Sources */,
+				A0EC17A61932B189002D4021 /* FinishImage+AddOns.m in Sources */,
 				7555074A162F2B6A00479537 /* SendInfoButton.m in Sources */,
 				75550750162F74B700479537 /* TermsViewController.m in Sources */,
+				A0EC179E1932ACC5002D4021 /* Finish+AddOns.m in Sources */,
 				7587C9CF1632182E00C66896 /* Adjunto.m in Sources */,
 				7575CA4A1676E6D20078E354 /* ZoomViewController.m in Sources */,
 				8BC64FF71919974F0005548D /* PlanosDePlantaViewController.m in Sources */,

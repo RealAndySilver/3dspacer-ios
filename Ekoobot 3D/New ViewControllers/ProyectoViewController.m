@@ -21,6 +21,10 @@
 #import "SlideControlViewController.h"
 #import "PlantaUrbanaVC.h"
 #import "PlanosDePisoViewController.h"
+#import "Project+AddOn.h"
+#import "Render+AddOns.h"
+#import "Urbanization.h"
+#import "UserInfo.h"
 
 @interface ProyectoViewController () <UICollectionViewDataSource, UICollectionViewDelegate, ProyectoCollectionViewCellDelegate>
 @property (strong, nonatomic) UICollectionView *collectionView;
@@ -104,15 +108,17 @@
     self.enterButton = [[UIButton alloc] initWithFrame:enterButtonFrame];
     [self.enterButton setBackgroundImage:[UIImage imageNamed:NSLocalizedString(@"BotonEntrar", nil)] forState:UIControlStateNormal];
     [self.enterButton addTarget:self action:@selector(showLoadingHUD) forControlEvents:UIControlEventTouchUpInside];
-    self.enterButton.alpha = 0.0;
-    if ([self.proyecto.data isEqualToString:@"1"]) {
+    self.enterButton.alpha = 1.0;
+    [self.view addSubview:self.enterButton];
+    /*if ([self.proyecto.data isEqualToString:@"1"]) {
         [self.view addSubview:self.enterButton];
-    }
+    }*/
     
     //Project Logo ImageView
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(60, 140, 150, 150)];
-        logoImageView.image = [self getLogoImageFromProject];
+        Project *project = self.projectDic[@"project"];
+        logoImageView.image = [project projectLogoImage];
         [self.view addSubview:logoImageView];
     }
     
@@ -127,7 +133,8 @@
     container.layer.shadowOpacity = 1.0;
     
     UILabel *tituloProyecto = [[UILabel alloc]initWithFrame:CGRectMake(10.0, 0.0, container.frame.size.width, container.frame.size.height)];
-    tituloProyecto.text = self.proyecto.nombre;
+    Project *project = self.projectDic[@"project"];
+    tituloProyecto.text = project.name;
     tituloProyecto.backgroundColor=[UIColor clearColor];
     tituloProyecto.textColor=[UIColor whiteColor];
     tituloProyecto.adjustsFontSizeToFitWidth = YES;
@@ -148,18 +155,19 @@
     [self.view addSubview:sendInfoButton];
     
     //Info Button
-    [self mostrarInfoButtonConTag:self.projectNumber + 2000 frame:infoButtonFrame];
+    //[self mostrarInfoButtonConTag:self.projectNumber + 2000 frame:infoButtonFrame];
     
     //Slideshow Button
     UIButton *slideshowButton = [[UIButton alloc] initWithFrame:slideshowButtonFrame];
     [slideshowButton setImage:[UIImage imageNamed:NSLocalizedString(@"tv2.png", nil)] forState:UIControlStateNormal];
     [slideshowButton addTarget:self action:@selector(goToSlideShow) forControlEvents:UIControlEventTouchUpInside];
-    if ([self.proyecto.arrayAdjuntos count] > 0) {
+    [self.view addSubview:slideshowButton];
+    /*if ([self.proyecto.arrayAdjuntos count] > 0) {
         [self.view addSubview:slideshowButton];
-    }
+    }*/
 }
 
--(void)mostrarInfoButtonConTag:(NSUInteger)tag frame:(CGRect)frame{
+/*-(void)mostrarInfoButtonConTag:(NSUInteger)tag frame:(CGRect)frame{
     UpdateView *updateBox=[[UpdateView alloc]initWithFrame:frame];
     updateBox.tag=tag+250;
     [self.view addSubview:updateBox];
@@ -213,30 +221,42 @@
         updateBox.updateText.text=[NSString stringWithFormat:@"%@ %@",peso,self.proyecto.peso];
     }
     [self.view bringSubviewToFront:updateBox];
-}
+}*/
 
 #pragma mark - UICollectionViewDataSource
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return [self.proyecto.arrayAdjuntos count] + 1; //Add 1 because of the main project image
+    //return [self.proyecto.arrayAdjuntos count] + 1; //Add 1 because of the main project image
+    return [self.projectDic[@"renders"] count];
 }
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     ProyectoCollectionViewCell *cell = (ProyectoCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"CellIdentifier" forIndexPath:indexPath];
     cell.delegate = self;
-    if (indexPath.item == 0) {
+    /*if (indexPath.item == 0) {
         cell.imageView.image = self.mainImage;
     } else {
         cell.imageView.image = [self projectAttachedImageAtIndex:indexPath.item - 1];
-    }
+    }*/
+    
+    Render *render = self.projectDic[@"renders"][indexPath.item];
+    cell.imageView.image = [render renderImage];
     return cell;
 }
 
 #pragma mark - Actions 
 
 -(void)goToSlideShow {
+    NSArray *rendersArray = self.projectDic[@"renders"];
+    NSMutableArray *tempRendersArray = [NSMutableArray arrayWithCapacity:[rendersArray count]];
+    for (int i = 0; i < [rendersArray count]; i++) {
+        Render *render = rendersArray[i];
+        [tempRendersArray addObject:[render renderImage]];
+    }
+    
     SlideshowViewController *ssVC=[[SlideshowViewController alloc]init];
-    ssVC.imagePathArray = [self arrayOfProjectImagesPaths];
+    ssVC.imagesArray = tempRendersArray;
+    //ssVC.imagePathArray = [self arrayOfProjectImagesPaths];
     //ssVC.imagePathArray = [renderPathArray objectAtIndex:sender.tag-3500];
     
     SlideControlViewController *cVC=[[SlideControlViewController alloc]init];
@@ -276,7 +296,7 @@
 }
 
 -(void)sendInfo {
-    SendInfoViewController *sendInfoVC=[[SendInfoViewController alloc]init];
+   /* SendInfoViewController *sendInfoVC=[[SendInfoViewController alloc]init];
     sendInfoVC=[self.storyboard instantiateViewControllerWithIdentifier:@"SendInfo"];
     sendInfoVC.nombreProyecto = self.proyecto.nombre;
     sendInfoVC.proyectoID = self.proyecto.idProyecto;
@@ -286,18 +306,29 @@
     sendInfoVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     sendInfoVC.modalPresentationStyle = UIModalPresentationCurrentContext;
     
+    [self.navigationController presentViewController:sendInfoVC animated:YES completion:nil];*/
+    
+    Project *project = self.projectDic[@"project"];
+    SendInfoViewController *sendInfoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SendInfo"];
+    sendInfoVC.nombreProyecto = project.name;
+    sendInfoVC.proyectoID = [NSString stringWithFormat:@"%d", [project.identifier intValue]];
+    sendInfoVC.usuario = [UserInfo sharedInstance].userName;
+    sendInfoVC.contrasena = [UserInfo sharedInstance].password;
+    sendInfoVC.userType = @"sellers"; // ***********************************Corregir estoooooooooo******************************************//
+    sendInfoVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    sendInfoVC.modalPresentationStyle = UIModalPresentationCurrentContext;
     [self.navigationController presentViewController:sendInfoVC animated:YES completion:nil];
 }
 
 -(void)updateProjectInfo {
-    self.navigationController.navigationBarHidden = YES;
+    /*self.navigationController.navigationBarHidden = YES;
     
     NSMutableDictionary *dic=[[NSMutableDictionary alloc]init];
     [dic setObject:self.proyecto forKey:@"Project"];
     [dic setObject:@(2000 + self.projectNumber) forKey:@"Tag"];
     [dic setObject:self.progressView forKey:@"Sender"];
     [dic setObject:self.usuario forKey:@"Usuario"];
-    [self performSelectorInBackground:@selector(downloadProject:) withObject:dic];
+    [self performSelectorInBackground:@selector(downloadProject:) withObject:dic];*/
 }
 
 -(void)downloadProject:(NSMutableDictionary*)dic{
@@ -317,7 +348,7 @@
 }
 
 -(void)goToPlanosVC {
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    /*[MBProgressHUD hideHUDForView:self.view animated:YES];
     
     ItemUrbanismo *itemUrbanismo = self.proyecto.arrayItemsUrbanismo[0];
     
@@ -343,35 +374,43 @@
             Producto *producto = tipoDePiso.arrayProductos[0];
             [self irATiposDePlantasVCConProducto:producto];
         }
+    }*/
+    
+    Urbanization *urbanization = [self.projectDic[@"urbanizations"] firstObject];
+    if ([urbanization.enabled boolValue]) {
+        [self irAPlantaUrbanaVC];
     }
 }
 
 -(void)irAPlantaUrbanaVC {
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    
     PlantaUrbanaVC *plantaUrbanaVC = [[PlantaUrbanaVC alloc]init];
     plantaUrbanaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlantaUrbanaVC"];
-    plantaUrbanaVC.proyecto = self.proyecto;
+    //plantaUrbanaVC.proyecto = self.proyecto;
+    plantaUrbanaVC.projectDic = self.projectDic;
     [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
     [self.navigationController pushViewController:plantaUrbanaVC animated:NO];
 }
 
 -(void)irATiposDePisosVCConGrupo:(Grupo *)grupo {
-    PlanosDePisoViewController *planosDePiso = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePiso"];
+    /*PlanosDePisoViewController *planosDePiso = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePiso"];
     planosDePiso.grupo = grupo;
     [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
-    [self.navigationController pushViewController:planosDePiso animated:YES];
+    [self.navigationController pushViewController:planosDePiso animated:YES];*/
 }
 
 -(void)irATiposDePlantasVCConProducto:(Producto *)producto {
-    PlanosDePlantaViewController *planosDePlantaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePlanta"];
+    /*PlanosDePlantaViewController *planosDePlantaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePlanta"];
     planosDePlantaVC.producto = producto;
     [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
-    [self.navigationController pushViewController:planosDePlantaVC animated:YES];
+    [self.navigationController pushViewController:planosDePlantaVC animated:YES];*/
 }
 
 #pragma mark - Custom Methods
 
 -(void)saveProjectAttachedImages {
-    for (int i = 0; i < [self.proyecto.arrayAdjuntos count]; i++) {
+    /*for (int i = 0; i < [self.proyecto.arrayAdjuntos count]; i++) {
         Adjunto *adjunto = self.proyecto.arrayAdjuntos[i];
         if ([adjunto.tipo isEqualToString:@"image"]) {
             NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
@@ -388,11 +427,11 @@
                 }
             }
         }
-    }
+    }*/
 }
 
 -(NSArray *)arrayOfProjectImagesPaths {
-    NSMutableArray *projectImagesArray = [[NSMutableArray alloc] init];
+   /* NSMutableArray *projectImagesArray = [[NSMutableArray alloc] init];
     
     for (int i = 0; i < [self.proyecto.arrayAdjuntos count]; i++) {
         Adjunto *adjunto = self.proyecto.arrayAdjuntos[i];
@@ -406,11 +445,11 @@
             }
         }
     }
-    return projectImagesArray;
+    return projectImagesArray;*/
 }
 
 -(UIImage *)getLogoImageFromProject {
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+   /* NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/logo%@%@",docDir,self.proyecto.idProyecto,[IAmCoder encodeURL:self.proyecto.logo]];
     [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
@@ -429,11 +468,11 @@
     else {
         UIImage *image = [UIImage imageWithContentsOfFile:jpegFilePath];
         return image;
-    }
+    }*/
 }
 
 -(UIImage *)projectAttachedImageAtIndex:(NSUInteger)index {
-    Adjunto *adjunto = self.proyecto.arrayAdjuntos[index];
+    /*Adjunto *adjunto = self.proyecto.arrayAdjuntos[index];
     if ([adjunto.tipo isEqualToString:@"image"]) {
         NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
         [ProjectDownloader addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:docDir]];
@@ -443,10 +482,10 @@
             NSURL *urlImagen=[NSURL URLWithString:adjunto.imagen];
             NSData *data=[NSData dataWithContentsOfURL:urlImagen];
             UIImage *image = [UIImage imageWithData:data];
-            /*NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0f)];//1.0f = 100% quality
+            NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0f)];//1.0f = 100% quality
             if (image) {
                 [data2 writeToFile:jpegFilePath atomically:YES];
-            }*/
+            }
             return image;
 
         } else {
@@ -456,24 +495,24 @@
 
     } else {
         return nil;
-    }
+    }*/
 }
 
 -(NSString *)pathForProjectImageAtIndex:(NSUInteger)index {
-    Adjunto *adjunto = self.proyecto.arrayAdjuntos[index];
+    /*Adjunto *adjunto = self.proyecto.arrayAdjuntos[index];
     if ([adjunto.tipo isEqualToString:@"image"]) {
         NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
         NSString *jpegFilePath = [NSString stringWithFormat:@"%@/render%@%@.jpg",docDir,self.proyecto.idProyecto,[IAmCoder encodeURL:adjunto.imagen]];
         return jpegFilePath;
     } else {
         return nil;
-    }
+    }*/
 }
 
 -(NSString *)pathForMainImage {
-    NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+    /*NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cover%@%@.jpeg",docDir,self.proyecto.idProyecto,[IAmCoder encodeURL:self.proyecto.imagen]];
-    return jpegFilePath;
+    return jpegFilePath;*/
 }
 
 #pragma mark - ProyectoCollectionViewCellDelegate
@@ -483,12 +522,15 @@
     
     ZoomViewController *zoomVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Zoom"];
     [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
-    if (indexPath.item == 0) {
+    
+    Render *render = self.projectDic[@"renders"][indexPath.item];
+    zoomVC.zoomImage = [render renderImage];
+    /*if (indexPath.item == 0) {
         //Get Path for main image
         zoomVC.path = [self pathForMainImage];
     } else {
         zoomVC.path = [self pathForProjectImageAtIndex:indexPath.item - 1];
-    }
+    }*/
     [self.navigationController pushViewController:zoomVC animated:NO];
 }
 

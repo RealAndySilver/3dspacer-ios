@@ -23,7 +23,16 @@
 #import "UserInfo.h"
 #import "ServerCommunicator.h"
 #import "NSArray+NullReplacement.h"
+#import "NSDictionary+NullReplacement.h"
 #import "Render+AddOns.h"
+#import "Urbanization+AddOns.h"
+#import "Group+AddOns.h"
+#import "Floor+AddOns.h"
+#import "Product+AddOns.h"
+#import "Plant+AddOns.h"
+#import "Space+AddOns.h"
+#import "Finish+AddOns.h"
+#import "FinishImage+AddOns.h"
 
 @interface MainCarouselViewController () <iCarouselDataSource, iCarouselDelegate, UIAlertViewDelegate, ServerCommunicatorDelegate>
 @property (strong, nonatomic) iCarousel *carousel;
@@ -36,12 +45,23 @@
 @property (strong, nonatomic) UIButton *deleteButton;
 @property (strong, nonatomic) UIButton *logoutButton;
 @property (strong, nonatomic) ProgressView *progressView;
-@property (strong, nonatomic) NSArray *rendersArray;
 @property (strong, nonatomic) UIManagedDocument *databaseDocument;
+
+//Project objects
+@property (strong, nonatomic) NSArray *rendersArray;
+@property (strong, nonatomic) NSDictionary *urbanizationDic;
+@property (strong, nonatomic) NSArray *groupsArray;
+@property (strong, nonatomic) NSArray *floorsArray;
+@property (strong, nonatomic) NSArray *productsArray;
+@property (strong, nonatomic) NSArray *plantsArray;
+@property (strong, nonatomic) NSArray *spacesArray;
+@property (strong, nonatomic) NSArray *finishesArray;
+@property (strong, nonatomic) NSArray *finishesImagesArray;
 @end
 
 @implementation MainCarouselViewController {
     NSUInteger projectToDownloadIndex;
+    BOOL downloadEntireProject;
 }
 
 #pragma mark - Lazy Instantiation
@@ -401,14 +421,14 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
--(void)goToProjectAtIndex:(NSUInteger)index {
+/*-(void)goToProjectAtIndex:(NSUInteger)index {
     ProyectoViewController *proyectoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Proyecto"];
     proyectoVC.proyecto = self.usuario.arrayProyectos[index];
     proyectoVC.usuario = self.usuario;
     proyectoVC.mainImage = [self imageFromProyectAtIndex:index];
     proyectoVC.projectNumber = index;
     [self.navigationController pushViewController:proyectoVC animated:YES];
-}
+}*/
 
 -(void)goToProjectsList {
     ProjectsListViewController *projectsListVC = [self.storyboard instantiateViewControllerWithIdentifier:@"ProjectsList"];
@@ -492,7 +512,19 @@
 
 #pragma mark - Server Stuff
 
+-(void)downloadProjectFromServer:(UIButton *)downloadButton {
+    downloadEntireProject = YES;
+    projectToDownloadIndex = downloadButton.tag - 1000.0;
+    Project *project = self.userProjectsArray[projectToDownloadIndex];
+    NSString *projectID = [NSString stringWithFormat:@"%d", [project.identifier intValue]];
+    
+    ServerCommunicator *serverCommunicator = [[ServerCommunicator alloc] init];
+    serverCommunicator.delegate = self;
+    [serverCommunicator callServerWithGETMethod:@"getProjectById" andParameter:projectID];
+}
+
 -(void)getRendersFromServer {
+    downloadEntireProject = NO;
     Project *project = self.userProjectsArray[self.carousel.currentItemIndex];
     NSString *projectID = [NSString stringWithFormat:@"%d", [project.identifier intValue]];
     
@@ -511,9 +543,26 @@
                 NSLog(@"Ocurrió algún error y no se devolvió la info");
             } else {
                 NSLog(@"Respuesta del getProjectByID: %@", dictionary);
-                NSArray *arrayWithNulls = dictionary[@"renders"];
-                self.rendersArray = [arrayWithNulls arrayByReplacingNullsWithBlanks];
-                [self startSavingRenderImagesInCoreData];
+                if (!downloadEntireProject) {
+                    //Download only the renders for the slideshow
+                    NSArray *arrayWithNulls = dictionary[@"renders"];
+                    self.rendersArray = [arrayWithNulls arrayByReplacingNullsWithBlanks];
+                    [self startSavingProcessInCoreData];
+                    
+                } else {
+                    //Download entire project
+                    self.rendersArray = [dictionary[@"renders"] arrayByReplacingNullsWithBlanks];
+                    self.urbanizationDic = [dictionary[@"urbanization"] dictionaryByReplacingNullWithBlanks];
+                    self.groupsArray = [dictionary[@"groups"] arrayByReplacingNullsWithBlanks];
+                    self.floorsArray = [dictionary[@"floors"] arrayByReplacingNullsWithBlanks];
+                    self.productsArray = [dictionary[@"products"] arrayByReplacingNullsWithBlanks];
+                    self.plantsArray = [dictionary[@"plants"] arrayByReplacingNullsWithBlanks];
+                    self.spacesArray = [dictionary[@"spaces"] arrayByReplacingNullsWithBlanks];
+                    self.finishesArray = [dictionary[@"finishes"] arrayByReplacingNullsWithBlanks];
+                    self.finishesImagesArray = [dictionary[@"finishImages"] arrayByReplacingNullsWithBlanks];
+                    [self startSavingProcessInCoreData];
+                }
+                
             }
         } else {
             NSLog(@"NO llegó respuesta del getProjectById");
@@ -530,7 +579,7 @@
 
 #pragma mark - CoreData Stuff
 
--(void)startSavingRenderImagesInCoreData {
+-(void)startSavingProcessInCoreData {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     //Get the Datababase Document path
@@ -546,7 +595,7 @@
         //Open The Database Document
         [self.databaseDocument openWithCompletionHandler:^(BOOL success){
             if (success) {
-                [self databaseDocumentIsReadyForRendersSaving];
+                [self databaseDocumentIsReadyForSaving];
             } else {
                 NSLog(@"Could not open the document at %@", url);
             }
@@ -555,7 +604,7 @@
         //The documents does not exist on disk, so create it
         [self.databaseDocument saveToURL:self.databaseDocument.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success){
             if (success) {
-                [self databaseDocumentIsReadyForRendersSaving];
+                [self databaseDocumentIsReadyForSaving];
             } else {
                 NSLog(@"Could not open the document at %@", url);
             }
@@ -563,18 +612,117 @@
     }
 }
 
--(void)databaseDocumentIsReadyForRendersSaving {
+-(void)databaseDocumentIsReadyForSaving {
     if (self.databaseDocument.documentState == UIDocumentStateNormal) {
         //Start using the document
         NSManagedObjectContext *context = self.databaseDocument.managedObjectContext;
-        NSMutableArray *rendersArray = [[NSMutableArray alloc] initWithCapacity:[self.rendersArray count]]; //Of Renders
-        for (int i = 0; i < [self.rendersArray count]; i++) {
-            NSDictionary *renderInfoDic = self.rendersArray[i];
-            Render *render = [Render renderWithServerInfo:renderInfoDic inManagedObjectContext:context];
-            [rendersArray addObject:render];
+        
+        if (!downloadEntireProject) {
+            //Save only the renders and go to the slideshow
+            
+            NSMutableArray *rendersArray = [[NSMutableArray alloc] initWithCapacity:[self.rendersArray count]]; //Of Renders
+            for (int i = 0; i < [self.rendersArray count]; i++) {
+                NSDictionary *renderInfoDic = self.rendersArray[i];
+                Render *render = [Render renderWithServerInfo:renderInfoDic inManagedObjectContext:context];
+                [rendersArray addObject:render];
+            }
+            [self goToSlideshowWithRendersArray:rendersArray];
+        
+        } else {
+            //Dic to store all the core data objects and pass them to the next view controller
+            NSMutableDictionary *projectDictionary = [[NSMutableDictionary alloc] init];
+            
+            //Save all the project info
+            
+            //Save render objects in core data
+            NSMutableArray *rendersArray = [[NSMutableArray alloc] initWithCapacity:[self.rendersArray count]]; //Of Renders
+            for (int i = 0; i < [self.rendersArray count]; i++) {
+                NSDictionary *renderInfoDic = self.rendersArray[i];
+                Render *render = [Render renderWithServerInfo:renderInfoDic inManagedObjectContext:context];
+                [rendersArray addObject:render];
+            }
+            
+            //Save urbanization object in core data
+            NSMutableArray *urbanizationsArray = [[NSMutableArray alloc] init];
+            Urbanization *urbanization = [Urbanization urbanizationWithServerInfo:self.urbanizationDic inManagedObjectContext:context];
+            [urbanizationsArray addObject:urbanization];
+            
+            //Save group objects in Core Data
+            NSMutableArray *groupsArray = [[NSMutableArray alloc] initWithCapacity:[self.groupsArray count]];
+            for (int i = 0; i < [self.groupsArray count]; i++) {
+                Group *group = [Group groupWithServerInfo:self.groupsArray[i] inManagedObjectContext:context];
+                [groupsArray addObject:group];
+            }
+            
+            //Save Floor products in Core Data
+            NSMutableArray *floorsArray = [[NSMutableArray alloc] initWithCapacity:[self.floorsArray count]];
+            for (int i = 0; i < [self.floorsArray count]; i++) {
+                Floor *floor = [Floor floorWithServerInfo:self.floorsArray[i] inManagedObjectContext:context];
+                [floorsArray addObject:floor];
+            }
+            
+            //Save product objects in Core Data
+            NSMutableArray *producstArray = [[NSMutableArray alloc] initWithCapacity:[self.productsArray count]];
+            for (int i = 0; i < [self.productsArray count]; i++) {
+                Product *product = [Product productWithServerInfo:self.productsArray[i] inManagedObjectContext:context];
+                [producstArray addObject:product];
+            }
+            
+            //Save plants objects in Core Data
+            NSMutableArray *plantsArray = [[NSMutableArray alloc] initWithCapacity:[self.plantsArray count]];
+            for (int i = 0; i < [self.plantsArray count]; i++) {
+                Plant *plant = [Plant plantWithServerInfo:self.plantsArray[i] inManagedObjectContext:context];
+                [plantsArray addObject:plant];
+            }
+            
+            //Save spaces object in Core Data
+            NSMutableArray *spacesArray = [[NSMutableArray alloc] initWithCapacity:[self.spacesArray count]];
+            for (int i = 0; i < [self.spacesArray count]; i++) {
+                Space *space = [Space spaceWithServerInfo:self.spacesArray[i] inManagedObjectContext:context];
+                [spacesArray addObject:space];
+            }
+            
+            //Save finishes in Core Data
+            NSMutableArray *finishesArray = [[NSMutableArray alloc] initWithCapacity:[self.finishesArray count]];
+            for (int i = 0; i < [self.finishesArray count]; i++) {
+                Finish *finish = [Finish finishWithServerInfo:self.finishesArray[i] inManagedObjectContext:context];
+                [finishesArray addObject:finish];
+            }
+            
+            //Save finishes images in Core Data
+            NSMutableArray *finishesImagesArray = [[NSMutableArray alloc] initWithCapacity:[self.finishesImagesArray count]];
+            for (int i = 0; i < [self.finishesImagesArray count]; i++) {
+                FinishImage *finishImage = [FinishImage finishImageWithServerInfo:self.finishesImagesArray[i] inManagedObjectContext:context];
+                [finishesImagesArray addObject:finishImage];
+            }
+            
+            //Save all core data objects in our dictionary
+            [projectDictionary setObject:self.userProjectsArray[self.carousel.currentItemIndex] forKey:@"project"];
+            [projectDictionary setObject:rendersArray forKey:@"renders"];
+            [projectDictionary setObject:urbanizationsArray forKey:@"urbanizations"];
+            [projectDictionary setObject:groupsArray forKey:@"groups"];
+            [projectDictionary setObject:floorsArray forKey:@"floors"];
+            [projectDictionary setObject:producstArray forKey:@"products"];
+            [projectDictionary setObject:plantsArray forKey:@"plants"];
+            [projectDictionary setObject:spacesArray forKey:@"spaces"];
+            [projectDictionary setObject:finishesArray forKey:@"finishes"];
+            [projectDictionary setObject:finishesImagesArray forKey:@"finishImages"];
+            
+            [self goToProjectScreenWithProjectDic:projectDictionary];
         }
-        [self goToSlideshowWithRendersArray:rendersArray];
     }
+}
+
+-(void)goToProjectScreenWithProjectDic:(NSDictionary *)dictionary {
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    
+    ProyectoViewController *proyectoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Proyecto"];
+    proyectoVC.projectDic = dictionary;
+    [self.navigationController pushViewController:proyectoVC animated:YES];
+    //proyectoVC.proyecto = self.usuario.arrayProyectos[index];
+    //proyectoVC.usuario = self.usuario;
+    //proyectoVC.mainImage = [self imageFromProyectAtIndex:index];
+    //proyectoVC.projectNumber = index;
 }
 
 -(void)goToSlideshowWithRendersArray:(NSMutableArray *)rendersArray {
@@ -676,7 +824,8 @@
     UIButton *downloadButton = [[UIButton alloc] initWithFrame:CGRectMake(view.frame.size.width/2.0 - 80.0, 0.0, 160.0, 160.0)];
     [downloadButton setBackgroundImage:[UIImage imageNamed:@"downloadBtn.png"] forState:UIControlStateNormal];
     downloadButton.tag = 1000 + index;
-    [downloadButton addTarget:self action:@selector(updateProject:) forControlEvents:UIControlEventTouchUpInside];
+    [downloadButton addTarget:self action:@selector(downloadProjectFromServer:) forControlEvents:UIControlEventTouchUpInside];
+    //[downloadButton addTarget:self action:@selector(updateProject:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:downloadButton];
     
     ((UIImageView *)[view viewWithTag:2]).image = [self getLogoImageFromProjectAtIndex:index];

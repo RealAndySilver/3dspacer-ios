@@ -12,4 +12,8 @@
 -(UIImage *)finishIconImage;
 +(Finish *)finishWithServerInfo:(NSDictionary *)dictionary
        inManagedObjectContext:(NSManagedObjectContext *)context;
++(NSArray *)finishesArrayForProjectWithID:(NSString* )projectID
+                   inManagedOBjectContext:(NSManagedObjectContext *)context;
++(void)deleteFinishesForProjectWithID:(NSString *)projectID
+               inManagedObjectContext:(NSManagedObjectContext *)context;
 @end

@@ -165,6 +165,14 @@
 		A09E5737193028A90099B458 /* Plant+AddOns.m in Sources */ = {isa = PBXBuildFile; fileRef = A09E5736193028A90099B458 /* Plant+AddOns.m */; };
 		A09E573B19302B950099B458 /* Space.m in Sources */ = {isa = PBXBuildFile; fileRef = A09E573A19302B950099B458 /* Space.m */; };
 		A09E573F19302BB20099B458 /* Space+AddOns.m in Sources */ = {isa = PBXBuildFile; fileRef = A09E573E19302BB20099B458 /* Space+AddOns.m */; };
+		A0A0B3B71934FEDD00BB48E0 /* NewBackground.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A0A0B3B61934FEDD00BB48E0 /* NewBackground.jpg */; };
+		A0A0B3B91935028900BB48E0 /* NewDownloadIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = A0A0B3B81935028900BB48E0 /* NewDownloadIcon.png */; };
+		A0A0B3BB193504CF00BB48E0 /* NewInfoIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = A0A0B3BA193504CF00BB48E0 /* NewInfoIcon.png */; };
+		A0A0B3BF193505DC00BB48E0 /* NewDeleteIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = A0A0B3BC193505DC00BB48E0 /* NewDeleteIcon.png */; };
+		A0A0B3C0193505DC00BB48E0 /* NewShareIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = A0A0B3BD193505DC00BB48E0 /* NewShareIcon.png */; };
+		A0A0B3C1193505DC00BB48E0 /* NewTVIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = A0A0B3BE193505DC00BB48E0 /* NewTVIcon.png */; };
+		A0A0B3C319350A9300BB48E0 /* NewLogoutIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = A0A0B3C219350A9300BB48E0 /* NewLogoutIcon.png */; };
+		A0A0B3C71935250100BB48E0 /* DownloadView.m in Sources */ = {isa = PBXBuildFile; fileRef = A0A0B3C61935250100BB48E0 /* DownloadView.m */; };
 		A0E7A47A191C08E60067ED3D /* MainCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A479191C08E60067ED3D /* MainCarouselViewController.m */; };
 		A0E7A47F191C0B000067ED3D /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A47E191C0B000067ED3D /* iCarousel.m */; };
 		A0E7A482191C20550067ED3D /* ProyectoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A481191C20550067ED3D /* ProyectoViewController.m */; };
@@ -440,6 +448,15 @@
 		A09E573A19302B950099B458 /* Space.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Space.m; path = "New ViewControllers/CoreData/CoreDataObjects/Space.m"; sourceTree = "<group>"; };
 		A09E573D19302BB20099B458 /* Space+AddOns.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Space+AddOns.h"; path = "New ViewControllers/CoreData/CoreDataObjects/Space+AddOns.h"; sourceTree = "<group>"; };
 		A09E573E19302BB20099B458 /* Space+AddOns.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Space+AddOns.m"; path = "New ViewControllers/CoreData/CoreDataObjects/Space+AddOns.m"; sourceTree = "<group>"; };
+		A0A0B3B61934FEDD00BB48E0 /* NewBackground.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = NewBackground.jpg; path = Resources/iPad/NewBackground.jpg; sourceTree = "<group>"; };
+		A0A0B3B81935028900BB48E0 /* NewDownloadIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NewDownloadIcon.png; path = Resources/iPad/NewDownloadIcon.png; sourceTree = "<group>"; };
+		A0A0B3BA193504CF00BB48E0 /* NewInfoIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NewInfoIcon.png; path = Resources/iPad/NewInfoIcon.png; sourceTree = "<group>"; };
+		A0A0B3BC193505DC00BB48E0 /* NewDeleteIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NewDeleteIcon.png; path = Resources/iPad/NewDeleteIcon.png; sourceTree = "<group>"; };
+		A0A0B3BD193505DC00BB48E0 /* NewShareIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NewShareIcon.png; path = Resources/iPad/NewShareIcon.png; sourceTree = "<group>"; };
+		A0A0B3BE193505DC00BB48E0 /* NewTVIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NewTVIcon.png; path = Resources/iPad/NewTVIcon.png; sourceTree = "<group>"; };
+		A0A0B3C219350A9300BB48E0 /* NewLogoutIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NewLogoutIcon.png; path = Resources/iPad/NewLogoutIcon.png; sourceTree = "<group>"; };
+		A0A0B3C51935250100BB48E0 /* DownloadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadView.h; path = "New ViewControllers/Custom Views/DownloadView.h"; sourceTree = "<group>"; };
+		A0A0B3C61935250100BB48E0 /* DownloadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadView.m; path = "New ViewControllers/Custom Views/DownloadView.m"; sourceTree = "<group>"; };
 		A0E7A478191C08E60067ED3D /* MainCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainCarouselViewController.h; path = "New ViewControllers/MainCarouselViewController.h"; sourceTree = "<group>"; };
 		A0E7A479191C08E60067ED3D /* MainCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainCarouselViewController.m; path = "New ViewControllers/MainCarouselViewController.m"; sourceTree = "<group>"; };
 		A0E7A47D191C0B000067ED3D /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
@@ -598,6 +615,7 @@
 				37E98A86153E24C3001B9BFE /* ViewControllers */,
 				7589C5AB15A4FC4E000C99AF /* Views */,
 				37319365158B842400B49F1E /* OpenGl */,
+				A0A0B3C4193524DB00BB48E0 /* CustomViews */,
 				8B5C791E19183B80003941AD /* Custom Cells */,
 				8BC64FEE19191BA60005548D /* Categories */,
 			);
@@ -835,6 +853,13 @@
 		8B0621E519217B4F0017DD20 /* New Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A0A0B3C219350A9300BB48E0 /* NewLogoutIcon.png */,
+				A0A0B3BC193505DC00BB48E0 /* NewDeleteIcon.png */,
+				A0A0B3BD193505DC00BB48E0 /* NewShareIcon.png */,
+				A0A0B3BE193505DC00BB48E0 /* NewTVIcon.png */,
+				A0A0B3BA193504CF00BB48E0 /* NewInfoIcon.png */,
+				A0A0B3B81935028900BB48E0 /* NewDownloadIcon.png */,
+				A0A0B3B61934FEDD00BB48E0 /* NewBackground.jpg */,
 				A029EADE1924250D00E57ECF /* LaunchImagePhoneR4.png */,
 				8B9C828719228767008B3055 /* Icons */,
 				8B9C828519228288008B3055 /* Wood.jpg */,
@@ -1064,6 +1089,15 @@
 			name = Space;
 			sourceTree = "<group>";
 		};
+		A0A0B3C4193524DB00BB48E0 /* CustomViews */ = {
+			isa = PBXGroup;
+			children = (
+				A0A0B3C51935250100BB48E0 /* DownloadView.h */,
+				A0A0B3C61935250100BB48E0 /* DownloadView.m */,
+			);
+			name = CustomViews;
+			sourceTree = "<group>";
+		};
 		A0E7A47B191C0AF30067ED3D /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -1194,19 +1228,23 @@
 				75A94B0617E011150045BE3D /* tv2.png in Resources */,
 				75E69F7616040622005907F6 /* bin.png in Resources */,
 				757BEC02161B8325002B251A /* fondo.jpeg in Resources */,
+				A0A0B3B91935028900BB48E0 /* NewDownloadIcon.png in Resources */,
 				757BEC04161B8736002B251A /* logo.png in Resources */,
 				757BEC14161B89C9002B251A /* loginBtn.png in Resources */,
 				7586793C17E003FF001E6C82 /* ayuda_off.png in Resources */,
 				757BEC17161B8A69002B251A /* ekoomediaWterMark.png in Resources */,
 				7589BB36161CF32D0027453E /* botonEntrar.png in Resources */,
+				A0A0B3B71934FEDD00BB48E0 /* NewBackground.jpg in Resources */,
 				75550744162F0FF300479537 /* play-video.png in Resources */,
 				7595183B1635FC5F00336C0A /* pin.png in Resources */,
 				75951841163608DE00336C0A /* cursor.png in Resources */,
 				75EE5593183D198E00C52654 /* icon76.png in Resources */,
 				7595184516360B8900336C0A /* Default-Landscape@2x~ipad.png in Resources */,
+				A0A0B3C319350A9300BB48E0 /* NewLogoutIcon.png in Resources */,
 				7595184916360BCA00336C0A /* Default-Portrait@2x~ipad.png in Resources */,
 				7595184B16360BE700336C0A /* Default-Landscape~ipad.png in Resources */,
 				8B9C828619228288008B3055 /* Wood.jpg in Resources */,
+				A0A0B3BF193505DC00BB48E0 /* NewDeleteIcon.png in Resources */,
 				7595184D16360C0300336C0A /* Default-Portrait~ipad.png in Resources */,
 				75EE5592183D198E00C52654 /* icon152.png in Resources */,
 				755233A0163ACB4400D541DB /* recomendar.png in Resources */,
@@ -1222,6 +1260,7 @@
 				75FF14501652EA2700C39705 /* compassOn.png in Resources */,
 				755F9F0E1653090C0002266B /* icon@2x.png in Resources */,
 				8B0621E819217B670017DD20 /* CarouselBackground.png in Resources */,
+				A0A0B3C1193505DC00BB48E0 /* NewTVIcon.png in Resources */,
 				8B9C828F19228767008B3055 /* Slideshow.png in Resources */,
 				755F9F101653091B0002266B /* icon.png in Resources */,
 				8B5C7919191804AB003941AD /* Skybox1Left.png in Resources */,
@@ -1230,6 +1269,8 @@
 				755241271679388E004BC471 /* zoom1.png in Resources */,
 				7534B20B1682595B0005F7BC /* analytics.sqlite in Resources */,
 				75A1D30416BC53270013B48A /* zoom2.png in Resources */,
+				A0A0B3BB193504CF00BB48E0 /* NewInfoIcon.png in Resources */,
+				A0A0B3C0193505DC00BB48E0 /* NewShareIcon.png in Resources */,
 				75DB354516BCC138007D00BB /* zoom3.png in Resources */,
 				759A937D17DE537E00BAA4E0 /* video.png in Resources */,
 				759A938117DE55C200BAA4E0 /* zoom.png in Resources */,
@@ -1362,6 +1403,7 @@
 				75A1D2F916BB6C050013B48A /* ProyectoLite.m in Sources */,
 				751D398E17AF2382008CD6E9 /* SlideshowViewController.m in Sources */,
 				751D399217AF26FD008CD6E9 /* KASlideShow.m in Sources */,
+				A0A0B3C71935250100BB48E0 /* DownloadView.m in Sources */,
 				75AAB5FB17BC488600C26D70 /* SlideControlViewController.m in Sources */,
 				A09E5719193019B10099B458 /* Urbanization.m in Sources */,
 				A09E572A19301EC80099B458 /* Floor+AddOns.m in Sources */,

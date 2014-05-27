@@ -12,4 +12,8 @@
 -(UIImage *)urbanizationImage;
 +(Urbanization *)urbanizationWithServerInfo:(NSDictionary *)dictionary
          inManagedObjectContext:(NSManagedObjectContext *)context;
++(NSArray *)urbanizationsArrayForProjectWithID:(NSString *)projectID
+                        inManagedObjectContext:(NSManagedObjectContext *)context;
++(void)deleteUrbanizationsForProjectWithID:(NSString *)projectID
+                    inManagedObjectContext:(NSManagedObjectContext *)context;
 @end

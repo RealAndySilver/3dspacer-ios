@@ -58,4 +58,25 @@
     
     return finishImage;
 }
+
++(NSArray *)finishesImagesArrayForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"FinishImage"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    NSLog(@"Número de imagenes de acabados encontradas para el proyecto con id %@: %d", projectID, [matches count]);
+    return matches;
+}
+
++(void)deleteFinishesImagesForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"FinishImage"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    for (int i = 0; i < [matches count]; i++) {
+        [context deleteObject:matches[i]];
+        NSLog(@"Removiendo imagen de acabado del proyecto %@ en la posicion %d",  projectID, i);
+    }
+}
+
 @end

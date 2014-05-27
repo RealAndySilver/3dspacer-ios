@@ -60,4 +60,25 @@
     return render;
 }
 
++(NSArray *)rendersForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Render"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    NSLog(@"Número de renders encontrados en la base de datos para el proyecto con id %@: %d", projectID, [matches count]);
+    return matches;
+}
+
++(void)deleteRendersForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context{
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Render"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    for (int i = 0; i < [matches count]; i++) {
+        [context deleteObject:matches[i]];
+        NSLog(@"removiendo render del proyecto %@ en la posición: %d", projectID, i);
+    }
+}
+
 @end

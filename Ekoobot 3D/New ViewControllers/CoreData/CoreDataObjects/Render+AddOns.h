@@ -12,4 +12,8 @@
 -(UIImage *)renderImage;
 +(Render *)renderWithServerInfo:(NSDictionary *)dictionary
          inManagedObjectContext:(NSManagedObjectContext *)context;
++(NSMutableArray *)rendersForProjectWithID:(NSString *)projectID
+                    inManagedObjectContext:(NSManagedObjectContext *)context;
++(void)deleteRendersForProjectWithID:(NSString *)projectID
+              inManagedObjectContext:(NSManagedObjectContext *)context;
 @end

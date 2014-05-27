@@ -13,6 +13,9 @@
 #import "Urbanization+AddOns.h"
 #import "Group.h"
 #import "Floor.h"
+#import "Product.h"
+#import "Plant.h"
+#import "Space.h"
 #import "CMMotionManager+Shared.h"
 
 @interface PlantaUrbanaVC ()
@@ -354,6 +357,48 @@
     if ([string rangeOfString:@"Urbanizationspaces"].location != NSNotFound) {
         NSLog(@"voy pa espacios...");
         
+        //Get the first floor of the group
+        Floor *floor;
+        for (int i = 0; i < [self.projectDic[@"floors"] count]; i++) {
+            floor = self.projectDic[@"floors"][i];
+            if ([floor.group isEqualToString:group.identifier]) {
+                break;
+            }
+        }
+        
+        //Get te first product of the floor
+        Product *product;
+        for (int i = 0; i < [self.projectDic[@"products"] count]; i++) {
+            product = self.projectDic[@"products"][i];
+            if ([product.floor isEqualToString:floor.identifier]) {
+                break;
+            }
+        }
+        
+        //Get the first plant of the product
+        Plant *plant;
+        for (int i = 0; i < [self.projectDic[@"plants"] count]; i++) {
+            plant = self.projectDic[@"plants"][i];
+            if ([plant.product isEqualToString:product.identifier]) {
+                break;
+            }
+        }
+        
+        //Get the spaces array for the plant
+        NSMutableArray *spacesArrayForPlant = [[NSMutableArray alloc] init];
+        for (int i = 0; i < [self.projectDic[@"spaces"] count]; i++) {
+            Space *space = self.projectDic[@"spaces"][i];
+            if ([space.plant isEqualToString:plant.identifier]) {
+                [spacesArrayForPlant addObject:space];
+            }
+        }
+        
+        GLKitSpaceViewController *glkKitSpaceViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"GLKitSpace"];
+        glkKitSpaceViewController.arregloDeEspacios3D = spacesArrayForPlant;
+        glkKitSpaceViewController.projectDic = self.projectDic;
+        glkKitSpaceViewController.espacioSeleccionado = 0;
+        [self.navigationController pushViewController:glkKitSpaceViewController animated:YES];
+        
        /* TipoDePiso *tipoDePiso = grupo.arrayTiposDePiso[0];
         Producto *producto = tipoDePiso.arrayProductos[0];
         Planta *planta = producto.arrayPlantas[0];
@@ -372,7 +417,18 @@
                 [self.navigationController pushViewController:planosDePisoVC animated:YES];
             
             } else {
-                
+                //Get the first product of the floor
+                Product *product;
+                for (int i = 0; i < [self.projectDic[@"products"] count]; i++) {
+                    product = self.projectDic[@"products"][i];
+                    if ([product.floor isEqualToString:floor.identifier]) {
+                        break;
+                    }
+                }
+                PlanosDePlantaViewController *planosDePlantaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePlanta"];
+                planosDePlantaVC.product = product;
+                planosDePlantaVC.projectDic = self.projectDic;
+                [self.navigationController pushViewController:planosDePlantaVC animated:YES];
             }
             /*TipoDePiso *tipoDePiso=[grupo.arrayTiposDePiso objectAtIndex:0];
             if (tipoDePiso.existe) {
@@ -387,8 +443,57 @@
                 [self.navigationController pushViewController:planosDePlantaVC animated:YES];
             }*/
             
-        }
-        else{
+        
+        } else{
+            //Get the first floor of the group
+            Floor *floor;
+            for (int i = 0; i < [self.projectDic[@"floors"] count]; i++) {
+                floor = self.projectDic[@"floors"][i];
+                if ([floor.group isEqualToString:group.identifier]) {
+                    break;
+                }
+            }
+            
+            //Get the first product of the floor
+            Product *product;
+            for (int i = 0; i < [self.projectDic[@"products"] count]; i++) {
+                product = self.projectDic[@"products"][i];
+                if ([product.floor isEqualToString:floor.identifier]) {
+                    break;
+                }
+            }
+            
+            if ([product.enabled boolValue]) {
+                PlanosDePlantaViewController *planosDePlantaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePlanta"];
+                planosDePlantaVC.product = product;
+                planosDePlantaVC.projectDic = self.projectDic;
+                [self.navigationController pushViewController:planosDePlantaVC animated:YES];
+            
+            } else {
+                //Get the first plant of the product
+                Plant *plant;
+                for (int i = 0; i < [self.projectDic[@"plants"] count]; i++) {
+                    plant = self.projectDic[@"plants"][i];
+                    if ([plant.product isEqualToString:product.identifier]) {
+                        break;
+                    }
+                }
+                
+                //Get spaces array for the plant
+                NSMutableArray *spacesArrayForPlant = [[NSMutableArray alloc] init];
+                for (int i = 0; i < [self.projectDic[@"spaces"] count]; i++) {
+                    Space *space = self.projectDic[@"spaces"][i];
+                    if ([space.plant isEqualToString:plant.identifier]) {
+                        [spacesArrayForPlant addObject:space];
+                    }
+                }
+                GLKitSpaceViewController *glkitSpaceVC = [self.storyboard instantiateViewControllerWithIdentifier:@"GLKitSpace"];
+                glkitSpaceVC.arregloDeEspacios3D = spacesArrayForPlant;
+                glkitSpaceVC.projectDic = self.projectDic;
+                glkitSpaceVC.espacioSeleccionado = 0;
+                [self.navigationController pushViewController:glkitSpaceVC animated:YES];
+            }
+            
            /* TipoDePiso *tipoDePiso=[grupo.arrayTiposDePiso objectAtIndex:0];
             Producto *producto=[tipoDePiso.arrayProductos objectAtIndex:0];
             //TiposDePlantasVC *tpVC=[[TiposDePlantasVC alloc]init];

@@ -12,4 +12,8 @@
 -(UIImage *)plantImage;
 +(Plant *)plantWithServerInfo:(NSDictionary *)dictionary
            inManagedObjectContext:(NSManagedObjectContext *)context;
++(NSArray *)plantsArrayForProjectWithID:(NSString *)projectID
+                 inManagedObjectContext:(NSManagedObjectContext *)context;
++(void)deletePlantsForProjectWithID:(NSString *)projectID
+             inManagedObjectContext:(NSManagedObjectContext *)context;
 @end

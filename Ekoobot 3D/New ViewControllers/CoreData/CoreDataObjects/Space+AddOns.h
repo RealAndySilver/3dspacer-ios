@@ -11,4 +11,8 @@
 @interface Space (AddOns)
 +(Space *)spaceWithServerInfo:(NSDictionary *)dictionary
            inManagedObjectContext:(NSManagedObjectContext *)context;
++(NSArray *)spacesArrayForProjectWithID:(NSString *)projectID
+                 inManagedObjectContext:(NSManagedObjectContext *)context;
++(void)deleteSpacesForProjectWithID:(NSString *)projectID
+             inManagedObjectContext:(NSManagedObjectContext *)context;
 @end

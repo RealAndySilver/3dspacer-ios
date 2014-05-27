@@ -14,6 +14,7 @@
 #import "FileSaver.h"
 #import "MainCarouselViewController.h"
 #import "NavController.h"
+#import "NSArray+NullReplacement.h"
 
 @interface LoginViewController () <UITextFieldDelegate, ServerCommunicatorDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *usernameTextfield;
@@ -59,7 +60,7 @@
 
 -(void)receivedDataFromServer:(NSDictionary *)dictionary withMethodName:(NSString *)methodName {
     [self.spinner stopAnimating];
-    
+    self.spinner.hidden = YES;
     if ([methodName isEqualToString:@"getProjectsByUser"]) {
         if (dictionary) {
             if (dictionary[@"code"]) {
@@ -67,7 +68,8 @@
                 [[[UIAlertView alloc] initWithTitle:@"Error" message:dictionary[@"message"] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
             } else {
                 NSLog(@"Recibí respuesta correcta de getProjectsByUser: %@", dictionary);
-                self.userProjectsArray = dictionary[@"projects"];
+                NSArray *projectsArrayWithNulls = dictionary[@"projects"];
+                self.userProjectsArray = [projectsArrayWithNulls arrayByReplacingNullsWithBlanks];
                 self.rendersArray = dictionary[@"renders"];
                 [self startCoreDataSavingProcess];
             }
@@ -82,7 +84,13 @@
 
 -(void)serverError:(NSError *)error {
     [self.spinner stopAnimating];
-    
+    self.spinner.hidden = YES;
+    if (error.code == -1009) {
+        //No Internet
+        [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Your internet conection appears to be offline." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+    } else {
+        [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Error trying to connecting" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
+    }
     NSLog(@"Error en el servidor: %@ %@", error, [error localizedDescription]);
 }
 
@@ -90,6 +98,7 @@
 
 -(void)startCoreDataSavingProcess {
     [self.spinner startAnimating];
+    self.spinner.hidden = NO;
     
     //Get the Datababase Document path
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -138,14 +147,14 @@
             }
             [projectsArray addObject:project];
         }
-        [self saveUserInfoOnDisk];
+        [self saveUserInfoOnDiskUsingProjectsArray:self.userProjectsArray];
         [self goToHomeScreenVCWithProjectsArray:projectsArray];
     }
 }
 
--(void)saveUserInfoOnDisk {
+-(void)saveUserInfoOnDiskUsingProjectsArray:(NSArray *)projectsArray {
     FileSaver *fileSaver = [[FileSaver alloc] init];
-    [fileSaver setDictionary:@{@"User": self.usernameTextfield.text, @"Password" : self.passwordTextfield.text} withName:@"UserInfoDic"];
+    [fileSaver setDictionary:@{@"User": self.usernameTextfield.text, @"Password" : self.passwordTextfield.text, @"Projects" : self.userProjectsArray} withName:@"UserInfoDic"];
 }
 
 #pragma mark - Custom Methods
@@ -164,6 +173,7 @@
 
 -(void)goToHomeScreenVCWithProjectsArray:(NSMutableArray *)projectsArray {
     [self.spinner stopAnimating];
+    self.spinner.hidden = YES;
     
     NavController *navController = (NavController *)self.navigationController;
     [navController setOrientationType:0];

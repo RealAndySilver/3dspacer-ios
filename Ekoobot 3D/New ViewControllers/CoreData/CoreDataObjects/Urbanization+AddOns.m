@@ -64,4 +64,24 @@
     return urbanization;
 }
 
++(NSArray *)urbanizationsArrayForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Urbanization"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    NSLog(@"Número de urbanizaciones encontradas en la base de datos para el proyecto con id %@: %d", projectID, [matches count]);
+    return matches;
+}
+
++(void)deleteUrbanizationsForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Urbanization"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    for (int i = 0;  i < [matches count]; i++) {
+        [context deleteObject:matches[i]];
+        NSLog(@"Removiendo urbanización del proyecto %@ en la posición %d", projectID, i);
+    }
+}
+
 @end

@@ -54,4 +54,12 @@
     return project;
 }
 
++(Project *)projectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Project"];
+    request.predicate = [NSPredicate predicateWithFormat:@"identifier = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    return [matches firstObject];
+}
+
 @end

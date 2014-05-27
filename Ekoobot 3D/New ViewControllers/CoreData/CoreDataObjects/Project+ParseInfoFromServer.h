@@ -11,4 +11,6 @@
 @interface Project (ParseInfoFromServer)
 +(Project *)projectWithServerInfo:(NSDictionary *)dictionary
            inManagedObjectContext:(NSManagedObjectContext *)context;
++(Project *)projectWithID:(NSString *)projectID
+   inManagedObjectContext:(NSManagedObjectContext *)context;
 @end

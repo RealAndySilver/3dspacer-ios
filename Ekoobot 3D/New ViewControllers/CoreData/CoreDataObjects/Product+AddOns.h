@@ -11,4 +11,8 @@
 @interface Product (AddOns)
 +(Product *)productWithServerInfo:(NSDictionary *)dictionary
        inManagedObjectContext:(NSManagedObjectContext *)context;
++(NSArray *)productsArrayForProjectWithID:(NSString *)projectID
+                   inManagedObjectContext:(NSManagedObjectContext *)context;
++(void)deleteProductsForProjectWithID:(NSString *)projectID
+               inManagedObjectContext:(NSManagedObjectContext *)context;
 @end

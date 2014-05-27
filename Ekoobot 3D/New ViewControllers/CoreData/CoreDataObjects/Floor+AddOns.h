@@ -12,4 +12,8 @@
 -(UIImage *)floorImage;
 +(Floor *)floorWithServerInfo:(NSDictionary *)dictionary
        inManagedObjectContext:(NSManagedObjectContext *)context;
++(NSArray *)floorsArrayForProjectWithID:(NSString *)projectID
+                 inManagedObjectContext:(NSManagedObjectContext *)context;
++(void)deleteFloorsForProjectWithID:(NSString *)projectID
+             inManagedObjectContext:(NSManagedObjectContext *)context;
 @end

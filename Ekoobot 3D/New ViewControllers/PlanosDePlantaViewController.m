@@ -73,6 +73,11 @@
     [self setupUI];
 }
 
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+}
+
 -(void)setupUI {
     CGRect screenFrame = screenBounds;
     //Setup CollectionView
@@ -221,6 +226,7 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [self performSelector:@selector(goToGLKitView) withObject:nil afterDelay:0.3];*/
     
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     self.numeroDeEspacio3D = tag;
     
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];

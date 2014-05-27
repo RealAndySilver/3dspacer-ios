@@ -422,6 +422,8 @@
         [self.inertiaTimer invalidate];
         self.inertiaTimer = nil;
     }
+    
+    [self rotateCompassWithRadians:-rotZAxis];
 }
 
 -(void)zoomIn:(UIPinchGestureRecognizer *)pinchGesture {

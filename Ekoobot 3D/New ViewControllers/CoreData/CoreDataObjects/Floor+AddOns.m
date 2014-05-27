@@ -70,4 +70,24 @@
     return floor;
 }
 
++(NSArray *)floorsArrayForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Floor"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    NSLog(@"Número de pisos encontrados en la base de datos para el proyecto con id %@: %d", projectID, [matches count]);
+    return matches;
+}
+
++(void)deleteFloorsForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Floor"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    for (int i = 0; i < [matches count]; i++) {
+        [context deleteObject:matches[i]];
+        NSLog(@"Removiendo pisos del proyecto %@ en la posición %d", projectID, i);
+    }
+}
+
 @end

@@ -61,4 +61,24 @@
     return finish;
 }
 
++(NSArray *)finishesArrayForProjectWithID:(NSString *)projectID inManagedOBjectContext:(NSManagedObjectContext *)context {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Finish"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    NSLog(@"Número de acabados encontrados en la base de datos para el proyecto con id %@: %d", projectID, [matches count]);
+    return matches;
+}
+
++(void)deleteFinishesForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Finish"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    for (int i = 0; i < [matches count]; i++) {
+        [context deleteObject:matches[i]];
+        NSLog(@"Removiendo acabado del proyecto %@ en la posicion %d", projectID, i);
+    }
+}
+
 @end

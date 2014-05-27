@@ -24,6 +24,9 @@
 #import "Project+AddOn.h"
 #import "Render+AddOns.h"
 #import "Urbanization.h"
+#import "Group.h"
+#import "Floor.h"
+#import "Product.h"
 #import "UserInfo.h"
 
 @interface ProyectoViewController () <UICollectionViewDataSource, UICollectionViewDelegate, ProyectoCollectionViewCellDelegate>
@@ -379,6 +382,53 @@
     Urbanization *urbanization = [self.projectDic[@"urbanizations"] firstObject];
     if ([urbanization.enabled boolValue]) {
         [self irAPlantaUrbanaVC];
+        
+    } else {
+        Group *group = [self.projectDic[@"groups"] firstObject];
+        
+        if ([group.enabled boolValue]) {
+            //Get the first floor of this group
+            Floor *floor;
+            for (int i = 0; i < [self.projectDic[@"floors"] count]; i++) {
+                floor = self.projectDic[@"floors"][i];
+                if ([floor.group isEqual:group.identifier]) {
+                    break;
+                }
+            }
+            if ([floor.enabled boolValue]) {
+                [self irATiposDePisosVCConGrupo:group];
+            } else {
+                //Get the first product of the floor
+                Product *product;
+                for (int i = 0; i < [self.projectDic[@"products"] count]; i++) {
+                    product = self.projectDic[@"products"][i];
+                    if ([product.floor isEqualToString:floor.identifier]) {
+                        break;
+                    }
+                }
+                [self irATiposDePlantasVCConProducto:product];
+            }
+        
+        } else {
+            //Get the first floor of the group
+            Floor *floor;
+            for (int i = 0; i < [self.projectDic[@"floors"] count]; i++) {
+                floor = self.projectDic[@"floors"][i];
+                if ([floor.group isEqual:group.identifier]) {
+                    break;
+                }
+            }
+            
+            //Get the first product of the floor
+            Product *product;
+            for (int i = 0; i < [self.projectDic[@"products"] count]; i++) {
+                product = self.projectDic[@"products"][i];
+                if ([product.floor isEqualToString:floor.identifier]) {
+                    break;
+                }
+            }
+            [self irATiposDePlantasVCConProducto:product];
+        }
     }
 }
 
@@ -393,18 +443,20 @@
     [self.navigationController pushViewController:plantaUrbanaVC animated:NO];
 }
 
--(void)irATiposDePisosVCConGrupo:(Grupo *)grupo {
-    /*PlanosDePisoViewController *planosDePiso = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePiso"];
-    planosDePiso.grupo = grupo;
+-(void)irATiposDePisosVCConGrupo:(Group *)group {
+    PlanosDePisoViewController *planosDePiso = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePiso"];
+    planosDePiso.group = group;
+    planosDePiso.projectDic = self.projectDic;
     [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
-    [self.navigationController pushViewController:planosDePiso animated:YES];*/
+    [self.navigationController pushViewController:planosDePiso animated:YES];
 }
 
--(void)irATiposDePlantasVCConProducto:(Producto *)producto {
-    /*PlanosDePlantaViewController *planosDePlantaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePlanta"];
-    planosDePlantaVC.producto = producto;
+-(void)irATiposDePlantasVCConProducto:(Product *)product {
+    PlanosDePlantaViewController *planosDePlantaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlanosDePlanta"];
+    planosDePlantaVC.product = product;
+    planosDePlantaVC.projectDic = self.projectDic;
     [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
-    [self.navigationController pushViewController:planosDePlantaVC animated:YES];*/
+    [self.navigationController pushViewController:planosDePlantaVC animated:YES];
 }
 
 #pragma mark - Custom Methods

@@ -59,4 +59,24 @@
     return space;
 }
 
++(NSArray *)spacesArrayForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Space"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    NSLog(@"Número de espacios encontrados en la base de datos para el proyecto con id %@: %d", projectID, [matches count]);
+    return matches;
+}
+
++(void)deleteSpacesForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Space"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    for (int i = 0; i < [matches count]; i++) {
+        [context deleteObject:matches[i]];
+        NSLog(@"Removiendo espacios del proyecto %@ en la posicion %d", projectID, i);
+    }
+}
+
 @end

@@ -11,4 +11,8 @@
 @interface Group (AddOns)
 +(Group *)groupWithServerInfo:(NSDictionary *)dictionary
        inManagedObjectContext:(NSManagedObjectContext *)context;
++(NSArray *)groupsArrayForProjectWithID:(NSString *)projectID
+                 inManagedObjectContext:(NSManagedObjectContext *)context;
++(void)deleteGroupsForProjectWithID:(NSString *)projectID
+             inManagedObjectContext:(NSManagedObjectContext *)context;
 @end

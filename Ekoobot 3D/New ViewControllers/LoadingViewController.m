@@ -57,7 +57,9 @@
         [UserInfo sharedInstance].password = [fileSaver getDictionary:@"UserInfoDic"][@"Password"];
         NSLog(@"User: %@", [UserInfo sharedInstance].userName);
         NSLog(@"Pass: %@", [UserInfo sharedInstance].password);
-        [self getProjectsForUser];
+        self.userProjectsArray = [fileSaver getDictionary:@"UserInfoDic"][@"Projects"];
+        [self startCoreDataSavingProcess];
+        //[self getProjectsForUser];
     }
 }
 

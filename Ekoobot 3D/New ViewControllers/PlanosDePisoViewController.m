@@ -15,7 +15,9 @@
 #import "BrujulaViewController.h"
 #import "Floor+AddOns.h"
 #import "Product.h"
+#import "Plant.h"
 #import "Group.h"
+#import "Space.h"
 
 @interface PlanosDePisoViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PisoCollectionViewCellDelegate>
 @property (strong, nonatomic) UICollectionView *collectionView;
@@ -220,6 +222,30 @@
         planosDePlantaVC.projectDic = self.projectDic;
         planosDePlantaVC.product = product;
         [self.navigationController pushViewController:planosDePlantaVC animated:YES];
+    
+    } else {
+        //Get the first plant of the product
+        Plant *plant;
+        for (int i = 0; i < [self.projectDic[@"plants"] count]; i++) {
+            plant = self.projectDic[@"plants"][i];
+            if ([plant.product isEqualToString:product.identifier]) {
+                break;
+            }
+        }
+        
+        //Get the spaces array for the plant
+        NSMutableArray *spacesArrayForPlant = [[NSMutableArray alloc] init];
+        for (int i = 0; i < [self.projectDic[@"spaces"] count]; i++) {
+            Space *space = self.projectDic[@"spaces"][i];
+            if ([space.plant isEqualToString:plant.identifier]) {
+                [spacesArrayForPlant addObject:space];
+            }
+        }
+        GLKitSpaceViewController *glKitSpaceVC = [self.storyboard instantiateViewControllerWithIdentifier:@"GLKitSpace"];
+        glKitSpaceVC.arregloDeEspacios3D = spacesArrayForPlant;
+        glKitSpaceVC.projectDic = self.projectDic;
+        glKitSpaceVC.espacioSeleccionado = index - 1;
+        [self .navigationController pushViewController:glKitSpaceVC animated:YES];
     }
     
     /*if (producto.existe) {

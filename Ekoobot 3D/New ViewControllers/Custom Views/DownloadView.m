@@ -10,7 +10,6 @@
 
 @interface DownloadView()
 @property (strong, nonatomic) UIProgressView *progressView;
-@property (strong, nonatomic) UILabel *percentageLabel;
 @end
 
 @implementation DownloadView
@@ -40,13 +39,7 @@
         titleLabel.textColor = [UIColor lightGrayColor];
         titleLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:titleLabel];
-        
-        //PercentageLabel
-        self.percentageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 100.0, 20.0)];
-        self.percentageLabel.textColor = [UIColor blackColor];
-        self.percentageLabel.text = @"0";
-        [self addSubview:self.percentageLabel];
-        
+      
         //Spinner
         UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         spinner.frame = CGRectMake(frame.size.width/2.0 - 20.0, frame.size.height/2.0 - 40.0, 40.0, 40.0);
@@ -100,10 +93,7 @@
 -(void)fileDownloadNotificationReceived:(NSNotification *)notification {
     NSDictionary *notificationDic = [notification userInfo];
     float progress = [notificationDic[@"Progress"] floatValue];
-    //self.progressView.progress = progress;
-    self.percentageLabel.text = [NSString stringWithFormat:@"%f", progress];
-    NSLog(@"percentaje label: %@", self.percentageLabel.text);
-    //NSLog(@"Progreso: %f", self.progressView.progress);
+    self.progressView.progress = progress;
 }
 
 -(void)downloadCompleteNotificationReceived:(NSNotification *)notification {

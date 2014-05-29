@@ -12,4 +12,5 @@
 @interface MainCarouselViewController : UIViewController
 @property (strong, nonatomic) Usuario *usuario;
 @property (strong, nonatomic) NSArray *userProjectsArray;
+-(void)downloadProjectFromServer:(UIButton *)downloadButton;
 @end

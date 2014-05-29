@@ -55,6 +55,7 @@
         NSLog(@"Ya había sesión iniciada con usuario");
         [UserInfo sharedInstance].userName = [fileSaver getDictionary:@"UserInfoDic"][@"User"];
         [UserInfo sharedInstance].password = [fileSaver getDictionary:@"UserInfoDic"][@"Password"];
+        [UserInfo sharedInstance].role = [fileSaver getDictionary:@"UserInfoDic"][@"Role"];
         NSLog(@"User: %@", [UserInfo sharedInstance].userName);
         NSLog(@"Pass: %@", [UserInfo sharedInstance].password);
         self.userProjectsArray = [fileSaver getDictionary:@"UserInfoDic"][@"Projects"];

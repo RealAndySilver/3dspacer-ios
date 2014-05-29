@@ -27,8 +27,25 @@
         group = [matches firstObject];
         group.identifier = groupID;
         group.name = dictionary[@"name"];
-        group.xCoord = dictionary[@"xCoord"];
-        group.yCoord = dictionary[@"yCoord"];
+        
+        if ([dictionary[@"xCoord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"xCoord"] isEqualToString:@""]) {
+                group.xCoord = @(0);
+            }
+        }
+        else {
+            group.xCoord = dictionary[@"xCoord"];
+        }
+        
+        if ([dictionary[@"yCoord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"yCoord"] isEqualToString:@""]) {
+                group.yCoord = @(0);
+            }
+        }
+        else {
+            group.yCoord = dictionary[@"yCoord"];
+        }
+        
         group.startFloor = dictionary[@"startFloor"];
         group.enabled = dictionary[@"enabled"];
         group.lastUpdate = dictionary[@"lastUpdate"];
@@ -42,8 +59,25 @@
         group = [NSEntityDescription insertNewObjectForEntityForName:@"Group" inManagedObjectContext:context];
         group.identifier = groupID;
         group.name = dictionary[@"name"];
-        group.xCoord = dictionary[@"xCoord"];
-        group.yCoord = dictionary[@"yCoord"];
+        
+        if ([dictionary[@"xCoord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"xCoord"] isEqualToString:@""]) {
+                group.xCoord = @(0);
+            }
+        }
+        else {
+            group.xCoord = dictionary[@"xCoord"];
+        }
+        
+        if ([dictionary[@"yCoord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"yCoord"] isEqualToString:@""]) {
+                group.yCoord = @(0);
+            }
+        }
+        else {
+            group.yCoord = dictionary[@"yCoord"];
+        }
+        
         group.startFloor = dictionary[@"startFloor"];
         group.enabled = dictionary[@"enabled"];
         group.lastUpdate = dictionary[@"lastUpdate"];

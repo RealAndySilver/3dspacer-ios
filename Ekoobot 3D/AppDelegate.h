@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "FileSaver.h"
-#import "ServerCommunicator.h"
 #import <CoreMotion/CoreMotion.h>
 #import "SqlHandler.h"
 @interface AppDelegate : UIResponder <UIApplicationDelegate>{

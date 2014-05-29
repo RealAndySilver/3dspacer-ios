@@ -61,9 +61,10 @@
 }
 
 +(NSArray *)rendersForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
-    
+    NSSortDescriptor *sortDescritor = [[NSSortDescriptor alloc] initWithKey:@"order" ascending:YES];
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Render"];
     request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    request.sortDescriptors = @[sortDescritor];
     NSError *error;
     NSArray *matches = [context executeFetchRequest:request error:&error];
     NSLog(@"Número de renders encontrados en la base de datos para el proyecto con id %@: %d", projectID, [matches count]);

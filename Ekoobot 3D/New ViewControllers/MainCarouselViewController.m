@@ -35,7 +35,7 @@
 #import "FinishImage+AddOns.h"
 #import "DownloadView.h"
 
-@interface MainCarouselViewController () <iCarouselDataSource, iCarouselDelegate, UIAlertViewDelegate, ServerCommunicatorDelegate, UIActionSheetDelegate, DownloadViewDelegate>
+@interface MainCarouselViewController () <iCarouselDataSource, iCarouselDelegate, UIAlertViewDelegate, ServerCommunicatorDelegate, UIActionSheetDelegate, DownloadViewDelegate, TermsAndConditionsDelegate>
 @property (strong, nonatomic) iCarousel *carousel;
 @property (strong, nonatomic) UILabel *projectNameLabel;
 @property (strong, nonatomic) NSMutableArray *projectsNamesArray;
@@ -60,6 +60,7 @@
 @property (strong, nonatomic) NSArray *finishesImagesArray;
 
 @property (strong, nonatomic) UIView *opacityView;
+@property (weak, nonatomic) IBOutlet UILabel *progressLabel;
 @end
 
 @implementation MainCarouselViewController {
@@ -99,6 +100,8 @@
 }
 
 -(void)setupUI {
+    self.progressLabel.hidden = YES;
+    
     CGRect screenRect = CGRectMake(0.0, 0.0, 1024.0, 768.0);
     
     //Background ImageView
@@ -109,11 +112,12 @@
     //Setup Carousel
     self.carousel = [[iCarousel alloc] init];
     self.carousel.type = iCarouselTypeRotary;
-    self.carousel.scrollSpeed = 0.5;
+    self.carousel.scrollSpeed = 1.0;
     self.carousel.backgroundColor = [UIColor clearColor];
     self.carousel.dataSource = self;
     self.carousel.delegate = self;
     [self.view addSubview:self.carousel];
+    //[self.view bringSubviewToFront:self.progressLabel];
     
     //Setup Project Name Label
     self.projectNameLabel = [[UILabel alloc] init];
@@ -465,6 +469,18 @@
     [self presentViewController:termsAndConditionsVC animated:YES completion:nil];
 }
 
+-(void)goToTermsVCFromDownloadButton {
+    Project *project = self.userProjectsArray[self.carousel.currentItemIndex];
+    
+    TermsAndConditionsViewController *termsAndConditionsVC = [self.storyboard instantiateViewControllerWithIdentifier:@"TermsAndConditions"];
+    termsAndConditionsVC.termsString = project.terms;
+    termsAndConditionsVC.delegate = self;
+    termsAndConditionsVC.controllerWasPresentedFromDownloadButton = YES;
+    termsAndConditionsVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    termsAndConditionsVC.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentViewController:termsAndConditionsVC animated:YES completion:nil];
+}
+
 #pragma mark - Project Download 
 
 /*-(void)updateProjectAtIndex:(NSUInteger)index {
@@ -536,7 +552,7 @@
     //[self showDownloadingView];
     
     fetchOnlyRenders = NO;
-    //[MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     downloadEntireProject = YES;
     projectToDownloadIndex = index;
     Project *project = self.userProjectsArray[projectToDownloadIndex];
@@ -728,6 +744,7 @@
         NSString *savedProjectID = [NSString stringWithFormat:@"%d", [identifier intValue]];
         if ([projectID isEqualToString:savedProjectID]) {
             [projectIDsArray removeObjectAtIndex:i];
+            NSLog(@"removiendo el id %@", savedProjectID);
         }
     }
     [fileSaver setDictionary:@{@"projectIDsArray": projectIDsArray} withName:@"downloadedProjectsIDs"];
@@ -815,7 +832,9 @@
                 
                 filesDownloadedCounter ++;
                 progressCompleted = filesDownloadedCounter / numberOfFiles;
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"fileDownloaded" object:nil userInfo:@{@"Progress": @(progressCompleted)}];
+                NSLog(@"progresooo: %f", progressCompleted);
+                self.progressLabel.text = @"hola";
+                //[[NSNotificationCenter defaultCenter] postNotificationName:@"fileDownloaded" object:nil userInfo:@{@"Progress": @(progressCompleted)}];
             }
             
             //Save urbanization object in core data
@@ -1076,8 +1095,12 @@
     UIButton *downloadButton = [[UIButton alloc] initWithFrame:CGRectMake(view.frame.size.width/2.0 - 40.0, 20.0, 80.0, 93.0)];
     [downloadButton setBackgroundImage:[UIImage imageNamed:@"NewDownloadIcon.png"] forState:UIControlStateNormal];
     downloadButton.tag = 1000 + index;
-    [downloadButton addTarget:self action:@selector(downloadProjectFromServer:) forControlEvents:UIControlEventTouchUpInside];
-    //[downloadButton addTarget:self action:@selector(updateProject:) forControlEvents:UIControlEventTouchUpInside];
+    
+    if ([[UserInfo sharedInstance].role isEqualToString:@"CLIENT"]) {
+        [downloadButton addTarget:self action:@selector(goToTermsVCFromDownloadButton) forControlEvents:UIControlEventTouchUpInside];
+    } else {
+        [downloadButton addTarget:self action:@selector(downloadProjectFromServer:) forControlEvents:UIControlEventTouchUpInside];
+    }
     [view addSubview:downloadButton];
     
     ((UIImageView *)[view viewWithTag:2]).image = [self getLogoImageFromProjectAtIndex:index];
@@ -1097,7 +1120,7 @@
             return 1.0;
             
         case iCarouselOptionFadeMinAlpha:
-             return 0.0;
+             return 0.8;
             
         case iCarouselOptionSpacing:
             //return 0.5;
@@ -1188,6 +1211,17 @@
 -(void)downloadViewDidDisappear:(DownloadView *)downloadView {
     [downloadView removeFromSuperview];
     downloadView = nil;
+}
+
+#pragma mark - TermsAndConditionsDelegate
+
+-(void)userDidAcceptTerms {
+    NSLog(@"El usuario acepto los terminoooooos");
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+    button.tag = 1000 + self.carousel.currentItemIndex;
+    
+    [self downloadProjectFromServer:button];
 }
 
 #pragma mark - Notification Handlers

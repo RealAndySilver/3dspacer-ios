@@ -23,10 +23,12 @@
 @property (strong, nonatomic) NSMutableArray *nombresPlantasArray;
 @property (strong, nonatomic) NSMutableArray *plantsArray;
 @property (strong, nonatomic) NSArray *spacesArray;
+@property (strong, nonatomic) PlanosCollectionViewCell *cell;
 @end
 
 @implementation PlanosDePlantaViewController {
     CGRect screenBounds;
+    NSUInteger theTag;
 }
 
 #pragma mark - Lazy Instantiation
@@ -186,6 +188,24 @@
     glkitSpaceVC.arregloDeEspacios3D = espacios3DArray;
     
     [self.navigationController pushViewController:glkitSpaceVC animated:YES];*/
+    
+    self.numeroDeEspacio3D = theTag;
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:self.cell];
+    Plant *plant = self.plantsArray[indexPath.item];
+    NSMutableArray *spacesArrayForPlant = [[NSMutableArray alloc] init];
+    for (int i = 0; i < [self.spacesArray count]; i++) {
+         Space *space = self.spacesArray[i];
+         if ([space.plant isEqualToString:plant.identifier]) {
+             [spacesArrayForPlant addObject:space];
+         }
+    }
+    NSLog(@"número de espacios en esta planta: %d", [spacesArrayForPlant count]);
+    GLKitSpaceViewController *glkitSpaceVC = [self.storyboard instantiateViewControllerWithIdentifier:@"GLKitSpace"];
+    glkitSpaceVC.espacioSeleccionado = self.numeroDeEspacio3D;
+    glkitSpaceVC.arregloDeEspacios3D = spacesArrayForPlant;
+    glkitSpaceVC.projectDic = self.projectDic;
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [self.navigationController pushViewController:glkitSpaceVC animated:YES];
 }
 
 -(void)goToBrujulaVCForFloorAtIndex:(NSUInteger)index {
@@ -225,9 +245,12 @@
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [self performSelector:@selector(goToGLKitView) withObject:nil afterDelay:0.3];*/
-    
+    theTag = tag;
+    self.cell = cell;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    self.numeroDeEspacio3D = tag;
+    [self performSelector:@selector(goToGLKitView) withObject:nil afterDelay:0.1];
+    
+    /*self.numeroDeEspacio3D = tag;
     
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
     Plant *plant = self.plantsArray[indexPath.item];
@@ -243,7 +266,7 @@
     glkitSpaceVC.espacioSeleccionado = self.numeroDeEspacio3D;
     glkitSpaceVC.arregloDeEspacios3D = spacesArrayForPlant;
     glkitSpaceVC.projectDic = self.projectDic;
-    [self.navigationController pushViewController:glkitSpaceVC animated:YES];
+    [self.navigationController pushViewController:glkitSpaceVC animated:YES];*/
 }
 
 @end

@@ -56,8 +56,22 @@
         plant.name = dictionary[@"name"];
         plant.imageURL = dictionary[@"image"];
         plant.miniURL = dictionary[@"mini"];
-        plant.imageWidth = dictionary[@"imageWidth"];
-        plant.imageHeight = dictionary[@"imageHeight"];
+        
+        if ([dictionary[@"imageWidth"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"imageWidth"] isEqualToString:@""]) {
+                plant.imageWidth = @(0);
+            }
+        } else {
+            plant.imageWidth = dictionary[@"imageWidth"];
+        }
+        
+        if ([dictionary[@"imageHeight"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"imageHeight"] isEqualToString:@""]) {
+                plant.imageWidth = @(0);
+            }
+        } else {
+            plant.imageHeight = dictionary[@"imageHeight"];
+        }
         plant.northDegs = dictionary[@"northDegs"];
         plant.enabled = dictionary[@"enabled"];
         plant.order = dictionary[@"order"];
@@ -70,8 +84,10 @@
 }
 
 +(NSArray *)plantsArrayForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"order" ascending:YES];
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Plant"];
     request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    request.sortDescriptors = @[sortDescriptor];
     NSError *error;
     NSArray *matches = [context executeFetchRequest:request error:&error];
     NSLog(@"Número de plantas encontradas en la base de datos para el proyecto con id %@: %d", projectID, [matches count]);

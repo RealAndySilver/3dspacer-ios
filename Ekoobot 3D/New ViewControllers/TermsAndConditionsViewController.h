@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol TermsAndConditionsDelegate <NSObject>
+-(void)userDidAcceptTerms;
+@end
+
 @interface TermsAndConditionsViewController : UIViewController
 @property (strong, nonatomic) NSString *termsString;
+@property (assign, nonatomic) BOOL controllerWasPresentedFromDownloadButton;
+@property (strong, nonatomic) id <TermsAndConditionsDelegate> delegate;
 @end

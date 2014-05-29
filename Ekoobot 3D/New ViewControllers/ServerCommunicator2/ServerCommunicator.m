@@ -95,15 +95,25 @@
 -(NSMutableURLRequest*)getHeaderForUrl:(NSURL*)url{
    
     NSString *time = [IAmCoder dateString];
-    
-    NSString *authString = [NSString stringWithFormat:@"%@:%@", [UserInfo sharedInstance].userName, [UserInfo sharedInstance].password];
+    NSString *email = [UserInfo sharedInstance].email;
+    NSString *authString;
+    NSString *token;
+    if ([UserInfo sharedInstance].sendEmailAsAuth) {
+        authString = email;
+        token = [NSString stringWithFormat:@"%@~~%@", email, time];
+    } else {
+        authString = [NSString stringWithFormat:@"%@:%@", [UserInfo sharedInstance].userName, [UserInfo sharedInstance].password];
+        token = [NSString stringWithFormat:@"%@~%@~%@", [UserInfo sharedInstance].userName, [UserInfo sharedInstance].password, time];
+    }
     NSLog(@"authstring: %@", authString);
     
-    NSString *token = [NSString stringWithFormat:@"%@~%@~%@", [UserInfo sharedInstance].userName, [UserInfo sharedInstance].password, time];
+    
+    NSLog(@"token sin hash: %@", token);
     NSString *hashToken = [IAmCoder hash256:token];
     
     NSString *langID = [[NSLocale preferredLanguages] objectAtIndex:0];
     
+    NSLog(@"email: %@", email);
     NSLog(@"auth: %@", authString);
     NSLog(@"TS70: %@", time);
     NSLog(@"token: %@", hashToken);

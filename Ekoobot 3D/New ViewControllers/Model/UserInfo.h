@@ -12,5 +12,8 @@
 @property (strong, nonatomic) NSString *userName;
 @property (strong, nonatomic) NSString *password;
 @property (strong, nonatomic) NSString *userID;
+@property (strong, nonatomic) NSString *email;
+@property (strong, nonatomic) NSString *role;
+@property (assign, nonatomic) BOOL sendEmailAsAuth;
 +(UserInfo *)sharedInstance;
 @end

@@ -757,7 +757,7 @@
     siVC.nombreProyecto=sender.nombreProyecto;
     siVC.proyectoID=sender.proyectoID;
     siVC.usuario=usuarioActual.usuario;
-    siVC.currentUser=usuarioActual;
+    //siVC.currentUser=usuarioActual;
     siVC.contrasena=usuarioActual.contrasena;
     siVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     siVC.modalPresentationStyle = UIModalPresentationCurrentContext;
@@ -816,12 +816,12 @@
         hud.labelText=NSLocalizedString(@"Cargando", nil);
         NSString *langID = [[NSLocale preferredLanguages] objectAtIndex:0];
         NSString *lang = [[NSLocale currentLocale] displayNameForKey:NSLocaleLanguageCode value:langID];
-        ServerCommunicator *server=[[ServerCommunicator alloc]init];
-        server.caller=self;
-        server.tag=1;
+        //ServerCommunicator *server=[[ServerCommunicator alloc]init];
+        //server.caller=self;
+        //server.tag=1;
         NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",usuarioActual.usuario,usuarioActual.contrasena,[IAmCoder dateString]];
         NSString *parameters=[NSString stringWithFormat:@"<ns:getData><data>%@</data><token>%@</token><language>%@</language></ns:getData>",loginData,[IAmCoder hash256:loginData],lang];
-        [server callServerWithMethod:@"" andParameter:parameters];
+        //[server callServerWithMethod:@"" andParameter:parameters];
     }
 }
 -(void)callLiteServerData{
@@ -830,19 +830,19 @@
         //hud.labelText=NSLocalizedString(@"Cargando", nil);
         NSString *langID = [[NSLocale preferredLanguages] objectAtIndex:0];
         NSString *lang = [[NSLocale currentLocale] displayNameForKey:NSLocaleLanguageCode value:langID];
-        ServerCommunicator *server=[[ServerCommunicator alloc]init];
-        server.caller=self;
-        server.tag=2;
-        server.method=@"getDataLite";
+        //ServerCommunicator *server=[[ServerCommunicator alloc]init];
+        //server.caller=self;
+        //server.tag=2;
+        //server.method=@"getDataLite";
         NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",usuarioActual.usuario,usuarioActual.contrasena,[IAmCoder dateString]];
         NSString *parameters=[NSString stringWithFormat:@"<ns:getDataLite><data>%@</data><token>%@</token><language>%@</language></ns:getDataLite>",loginData,[IAmCoder hash256:loginData],lang];
-        [server callServerWithMethod:@"" andParameter:parameters];
+        //[server callServerWithMethod:@"" andParameter:parameters];
     }
 }
 #pragma mark server response
 
 -(void)receivedDataFromServer:(ServerCommunicator*)sc{
-    NSLog(@"Usuario actual: %@ contraseña: %@",usuarioActual.usuario,usuarioActual.contrasena);
+   /* NSLog(@"Usuario actual: %@ contraseña: %@",usuarioActual.usuario,usuarioActual.contrasena);
     if (sc.tag==1) {
         if ([sc.resDic objectForKey:@"usuario"]) {
             usuarioActual=nil;
@@ -869,10 +869,10 @@
         }
     }
     
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    [MBProgressHUD hideHUDForView:self.view animated:YES];*/
 }
 -(void)receivedDataFromServerLite:(ServerCommunicator*)sc{
-    [arrayLiteDesdeServer removeAllObjects];
+    /*[arrayLiteDesdeServer removeAllObjects];
     if (sc.tag==2){
         if ([sc.resDic objectForKey:@"usuario"]) {
             //Determinamos si lo que llega es un array o un dictionary
@@ -891,7 +891,7 @@
             }
         }
     }
-    [self compararArregloFull:arrayLiteDesdeFull conArregloDelServer:arrayLiteDesdeServer];
+    [self compararArregloFull:arrayLiteDesdeFull conArregloDelServer:arrayLiteDesdeServer];*/
 }
 -(void)receivedDataFromServerWithError:(ServerCommunicator*)sc{
     [MBProgressHUD hideHUDForView:self.view animated:YES];

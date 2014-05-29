@@ -400,7 +400,7 @@ float cuenta=0;
             ServerCommunicator *server=[[ServerCommunicator alloc]init];
             NSString *message=[NSString stringWithFormat:@"No se guardó %@ con ID %@",imageUrl,ID];
             NSString *parameters=[NSString stringWithFormat:@"<ns:setEventLog><username>%@</username><password>%@</password><message>%@</message></ns:setEventLog>",usuario.usuario,usuario.contrasena,message];
-            [server callServerWithMethod:@"" andParameter:parameters];
+            //[server callServerWithMethod:@"" andParameter:parameters];
             return 1;
         }
     }
@@ -429,7 +429,7 @@ float cuenta=0;
             ServerCommunicator *server=[[ServerCommunicator alloc]init];
             NSString *message=[NSString stringWithFormat:@"No se guardó video %@ con ID %@",videoUrl,ID];
             NSString *parameters=[NSString stringWithFormat:@"<ns:setEventLog><username>%@</username><password>%@</password><message>%@</message></ns:setEventLog>",usuario.usuario,usuario.contrasena,message];
-            [server callServerWithMethod:@"" andParameter:parameters];
+            //[server callServerWithMethod:@"" andParameter:parameters];
             return 1;
         }
         

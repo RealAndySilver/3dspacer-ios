@@ -38,8 +38,21 @@
         floor.name = dictionary[@"name"];
         floor.imageURL = dictionary[@"image"];
         floor.miniURL = dictionary[@"mini"];
-        floor.imageWidth = dictionary[@"imageWidth"];
-        floor.imageHeight = dictionary[@"imageHeight"];
+        if ([dictionary[@"imageWidth"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"imageWidth"] isEqualToString:@""]) {
+                floor.imageWidth = @(0);
+            }
+        } else {
+            floor.imageWidth = dictionary[@"imageWidth"];
+        }
+        
+        if ([dictionary[@"imageHeight"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"imageHeight"] isEqualToString:@""]) {
+                floor.imageHeight = @(0);
+            }
+        } else {
+            floor.imageHeight = dictionary[@"imageHeight"];
+        }
         floor.northDegrees = dictionary[@"northDegs"];
         floor.enabled = dictionary[@"enabled"];
         floor.order = dictionary[@"order"];
@@ -57,8 +70,21 @@
         floor.name = dictionary[@"name"];
         floor.imageURL = dictionary[@"image"];
         floor.miniURL = dictionary[@"mini"];
-        floor.imageWidth = dictionary[@"imageWidth"];
-        floor.imageHeight = dictionary[@"imageHeight"];
+        if ([dictionary[@"imageWidth"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"imageWidth"] isEqualToString:@""]) {
+                floor.imageWidth = @(0);
+            }
+        } else {
+            floor.imageWidth = dictionary[@"imageWidth"];
+        }
+        
+        if ([dictionary[@"imageHeight"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"imageHeight"] isEqualToString:@""]) {
+                floor.imageHeight = @(0);
+            }
+        } else {
+            floor.imageHeight = dictionary[@"imageHeight"];
+        }
         floor.northDegrees = dictionary[@"northDegs"];
         floor.enabled = dictionary[@"enabled"];
         floor.order = dictionary[@"order"];
@@ -71,8 +97,10 @@
 }
 
 +(NSArray *)floorsArrayForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"order" ascending:YES];
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Floor"];
     request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    request.sortDescriptors = @[sortDescriptor];
     NSError *error;
     NSArray *matches = [context executeFetchRequest:request error:&error];
     NSLog(@"Número de pisos encontrados en la base de datos para el proyecto con id %@: %d", projectID, [matches count]);

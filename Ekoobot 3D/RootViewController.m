@@ -29,8 +29,8 @@
     [super viewDidLoad];
     usuarioTF.delegate=self;
     passwordTF.delegate=self;
-    sc=[[ServerCommunicator alloc]init];    
-    sc.caller=self;
+    //sc=[[ServerCommunicator alloc]init];
+    //sc.caller=self;
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         littleBoxView=[[UIView alloc]initWithFrame:CGRectMake(infoButton.frame.origin.x+40, infoButton.frame.origin.y-10,230, 190)];
@@ -199,7 +199,7 @@
     //NSString *parameters=[NSString stringWithFormat:@"<ns:getData><username>%@</username><password>%@</password><language>%@</language></ns:getData>",usuarioString,contrasenaString,lang];
         NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",usuarioString,contrasenaString,[IAmCoder dateString]];
         NSString *parameters=[NSString stringWithFormat:@"<ns:getData><data>%@</data><token>%@</token><language>%@</language></ns:getData>",loginData,[IAmCoder hash256:loginData],lang];
-    [sc callServerWithMethod:@"" andParameter:parameters];
+    //[sc callServerWithMethod:@"" andParameter:parameters];
     
         NSThread *secThread=[[NSThread alloc]initWithTarget:self 
                                                    selector:@selector(startSpinner) 
@@ -253,7 +253,7 @@
 
 -(void)receivedDataFromServer:(id)sender{
     sc=sender;
-    if ([sc.resDic objectForKey:@"usuario"]) {
+    /*if ([sc.resDic objectForKey:@"usuario"]) {
         //NSLog(@"resDic: %@", sc.resDic);
         Usuario *usuario=[[Usuario alloc]initWithDictionary:[sc.resDic objectForKey:@"usuario"]];
         Usuario *usuarioCopia=[[Usuario alloc]initWithDictionary:[sc.resDic objectForKey:@"usuario"]];
@@ -291,14 +291,14 @@
         
     }
     else{
-        /*NSString *message=NSLocalizedString(@"LoginError", nil);
+        NSString *message=NSLocalizedString(@"LoginError", nil);
         UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
         spinner.alpha=0;
         [spinner stopAnimating];
-        loginButton.enabled=YES;*/
+        loginButton.enabled=YES;
         [self receivedDataFromServerWithError:nil];
-    }
+    }*/
 }
 -(void)receivedDataFromServerWithError:(id)sender{
     FileSaver *fileSaver=[[FileSaver alloc]init];

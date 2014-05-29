@@ -28,10 +28,37 @@
         space.urbanization = dictionary[@"urbanization"];
         space.project = dictionary[@"project"];
         space.name = dictionary[@"name"];
-        space.xCoord = dictionary[@"xCoord"];
-        space.yCoord = dictionary[@"yCoord"];
-        space.xLimit = dictionary[@"xLimit"];
-        space.yLimit = dictionary[@"yLimit"];
+        if ([dictionary[@"xCoord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"xCoord"] isEqualToString:@""]) {
+                space.xCoord = @(0);
+            }
+        } else {
+            space.xCoord = dictionary[@"xCoord"];
+        }
+        
+        if ([dictionary[@"yCoord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"yCoord"] isEqualToString:@""]) {
+                space.yCoord = @(0);
+            }
+        } else {
+            space.yCoord = dictionary[@"yCoord"];
+        }
+        
+        if ([dictionary[@"xLimit"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"xLimit"] isEqualToString:@""]) {
+                space.xLimit = @(0);
+            }
+        } else {
+            space.xLimit = dictionary[@"xLimit"];
+        }
+        
+        if ([dictionary[@"yLimit"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"yLimit"] isEqualToString:@""]) {
+                space.yLimit = @(0);
+            }
+        } else {
+            space.yLimit = dictionary[@"yLimit"];
+        }
         space.common = dictionary[@"common"];
         space.enabled = dictionary[@"enabled"];
         space.lastUpdate = dictionary[@"lastUpdate"];
@@ -46,10 +73,38 @@
         space.urbanization = dictionary[@"urbanization"];
         space.project = dictionary[@"project"];
         space.name = dictionary[@"name"];
-        space.xCoord = dictionary[@"xCoord"];
-        space.yCoord = dictionary[@"yCoord"];
-        space.xLimit = dictionary[@"xLimit"];
-        space.yLimit = dictionary[@"yLimit"];
+        
+        if ([dictionary[@"xCoord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"xCoord"] isEqualToString:@""]) {
+                space.xCoord = @(0);
+            }
+        } else {
+            space.xCoord = dictionary[@"xCoord"];
+        }
+        
+        if ([dictionary[@"yCoord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"yCoord"] isEqualToString:@""]) {
+                space.yCoord = @(0);
+            }
+        } else {
+            space.yCoord = dictionary[@"yCoord"];
+        }
+        
+        if ([dictionary[@"xLimit"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"xLimit"] isEqualToString:@""]) {
+                space.xLimit = @(0);
+            }
+        } else {
+            space.xLimit = dictionary[@"xLimit"];
+        }
+        
+        if ([dictionary[@"yLimit"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"yLimit"] isEqualToString:@""]) {
+                space.yLimit = @(0);
+            }
+        } else {
+            space.yLimit = dictionary[@"yLimit"];
+        }
         space.common = dictionary[@"common"];
         space.enabled = dictionary[@"enabled"];
         space.lastUpdate = dictionary[@"lastUpdate"];

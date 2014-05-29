@@ -37,8 +37,24 @@
         urbanization.identifier = urbanizationID;
         urbanization.imageURL = dictionary[@"image"];
         urbanization.miniURL = dictionary[@"mini"];
-        urbanization.imageWidth = dictionary[@"imageWidth"];
-        urbanization.imageHeight = dictionary[@"imageHeight"];
+        
+        if ([dictionary[@"imageWidth"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"imageWidth"] isEqualToString:@""]) {
+                urbanization.imageWidth = @(0);
+            }
+        }
+         else {
+            urbanization.imageWidth = dictionary[@"imageWidth"];
+        }
+        
+        if ([dictionary[@"imageHeight"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"imageHeight"] isEqualToString:@""]) {
+                urbanization.imageHeight = @(0);
+            }
+        }
+        else {
+            urbanization.imageHeight = dictionary[@"imageHeight"];
+        }
         urbanization.northDegrees = dictionary[@"northDegs"];
         urbanization.enabled = dictionary[@"enabled"];
         urbanization.lastUpdate = dictionary[@"lastUpdate"];
@@ -53,8 +69,23 @@
         urbanization.identifier = urbanizationID;
         urbanization.imageURL = dictionary[@"image"];
         urbanization.miniURL = dictionary[@"mini"];
-        urbanization.imageWidth = dictionary[@"imageWidth"];
-        urbanization.imageHeight = dictionary[@"imageHeight"];
+        if ([dictionary[@"imageWidth"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"imageWidth"] isEqualToString:@""]) {
+                urbanization.imageWidth = @(0);
+            }
+        }
+        else {
+            urbanization.imageWidth = dictionary[@"imageWidth"];
+        }
+        
+        if ([dictionary[@"imageHeight"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"imageHeight"] isEqualToString:@""]) {
+                urbanization.imageHeight = @(0);
+            }
+        }
+        else {
+            urbanization.imageHeight = dictionary[@"imageHeight"];
+        }
         urbanization.northDegrees = dictionary[@"northDegs"];
         urbanization.enabled = dictionary[@"enabled"];
         urbanization.lastUpdate = dictionary[@"lastUpdate"];

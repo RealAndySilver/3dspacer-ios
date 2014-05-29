@@ -28,8 +28,23 @@
         product.project = dictionary[@"project"];
         product.name = dictionary[@"name"];
         product.area = dictionary[@"area"];
-        product.xCoord = dictionary[@"xCoord"];
-        product.yCoord = dictionary[@"yCoord"];
+        if ([dictionary[@"xCoord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"xCoord"] isEqualToString:@""]) {
+                product.xCoord = @(0);
+            }
+        }
+         else {
+            product.xCoord = dictionary[@"xCoord"];
+        }
+        
+        if ([dictionary[@"yCoord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"yCoord"] isEqualToString:@""]) {
+                product.yCoord = @(0);
+            }
+        }
+         else {
+            product.yCoord = dictionary[@"yCoord"];
+        }
         product.startPlant = dictionary[@"startPlant"];
         product.enabled = dictionary[@"enabled"];
         product.lastUpdate = dictionary[@"lastUpdate"];
@@ -45,8 +60,24 @@
         product.project = dictionary[@"project"];
         product.name = dictionary[@"name"];
         product.area = dictionary[@"area"];
-        product.xCoord = dictionary[@"xCoord"];
-        product.yCoord = dictionary[@"yCoord"];
+        
+        if ([dictionary[@"xCoord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"xCoord"] isEqualToString:@""]) {
+                product.xCoord = @(0);
+            }
+        }
+        else {
+            product.xCoord = dictionary[@"xCoord"];
+        }
+        
+        if ([dictionary[@"yCoord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"yCoord"] isEqualToString:@""]) {
+                product.yCoord = @(0);
+            }
+        }
+        else {
+            product.yCoord = dictionary[@"yCoord"];
+        }
         product.startPlant = dictionary[@"startPlant"];
         product.enabled = dictionary[@"enabled"];
         product.lastUpdate = dictionary[@"lastUpdate"];

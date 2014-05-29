@@ -204,7 +204,7 @@
     sendInfoVC.nombreProyecto = proyecto.nombre;
     sendInfoVC.proyectoID = proyecto.idProyecto;
     sendInfoVC.usuario = self.usuario.usuario;
-    sendInfoVC.currentUser = self.usuario;
+    //sendInfoVC.currentUser = self.usuario;
     sendInfoVC.contrasena = self.usuario.contrasena;
     sendInfoVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     sendInfoVC.modalPresentationStyle = UIModalPresentationCurrentContext;

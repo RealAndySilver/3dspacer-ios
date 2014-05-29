@@ -7,13 +7,15 @@
 //
 
 #import "SendInfoViewController.h"
+#import "ServerCommunicator.h"
+#import "UserInfo.h"
 
-@interface SendInfoViewController ()
+@interface SendInfoViewController () <ServerCommunicatorDelegate>
 
 @end
 
 @implementation SendInfoViewController
-@synthesize nombreProyecto,usuario,contrasena,proyectoID,currentUser;
+@synthesize nombreProyecto,usuario,contrasena,proyectoID;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -73,9 +75,10 @@
             if (![emailTF.text isEqualToString:@""]) {
                 if (![comentarioTV.text isEqualToString:@""]) {
                     NSLog(@"Usuario :%@ \nContrasena : %@",usuario,contrasena);
-                    NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",usuario,contrasena,[IAmCoder dateString]];
+                    /*NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",usuario,contrasena,[IAmCoder dateString]];
                     NSString *params=[NSString stringWithFormat:@"<ns:setRegister><data>%@</data><token>%@</token><language>%@</language><register><name>%@</name><email>%@</email><comments>%@</comments><project>%@</project></register></ns:setRegister>",loginData,[IAmCoder hash256:loginData],lang,nombreTF.text,emailTF.text,comentarioTV.text,proyectoID];
-                    //[server callServerWithMethod:@"" andParameter:params];
+                    [server callServerWithMethod:@"" andParameter:params];*/
+                    [self sendInfoToServer];
                     [self resignKeyboard];
                 }
                 else{
@@ -98,9 +101,10 @@
             if (![emailTF.text isEqualToString:@""]) {
                 if (![comentarioTV.text isEqualToString:@""]) {
                     NSLog(@"Usuario :%@ \nContrasena : %@",usuario,contrasena);
-                    NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",usuario,contrasena,[IAmCoder dateString]];
+                    [self sendInfoToServer];
+                    /*NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",usuario,contrasena,[IAmCoder dateString]];
                     NSString *params=[NSString stringWithFormat:@"<ns:sendSuggest><data>%@</data><token>%@</token><language>%@</language><register><name>%@</name><email>%@</email><comments>%@</comments><project>%@</project></register></ns:sendSuggest>",loginData,[IAmCoder hash256:loginData],lang,nombreTF.text,emailTF.text,comentarioTV.text,proyectoID];
-                    //[server callServerWithMethod:@"" andParameter:params];
+                    [server callServerWithMethod:@"" andParameter:params];*/
                 }
                 else{
                     UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:NSLocalizedString(@"AgregarComentario", nil) delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
@@ -131,6 +135,67 @@
     [file setDictionary:dictionary withName:@"SendInfoDictionary"];
     NSLog(@"Ditcionary dude %@",[file getDictionary:@"SendInfoDictionary"]);
 }
+
+-(NSString *)generateJSONString {
+    //Create JSON string with user info
+    NSDictionary *userDic = @{@"name": nombreTF.text,
+                              @"email" : emailTF.text,
+                              @"comments" : comentarioTV.text};
+    NSDictionary *projectDic = @{@"id": @([self.proyectoID intValue])};
+    
+    NSDictionary *finalInfoDic = @{@"user": userDic,
+                                   @"project" : projectDic};
+    
+    NSArray *finalInfoArray = @[finalInfoDic];
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:finalInfoArray
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    NSLog(@"JSON String: %@", jsonString);
+    return jsonString;
+}
+
+-(void)sendInfoToServer {
+    ServerCommunicator *serverCommunicator = [[ServerCommunicator alloc] init];
+    serverCommunicator.delegate = self;
+    NSString *parameter = [NSString stringWithFormat:@"projectUser=%@", [self generateJSONString]];
+    [serverCommunicator callServerWithPOSTMethod:@"sendProjects" andParameter:parameter httpMethod:@"POST"];
+}
+
+-(void)receivedDataFromServer:(NSDictionary *)dictionary withMethodName:(NSString *)theMethodName {
+    if ([theMethodName isEqualToString:@"sendProjects"]) {
+        if (dictionary) {
+            NSLog(@"Llego correctamente el diccionario de sendProject: %@", dictionary);
+            if ([dictionary[@"message"] isEqualToString:@"Success invitation was sended"]) {
+                NSMutableDictionary *dictionary=[[NSMutableDictionary alloc]init];
+                [dictionary setObject:@"true" forKey:@"SentState"];
+                FileSaver *file=[[FileSaver alloc]init];
+                [file setDictionary:dictionary withName:@"SendInfoDictionary"];
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ProyectoEnviado", nil)
+                                                                message:NSLocalizedString(@"ProyectoEnviadoExito", nil)
+                                                               delegate:self
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil,nil];
+                [alert show];
+            }
+            else{
+                [self errorAlert];
+            }
+            
+        } else {
+            NSLog(@"La respuesta del sendPRojects fue Null");
+        }
+    } else {
+        NSLog(@"Error en la respuesta del server");
+    }
+}
+
+-(void)serverError:(NSError *)error {
+    NSLog(@"Error en el server: %@ %@", error, [error localizedDescription]);
+}
+
 -(IBAction)cancel:(id)sender{
     [self customLogoutAlert];
 }
@@ -153,10 +218,10 @@
 }
 -(void)goBack{
     [self.navigationController popViewControllerAnimated:YES];
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
     
 }
--(void)receivedDataFromServerRegister:(id)sender{
+/*-(void)receivedDataFromServerRegister:(id)sender{
     //server=sender;
     NSMutableDictionary *dictionary=[[NSMutableDictionary alloc]init];
     [dictionary setObject:@"true" forKey:@"SentState"];
@@ -166,8 +231,8 @@
     NSString *tempMethod=[NSString stringWithFormat:@"ns1:%@Response",methodName];
     
     
-    //NSString *response=[[server.resDic objectForKey:tempMethod]objectForKey:@"return"]; ***************************************
-    /*if ([response isEqualToString:@"success"]) {
+    NSString *response=[[server.resDic objectForKey:tempMethod]objectForKey:@"return"]; ***************************************
+    if ([response isEqualToString:@"success"]) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ProyectoEnviado", nil)
                                                         message:NSLocalizedString(@"ProyectoEnviadoExito", nil)
                                                        delegate:self
@@ -177,11 +242,12 @@
     }
     else{
         [self errorAlert];
-    }*/
+    }
 }
 -(void)receivedDataFromServerWithError:(id)sender{
     [self errorAlert];
-}
+}*/
+
 -(void)errorAlert{
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
                                                     message:NSLocalizedString(@"ProyectoEnviadoNOExito", nil)

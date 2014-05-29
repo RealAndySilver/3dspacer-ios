@@ -11,8 +11,8 @@
 @implementation ComprobarUsuario
 
 - (NSDictionary*)convertirPListEnDiccionario{
-    sc=[[ServerCommunicator alloc]init];
-    sc.caller=self;
+    //sc=[[ServerCommunicator alloc]init];
+    //sc.caller=self;
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Datos" ofType:@"plist"];
     NSDictionary *resultado=[[NSDictionary alloc]initWithContentsOfFile:path];
     return resultado;
@@ -33,7 +33,7 @@
     return nil;
 }*/
 - (Usuario*)verificarUsuarioConNombre:(NSString *)nombre yContrasena:(NSString *)contrasena{
-    [sc callServerWithMethod:@"" andParameter:@""];
+   // [sc callServerWithMethod:@"" andParameter:@""];
 
     return nil;
 }

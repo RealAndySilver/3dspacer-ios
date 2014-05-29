@@ -138,13 +138,13 @@
 		8BD29412191D764E0006AB2A /* PisoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BD29411191D764E0006AB2A /* PisoCollectionViewCell.m */; };
 		A029EADF1924250D00E57ECF /* LaunchImagePhoneR4.png in Resources */ = {isa = PBXBuildFile; fileRef = A029EADE1924250D00E57ECF /* LaunchImagePhoneR4.png */; };
 		A029EAE319242F5E00E57ECF /* HomeScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A029EAE219242F5E00E57ECF /* HomeScreenViewController.m */; };
+		A081542F1936400A004F25B3 /* ServerCommunicator.m in Sources */ = {isa = PBXBuildFile; fileRef = A081542E1936400A004F25B3 /* ServerCommunicator.m */; };
 		A09E56D5192F96110099B458 /* LoadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A09E56D4192F96110099B458 /* LoadingViewController.m */; };
 		A09E56D8192F9B350099B458 /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A09E56D7192F9B350099B458 /* UserInfo.m */; };
 		A09E56DC192F9C3A0099B458 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A09E56DA192F9C3A0099B458 /* Model.xcdatamodeld */; };
 		A09E56DF192F9CE60099B458 /* Project.m in Sources */ = {isa = PBXBuildFile; fileRef = A09E56DE192F9CE60099B458 /* Project.m */; };
 		A09E56E6192F9E790099B458 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A09E56E5192F9E790099B458 /* LoginViewController.m */; };
 		A09E56E8192FA1970099B458 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A09E56E7192FA1970099B458 /* CoreData.framework */; };
-		A09E56EC192FA50C0099B458 /* ServerCommunicator.m in Sources */ = {isa = PBXBuildFile; fileRef = A09E56EB192FA50C0099B458 /* ServerCommunicator.m */; };
 		A09E56F4192FB3880099B458 /* Project+ParseInfoFromServer.m in Sources */ = {isa = PBXBuildFile; fileRef = A09E56F3192FB3880099B458 /* Project+ParseInfoFromServer.m */; };
 		A09E56F7192FB4070099B458 /* Project+AddOn.m in Sources */ = {isa = PBXBuildFile; fileRef = A09E56F6192FB4070099B458 /* Project+AddOn.m */; };
 		A09E56FF192FB7E00099B458 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = A09E56FE192FB7E00099B458 /* MBProgressHUD.m */; };
@@ -173,6 +173,9 @@
 		A0A0B3C1193505DC00BB48E0 /* NewTVIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = A0A0B3BE193505DC00BB48E0 /* NewTVIcon.png */; };
 		A0A0B3C319350A9300BB48E0 /* NewLogoutIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = A0A0B3C219350A9300BB48E0 /* NewLogoutIcon.png */; };
 		A0A0B3C71935250100BB48E0 /* DownloadView.m in Sources */ = {isa = PBXBuildFile; fileRef = A0A0B3C61935250100BB48E0 /* DownloadView.m */; };
+		A0CF3F681937AE80000E9986 /* NewLoginBox.png in Resources */ = {isa = PBXBuildFile; fileRef = A0CF3F671937AE80000E9986 /* NewLoginBox.png */; };
+		A0CF3F6A1937B019000E9986 /* ImagenProyectoDefecto.png in Resources */ = {isa = PBXBuildFile; fileRef = A0CF3F691937B019000E9986 /* ImagenProyectoDefecto.png */; };
+		A0CF3F6C1937B0CE000E9986 /* NewLoginToProject.png in Resources */ = {isa = PBXBuildFile; fileRef = A0CF3F6B1937B0CE000E9986 /* NewLoginToProject.png */; };
 		A0E7A47A191C08E60067ED3D /* MainCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A479191C08E60067ED3D /* MainCarouselViewController.m */; };
 		A0E7A47F191C0B000067ED3D /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A47E191C0B000067ED3D /* iCarousel.m */; };
 		A0E7A482191C20550067ED3D /* ProyectoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A481191C20550067ED3D /* ProyectoViewController.m */; };
@@ -396,6 +399,8 @@
 		A029EADE1924250D00E57ECF /* LaunchImagePhoneR4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LaunchImagePhoneR4.png; path = Resources/LaunchImagePhoneR4.png; sourceTree = "<group>"; };
 		A029EAE119242F5E00E57ECF /* HomeScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomeScreenViewController.h; path = "New ViewControllers/iPhone ViewControllers/HomeScreenViewController.h"; sourceTree = "<group>"; };
 		A029EAE219242F5E00E57ECF /* HomeScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HomeScreenViewController.m; path = "New ViewControllers/iPhone ViewControllers/HomeScreenViewController.m"; sourceTree = "<group>"; };
+		A081542D1936400A004F25B3 /* ServerCommunicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerCommunicator.h; sourceTree = "<group>"; };
+		A081542E1936400A004F25B3 /* ServerCommunicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerCommunicator.m; sourceTree = "<group>"; };
 		A09E56D3192F96110099B458 /* LoadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoadingViewController.h; path = "New ViewControllers/LoadingViewController.h"; sourceTree = "<group>"; };
 		A09E56D4192F96110099B458 /* LoadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoadingViewController.m; path = "New ViewControllers/LoadingViewController.m"; sourceTree = "<group>"; };
 		A09E56D6192F9B350099B458 /* UserInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserInfo.h; path = "New ViewControllers/Model/UserInfo.h"; sourceTree = "<group>"; };
@@ -406,8 +411,6 @@
 		A09E56E4192F9E790099B458 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = "New ViewControllers/LoginViewController.h"; sourceTree = "<group>"; };
 		A09E56E5192F9E790099B458 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = "New ViewControllers/LoginViewController.m"; sourceTree = "<group>"; };
 		A09E56E7192FA1970099B458 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		A09E56EA192FA50C0099B458 /* ServerCommunicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerCommunicator.h; sourceTree = "<group>"; };
-		A09E56EB192FA50C0099B458 /* ServerCommunicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerCommunicator.m; sourceTree = "<group>"; };
 		A09E56F2192FB3880099B458 /* Project+ParseInfoFromServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Project+ParseInfoFromServer.h"; path = "New ViewControllers/CoreData/CoreDataObjects/Project+ParseInfoFromServer.h"; sourceTree = "<group>"; };
 		A09E56F3192FB3880099B458 /* Project+ParseInfoFromServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Project+ParseInfoFromServer.m"; path = "New ViewControllers/CoreData/CoreDataObjects/Project+ParseInfoFromServer.m"; sourceTree = "<group>"; };
 		A09E56F5192FB4070099B458 /* Project+AddOn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Project+AddOn.h"; path = "New ViewControllers/CoreData/CoreDataObjects/Project+AddOn.h"; sourceTree = "<group>"; };
@@ -457,6 +460,9 @@
 		A0A0B3C219350A9300BB48E0 /* NewLogoutIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NewLogoutIcon.png; path = Resources/iPad/NewLogoutIcon.png; sourceTree = "<group>"; };
 		A0A0B3C51935250100BB48E0 /* DownloadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadView.h; path = "New ViewControllers/Custom Views/DownloadView.h"; sourceTree = "<group>"; };
 		A0A0B3C61935250100BB48E0 /* DownloadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadView.m; path = "New ViewControllers/Custom Views/DownloadView.m"; sourceTree = "<group>"; };
+		A0CF3F671937AE80000E9986 /* NewLoginBox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NewLoginBox.png; path = Resources/iPad/NewLoginBox.png; sourceTree = "<group>"; };
+		A0CF3F691937B019000E9986 /* ImagenProyectoDefecto.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ImagenProyectoDefecto.png; path = Resources/iPad/ImagenProyectoDefecto.png; sourceTree = "<group>"; };
+		A0CF3F6B1937B0CE000E9986 /* NewLoginToProject.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NewLoginToProject.png; path = Resources/iPad/NewLoginToProject.png; sourceTree = "<group>"; };
 		A0E7A478191C08E60067ED3D /* MainCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainCarouselViewController.h; path = "New ViewControllers/MainCarouselViewController.h"; sourceTree = "<group>"; };
 		A0E7A479191C08E60067ED3D /* MainCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainCarouselViewController.m; path = "New ViewControllers/MainCarouselViewController.m"; sourceTree = "<group>"; };
 		A0E7A47D191C0B000067ED3D /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
@@ -603,8 +609,8 @@
 		37E98A3F153E0D70001B9BFE /* Ekoobot 3D */ = {
 			isa = PBXGroup;
 			children = (
+				A081542C1936400A004F25B3 /* ServerCommunicator2 */,
 				A09E56FC192FB7E00099B458 /* MBProgressHUD2 */,
-				A09E56E9192FA50C0099B458 /* ServerCommunicator2 */,
 				A09E56D9192F9C1E0099B458 /* CoreData */,
 				A0E7A47B191C0AF30067ED3D /* Libraries */,
 				7589F495167EBA43007CA511 /* Analytics */,
@@ -853,6 +859,9 @@
 		8B0621E519217B4F0017DD20 /* New Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A0CF3F6B1937B0CE000E9986 /* NewLoginToProject.png */,
+				A0CF3F691937B019000E9986 /* ImagenProyectoDefecto.png */,
+				A0CF3F671937AE80000E9986 /* NewLoginBox.png */,
 				A0A0B3C219350A9300BB48E0 /* NewLogoutIcon.png */,
 				A0A0B3BC193505DC00BB48E0 /* NewDeleteIcon.png */,
 				A0A0B3BD193505DC00BB48E0 /* NewShareIcon.png */,
@@ -961,6 +970,16 @@
 			name = "iPhone ViewControllers";
 			sourceTree = "<group>";
 		};
+		A081542C1936400A004F25B3 /* ServerCommunicator2 */ = {
+			isa = PBXGroup;
+			children = (
+				A081542D1936400A004F25B3 /* ServerCommunicator.h */,
+				A081542E1936400A004F25B3 /* ServerCommunicator.m */,
+			);
+			name = ServerCommunicator2;
+			path = "New ViewControllers/ServerCommunicator2";
+			sourceTree = "<group>";
+		};
 		A09E56D9192F9C1E0099B458 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
@@ -977,16 +996,6 @@
 				A09E56F1192FB3450099B458 /* Project */,
 			);
 			name = CoreData;
-			sourceTree = "<group>";
-		};
-		A09E56E9192FA50C0099B458 /* ServerCommunicator2 */ = {
-			isa = PBXGroup;
-			children = (
-				A09E56EA192FA50C0099B458 /* ServerCommunicator.h */,
-				A09E56EB192FA50C0099B458 /* ServerCommunicator.m */,
-			);
-			name = ServerCommunicator2;
-			path = "New ViewControllers/ServerCommunicator2";
 			sourceTree = "<group>";
 		};
 		A09E56F1192FB3450099B458 /* Project */ = {
@@ -1226,6 +1235,7 @@
 				7574E8211602A12100974D7B /* downloadBtn.png in Resources */,
 				7574E8231602A16E00974D7B /* updateBox.png in Resources */,
 				75A94B0617E011150045BE3D /* tv2.png in Resources */,
+				A0CF3F681937AE80000E9986 /* NewLoginBox.png in Resources */,
 				75E69F7616040622005907F6 /* bin.png in Resources */,
 				757BEC02161B8325002B251A /* fondo.jpeg in Resources */,
 				A0A0B3B91935028900BB48E0 /* NewDownloadIcon.png in Resources */,
@@ -1258,6 +1268,7 @@
 				75E995C1164AAC6E00C7452E /* cancel-en.png in Resources */,
 				75E995C2164AAC6E00C7452E /* send-en.png in Resources */,
 				75FF14501652EA2700C39705 /* compassOn.png in Resources */,
+				A0CF3F6A1937B019000E9986 /* ImagenProyectoDefecto.png in Resources */,
 				755F9F0E1653090C0002266B /* icon@2x.png in Resources */,
 				8B0621E819217B670017DD20 /* CarouselBackground.png in Resources */,
 				A0A0B3C1193505DC00BB48E0 /* NewTVIcon.png in Resources */,
@@ -1266,6 +1277,7 @@
 				8B5C7919191804AB003941AD /* Skybox1Left.png in Resources */,
 				75524125167937BF004BC471 /* compassIcon.png in Resources */,
 				8B9C828C19228767008B3055 /* Add.png in Resources */,
+				A0CF3F6C1937B0CE000E9986 /* NewLoginToProject.png in Resources */,
 				755241271679388E004BC471 /* zoom1.png in Resources */,
 				7534B20B1682595B0005F7BC /* analytics.sqlite in Resources */,
 				75A1D30416BC53270013B48A /* zoom2.png in Resources */,
@@ -1320,7 +1332,6 @@
 				37E98A53153E0D71001B9BFE /* RootViewController.m in Sources */,
 				37E98A5A153E0D71001B9BFE /* ListadoDeProyectosVC.m in Sources */,
 				37E98A7E153E2164001B9BFE /* Usuario.m in Sources */,
-				A09E56EC192FA50C0099B458 /* ServerCommunicator.m in Sources */,
 				37E98A83153E21C0001B9BFE /* Proyecto.m in Sources */,
 				37E98A8C153E27CE001B9BFE /* ComprobarUsuario.m in Sources */,
 				37F553F61540ED8200BB6A90 /* PlantaUrbanaVC.m in Sources */,
@@ -1367,6 +1378,7 @@
 				7515C67015E54D3600DFE029 /* FileSaver.m in Sources */,
 				75D49A8215ED2FF000A4F6BA /* IAmCoder.m in Sources */,
 				A09E571F19301C800099B458 /* Group.m in Sources */,
+				A081542F1936400A004F25B3 /* ServerCommunicator.m in Sources */,
 				75E69F74160404F3005907F6 /* EraseViewController.m in Sources */,
 				A09E56F7192FB4070099B458 /* Project+AddOn.m in Sources */,
 				8B5C791C19183231003941AD /* More3DScenesView.m in Sources */,
@@ -1550,16 +1562,16 @@
 		37E98A77153E0D71001B9BFE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Diego Fernando Vidal Illera (9JA65WT89C)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Diego Fernando Vidal Illera (9JA65WT89C)";
 				COMPRESS_PNG_FILES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Ekoobot 3D/Ekoobot 3D-Prefix.pch";
 				INFOPLIST_FILE = "Ekoobot 3D/Ekoobot 3D-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "0C1E9164-F94C-44B1-B349-EBCC577E5EF1";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0C1E9164-F94C-44B1-B349-EBCC577E5EF1";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1568,16 +1580,16 @@
 		37E98A78153E0D71001B9BFE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Diego Fernando Vidal Illera (9JA65WT89C)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Diego Fernando Vidal Illera (9JA65WT89C)";
 				COMPRESS_PNG_FILES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Ekoobot 3D/Ekoobot 3D-Prefix.pch";
 				INFOPLIST_FILE = "Ekoobot 3D/Ekoobot 3D-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "0C1E9164-F94C-44B1-B349-EBCC577E5EF1";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0C1E9164-F94C-44B1-B349-EBCC577E5EF1";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1652,16 +1664,16 @@
 		75E995DD164AF28000C7452E /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: iAm Studio S.A.S. (4U39LJL48R)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: iAm Studio S.A.S. (4U39LJL48R)";
 				COMPRESS_PNG_FILES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Ekoobot 3D/Ekoobot 3D-Prefix.pch";
 				INFOPLIST_FILE = "Ekoobot 3D/Ekoobot 3D-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "317659E4-2B38-433F-A699-F2B3B4FB44AB";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "317659E4-2B38-433F-A699-F2B3B4FB44AB";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

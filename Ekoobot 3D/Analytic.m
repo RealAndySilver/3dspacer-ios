@@ -38,13 +38,13 @@
         appendedString=[appendedString stringByAppendingString:[NSString stringWithFormat:@"<item><id_proyect>%@</id_proyect><id_user>%@</id_user><date>%@-%@-%@ %@:%@:%@</date></item>",analytic.projectId,analytic.userId,analytic.year,analytic.month,analytic.day,analytic.hour,analytic.minute,analytic.seconds]];
     }
     
-    ServerCommunicator *server=[[ServerCommunicator alloc]init];
-    server.caller=self;
-    server.tag=1;
+    //ServerCommunicator *server=[[ServerCommunicator alloc]init];
+    //server.caller=self;
+    //server.tag=1;
     NSString *loginData=[NSString stringWithFormat:@"%@~%@~%@",theUsername,thePassword,[IAmCoder dateString]];
      NSString *parameters=[NSString stringWithFormat:@"<ns:setAnalytics><data>%@</data><token>%@</token><statistics><projectsStatistic>%@</projectsStatistic></statistics></ns:setAnalytics>",loginData,[IAmCoder hash256:loginData],appendedString];
     NSLog(@"Parametros %@",parameters);
-    [server callServerWithMethod:@"" andParameter:parameters];
+    //[server callServerWithMethod:@"" andParameter:parameters];
 }
 -(NSDictionary*)convertAnalyticInDictionary:(Analytic*)analytic{
     NSMutableDictionary *tempDic=[[NSMutableDictionary alloc]init];
@@ -71,12 +71,12 @@
 }
 #pragma mark server response
 -(void)receivedDataFromServerAnalytics:(ServerCommunicator*)server{
-    NSLog(@"Server response %@",server.resDic);
+    /*NSLog(@"Server response %@",server.resDic);
     if ([[server.resDic objectForKey:@"return"] isEqualToString:@"success"]) {
         NSLog(@"Success dude!");
         SqlHandler *handler=[[SqlHandler alloc]init];
         [handler deleteTable];
-    }
+    }*/
 }
 -(void)receivedDataFromServerWithError:(ServerCommunicator*)server{
     

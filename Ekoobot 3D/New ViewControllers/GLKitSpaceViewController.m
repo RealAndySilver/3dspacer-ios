@@ -228,7 +228,26 @@
     self.more3DScenesView = [[More3DScenesView alloc] initWithFrame:more3DScenesRect];
     self.more3DScenesView.delegate = self;
     self.more3DScenesView.espacios3DArray = self.arregloDeEspacios3D;
-    NSLog(@"numero de espacios 3D en glkit: %d", [self.arregloDeEspacios3D count]);
+    
+    //Search for the thumbs images to display in the inferior view
+    NSMutableArray *thumbsArray = [[NSMutableArray alloc] init];
+    for (int i = 0; i < [self.arregloDeEspacios3D count]; i++) {
+        Space *space = self.arregloDeEspacios3D[i];
+        for (int j = 0; j < [self.projectDic[@"finishes"] count]; j++) {
+            Finish *finish = self.projectDic[@"finishes"][j];
+            if ([finish.space isEqualToString:space.identifier]) {
+                for (int k = 0; k < [self.projectDic[@"finishImages"] count]; k++) {
+                    FinishImage *finishImage = self.projectDic[@"finishImages"][k];
+                    if ([finishImage.finish isEqualToString:finish.identifier] && [finishImage.type isEqualToString:@"back"]) {
+                        [thumbsArray addObject:[finishImage finishImage]];
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+    }
+    self.more3DScenesView.thumbsArray = thumbsArray;
     Space *space = self.arregloDeEspacios3D[self.espacioSeleccionado];
     self.more3DScenesView.titleLabel.text = space.name;
     [self.view addSubview:self.more3DScenesView];

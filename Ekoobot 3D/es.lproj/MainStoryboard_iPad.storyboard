@@ -808,7 +808,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <view contentMode="scaleToFill" id="lgo-fo-KoC">
-                                <rect key="frame" x="352" y="49" width="320" height="78"/>
+                                <rect key="frame" x="352" y="640" width="320" height="78"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NewLoginBox.png" id="yTp-8f-gqL">
@@ -847,7 +847,7 @@
                                 <color key="backgroundColor" red="0.52445392219387754" green="0.52445392219387754" blue="0.52445392219387754" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="vRj-p8-gBD">
-                                <rect key="frame" x="680" y="99" width="53" height="37"/>
+                                <rect key="frame" x="680" y="681" width="53" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Login">
                                     <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -855,14 +855,14 @@
                                 </state>
                             </button>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" id="IO3-Ad-cje">
-                                <rect key="frame" x="741" y="108" width="20" height="20"/>
+                                <rect key="frame" x="734" y="690" width="20" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Dqw-qc-pRt">
-                                <rect key="frame" x="686" y="54" width="141" height="30"/>
+                                <rect key="frame" x="352" y="718" width="149" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Italic" family="Helvetica Neue" pointSize="15"/>
-                                <state key="normal" title="Olvidé mi contraseña">
+                                <state key="normal" title="Olvidó su contraseña?">
                                     <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -900,21 +900,22 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yQT-1j-gt2">
                                 <rect key="frame" x="734" y="249" width="75" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="italicSystem" pointSize="15"/>
                                 <state key="normal" title="Cancelar">
                                     <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
                             <view contentMode="scaleToFill" id="2QA-2a-Ym0">
-                                <rect key="frame" x="382" y="154" width="260" height="460"/>
+                                <rect key="frame" x="382" y="171" width="260" height="426"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ImagenProyectoDefecto.png" id="jgv-0C-tPC">
-                                        <rect key="frame" x="4" y="6" width="252" height="447"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ImagenProyectoDefecto.png" id="A03-YO-lNa">
+                                        <rect key="frame" x="6" y="5" width="249" height="415"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NewLoginToProject.png" id="jAS-Rq-hGb">
-                                        <rect key="frame" x="4" y="6" width="252" height="447"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NewLoginToProtectEspanol.png" id="iQP-ja-Cj3">
+                                        <rect key="frame" x="6" y="5" width="249" height="415"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                 </subviews>
@@ -1038,7 +1039,7 @@
         <image name="ImagenProyectoDefecto.png" width="1024" height="768"/>
         <image name="NewBackground.jpg" width="2048" height="1536"/>
         <image name="NewLoginBox.png" width="497" height="108"/>
-        <image name="NewLoginToProject.png" width="498" height="846"/>
+        <image name="NewLoginToProtectEspanol.png" width="498" height="846"/>
         <image name="bin.png" width="256" height="256"/>
         <image name="cancel.png" width="138" height="51"/>
         <image name="ekoomediaWterMark.png" width="278" height="63"/>

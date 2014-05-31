@@ -39,6 +39,12 @@
 -(void)viewDidLoad {
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = YES;
+    
+    //Add as an observer of the Keyboard notifications to move the textfields when
+    //the keyboard appears.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardAppear) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardHide) name:UIKeyboardWillHideNotification object:nil];
+    
     [self setupUI];
 }
 
@@ -50,9 +56,9 @@
     self.projectContainerVIew.layer.shadowRadius = 5.0;
     
     //EmailCOntainerView
-    self.emailContainerView.frame = CGRectMake(374.0, 64.0, 276.0, 44.0);
-    self.cancelButton.frame = CGRectMake(374.0, 110.0, 70.0, 44.0);
-    self.sendButton.frame = CGRectMake(655.0, 64.0, 60.0, 44.0);
+    self.emailContainerView.frame = CGRectMake(374.0, 650.0, 276.0, 44.0);
+    self.cancelButton.frame = CGRectMake(374.0, 700.0, 70.0, 44.0);
+    self.sendButton.frame = CGRectMake(655.0, 650.0, 60.0, 44.0);
     
     //Hidde views
     self.emailContainerView.alpha = 0.0;
@@ -273,6 +279,36 @@
     MainCarouselViewController *mainCarousel = [self.storyboard instantiateViewControllerWithIdentifier:@"MainCarousel"];
     mainCarousel.userProjectsArray = projectsArray;
     [self.navigationController pushViewController:mainCarousel animated:NO];
+}
+
+#pragma mark - Notification Handlers 
+
+-(void)keyboardAppear {
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^(){
+                         self.userInfoContainerView.transform = CGAffineTransformMakeTranslation(0.0, -600.0);
+                         self.forgotPasswordButton.transform = CGAffineTransformMakeTranslation(0.0, -600.0);
+                         self.enterButton.transform = CGAffineTransformMakeTranslation(0.0, -600.0);
+                         self.emailContainerView.transform = CGAffineTransformMakeTranslation(0.0, -600.0);
+                         self.cancelButton.transform = CGAffineTransformMakeTranslation(0.0, -600.0);
+                         self.sendButton.transform = CGAffineTransformMakeTranslation(0.0, -600.0);
+                     } completion:^(BOOL finished){}];
+}
+
+-(void)keyboardHide {
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^(){
+                         self.userInfoContainerView.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+                         self.forgotPasswordButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+                         self.enterButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+                         self.emailContainerView.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+                         self.sendButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+                         self.cancelButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+                     } completion:^(BOOL finished){}];
 }
 
 #pragma mark - UITextfieldDelegate

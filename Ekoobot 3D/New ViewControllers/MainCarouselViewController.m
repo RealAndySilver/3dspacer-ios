@@ -111,8 +111,8 @@
     
     //Setup Carousel
     self.carousel = [[iCarousel alloc] init];
-    self.carousel.type = iCarouselTypeRotary;
-    self.carousel.scrollSpeed = 1.0;
+    self.carousel.type = iCarouselTypeCustom;
+    self.carousel.scrollSpeed = 0.3;
     self.carousel.backgroundColor = [UIColor clearColor];
     self.carousel.dataSource = self;
     self.carousel.delegate = self;
@@ -134,25 +134,25 @@
     [self.view addSubview:ekoomediaLogo];*/
     
     //Delete button
-    self.deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 - 15.0 - 40.0, screenRect.size.height - 80.0, 30.0, 30.0)];
+    self.deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 - 15.0 + 40.0, screenRect.size.height - 110.0, 35.0, 35.0)];
     [self.deleteButton setBackgroundImage:[UIImage imageNamed:@"NewDeleteIcon.png"] forState:UIControlStateNormal];
     [self.deleteButton addTarget:self action:@selector(deleteProject) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.deleteButton];
     
     //Meesage button
-    self.messageButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 - 15.0 - 40.0 - 30.0 - 40.0, screenRect.size.height - 80.0, 30.0, 30.0)];
+    self.messageButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 - 15.0 - 40.0 - 30.0 - 40.0, screenRect.size.height - 110.0, 35.0, 35.0)];
     [self.messageButton setBackgroundImage:[UIImage imageNamed:@"NewShareIcon.png"] forState:UIControlStateNormal];
     [self.messageButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.messageButton];
     
     //Slideshow button
-    self.slideShowButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 - 15.0 + 40.0, screenRect.size.height - 80.0, 30.0, 30.0)];
+    self.slideShowButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 - 15.0 - 40.0, screenRect.size.height - 110.0, 35.0, 35.0)];
     [self.slideShowButton setBackgroundImage:[UIImage imageNamed:@"NewTVIcon.png"] forState:UIControlStateNormal];
     [self.slideShowButton addTarget:self action:@selector(startSlideshowProcess) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.slideShowButton];
     
     //Logout button
-    self.logoutButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 - 15.0 + 40.0 + 30.0 + 40.0, screenRect.size.height - 80.0, 30.0, 30.0)];
+    self.logoutButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 - 15.0 + 40.0 + 30.0 + 40.0, screenRect.size.height - 110.0, 35.0, 35.0)];
     [self.logoutButton setBackgroundImage:[UIImage imageNamed:@"NewLogoutIcon.png"] forState:UIControlStateNormal];
     [self.logoutButton addTarget:self action:@selector(showLogoutAlert) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.logoutButton];
@@ -748,7 +748,7 @@
         }
     }
     [fileSaver setDictionary:@{@"projectIDsArray": projectIDsArray} withName:@"downloadedProjectsIDs"];
-    
+    [self carouselDidEndScrollingAnimation:self.carousel];
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [[[UIAlertView alloc] initWithTitle:@"Delete Complete" message:@"The project has been deleted successfully." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
 }
@@ -938,12 +938,14 @@
             FileSaver *fileSaver = [[FileSaver alloc] init];
             if ([fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"]) {
                 //Get the array with the project's ids and add the new downloaded project id
-                NSMutableArray *projectIDsArray = [fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"];
+                NSMutableArray *projectIDsArray = [NSMutableArray arrayWithArray:[fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"]];
                 Project *project = self.userProjectsArray[self.carousel.currentItemIndex];
-                [projectIDsArray addObject:project.identifier];
-                [fileSaver setDictionary:@{@"projectIDsArray": projectIDsArray} withName:@"downloadedProjectsIDs"];
-                NSLog(@"agregué el id %@ a filesaver", project.identifier);
-            
+                if (![projectIDsArray containsObject:project.identifier]) {
+                    [projectIDsArray addObject:project.identifier];
+                    [fileSaver setDictionary:@{@"projectIDsArray": projectIDsArray} withName:@"downloadedProjectsIDs"];
+                    NSLog(@"agregué el id %@ a filesaver", project.identifier);
+                }
+
             } else {
                 //Create an array to store the downloaded project ids
                 NSMutableArray *projectIDsArray = [[NSMutableArray alloc] init];
@@ -952,7 +954,7 @@
                 [fileSaver setDictionary:@{@"projectIDsArray": projectIDsArray} withName:@"downloadedProjectsIDs"];
                 NSLog(@"cree un nuevo arreglo en filesaver con el projectID %@", project.identifier);
             }
-            
+            [self carouselDidEndScrollingAnimation:self.carousel];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"downloadCompleted" object:nil userInfo:nil];
             [self goToProjectScreenWithProjectDic:projectDictionary];
         }
@@ -1056,14 +1058,14 @@
 
 -(UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index reusingView:(UIView *)view {
     if (!view) {
-        view = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 260.0, 460.0)];
+        view = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 260.0, 428.0)];
         view.layer.shadowColor = [UIColor blackColor].CGColor;
         view.layer.shadowOffset = CGSizeMake(5.0, 5.0);
         view.layer.shadowOpacity = 0.9;
         view.layer.shadowRadius = 5.0;
         
         //Main Project ImageView
-        UIImageView *projectImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 260.0, 460.0)];
+        UIImageView *projectImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 260.0, 428.0)];
         projectImageView.tag = 1;
         projectImageView.clipsToBounds = YES;
         projectImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -1082,6 +1084,7 @@
         //Project Terms and Conditions button
         UIButton *termsAndConditionsButton = [UIButton buttonWithType:UIButtonTypeSystem];
         termsAndConditionsButton.frame = CGRectMake(view.frame.size.width - 40.0, 10.0, 30.0, 30.0);
+        termsAndConditionsButton.tag = 2000 + index;
         [termsAndConditionsButton setBackgroundImage:[UIImage imageNamed:@"NewInfoIcon.png"] forState:UIControlStateNormal];
         [termsAndConditionsButton addTarget:self action:@selector(goToTermsVC) forControlEvents:UIControlEventTouchUpInside];
         
@@ -1108,9 +1111,32 @@
     return view;
 }
 
+-(CATransform3D)carousel:(iCarousel *)carousel itemTransformForOffset:(CGFloat)offset baseTransform:(CATransform3D)transform {
+    const CGFloat centerItemZoom = 1.5;
+    const CGFloat centerItemSpacing = 1.23;
+    
+    CGFloat spacing = [self carousel:carousel valueForOption:iCarouselOptionSpacing withDefault:1.0f];
+    CGFloat absClampedOffset = MIN(1.0, fabs(offset));
+    CGFloat clampedOffset = MIN(1.0, MAX(-1.0, offset));
+    CGFloat scaleFactor = 1.0 + absClampedOffset * (1.0/centerItemZoom - 1.0);
+    offset = (scaleFactor * offset + scaleFactor * (centerItemSpacing - 1.0) * clampedOffset) * carousel.itemWidth * spacing;
+    
+    if (carousel.vertical)
+    {
+        transform = CATransform3DTranslate(transform, 0.0f, offset, -absClampedOffset);
+    }
+    else
+    {
+        transform = CATransform3DTranslate(transform, offset, 0.0f, -absClampedOffset);
+    }
+    
+    transform = CATransform3DScale(transform, scaleFactor, scaleFactor, 1.0f);
+    return transform;
+}
+
 -(CGFloat)carousel:(iCarousel *)carousel valueForOption:(iCarouselOption)option withDefault:(CGFloat)value {
     switch (option) {
-        case iCarouselOptionFadeMin:
+        /*case iCarouselOptionFadeMin:
             return -1.0;
             
         case iCarouselOptionFadeMax:
@@ -1120,11 +1146,14 @@
             return 1.0;
             
         case iCarouselOptionFadeMinAlpha:
-             return 0.8;
+             return 0.8;*/
             
         case iCarouselOptionSpacing:
             //return 0.5;
-            return 2.3;
+            return 1.5;
+        
+        //case iCarouselOptionOffsetMultiplier:
+          //  return 0.5;
             
         default:
             return value;
@@ -1163,6 +1192,7 @@
 }
 
 -(void)carouselDidEndScrollingAnimation:(iCarousel *)carousel {
+    
     BOOL projectIsDownloaded = [self userHasDownloadProjectAtIndex:carousel.currentItemIndex];
     NSLog(@"%hhd", projectIsDownloaded);
     if (projectIsDownloaded) {
@@ -1174,6 +1204,8 @@
                              self.slideShowButton.alpha = 1.0;
                              self.messageButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
                              self.logoutButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+                             [carousel.currentItemView viewWithTag:1000 + carousel.currentItemIndex].alpha = 0.0;
+                             [carousel.currentItemView viewWithTag:2000 + carousel.currentItemIndex].alpha = 1.0;
                          } completion:^(BOOL finished){}];
         
     } else {
@@ -1185,6 +1217,8 @@
                              self.slideShowButton.alpha = 0.0;
                              self.messageButton.transform = CGAffineTransformMakeTranslation(30.0 + 48.0, 0.0);
                              self.logoutButton.transform = CGAffineTransformMakeTranslation(-15.0-48.0, 0.0);
+                             [carousel.currentItemView viewWithTag:1000 + carousel.currentItemIndex].alpha = 1.0;
+                             [carousel.currentItemView viewWithTag:2000 + carousel.currentItemIndex].alpha = 0.0;
                          } completion:^(BOOL finished){}];
     }
 }

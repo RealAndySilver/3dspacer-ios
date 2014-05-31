@@ -17,5 +17,7 @@
 @property (strong, nonatomic) UILabel *titleLabel;
 @property (assign, nonatomic) NSUInteger numberOfScenes;
 @property (strong, nonatomic) NSArray *espacios3DArray;
+@property (strong, nonatomic) NSArray *thumbsArray;
+//@property (strong, nonatomic) NSDictionary *projectDic;
 @property (strong, nonatomic) id <More3DScenesViewDelegate> delegate;
 @end

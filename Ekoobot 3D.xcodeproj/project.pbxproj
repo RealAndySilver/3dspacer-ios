@@ -176,6 +176,10 @@
 		A0CF3F681937AE80000E9986 /* NewLoginBox.png in Resources */ = {isa = PBXBuildFile; fileRef = A0CF3F671937AE80000E9986 /* NewLoginBox.png */; };
 		A0CF3F6A1937B019000E9986 /* ImagenProyectoDefecto.png in Resources */ = {isa = PBXBuildFile; fileRef = A0CF3F691937B019000E9986 /* ImagenProyectoDefecto.png */; };
 		A0CF3F6C1937B0CE000E9986 /* NewLoginToProject.png in Resources */ = {isa = PBXBuildFile; fileRef = A0CF3F6B1937B0CE000E9986 /* NewLoginToProject.png */; };
+		A0D1A5981938BC84004285A1 /* GrayImage.png in Resources */ = {isa = PBXBuildFile; fileRef = A0D1A5971938BC84004285A1 /* GrayImage.png */; };
+		A0D1A59B1938D3F5004285A1 /* InfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = A0D1A59A1938D3F5004285A1 /* InfoView.m */; };
+		A0D1A59D1939206A004285A1 /* NewLoginToProtectEspanol.png in Resources */ = {isa = PBXBuildFile; fileRef = A0D1A59C1939206A004285A1 /* NewLoginToProtectEspanol.png */; };
+		A0D1A59F193943B3004285A1 /* NewUpdateIcon.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A0D1A59E193943B3004285A1 /* NewUpdateIcon.jpg */; };
 		A0E7A47A191C08E60067ED3D /* MainCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A479191C08E60067ED3D /* MainCarouselViewController.m */; };
 		A0E7A47F191C0B000067ED3D /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A47E191C0B000067ED3D /* iCarousel.m */; };
 		A0E7A482191C20550067ED3D /* ProyectoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0E7A481191C20550067ED3D /* ProyectoViewController.m */; };
@@ -463,6 +467,11 @@
 		A0CF3F671937AE80000E9986 /* NewLoginBox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NewLoginBox.png; path = Resources/iPad/NewLoginBox.png; sourceTree = "<group>"; };
 		A0CF3F691937B019000E9986 /* ImagenProyectoDefecto.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ImagenProyectoDefecto.png; path = Resources/iPad/ImagenProyectoDefecto.png; sourceTree = "<group>"; };
 		A0CF3F6B1937B0CE000E9986 /* NewLoginToProject.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NewLoginToProject.png; path = Resources/iPad/NewLoginToProject.png; sourceTree = "<group>"; };
+		A0D1A5971938BC84004285A1 /* GrayImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = GrayImage.png; path = Resources/iPad/GrayImage.png; sourceTree = "<group>"; };
+		A0D1A5991938D3F5004285A1 /* InfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InfoView.h; path = "New ViewControllers/Custom Views/InfoView.h"; sourceTree = "<group>"; };
+		A0D1A59A1938D3F5004285A1 /* InfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InfoView.m; path = "New ViewControllers/Custom Views/InfoView.m"; sourceTree = "<group>"; };
+		A0D1A59C1939206A004285A1 /* NewLoginToProtectEspanol.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NewLoginToProtectEspanol.png; path = Resources/iPad/NewLoginToProtectEspanol.png; sourceTree = "<group>"; };
+		A0D1A59E193943B3004285A1 /* NewUpdateIcon.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = NewUpdateIcon.jpg; path = Resources/iPad/NewUpdateIcon.jpg; sourceTree = "<group>"; };
 		A0E7A478191C08E60067ED3D /* MainCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainCarouselViewController.h; path = "New ViewControllers/MainCarouselViewController.h"; sourceTree = "<group>"; };
 		A0E7A479191C08E60067ED3D /* MainCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainCarouselViewController.m; path = "New ViewControllers/MainCarouselViewController.m"; sourceTree = "<group>"; };
 		A0E7A47D191C0B000067ED3D /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
@@ -859,6 +868,9 @@
 		8B0621E519217B4F0017DD20 /* New Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A0D1A59E193943B3004285A1 /* NewUpdateIcon.jpg */,
+				A0D1A59C1939206A004285A1 /* NewLoginToProtectEspanol.png */,
+				A0D1A5971938BC84004285A1 /* GrayImage.png */,
 				A0CF3F6B1937B0CE000E9986 /* NewLoginToProject.png */,
 				A0CF3F691937B019000E9986 /* ImagenProyectoDefecto.png */,
 				A0CF3F671937AE80000E9986 /* NewLoginBox.png */,
@@ -1103,6 +1115,8 @@
 			children = (
 				A0A0B3C51935250100BB48E0 /* DownloadView.h */,
 				A0A0B3C61935250100BB48E0 /* DownloadView.m */,
+				A0D1A5991938D3F5004285A1 /* InfoView.h */,
+				A0D1A59A1938D3F5004285A1 /* InfoView.m */,
 			);
 			name = CustomViews;
 			sourceTree = "<group>";
@@ -1264,10 +1278,13 @@
 				755233AF163B446A00D541DB /* brujula.png in Resources */,
 				8B9C828E19228767008B3055 /* Message.png in Resources */,
 				75879A2B1648523A00020A2B /* Localizable.strings in Resources */,
+				A0D1A59D1939206A004285A1 /* NewLoginToProtectEspanol.png in Resources */,
 				75E995BE164AABFE00C7452E /* botonEntrar-en.png in Resources */,
 				75E995C1164AAC6E00C7452E /* cancel-en.png in Resources */,
 				75E995C2164AAC6E00C7452E /* send-en.png in Resources */,
 				75FF14501652EA2700C39705 /* compassOn.png in Resources */,
+				A0D1A5981938BC84004285A1 /* GrayImage.png in Resources */,
+				A0D1A59F193943B3004285A1 /* NewUpdateIcon.jpg in Resources */,
 				A0CF3F6A1937B019000E9986 /* ImagenProyectoDefecto.png in Resources */,
 				755F9F0E1653090C0002266B /* icon@2x.png in Resources */,
 				8B0621E819217B670017DD20 /* CarouselBackground.png in Resources */,
@@ -1400,6 +1417,7 @@
 				A09E570919300EC30099B458 /* Render+AddOns.m in Sources */,
 				A09E56FF192FB7E00099B458 /* MBProgressHUD.m in Sources */,
 				A0E7A485191C28210067ED3D /* ProyectoCollectionViewCell.m in Sources */,
+				A0D1A59B1938D3F5004285A1 /* InfoView.m in Sources */,
 				8BD29412191D764E0006AB2A /* PisoCollectionViewCell.m in Sources */,
 				7575CA581676EB5E0078E354 /* NavAnimations.m in Sources */,
 				7552410D1677D2C8004BC471 /* BrujulaViewController.m in Sources */,

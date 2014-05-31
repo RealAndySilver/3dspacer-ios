@@ -32,10 +32,12 @@
     
     //Buttons
     if (self.controllerWasPresentedFromDownloadButton) {
+        NSLog(@"Mostraré el cancel button");
         self.cancelButton.hidden = NO;
         [self.cancelButton addTarget:self action:@selector(dismissVCWithCancel) forControlEvents:UIControlEventTouchUpInside];
         [self.dismissButton addTarget:self action:@selector(acceptTerms) forControlEvents:UIControlEventTouchUpInside];
     } else {
+        NSLog(@"No mostraré el cancel button");
         self.cancelButton.hidden = YES;
         [self.dismissButton addTarget:self action:@selector(dismissVC) forControlEvents:UIControlEventTouchUpInside];
     }

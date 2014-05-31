@@ -9,6 +9,8 @@
 #import "More3DScenesView.h"
 #import "More3DScenesCollectionViewCell.h"
 #import "Space.h"
+#import "Finish.h"
+#import "FinishImage+AddOns.h"
 
 @interface More3DScenesView() <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (strong, nonatomic) UICollectionView *collectionView;
@@ -16,7 +18,7 @@
 
 @implementation More3DScenesView
 
-#pragma mark - Setters
+#pragma mark - Setters & Getters
 
 -(void)setNumberOfScenes:(NSUInteger)numberOfScenes {
     _numberOfScenes = numberOfScenes;
@@ -63,11 +65,9 @@
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     More3DScenesCollectionViewCell *cell = (More3DScenesCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"CellIdentifier" forIndexPath:indexPath];
-    //Espacio3D *espacio3D = self.espacios3DArray[indexPath.item];
-    //Caras *caras = espacio3D.arrayCaras[0];
-    //cell.sceneImageView.image = [UIImage imageWithContentsOfFile:[self pathForJPEGResourceWithName:@"Atras" ID:caras.idAtras]];
     Space *space = self.espacios3DArray[indexPath.item];
     cell.sceneNameLabel.text = space.name;
+    cell.sceneImageView.image = self.thumbsArray[indexPath.item];
     return cell;
 }
 
@@ -75,12 +75,6 @@
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [self.delegate sceneWasSelectedAtIndex:indexPath.item inView:self];
-}
-
--(NSString*)pathForJPEGResourceWithName:(NSString*)name ID:(NSString*)ID{
-    NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
-    NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cara%@%@.jpeg",docDir,name,ID];
-    return jpegFilePath;
 }
 
 @end

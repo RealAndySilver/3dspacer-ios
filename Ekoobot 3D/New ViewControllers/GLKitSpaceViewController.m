@@ -56,7 +56,7 @@
                 [_carasIds setObject:finishImage.identifier forKey:@"back"];
             } else if ([finishImage.type isEqualToString:@"top"]) {
                 [_carasIds setObject:finishImage.identifier forKey:@"top"];
-            } else if ([finishImage.type isEqualToString:@"down"]) {
+            } else if ([finishImage.type isEqualToString:@"down"] || [finishImage.type isEqualToString:@"bottom"]) {
                 [_carasIds setObject:finishImage.identifier forKey:@"down"];
             } else if ([finishImage.type isEqualToString:@"left"]) {
                 [_carasIds setObject:finishImage.identifier forKey:@"left"];
@@ -95,6 +95,7 @@
             [self.finishesArray addObject:finish];
         }
     }
+    NSLog(@"*** Acabados encontrados para este espacio '%@' con id %@: %d", space.name, space.identifier, [self.finishesArray count]);
 }
 
 -(void)changeFinishesArray {
@@ -130,7 +131,7 @@
             [_carasIds setObject:finishImage.identifier forKey:@"back"];
         } else if ([finishImage.type isEqualToString:@"top"]) {
             [_carasIds setObject:finishImage.identifier forKey:@"top"];
-        } else if ([finishImage.type isEqualToString:@"down"]) {
+        } else if ([finishImage.type isEqualToString:@"down"] || [finishImage.type isEqualToString:@"bottom"]) {
             [_carasIds setObject:finishImage.identifier forKey:@"down"];
         } else if ([finishImage.type isEqualToString:@"left"]) {
             [_carasIds setObject:finishImage.identifier forKey:@"left"];
@@ -175,6 +176,10 @@
     [self setupUI];
     [self setupGL];
     [self createGestureRecognizers];
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self startDeviceMotion];
 }
 
@@ -247,6 +252,7 @@
             }
         }
     }
+    NSLog(@"Thumbs encontrados: %d", [thumbsArray count]);
     self.more3DScenesView.thumbsArray = thumbsArray;
     Space *space = self.arregloDeEspacios3D[self.espacioSeleccionado];
     self.more3DScenesView.titleLabel.text = space.name;
@@ -500,7 +506,7 @@
             theImage = [theImage flippedImageByAxis:MVImageFlipXAxisAndYAxis];
             [self saveImage:theImage withName:@"FlippedArriba" identifier:finishImage.identifier format:@"png"];
         
-        } else if ([finishImage.type isEqualToString:@"down"]) {
+        } else if ([finishImage.type isEqualToString:@"down"] || [finishImage.type isEqualToString:@"bottom"]) {
             theImage = [finishImage finishImage];
             theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
             theImage = [theImage flippedImageByAxis:MVImageFlipYAxis];
@@ -669,11 +675,14 @@
 -(void)saveImage:(UIImage *)image withName:(NSString *)name identifier:(NSString *)identifier format:(NSString *)format{
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cara%@%@.%@", docDir, name, identifier, format];
-    
+    NSLog(@"Entré a guardar la imagen");
     BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     if (!fileExist) {
+        NSLog(@"La imagen no existía en documents directory, así que la guardaré");
         NSData *imageData = [NSData dataWithData:UIImagePNGRepresentation(image)];
         [imageData writeToFile:jpegFilePath atomically:YES];
+    } else {
+        NSLog(@"La imagen ya existía, así que no la guardé en documents directory");
     }
 }
 

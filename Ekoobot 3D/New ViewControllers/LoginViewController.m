@@ -15,6 +15,7 @@
 #import "MainCarouselViewController.h"
 #import "NavController.h"
 #import "NSArray+NullReplacement.h"
+#import "HomeScreenViewController.h"
 
 @interface LoginViewController () <UITextFieldDelegate, ServerCommunicatorDelegate>
 @property (weak, nonatomic) IBOutlet UIView *projectContainerVIew;
@@ -34,10 +35,16 @@
 @property (strong, nonatomic) NSString *userRole;
 @end
 
-@implementation LoginViewController
+@implementation LoginViewController {
+    CGRect screenBounds;
+    BOOL userIsTryingToLogin;
+}
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    CGRect screen = [UIScreen mainScreen].bounds;
+    screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
+    NSLog(@"screen: %@", NSStringFromCGRect(screenBounds));
     self.navigationController.navigationBarHidden = YES;
     
     //Add as an observer of the Keyboard notifications to move the textfields when
@@ -49,6 +56,7 @@
 }
 
 -(void)setupUI {
+    
     //Project Container view
     self.projectContainerVIew.layer.shadowColor = [UIColor blackColor].CGColor;
     self.projectContainerVIew.layer.shadowOffset = CGSizeMake(5.0, 5.0);
@@ -56,9 +64,9 @@
     self.projectContainerVIew.layer.shadowRadius = 5.0;
     
     //EmailCOntainerView
-    self.emailContainerView.frame = CGRectMake(374.0, 650.0, 276.0, 44.0);
-    self.cancelButton.frame = CGRectMake(374.0, 700.0, 70.0, 44.0);
-    self.sendButton.frame = CGRectMake(655.0, 650.0, 60.0, 44.0);
+    self.emailContainerView.frame = CGRectMake(screenBounds.size.width/2.0 - 276.0/2.0, screenBounds.size.height - 118.0, 276.0, 44.0);
+    self.cancelButton.frame = CGRectMake(self.emailContainerView.frame.origin.x, self.emailContainerView.frame.origin.y + self.emailContainerView.frame.size.height, 70.0, 44.0);
+    self.sendButton.frame = CGRectMake(self.emailContainerView.frame.origin.x + self.emailContainerView.frame.size.width, self.emailContainerView.frame.origin.y, 60.0, 44.0);
     
     //Hidde views
     self.emailContainerView.alpha = 0.0;
@@ -114,6 +122,7 @@
 #pragma mark - Server Stuff
 
 -(void)sendForgotPassword {
+    userIsTryingToLogin = NO;
     if (![self.emailTextfield.text length] > 0) {
         [[[UIAlertView alloc] initWithTitle:@"Error" message:@"You must specify an email." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
         return;
@@ -127,6 +136,7 @@
 }
 
 -(void)login {
+    userIsTryingToLogin = YES;
     self.spinner.hidden = NO;
     [self.spinner startAnimating];
     
@@ -175,16 +185,42 @@
 
 -(void)serverError:(NSError *)error {
     [UserInfo sharedInstance].sendEmailAsAuth = NO;
-    
     [self.spinner stopAnimating];
     self.spinner.hidden = YES;
-    if (error.code == -1009) {
-        //No Internet
-        [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Your internet conection appears to be offline." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+
+    if (userIsTryingToLogin) {
+        [self loginWithoutConnection];
     } else {
-        [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Error trying to connecting" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
+         if (error.code == -1009) {
+         //No Internet
+         [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Your internet conection appears to be offline." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+         } else {
+         [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Error trying to connecting" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
+        }
+        NSLog(@"Error en el servidor: %@ %@", error, [error localizedDescription]);
     }
-    NSLog(@"Error en el servidor: %@ %@", error, [error localizedDescription]);
+}
+
+-(void)loginWithoutConnection {
+    NSLog(@"No había internet así que intentaré loguearme de forma local");
+    FileSaver *fileSaver = [[FileSaver alloc] init];
+    if ([fileSaver getDictionary:self.usernameTextfield.text]) {
+        NSDictionary *userDic = [fileSaver getDictionary:self.usernameTextfield.text];
+        
+        if ([userDic[@"Password"] isEqualToString:self.passwordTextfield.text]) {
+            [UserInfo sharedInstance].role = userDic[@"Role"];
+            self.userProjectsArray = userDic[@"Projects"];
+            self.userRole = userDic[@"Role"];
+            [self startCoreDataSavingProcess];
+            
+        } else {
+            [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Wrong username or password." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+        }
+        
+    } else {
+        NSLog(@"NO había usuario local guardado");
+        [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Your internet conection appears to be offline." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+    }
 }
 
 #pragma mark - CoreData Stuff
@@ -248,6 +284,8 @@
 -(void)saveUserInfoOnDiskUsingProjectsArray:(NSArray *)projectsArray {
     FileSaver *fileSaver = [[FileSaver alloc] init];
     [fileSaver setDictionary:@{@"User": self.usernameTextfield.text, @"Password" : self.passwordTextfield.text, @"Projects" : self.userProjectsArray, @"Role" : self.userRole} withName:@"UserInfoDic"];
+    
+    [fileSaver setDictionary:@{@"User": self.usernameTextfield.text, @"Password" : self.passwordTextfield.text, @"Projects" : self.userProjectsArray, @"Role" : self.userRole} withName:self.usernameTextfield.text];
 }
 
 #pragma mark - Custom Methods
@@ -276,29 +314,44 @@
     transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     [self.navigationController.view.layer addAnimation:transition forKey:nil];
     
-    MainCarouselViewController *mainCarousel = [self.storyboard instantiateViewControllerWithIdentifier:@"MainCarousel"];
-    mainCarousel.userProjectsArray = projectsArray;
-    [self.navigationController pushViewController:mainCarousel animated:NO];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        MainCarouselViewController *mainCarousel = [self.storyboard instantiateViewControllerWithIdentifier:@"MainCarousel"];
+        mainCarousel.userProjectsArray = projectsArray;
+        [self.navigationController pushViewController:mainCarousel animated:NO];
+    
+    } else {
+        HomeScreenViewController *homeScreenVC = [self.storyboard instantiateViewControllerWithIdentifier:@"HomeScreen"];
+        homeScreenVC.userProjectsArray = projectsArray;
+        [self.navigationController pushViewController:homeScreenVC animated:YES];
+    }
 }
 
 #pragma mark - Notification Handlers 
 
 -(void)keyboardAppear {
-    [UIView animateWithDuration:0.5
+    CGFloat yTranslation;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        yTranslation = -450.0;
+    } else {
+        yTranslation = -160.0;
+    }
+    
+    [UIView animateWithDuration:0.35
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^(){
-                         self.userInfoContainerView.transform = CGAffineTransformMakeTranslation(0.0, -600.0);
-                         self.forgotPasswordButton.transform = CGAffineTransformMakeTranslation(0.0, -600.0);
-                         self.enterButton.transform = CGAffineTransformMakeTranslation(0.0, -600.0);
-                         self.emailContainerView.transform = CGAffineTransformMakeTranslation(0.0, -600.0);
-                         self.cancelButton.transform = CGAffineTransformMakeTranslation(0.0, -600.0);
-                         self.sendButton.transform = CGAffineTransformMakeTranslation(0.0, -600.0);
+                         self.userInfoContainerView.transform = CGAffineTransformMakeTranslation(0.0, yTranslation);
+                         self.forgotPasswordButton.transform = CGAffineTransformMakeTranslation(0.0, yTranslation);
+                         self.enterButton.transform = CGAffineTransformMakeTranslation(0.0, yTranslation);
+                         self.emailContainerView.transform = CGAffineTransformMakeTranslation(0.0, yTranslation);
+                         self.cancelButton.transform = CGAffineTransformMakeTranslation(0.0, yTranslation);
+                         self.sendButton.transform = CGAffineTransformMakeTranslation(0.0, yTranslation);
+                         self.projectContainerVIew.alpha = 0.0;
                      } completion:^(BOOL finished){}];
 }
 
 -(void)keyboardHide {
-    [UIView animateWithDuration:0.5
+    [UIView animateWithDuration:0.35
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^(){
@@ -308,6 +361,7 @@
                          self.emailContainerView.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
                          self.sendButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
                          self.cancelButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+                         self.projectContainerVIew.alpha = 1.0;
                      } completion:^(BOOL finished){}];
 }
 

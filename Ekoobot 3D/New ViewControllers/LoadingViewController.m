@@ -16,6 +16,7 @@
 #import "NavController.h"
 #import "LoginViewController.h"
 #import "MainCarouselViewController.h"
+#import "HomeScreenViewController.h"
 
 @interface LoadingViewController () <ServerCommunicatorDelegate>
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
@@ -66,7 +67,7 @@
 
 #pragma mark - Server Stuff
 
--(void)getProjectsForUser {
+/*-(void)getProjectsForUser {
     [self.spinner startAnimating];
     ServerCommunicator *serverCommunicator = [[ServerCommunicator alloc] init];
     serverCommunicator.delegate = self;
@@ -99,7 +100,7 @@
     [self.spinner stopAnimating];
     
     NSLog(@"Error en el servidor: %@ %@", error, [error localizedDescription]);
-}
+}*/
 
 #pragma mark - CoreData Stuff
 
@@ -168,14 +169,26 @@
 -(void)goToHomeScreenVCWithProjectsArray:(NSMutableArray *)projectsArray {
     [self.spinner stopAnimating];
     
-    LoginViewController *loginVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Login"];
-    MainCarouselViewController *mainCarousel = [self.storyboard instantiateViewControllerWithIdentifier:@"MainCarousel"];
-    mainCarousel.userProjectsArray = projectsArray;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        LoginViewController *loginVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Login"];
+        MainCarouselViewController *mainCarousel = [self.storyboard instantiateViewControllerWithIdentifier:@"MainCarousel"];
+        mainCarousel.userProjectsArray = projectsArray;
+        
+        NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"Nav"];
+        [navController setViewControllers:@[loginVC, mainCarousel] animated:NO];
+        navController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentViewController:navController animated:YES completion:nil];
     
-    NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"Nav"];
-    [navController setViewControllers:@[loginVC, mainCarousel] animated:NO];
-    navController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentViewController:navController animated:YES completion:nil];
+    } else {
+        LoginViewController *loginVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Login"];
+        HomeScreenViewController *homeScreenVC = [self.storyboard instantiateViewControllerWithIdentifier:@"HomeScreen"];
+        homeScreenVC.userProjectsArray = projectsArray;
+        
+        NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"Nav"];
+        [navController setViewControllers:@[loginVC, homeScreenVC] animated:NO];
+        navController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentViewController:navController animated:YES completion:nil];
+    }
 }
 
 @end

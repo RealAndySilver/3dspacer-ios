@@ -116,6 +116,8 @@
     self.carousel.backgroundColor = [UIColor clearColor];
     self.carousel.dataSource = self;
     self.carousel.delegate = self;
+    self.carousel.bounceDistance = 0.3;
+    self.carousel.pagingEnabled = YES;
     [self.view addSubview:self.carousel];
     //[self.view bringSubviewToFront:self.progressLabel];
     
@@ -521,7 +523,7 @@
     }
 }*/
 
--(BOOL)userCanPassToProjectAtIndex:(NSUInteger)index {
+/*-(BOOL)userCanPassToProjectAtIndex:(NSUInteger)index {
     
     FileSaver *fileSaver = [[FileSaver alloc] init];
     Proyecto *proyecto = self.usuario.arrayProyectos[index];
@@ -544,7 +546,7 @@
     } else {
         return NO;
     }
-}
+}*/
 
 #pragma mark - Server Stuff
 
@@ -1152,8 +1154,8 @@
             //return 0.5;
             return 1.5;
         
-        //case iCarouselOptionOffsetMultiplier:
-          //  return 0.5;
+        case iCarouselOptionOffsetMultiplier:
+            return 0.7;
             
         default:
             return value;

@@ -32,20 +32,12 @@
         titleLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
         [self addSubview:titleLabel];
         
-        //'Piso' Label
-        UILabel *pisoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, titleLabel.frame.origin.y + titleLabel.frame.size.height, frame.size.width, 40.0)];
-        pisoLabel.text = @"Piso";
-        pisoLabel.textColor = [UIColor whiteColor];
-        pisoLabel.font = [UIFont systemFontOfSize:13.0];
-        pisoLabel.textAlignment = NSTextAlignmentCenter;
-        [self addSubview:pisoLabel];
-        
         //Acabados Collection view
         UICollectionViewFlowLayout *collectionViewFlowLayout = [[UICollectionViewFlowLayout alloc] init];
         collectionViewFlowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
         collectionViewFlowLayout.itemSize = CGSizeMake(frame.size.width, frame.size.width/3.0 + 20.0);
         
-        UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0, pisoLabel.frame.origin.y + pisoLabel.frame.size.height, frame.size.width, frame.size.height - (pisoLabel.frame.origin.y + pisoLabel.frame.size.height)) collectionViewLayout:collectionViewFlowLayout];
+        UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0, titleLabel.frame.origin.y + titleLabel.frame.size.height, frame.size.width, frame.size.height - (titleLabel.frame.origin.y + titleLabel.frame.size.height)) collectionViewLayout:collectionViewFlowLayout];
         collectionView.showsVerticalScrollIndicator = NO;
         collectionView.delegate = self;
         collectionView.dataSource = self;

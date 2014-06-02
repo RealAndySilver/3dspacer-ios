@@ -142,11 +142,11 @@
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         MainCarouselViewController *mainCarouselVC = [self.storyboard instantiateViewControllerWithIdentifier:@"MainCarousel"];
-        mainCarouselVC.usuario = usuario;
+        //mainCarouselVC.usuario = usuario;
         [self.navigationController pushViewController:mainCarouselVC animated:NO];
     } else {
         HomeScreenViewController *homeScreenVC = [self.storyboard instantiateViewControllerWithIdentifier:@"HomeScreen"];
-        homeScreenVC.usuario = usuario;
+        //homeScreenVC.usuario = usuario;
         [self.navigationController pushViewController:homeScreenVC animated:NO];
     }
 }

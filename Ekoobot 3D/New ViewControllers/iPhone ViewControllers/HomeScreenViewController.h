@@ -7,8 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-@class Usuario;
 
 @interface HomeScreenViewController : UIViewController
-@property (strong, nonatomic) Usuario *usuario;
+@property (strong, nonatomic) NSArray *userProjectsArray; //Of Project
 @end

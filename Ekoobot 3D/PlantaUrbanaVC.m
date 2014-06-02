@@ -20,11 +20,25 @@
 
 @interface PlantaUrbanaVC ()
 @property (strong, nonatomic) CMMotionManager *motionManager;
+@property (strong, nonatomic) NSMutableArray *commonSpacesArray;
 @end
 
 @implementation PlantaUrbanaVC
 
 @synthesize scrollViewUrbanismo;
+
+-(NSMutableArray *)commonSpacesArray {
+    if (!_commonSpacesArray) {
+        _commonSpacesArray = [[NSMutableArray alloc] init];
+        for (int i = 0; i < [self.projectDic[@"spaces"] count]; i++) {
+            Space *space = self.projectDic[@"spaces"][i];
+            if ([space.common boolValue]) {
+                [_commonSpacesArray addObject:space];
+            }
+        }
+    }
+    return _commonSpacesArray;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -224,6 +238,11 @@
         Group *group = arrayGrupos[i];
         [self insertarBotonEn:imageViewUrbanismo enPosicionX:[group.xCoord description] yPosicionY:[group.yCoord description] yTag:i titulo:group.name];
     }
+    
+    for (int i = 0; i < [self.commonSpacesArray count]; i++) {
+        Space *space = self.commonSpacesArray[i];
+        [self insertarAreaComunEn:imageViewUrbanismo enPosicionX:[space.xCoord description] posicionY:[space.yCoord description] tag:1000+i titulo:space.name];
+    }
     [scrollViewUrbanismo setMinimumZoomScale:minimumZoomScale];
     [scrollViewUrbanismo setMaximumZoomScale:maximumZoomScale];
     [scrollViewUrbanismo setCanCancelContentTouches:NO];
@@ -233,6 +252,22 @@
     [scrollViewUrbanismo setDelegate:self];
     
 }
+
+-(void)insertarAreaComunEn:(UIView *)view enPosicionX:(NSString *)posX posicionY:(NSString *)posY tag:(int)tag titulo:(NSString *)titulo {
+    UIButton *boton = [[UIButton alloc]init];
+    UIImage *imageButton = [UIImage imageNamed:@"pin.png"];
+    boton.tag=tag;
+    float buttonSize=60;
+    [boton setImage:imageButton forState:UIControlStateNormal];
+    [boton addTarget:self action:@selector(irAEscena3D:) forControlEvents:UIControlEventTouchUpInside];
+    int posXint=[posX intValue];
+    int posYint=[posY intValue];
+    boton.frame=CGRectMake(posXint-(buttonSize/2), posYint-buttonSize,buttonSize, buttonSize);
+    [self agregarLabelAlLadoDelBotonEnView:view enPosicionX:posXint yPosicionY:posYint conTitulo:titulo];
+    [view addSubview:boton];
+    [view bringSubviewToFront:boton];
+}
+
 -(void)update{
     if (brujula.isOn) {
         NavController *navController = (NavController *)self.navigationController;
@@ -337,6 +372,20 @@
     [container addSubview:label];
 }
 
+-(void)irAEscena3D:(UIButton *)sender {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self performSelector:@selector(goToGLKView:) withObject:sender afterDelay:0.3];
+}
+
+-(void)goToGLKView:(UIButton *)sender {
+    GLKitSpaceViewController *glkitSpaceVC = [self.storyboard instantiateViewControllerWithIdentifier:@"GLKitSpace"];
+    glkitSpaceVC.espacioSeleccionado = 0;
+    Space *space = self.commonSpacesArray[sender.tag - 1000];
+    glkitSpaceVC.arregloDeEspacios3D= [NSMutableArray arrayWithObject:space];
+    glkitSpaceVC.projectDic = self.projectDic;
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [self.navigationController pushViewController:glkitSpaceVC animated:YES];
+}
 
 -(void)irAlSiguienteViewController:(UIButton*)sender{
     hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];

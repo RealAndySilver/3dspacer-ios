@@ -18,6 +18,15 @@
 
 #pragma mark - Setters
 
+-(void)setShowCompass:(BOOL)showCompass {
+    _showCompass = showCompass;
+    if (showCompass) {
+        self.brujulaButton.hidden = NO;
+    } else {
+        self.brujulaButton.hidden = YES;
+    }
+}
+
 -(void)removeAllPinsFromArray:(NSArray *)espacios3DArray {
     for (int i = 0; i < 10; i++) {
         if ([self.contentView viewWithTag:i + 1]) {

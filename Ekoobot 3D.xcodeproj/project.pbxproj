@@ -121,6 +121,8 @@
 		8B5C7919191804AB003941AD /* Skybox1Left.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B5C7918191804AB003941AD /* Skybox1Left.png */; };
 		8B5C791C19183231003941AD /* More3DScenesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C791B19183231003941AD /* More3DScenesView.m */; };
 		8B5C792119183BC1003941AD /* More3DScenesCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C792019183BC1003941AD /* More3DScenesCollectionViewCell.m */; };
+		8B60B261193E444700CBD428 /* NewCancelDownloadIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B60B25F193E444700CBD428 /* NewCancelDownloadIcon.png */; };
+		8B60B262193E444700CBD428 /* NewDownloadBox.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B60B260193E444700CBD428 /* NewDownloadBox.png */; };
 		8B9C828119227754008B3055 /* AcabadosView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C828019227754008B3055 /* AcabadosView.m */; };
 		8B9C828419227DC0008B3055 /* AcabadosCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C828319227DC0008B3055 /* AcabadosCollectionViewCell.m */; };
 		8B9C828619228288008B3055 /* Wood.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8B9C828519228288008B3055 /* Wood.jpg */; };
@@ -376,6 +378,8 @@
 		8B5C791B19183231003941AD /* More3DScenesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = More3DScenesView.m; path = "New ViewControllers/Views/More3DScenesView.m"; sourceTree = "<group>"; };
 		8B5C791F19183BC1003941AD /* More3DScenesCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = More3DScenesCollectionViewCell.h; path = "New ViewControllers/Custom Cells/More3DScenesCollectionViewCell.h"; sourceTree = "<group>"; };
 		8B5C792019183BC1003941AD /* More3DScenesCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = More3DScenesCollectionViewCell.m; path = "New ViewControllers/Custom Cells/More3DScenesCollectionViewCell.m"; sourceTree = "<group>"; };
+		8B60B25F193E444700CBD428 /* NewCancelDownloadIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NewCancelDownloadIcon.png; path = Resources/iPad/NewCancelDownloadIcon.png; sourceTree = "<group>"; };
+		8B60B260193E444700CBD428 /* NewDownloadBox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NewDownloadBox.png; path = Resources/iPad/NewDownloadBox.png; sourceTree = "<group>"; };
 		8B9C827F19227754008B3055 /* AcabadosView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AcabadosView.h; path = "New ViewControllers/Views/AcabadosView.h"; sourceTree = "<group>"; };
 		8B9C828019227754008B3055 /* AcabadosView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AcabadosView.m; path = "New ViewControllers/Views/AcabadosView.m"; sourceTree = "<group>"; };
 		8B9C828219227DC0008B3055 /* AcabadosCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AcabadosCollectionViewCell.h; path = "New ViewControllers/Custom Cells/AcabadosCollectionViewCell.h"; sourceTree = "<group>"; };
@@ -868,6 +872,8 @@
 		8B0621E519217B4F0017DD20 /* New Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8B60B25F193E444700CBD428 /* NewCancelDownloadIcon.png */,
+				8B60B260193E444700CBD428 /* NewDownloadBox.png */,
 				A0D1A59E193943B3004285A1 /* NewUpdateIcon.jpg */,
 				A0D1A59C1939206A004285A1 /* NewLoginToProtectEspanol.png */,
 				A0D1A5971938BC84004285A1 /* GrayImage.png */,
@@ -1245,6 +1251,7 @@
 				3731935B158B840E00B49F1E /* SimpleFragment.glsl in Resources */,
 				8B0621E919217B670017DD20 /* CarouselBackground@2x.png in Resources */,
 				3731935C158B840E00B49F1E /* SimpleVertex.glsl in Resources */,
+				8B60B261193E444700CBD428 /* NewCancelDownloadIcon.png in Resources */,
 				7574E81E16029F7300974D7B /* downloading.jpg in Resources */,
 				7574E8211602A12100974D7B /* downloadBtn.png in Resources */,
 				7574E8231602A16E00974D7B /* updateBox.png in Resources */,
@@ -1297,6 +1304,7 @@
 				A0CF3F6C1937B0CE000E9986 /* NewLoginToProject.png in Resources */,
 				755241271679388E004BC471 /* zoom1.png in Resources */,
 				7534B20B1682595B0005F7BC /* analytics.sqlite in Resources */,
+				8B60B262193E444700CBD428 /* NewDownloadBox.png in Resources */,
 				75A1D30416BC53270013B48A /* zoom2.png in Resources */,
 				A0A0B3BB193504CF00BB48E0 /* NewInfoIcon.png in Resources */,
 				A0A0B3C0193505DC00BB48E0 /* NewShareIcon.png in Resources */,
@@ -1588,8 +1596,8 @@
 				INFOPLIST_FILE = "Ekoobot 3D/Ekoobot 3D-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0C1E9164-F94C-44B1-B349-EBCC577E5EF1";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0C1E9164-F94C-44B1-B349-EBCC577E5EF1";
+				PROVISIONING_PROFILE = "9B8B7950-F1F9-453D-B9C0-D16EA4D00DC7";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9B8B7950-F1F9-453D-B9C0-D16EA4D00DC7";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

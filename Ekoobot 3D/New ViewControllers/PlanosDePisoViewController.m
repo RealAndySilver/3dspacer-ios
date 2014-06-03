@@ -18,6 +18,7 @@
 #import "Plant.h"
 #import "Group.h"
 #import "Space.h"
+#import "CMMotionManager+Shared.h"
 
 @interface PlanosDePisoViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PisoCollectionViewCellDelegate>
 @property (strong, nonatomic) UICollectionView *collectionView;
@@ -29,6 +30,7 @@
 
 @implementation PlanosDePisoViewController {
     CGRect screenBounds;
+    BOOL magnetometerIsAvailable;
 }
 
 #pragma mark - Lazy Instantiation 
@@ -80,6 +82,16 @@
     self.view.backgroundColor = [UIColor colorWithWhite:0.1 alpha:1.0];
     self.navigationItem.title = self.arrayNombresPiso[0];
     [self setupUI];
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    CMMotionManager *motionManager = [CMMotionManager sharedMotionManager];
+    if (motionManager.magnetometerAvailable) {
+        magnetometerIsAvailable = YES;
+    } else {
+        magnetometerIsAvailable = NO;
+    }
 }
 
 -(void)setupUI {
@@ -136,6 +148,7 @@
     cell.delegate = self;
     Floor *floor = self.floorsArray[indexPath.item];
     cell.pisoImageView.image = [floor floorImage];
+    cell.showCompass = magnetometerIsAvailable;
     
     NSMutableArray *pinsArrayForFloor = [[NSMutableArray alloc] init];
     for (int i = 0; i < [self.productsArray count]; i++) {

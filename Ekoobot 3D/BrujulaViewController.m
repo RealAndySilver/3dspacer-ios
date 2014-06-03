@@ -45,17 +45,7 @@
     minimumZoomScale=1;
     [self loadScrollView];
     
-    CMMotionManager *motionManager = [CMMotionManager sharedMotionManager];
-    if (motionManager.isDeviceMotionAvailable) {
-        motionManager.deviceMotionUpdateInterval = 1.0/30.0;
-        [motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXMagneticNorthZVertical
-                                                           toQueue:[NSOperationQueue mainQueue]
-                                                       withHandler:^(CMDeviceMotion *motion, NSError *error){
-                                                           attitude = motion.attitude;
-                                                           [self update];
-                                                       }];
-    }
-    //_motionManager = [self motionManager];
+        //_motionManager = [self motionManager];
     //[_motionManager setDeviceMotionUpdateInterval:1/60];
     //[_motionManager startDeviceMotionUpdates];
     //[_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXMagneticNorthZVertical];
@@ -68,6 +58,7 @@
     //[self.navigationItem setHidesBackButton:YES];
     // Do any additional setup after loading the view.
 }
+
 -(void)update{
     if (brujula.isOn) {
         //_motionManager.showsDeviceMovementDisplay = YES;
@@ -96,6 +87,18 @@
     //[self crearObjetos];
 }
 -(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    CMMotionManager *motionManager = [CMMotionManager sharedMotionManager];
+    if (motionManager.isDeviceMotionAvailable) {
+        motionManager.deviceMotionUpdateInterval = 1.0/30.0;
+        [motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXMagneticNorthZVertical
+                                                           toQueue:[NSOperationQueue mainQueue]
+                                                       withHandler:^(CMDeviceMotion *motion, NSError *error){
+                                                           attitude = motion.attitude;
+                                                           [self update];
+                                                       }];
+    }
+    
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     [scrollViewImagen setZoomScale:minimumZoomScale animated:NO];
     //[brujula changeState];

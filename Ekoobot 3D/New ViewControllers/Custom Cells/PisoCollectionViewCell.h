@@ -16,6 +16,7 @@
 
 @interface PisoCollectionViewCell : UICollectionViewCell
 @property (strong, nonatomic) UIImageView *pisoImageView;
+@property (assign, nonatomic) BOOL showCompass;
 @property (strong, nonatomic) id <PisoCollectionViewCellDelegate> delegate;
 
 -(void)setPinsButtonsFromArray:(NSArray *)pinsArray;

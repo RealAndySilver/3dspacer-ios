@@ -18,4 +18,5 @@
 
 @interface DownloadView : UIView
 @property (strong, nonatomic) id <DownloadViewDelegate> delegate;
+@property (assign, nonatomic) float progress;
 @end

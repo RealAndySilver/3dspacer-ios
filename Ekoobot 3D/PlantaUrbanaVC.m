@@ -49,13 +49,13 @@
 }
 
 - (void)viewDidLoad{
+    [super viewDidLoad];
     NSLog(@"Entré a PlantaUrbanaVC");
     
     NavController *navController = (NavController *)self.navigationController;
     [navController setInterfaceOrientation:YES];
     self.automaticallyAdjustsScrollViewInsets=NO;
 
-    [super viewDidLoad];
     self.navigationItem.title = NSLocalizedString(@"PlantaUrbana", nil);
     maximumZoomScale=2.0;
     minimumZoomScale=0.3;
@@ -79,6 +79,7 @@
     //[self crearObjetos];
 }
 -(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     spinner.alpha=0.0;
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     [spinner stopAnimating];
@@ -95,6 +96,7 @@
     [navController setInterfaceOrientation:YES];
 }
 -(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     //NSMutableArray *tempArray=proyecto.arrayItemsUrbanismo;
     //ItemUrbanismo *itemUrbanismo=[tempArray objectAtIndex:0];
     Urbanization *urbanization = [self.projectDic[@"urbanizations"] firstObject];
@@ -131,11 +133,18 @@
     timer=[[NSTimer alloc]init];
     timer =[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(update) userInfo:nil repeats:YES];*/
     
-    brujula=[[BrujulaView alloc]initWithFrame:CGRectMake(self.view.frame.size.width-90, 80, 70, 70)];
-    [self.view addSubview:brujula];
-    [brujula changeState];
+    if (self.motionManager.magnetometerAvailable) {
+        NSLog(@"El magnetómetro está disponible entonces mostraré la brújula");
+        brujula=[[BrujulaView alloc]initWithFrame:CGRectMake(self.view.frame.size.width-90, 80, 70, 70)];
+        [self.view addSubview:brujula];
+        [brujula changeState];
+    } else {
+        NSLog(@"El magnetómetro no está disponible, así que no mostraré la brújula");
+    }
+    
 }
 -(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     //[scrollViewUrbanismo setZoomScale:0.3 animated:NO];
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{

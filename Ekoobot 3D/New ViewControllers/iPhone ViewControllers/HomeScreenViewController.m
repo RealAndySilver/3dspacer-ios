@@ -32,8 +32,9 @@
 #import "Space+AddOns.h"
 #import "Finish+AddOns.h"
 #import "FinishImage+AddOns.h"
+#import "DownloadView.h"
 
-@interface HomeScreenViewController () <iCarouselDataSource, iCarouselDelegate, TermsAndConditionsDelegate, ServerCommunicatorDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
+@interface HomeScreenViewController () <iCarouselDataSource, iCarouselDelegate, TermsAndConditionsDelegate, ServerCommunicatorDelegate, UIAlertViewDelegate, UIActionSheetDelegate, DownloadViewDelegate>
 @property (strong, nonatomic) iCarousel *carousel;
 @property (strong, nonatomic) NSMutableArray *projectNamesArray;
 @property (strong, nonatomic) UIButton *slideShowButton;
@@ -54,6 +55,9 @@
 @property (strong, nonatomic) NSArray *spacesArray;
 @property (strong, nonatomic) NSArray *finishesArray;
 @property (strong, nonatomic) NSArray *finishesImagesArray;
+
+@property (strong, nonatomic) UIView *opacityView;
+@property (strong, nonatomic) DownloadView *downloadView;
 @end
 
 @implementation HomeScreenViewController {
@@ -65,6 +69,23 @@
 }
 
 #pragma mark - Lazy Instantiation
+
+-(UIView *)opacityView {
+    if (!_opacityView) {
+        _opacityView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 1024.0, 768.0)];
+        _opacityView.backgroundColor = [UIColor blackColor];
+        _opacityView.alpha = 0.7;
+    }
+    return _opacityView;
+}
+
+-(DownloadView *)downloadView {
+    if (!_downloadView) {
+        _downloadView = [[DownloadView alloc] initWithFrame:CGRectMake(screenBounds.size.width/2.0 - 350/2.0, screenBounds.size.height/2.0 - 250.0/2.0, 350.0, 250.0)];
+        _downloadView.delegate = self;
+    }
+    return _downloadView;
+}
 
 -(NSMutableArray *)projectNamesArray {
     if (!_projectNamesArray) {
@@ -156,6 +177,11 @@
     
     [self.navigationController.view addSubview:self.progressView];
     [self.view bringSubviewToFront:self.progressView];*/
+    
+    [self.view addSubview:self.opacityView];
+    [self.view addSubview:self.downloadView];
+    self.opacityView.hidden = YES;
+    self.downloadView.hidden = YES;
 }
 
 #pragma mark - Actions 
@@ -416,6 +442,11 @@
     [self.navigationController pushViewController:proyectoVC animated:YES];
 }
 
+-(void)showDownloadingView {
+    self.opacityView.hidden = NO;
+    self.downloadView.hidden = NO;
+}
+
 #pragma mark - Server Stuff
 
 -(void)getRendersFromServer {
@@ -430,10 +461,10 @@
 }
 
 -(void)downloadProjectFromServerAtIndex:(NSUInteger)index {
-    //[self showDownloadingView];
+    [self showDownloadingView];
     
     fetchOnlyRenders = NO;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    //[MBProgressHUD showHUDAddedTo:self.view animated:YES];
     downloadEntireProject = YES;
     projectToDownloadIndex = index;
     Project *project = self.userProjectsArray[projectToDownloadIndex];
@@ -445,14 +476,14 @@
 }
 
 -(void)downloadProjectFromServer:(UIButton *)downloadButton {
-    //[self showDownloadingView];
+    [self showDownloadingView];
     
     //Bool that indicates that we are going to download the project
     //from the server, and not access it from our core data data base
     getProjectFromTheDatabase = NO;
     fetchOnlyRenders = NO;
     
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    //[MBProgressHUD showHUDAddedTo:self.view animated:YES];
     downloadEntireProject = YES;
     projectToDownloadIndex = downloadButton.tag - 1000.0;
     Project *project = self.userProjectsArray[projectToDownloadIndex];
@@ -548,7 +579,9 @@
 }
 
 -(void)startSavingProcessInCoreData {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    if (getProjectFromTheDatabase) {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    }
     
     //Get the Datababase Document path
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -664,132 +697,144 @@
     }
 }
 
+-(void)updateLabel:(NSNumber *)aNumber {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"fileDownloaded" object:nil userInfo:@{@"Progress": aNumber}];
+    //self.progressLabel.text = [NSString stringWithFormat:@"%f", [aNumber floatValue]];
+}
+
 -(void)databaseDocumentIsReadyForSaving {
     if (self.databaseDocument.documentState == UIDocumentStateNormal) {
-        //Start using the document
-        NSManagedObjectContext *context = self.databaseDocument.managedObjectContext;
         
-        if (!downloadEntireProject) {
-            //Save only the renders and go to the slideshow
-            
-            NSMutableArray *rendersArray = [[NSMutableArray alloc] initWithCapacity:[self.rendersArray count]]; //Of Renders
-            for (int i = 0; i < [self.rendersArray count]; i++) {
-                NSDictionary *renderInfoDic = self.rendersArray[i];
-                Render *render = [Render renderWithServerInfo:renderInfoDic inManagedObjectContext:context];
-                [rendersArray addObject:render];
-            }
-            [self goToSlideshowWithRendersArray:rendersArray];
-            
-        } else {
-            
-            //Get the total number of files to download
-            float filesDownloadedCounter = 0;
-            float progressCompleted;
-            float numberOfFiles = [self getNumberOfFilesToDownload];
-            NSLog(@"Número de archivos a descargar: %f", numberOfFiles);
-            
-            //Dic to store all the core data objects and pass them to the next view controller
-            NSMutableDictionary *projectDictionary = [[NSMutableDictionary alloc] init];
-            
-            //Save all the project info
-            
+        //Get the total number of files to download
+        __block float filesDownloadedCounter = 0;
+        __block float progressCompleted;
+        __block NSNumber *number = nil;
+        float numberOfFiles = [self getNumberOfFilesToDownload];
+        NSLog(@"Número de archivos a descargar: %f", numberOfFiles);
+        
+        //Dic to store all the core data objects and pass them to the next view controller
+        NSMutableDictionary *projectDictionary = [[NSMutableDictionary alloc] init];
+        
+        NSManagedObjectContext *context = self.databaseDocument.managedObjectContext.parentContext;
+        [context performBlock:^(){
             //Save render objects in core data
             NSMutableArray *rendersArray = [[NSMutableArray alloc] initWithCapacity:[self.rendersArray count]]; //Of Renders
             for (int i = 0; i < [self.rendersArray count]; i++) {
                 NSDictionary *renderInfoDic = self.rendersArray[i];
                 Render *render = [Render renderWithServerInfo:renderInfoDic inManagedObjectContext:context];
+                [context save:NULL];
                 [rendersArray addObject:render];
-                
                 filesDownloadedCounter ++;
                 progressCompleted = filesDownloadedCounter / numberOfFiles;
                 NSLog(@"progresooo: %f", progressCompleted);
-                //[[NSNotificationCenter defaultCenter] postNotificationName:@"fileDownloaded" object:nil userInfo:@{@"Progress": @(progressCompleted)}];
+                number = @(progressCompleted);
+                [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
             }
             
             //Save urbanization object in core data
             NSMutableArray *urbanizationsArray = [[NSMutableArray alloc] init];
             Urbanization *urbanization = [Urbanization urbanizationWithServerInfo:self.urbanizationDic inManagedObjectContext:context];
+            [context save:NULL];
             [urbanizationsArray addObject:urbanization];
             filesDownloadedCounter ++;
             progressCompleted = filesDownloadedCounter / numberOfFiles;
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"fileDownloaded" object:nil userInfo:@{@"Progress": @(progressCompleted)}];
+            NSLog(@"progresooo: %f", progressCompleted);
+            number = @(progressCompleted);
+            [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
             
             //Save group objects in Core Data
             NSMutableArray *groupsArray = [[NSMutableArray alloc] initWithCapacity:[self.groupsArray count]];
             for (int i = 0; i < [self.groupsArray count]; i++) {
                 Group *group = [Group groupWithServerInfo:self.groupsArray[i] inManagedObjectContext:context];
+                [context save:NULL];
                 [groupsArray addObject:group];
                 
                 filesDownloadedCounter ++;
                 progressCompleted = filesDownloadedCounter / numberOfFiles;
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"fileDownloaded" object:nil userInfo:@{@"Progress": @(progressCompleted)}];
+                NSLog(@"progresooo: %f", progressCompleted);
+                number = @(progressCompleted);
+                [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
             }
             
             //Save Floor products in Core Data
             NSMutableArray *floorsArray = [[NSMutableArray alloc] initWithCapacity:[self.floorsArray count]];
             for (int i = 0; i < [self.floorsArray count]; i++) {
                 Floor *floor = [Floor floorWithServerInfo:self.floorsArray[i] inManagedObjectContext:context];
+                [context save:NULL];
                 [floorsArray addObject:floor];
                 
                 filesDownloadedCounter ++;
                 progressCompleted = filesDownloadedCounter / numberOfFiles;
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"fileDownloaded" object:nil userInfo:@{@"Progress": @(progressCompleted)}];
+                number = @(progressCompleted);
+                [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
             }
             
             //Save product objects in Core Data
             NSMutableArray *producstArray = [[NSMutableArray alloc] initWithCapacity:[self.productsArray count]];
             for (int i = 0; i < [self.productsArray count]; i++) {
                 Product *product = [Product productWithServerInfo:self.productsArray[i] inManagedObjectContext:context];
+                [context save:NULL];
                 [producstArray addObject:product];
                 
                 filesDownloadedCounter ++;
                 progressCompleted = filesDownloadedCounter / numberOfFiles;
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"fileDownloaded" object:nil userInfo:@{@"Progress": @(progressCompleted)}];
+                number = @(progressCompleted);
+                [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
             }
             
             //Save plants objects in Core Data
             NSMutableArray *plantsArray = [[NSMutableArray alloc] initWithCapacity:[self.plantsArray count]];
             for (int i = 0; i < [self.plantsArray count]; i++) {
                 Plant *plant = [Plant plantWithServerInfo:self.plantsArray[i] inManagedObjectContext:context];
+                [context save:NULL];
                 [plantsArray addObject:plant];
                 
                 filesDownloadedCounter ++;
                 progressCompleted = filesDownloadedCounter / numberOfFiles;
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"fileDownloaded" object:nil userInfo:@{@"Progress": @(progressCompleted)}];
+                number = @(progressCompleted);
+                [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
             }
             
             //Save spaces object in Core Data
             NSMutableArray *spacesArray = [[NSMutableArray alloc] initWithCapacity:[self.spacesArray count]];
             for (int i = 0; i < [self.spacesArray count]; i++) {
                 Space *space = [Space spaceWithServerInfo:self.spacesArray[i] inManagedObjectContext:context];
+                [context save:NULL];
                 [spacesArray addObject:space];
                 
                 filesDownloadedCounter ++;
                 progressCompleted = filesDownloadedCounter / numberOfFiles;
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"fileDownloaded" object:nil userInfo:@{@"Progress": @(progressCompleted)}];
+                number = @(progressCompleted);
+                [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
             }
             
             //Save finishes in Core Data
             NSMutableArray *finishesArray = [[NSMutableArray alloc] initWithCapacity:[self.finishesArray count]];
             for (int i = 0; i < [self.finishesArray count]; i++) {
                 Finish *finish = [Finish finishWithServerInfo:self.finishesArray[i] inManagedObjectContext:context];
+                [context save:NULL];
                 [finishesArray addObject:finish];
                 
                 filesDownloadedCounter ++;
                 progressCompleted = filesDownloadedCounter / numberOfFiles;
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"fileDownloaded" object:nil userInfo:@{@"Progress": @(progressCompleted)}];
+                number = @(progressCompleted);
+                [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
             }
             
             //Save finishes images in Core Data
             NSMutableArray *finishesImagesArray = [[NSMutableArray alloc] initWithCapacity:[self.finishesImagesArray count]];
             for (int i = 0; i < [self.finishesImagesArray count]; i++) {
                 FinishImage *finishImage = [FinishImage finishImageWithServerInfo:self.finishesImagesArray[i] inManagedObjectContext:context];
+                [context save:NULL];
                 [finishesImagesArray addObject:finishImage];
                 
                 filesDownloadedCounter ++;
                 progressCompleted = filesDownloadedCounter / numberOfFiles;
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"fileDownloaded" object:nil userInfo:@{@"Progress": @(progressCompleted)}];
+                number = @(progressCompleted);
+                [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
             }
+            
+            NSLog(@"Terminé de guardar toda la vaina");
             
             //Save all core data objects in our dictionary
             [projectDictionary setObject:self.userProjectsArray[self.carousel.currentItemIndex] forKey:@"project"];
@@ -803,31 +848,36 @@
             [projectDictionary setObject:finishesArray forKey:@"finishes"];
             [projectDictionary setObject:finishesImagesArray forKey:@"finishImages"];
             
-            //Save a key with file saver indicating that this project has been downloaded
-            FileSaver *fileSaver = [[FileSaver alloc] init];
-            if ([fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"]) {
-                //Get the array with the project's ids and add the new downloaded project id
-                NSMutableArray *projectIDsArray = [NSMutableArray arrayWithArray:[fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"]];
-                Project *project = self.userProjectsArray[self.carousel.currentItemIndex];
-                if (![projectIDsArray containsObject:project.identifier]) {
-                    [projectIDsArray addObject:project.identifier];
-                    [fileSaver setDictionary:@{@"projectIDsArray": projectIDsArray} withName:@"downloadedProjectsIDs"];
-                    NSLog(@"agregué el id %@ a filesaver", project.identifier);
-                }
-                
-            } else {
-                //Create an array to store the downloaded project ids
-                NSMutableArray *projectIDsArray = [[NSMutableArray alloc] init];
-                Project *project = self.userProjectsArray[self.carousel.currentItemIndex];
-                [projectIDsArray addObject:project.identifier];
-                [fileSaver setDictionary:@{@"projectIDsArray": projectIDsArray} withName:@"downloadedProjectsIDs"];
-                NSLog(@"cree un nuevo arreglo en filesaver con el projectID %@", project.identifier);
-            }
-            [self carouselDidEndScrollingAnimation:self.carousel];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"downloadCompleted" object:nil userInfo:nil];
-            [self goToProjectScreenWithProjectDic:projectDictionary];
-        }
+            [self performSelectorOnMainThread:@selector(finishSavingProcessOnMainThread:) withObject:projectDictionary waitUntilDone:NO];
+        }];
+        NSLog(@"me salí del bloqueee");
     }
+}
+
+-(void)finishSavingProcessOnMainThread:(NSDictionary *)projectDic {
+    //Save a key with file saver indicating that this project has been downloaded
+    FileSaver *fileSaver = [[FileSaver alloc] init];
+    if ([fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"]) {
+        //Get the array with the project's ids and add the new downloaded project id
+        NSMutableArray *projectIDsArray = [NSMutableArray arrayWithArray:[fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"]];
+        Project *project = self.userProjectsArray[self.carousel.currentItemIndex];
+        if (![projectIDsArray containsObject:project.identifier]) {
+            [projectIDsArray addObject:project.identifier];
+            [fileSaver setDictionary:@{@"projectIDsArray": projectIDsArray} withName:@"downloadedProjectsIDs"];
+            NSLog(@"agregué el id %@ a filesaver", project.identifier);
+        }
+        
+    } else {
+        //Create an array to store the downloaded project ids
+        NSMutableArray *projectIDsArray = [[NSMutableArray alloc] init];
+        Project *project = self.userProjectsArray[self.carousel.currentItemIndex];
+        [projectIDsArray addObject:project.identifier];
+        [fileSaver setDictionary:@{@"projectIDsArray": projectIDsArray} withName:@"downloadedProjectsIDs"];
+        NSLog(@"cree un nuevo arreglo en filesaver con el projectID %@", project.identifier);
+    }
+    [self carouselDidEndScrollingAnimation:self.carousel];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"downloadCompleted" object:nil userInfo:nil];
+    [self goToProjectScreenWithProjectDic:projectDic];
 }
 
 #pragma mark - iCarouselDataSource
@@ -1019,6 +1069,23 @@
     if (buttonIndex == 0) {
         [self startDeletionProcessInCoreData];
     }
+}
+
+#pragma mark - DownloadViewDelegate
+
+-(void)cancelButtonWasTappedInDownloadView:(DownloadView *)downloadView {
+    NSLog(@"*** Cancelé la download");
+}
+
+-(void)downloadViewWillDisappear:(DownloadView *)downloadView {
+    self.opacityView.hidden = YES;
+}
+
+-(void)downloadViewDidDisappear:(DownloadView *)downloadView {
+    self.opacityView.hidden = YES;
+    self.downloadView.hidden = YES;
+    self.downloadView.progress = 0;
+    
 }
 
 #pragma mark - Notification Handlers

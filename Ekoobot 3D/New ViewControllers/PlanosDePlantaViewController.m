@@ -14,6 +14,7 @@
 #import "Plant+AddOns.h"
 #import "Product.h"
 #import "Space.h"
+#import "CMMotionManager+Shared.h"
 
 @interface PlanosDePlantaViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PlanoCollectionViewCellDelegate>
 @property (strong, nonatomic) UICollectionView *collectionView;
@@ -29,6 +30,7 @@
 @implementation PlanosDePlantaViewController {
     CGRect screenBounds;
     NSUInteger theTag;
+    BOOL magnetometerIsAvailable;
 }
 
 #pragma mark - Lazy Instantiation
@@ -73,6 +75,16 @@
     self.view.backgroundColor = [UIColor colorWithWhite:0.15 alpha:1.0];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     [self setupUI];
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    CMMotionManager *motionManager = [CMMotionManager sharedMotionManager];
+    if (motionManager.magnetometerAvailable) {
+        magnetometerIsAvailable = YES;
+    } else {
+        magnetometerIsAvailable = NO;
+    }
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
@@ -125,6 +137,7 @@
     //Planta *planta = self.producto.arrayPlantas[indexPath.item];
     Plant *plant = self.plantsArray[indexPath.item];
     cell.planoImageView.image = [plant plantImage];
+    cell.showCompass = magnetometerIsAvailable;
     
     NSMutableArray *pinsArrayForPlant = [[NSMutableArray alloc] init];
     for (int i = 0; i < [self.spacesArray count]; i++) {

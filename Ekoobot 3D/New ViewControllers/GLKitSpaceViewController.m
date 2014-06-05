@@ -45,6 +45,7 @@
     CGPoint movementVector;
     NSUInteger acabadoSeleccionado;
     CMMotionManager *motionManager;
+    BOOL magnetomerIsActive;
 }
 
 #pragma mark - Lazy Instantiation 
@@ -301,8 +302,9 @@
 #pragma mark - OpenGL Stuff
 
 -(void)setupGL {
+    magnetomerIsActive = YES;
     //Set GLContext
-    self.preferredFramesPerSecond = 30.0;
+    self.preferredFramesPerSecond = 60.0;
     GLKView *view = (GLKView *)self.view;
     view.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     [EAGLContext setCurrentContext:view.context];
@@ -349,16 +351,17 @@
 #pragma mark - GLKViewDelegate
 
 -(void)update {
-    /*
-    if (deviceIsLeftRotated) {
-        rotXAxis = motionManager.deviceMotion.attitude.roll;
-        rotZAxis = -motionManager.deviceMotion.attitude.yaw - M_PI;
-        rotYAxis = -motionManager.deviceMotion.attitude.pitch;
-    } else {
-        rotXAxis = -motionManager.deviceMotion.attitude.roll;
-        rotZAxis = -motionManager.deviceMotion.attitude.yaw;
-        rotYAxis = motionManager.deviceMotion.attitude.pitch;
-    }*/
+    if (magnetomerIsActive) {
+        if (deviceIsLeftRotated) {
+            rotXAxis = motionManager.deviceMotion.attitude.roll;
+            rotZAxis = -motionManager.deviceMotion.attitude.yaw - M_PI;
+            rotYAxis = -motionManager.deviceMotion.attitude.pitch;
+        } else {
+            rotXAxis = -motionManager.deviceMotion.attitude.roll;
+            rotZAxis = -motionManager.deviceMotion.attitude.yaw;
+            rotYAxis = motionManager.deviceMotion.attitude.pitch;
+        }
+    }
     
     GLKMatrix4 identity = GLKMatrix4Identity;
     GLKMatrix4 modelviewMatrix = GLKMatrix4Translate(identity, x, y, z);
@@ -367,6 +370,7 @@
     modelviewMatrix = GLKMatrix4Rotate(modelviewMatrix, rotZAxis, 0.0, 0.0, 1.0);
     modelviewMatrix = GLKMatrix4Scale(modelviewMatrix, 10.0, 10.0, 10.0);
     self.skyboxEffect.transform.modelviewMatrix = modelviewMatrix;
+    [self rotateCompassWithRadians:-rotZAxis];
 }
 
 -(void)glkView:(GLKView *)view drawInRect:(CGRect)rect {
@@ -406,12 +410,14 @@
     static BOOL panningInteractionEnabled = NO;
     if (!panningInteractionEnabled) {
         //Activate panning interaction
+        magnetomerIsActive = NO;
         [self.view addGestureRecognizer:self.panGesture];
         rotYAxis = 0;
         [self stopDeviceMotion];
         self.interactionTypeBarButton.title = NSLocalizedString(@"3D", nil);
         panningInteractionEnabled = YES;
     } else {
+        magnetomerIsActive = YES;
         [self.view removeGestureRecognizer:self.panGesture];
         [self startDeviceMotion];
         self.interactionTypeBarButton.title = NSLocalizedString(@"Toque", nil);
@@ -464,7 +470,7 @@
 }
 
 -(void)stopSceneRotationWithInertia {
-    self.inertiaTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/30.0 target:self selector:@selector(calculateSceneRotationValues) userInfo:nil repeats:YES];
+    self.inertiaTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 target:self selector:@selector(calculateSceneRotationValues) userInfo:nil repeats:YES];
 }
 
 -(void)calculateSceneRotationValues {
@@ -596,9 +602,9 @@
     
     if (motionManager.deviceMotionAvailable) {
         NSLog(@"** Entré a calcular valores del sensor ***");
-        motionManager.deviceMotionUpdateInterval = 1.0/30.0;
+        motionManager.deviceMotionUpdateInterval = 1.0/60.0;
         [motionManager startDeviceMotionUpdatesUsingReferenceFrame:attitude];
-        [motionManager startDeviceMotionUpdatesUsingReferenceFrame:attitude toQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motion, NSError *error){
+        /*[motionManager startDeviceMotionUpdatesUsingReferenceFrame:attitude toQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motion, NSError *error){
             if (deviceIsLeftRotated) {
                 
                 rotXAxis = motion.attitude.roll;
@@ -612,7 +618,7 @@
             [self updateViewWithRotX:rotXAxis rotY:rotYAxis rotZ:rotZAxis];;
             //NSLog(@"Attitude X:%f, Y:%f, Z:%f", rotXAxis, rotYAxis, rotZAxis);
             [self rotateCompassWithRadians:-rotZAxis];
-        }];
+        }];*/
     } else {
         NSLog(@"*** el sensor no está disponible ***");
     }

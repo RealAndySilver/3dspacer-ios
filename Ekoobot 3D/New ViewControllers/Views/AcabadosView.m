@@ -8,6 +8,7 @@
 
 #import "AcabadosView.h"
 #import "AcabadosCollectionViewCell.h"
+#import "Finish+AddOns.h"
 
 @interface AcabadosView() <UICollectionViewDataSource, UICollectionViewDelegate>
 @end
@@ -53,13 +54,16 @@
 #pragma mark - UICollectionViewDataSource
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 8;
+    return [self.finishesArray count];
 }
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     AcabadosCollectionViewCell *cell = (AcabadosCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"CellIdentifier" forIndexPath:indexPath];
-    cell.imageView.image = [UIImage imageNamed:@"Wood.jpg"];
-    cell.nameLabel.text = @"marmooool";
+    //cell.imageView.image = [UIImage imageNamed:@"Wood.jpg"];
+    //cell.nameLabel.text = @"marmol";
+    Finish *finish = self.finishesArray[indexPath.item];
+    cell.nameLabel.text = finish.name;
+    cell.imageView.image = [finish finishIconImage];
     return cell;
 }
 

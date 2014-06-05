@@ -58,7 +58,7 @@
             [self.planoImageView addSubview:pinButton];
             
             //Button Label
-            UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(pinButton.frame.origin.x + pinButton.frame.size.width, pinButton.frame.origin.y, 100.0, 30.0)];
+            UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(pinButton.frame.origin.x + pinButton.frame.size.width, pinButton.frame.origin.y, 200.0, 30.0)];
             nameLabel.text = space.name;
             nameLabel.tag = i + 10;
             nameLabel.textColor = [UIColor whiteColor];

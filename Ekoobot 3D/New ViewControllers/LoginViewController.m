@@ -65,8 +65,8 @@
     
     //EmailCOntainerView
     self.emailContainerView.frame = CGRectMake(screenBounds.size.width/2.0 - 276.0/2.0, screenBounds.size.height - 118.0, 276.0, 44.0);
-    self.cancelButton.frame = CGRectMake(self.emailContainerView.frame.origin.x, self.emailContainerView.frame.origin.y + self.emailContainerView.frame.size.height, 70.0, 44.0);
-    self.sendButton.frame = CGRectMake(self.emailContainerView.frame.origin.x + self.emailContainerView.frame.size.width, self.emailContainerView.frame.origin.y, 60.0, 44.0);
+    self.cancelButton.frame = CGRectMake(self.emailContainerView.frame.origin.x, self.emailContainerView.frame.origin.y + self.emailContainerView.frame.size.height, 70.0, 30.0);
+    self.sendButton.frame = CGRectMake(self.emailContainerView.frame.origin.x + self.emailContainerView.frame.size.width - 60.0, self.emailContainerView.frame.origin.y + self.emailContainerView.frame.size.height, 60.0, 30.0);
     
     //Hidde views
     self.emailContainerView.alpha = 0.0;
@@ -136,6 +136,9 @@
 }
 
 -(void)login {
+    [self.usernameTextfield resignFirstResponder];
+    [self.passwordTextfield resignFirstResponder];
+    
     userIsTryingToLogin = YES;
     self.spinner.hidden = NO;
     [self.spinner startAnimating];

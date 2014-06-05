@@ -14,4 +14,5 @@
 
 @interface AcabadosView : UIView
 @property (strong, nonatomic) id <AcabadosViewDelegate> delegate;
+@property (strong, nonatomic) NSArray *finishesArray;
 @end

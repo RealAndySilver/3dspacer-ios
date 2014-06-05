@@ -43,6 +43,8 @@
     BOOL deviceIsLeftRotated;
     GLfloat rotationFactor;
     CGPoint movementVector;
+    NSUInteger acabadoSeleccionado;
+    CMMotionManager *motionManager;
 }
 
 #pragma mark - Lazy Instantiation 
@@ -71,9 +73,10 @@
 }
 
 -(NSMutableArray *)finishesImagesArray {
-    Finish *finish = self.finishesArray[0];
     
     if (!_finishesImagesArray) {
+        Finish *finish = self.finishesArray[0];
+
         _finishesImagesArray = [[NSMutableArray alloc] init];
         for (int i = 0; i < [self.projectDic[@"finishImages"] count]; i++) {
             FinishImage *finishImage = self.projectDic[@"finishImages"][i];
@@ -114,7 +117,8 @@
 -(void)changeFinishesImagesArray {
     [self.finishesImagesArray removeAllObjects];
     
-    Finish *finish = self.finishesArray[0];
+    //Finish *finish = self.finishesArray[0];
+    Finish *finish = self.finishesArray[acabadoSeleccionado];
     
     for (int i = 0; i < [self.projectDic[@"finishImages"] count]; i++) {
         FinishImage *finishImage = self.projectDic[@"finishImages"][i];
@@ -252,7 +256,7 @@
             }
         }
     }
-    NSLog(@"Thumbs encontrados: %d", [thumbsArray count]);
+    NSLog(@"Thumbs encontrados: %lu", (unsigned long)[thumbsArray count]);
     self.more3DScenesView.thumbsArray = thumbsArray;
     Space *space = self.arregloDeEspacios3D[self.espacioSeleccionado];
     self.more3DScenesView.titleLabel.text = space.name;
@@ -261,6 +265,17 @@
     
     //Add the 'Acabados' view
     self.acabadosView = [[AcabadosView alloc] initWithFrame:acabadosViewFrame];
+    
+    //Search for the finishes of this space
+    NSMutableArray *finishesArray = [[NSMutableArray alloc] init];
+    for (int i = 0; i < [self.projectDic[@"finishes"] count]; i++) {
+        Finish *finish = self.projectDic[@"finishes"][i];
+        if ([finish.space isEqualToString:space.identifier]) {
+            NSLog(@"*** Encontré un acabado para este espacio");
+            [finishesArray addObject:finish];
+        }
+    }
+    self.acabadosView.finishesArray = finishesArray;
     self.acabadosView.delegate = self;
     [self.view addSubview:self.acabadosView];
 }
@@ -287,12 +302,17 @@
 
 -(void)setupGL {
     //Set GLContext
+    self.preferredFramesPerSecond = 30.0;
     GLKView *view = (GLKView *)self.view;
     view.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     [EAGLContext setCurrentContext:view.context];
     
     glClearColor(1.0, 1.0, 1.0, 1.0);
-  
+    glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+    
     [self resizeCubeImages];
     /*NSArray *skyboxArray = @[[self pathForJPEGResourceWithName:@"Derecha" ID:@"Spaces_16_2013-01-30 19:40:28"],
                              [self pathForJPEGResourceWithName:@"Izquierda" ID:@"Spaces_14_2013-01-30 19:40:28"],
@@ -329,6 +349,17 @@
 #pragma mark - GLKViewDelegate
 
 -(void)update {
+    /*
+    if (deviceIsLeftRotated) {
+        rotXAxis = motionManager.deviceMotion.attitude.roll;
+        rotZAxis = -motionManager.deviceMotion.attitude.yaw - M_PI;
+        rotYAxis = -motionManager.deviceMotion.attitude.pitch;
+    } else {
+        rotXAxis = -motionManager.deviceMotion.attitude.roll;
+        rotZAxis = -motionManager.deviceMotion.attitude.yaw;
+        rotYAxis = motionManager.deviceMotion.attitude.pitch;
+    }*/
+    
     GLKMatrix4 identity = GLKMatrix4Identity;
     GLKMatrix4 modelviewMatrix = GLKMatrix4Translate(identity, x, y, z);
     modelviewMatrix = GLKMatrix4Rotate(modelviewMatrix, rotXAxis, 1.0, 0.0, 0.0);
@@ -376,6 +407,7 @@
     if (!panningInteractionEnabled) {
         //Activate panning interaction
         [self.view addGestureRecognizer:self.panGesture];
+        rotYAxis = 0;
         [self stopDeviceMotion];
         self.interactionTypeBarButton.title = NSLocalizedString(@"3D", nil);
         panningInteractionEnabled = YES;
@@ -551,7 +583,7 @@
 
 -(void)startDeviceMotion {
     CMAttitudeReferenceFrame attitude;
-    CMMotionManager *motionManager = [CMMotionManager sharedMotionManager];
+    motionManager = [CMMotionManager sharedMotionManager];
     
     if (motionManager.magnetometerAvailable) {
         NSLog(@"*** El magnetómetro está disponible ***");
@@ -565,8 +597,10 @@
     if (motionManager.deviceMotionAvailable) {
         NSLog(@"** Entré a calcular valores del sensor ***");
         motionManager.deviceMotionUpdateInterval = 1.0/30.0;
+        [motionManager startDeviceMotionUpdatesUsingReferenceFrame:attitude];
         [motionManager startDeviceMotionUpdatesUsingReferenceFrame:attitude toQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motion, NSError *error){
             if (deviceIsLeftRotated) {
+                
                 rotXAxis = motion.attitude.roll;
                 rotZAxis = -motion.attitude.yaw - M_PI;
                 rotYAxis = -motion.attitude.pitch;
@@ -575,12 +609,24 @@
                 rotZAxis = -motion.attitude.yaw;
                 rotYAxis = motion.attitude.pitch;
             }
+            [self updateViewWithRotX:rotXAxis rotY:rotYAxis rotZ:rotZAxis];;
             //NSLog(@"Attitude X:%f, Y:%f, Z:%f", rotXAxis, rotYAxis, rotZAxis);
             [self rotateCompassWithRadians:-rotZAxis];
         }];
     } else {
         NSLog(@"*** el sensor no está disponible ***");
     }
+}
+
+-(void)updateViewWithRotX:(float)rotX rotY:(float)rotY rotZ:(float)rotZ {
+    GLKMatrix4 identity = GLKMatrix4Identity;
+    GLKMatrix4 modelviewMatrix = GLKMatrix4Translate(identity, x, y, z);
+    
+    modelviewMatrix = GLKMatrix4Rotate(modelviewMatrix, rotXAxis, 1.0, 0.0, 0.0);
+    modelviewMatrix = GLKMatrix4Rotate(modelviewMatrix, rotYAxis, 0.0, 1.0, 0.0);
+    modelviewMatrix = GLKMatrix4Rotate(modelviewMatrix, rotZAxis, 0.0, 0.0, 1.0);
+    modelviewMatrix = GLKMatrix4Scale(modelviewMatrix, 10.0, 10.0, 10.0);
+    self.skyboxEffect.transform.modelviewMatrix = modelviewMatrix;
 }
 
 -(void)stopDeviceMotion {
@@ -608,13 +654,33 @@
     
     [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     
-    [UIView animateWithDuration:0.3
+    [UIView animateWithDuration:0.1
                           delay:0.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^(){
                          self.opacityView.alpha = 0.75;
                      } completion:^(BOOL finished){
                          [self changeFinishesArray];
+                         [self changeFinishesImagesArray];
+                         [self changeCarasIds];
+                         [self changeCubeImages];
+                     }];
+}
+
+-(void)showLoadingOpacityViewWhileFinishIsChanged {
+    self.opacityView = [[UIView alloc] initWithFrame:self.view.bounds];
+    self.opacityView.backgroundColor = [UIColor blackColor];
+    self.opacityView.alpha = 0.0;
+    [self.navigationController.view addSubview:self.opacityView];
+    
+    [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    
+    [UIView animateWithDuration:0.1
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^(){
+                         self.opacityView.alpha = 0.75;
+                     } completion:^(BOOL finished){
                          [self changeFinishesImagesArray];
                          [self changeCarasIds];
                          [self changeCubeImages];
@@ -640,7 +706,7 @@
 
 -(void)removeOpacityView {
     [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
-    [UIView animateWithDuration:0.5
+    [UIView animateWithDuration:0.1
                           delay:0.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^(){
@@ -655,6 +721,11 @@
 
 -(void)AcabadoWasSelectedAtIndex:(NSUInteger)index {
     NSLog(@"Seleccioné el acabado en la posicion %d", index);
+    if (acabadoSeleccionado != index) {
+        acabadoSeleccionado = index;
+        [self showLoadingOpacityViewWhileFinishIsChanged];
+    }
+    [self toggleComplementaryViews];
 }
 
 #pragma mark - More3DScenesViewDelegate

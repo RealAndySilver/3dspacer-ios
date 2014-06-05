@@ -21,7 +21,6 @@
         
         //Top Label
         self.topLabel = [[UILabel alloc] initWithFrame:CGRectMake(50.0, 0.0, frame.size.width - 50.0, frame.size.height/2.0)];
-        self.topLabel.text = @"You have the latest version.";
         self.topLabel.font = [UIFont systemFontOfSize:12.0];
         [self addSubview:self.topLabel];
         
@@ -29,7 +28,6 @@
         self.bottomLabel = [[UILabel alloc] initWithFrame:CGRectMake(50.0, frame.size.height/2.0, frame.size.width - 50.0, frame.size.height/2.0)];
         self.bottomLabel.textColor = [UIColor whiteColor];
         self.bottomLabel.font = [UIFont systemFontOfSize:12.0];
-        self.bottomLabel.text = @"Update on 2014-05-20 12:30";
         [self addSubview:self.bottomLabel];
     }
     return self;

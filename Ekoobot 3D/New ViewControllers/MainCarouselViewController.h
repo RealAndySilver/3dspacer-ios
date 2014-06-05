@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface MainCarouselViewController : UIViewController
-@property (strong, nonatomic) NSArray *userProjectsArray;
+@property (strong, nonatomic) NSMutableArray *userProjectsArray;
 -(void)downloadProjectFromServer:(UIButton *)downloadButton;
 @end

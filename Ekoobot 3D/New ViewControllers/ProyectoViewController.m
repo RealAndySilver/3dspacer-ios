@@ -101,6 +101,7 @@
 
 -(void)setupUI {
     CGRect screenFrame = screenBounds;
+    Project *project = self.projectDic[@"project"];
     
     CGRect updateButtonFrame;
     CGRect containerFrame;
@@ -177,7 +178,6 @@
     container.layer.shadowOpacity = 1.0;
     
     UILabel *tituloProyecto = [[UILabel alloc]initWithFrame:CGRectMake(10.0, 0.0, container.frame.size.width, container.frame.size.height)];
-    Project *project = self.projectDic[@"project"];
     tituloProyecto.text = project.name;
     tituloProyecto.backgroundColor=[UIColor clearColor];
     tituloProyecto.textColor=[UIColor whiteColor];
@@ -218,6 +218,8 @@
     self.infoView = [[InfoView alloc] initWithFrame:CGRectMake(infoButton.frame.origin.x + infoButton.frame.size.width/2.0, infoButton.frame.origin.y, 260.0, 40.0)];
     self.infoView.topLabelColor = [UIColor greenColor];
     self.infoView.alpha = 0.0;
+    self.infoView.topLabel.text = @"You have the latest project version";
+    self.infoView.bottomLabel.text = [NSString stringWithFormat:@"Updated on %@", project.lastUpdate];
     [self.view addSubview:self.infoView];
     [self.view bringSubviewToFront:infoButton];
     

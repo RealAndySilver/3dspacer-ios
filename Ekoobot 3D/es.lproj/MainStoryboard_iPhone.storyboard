@@ -748,7 +748,7 @@
                                 <color key="backgroundColor" red="0.41675302930000002" green="0.41675302930000002" blue="0.41675302930000002" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="nMb-sK-AY9">
-                                <rect key="frame" x="405" y="71" width="43" height="30"/>
+                                <rect key="frame" x="357" y="108" width="43" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Enviar">
                                     <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>

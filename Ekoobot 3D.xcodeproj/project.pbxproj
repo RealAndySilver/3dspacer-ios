@@ -1216,7 +1216,7 @@
 				ORGANIZATIONNAME = Ekoomedia;
 				TargetAttributes = {
 					37E98A34153E0D70001B9BFE = {
-						DevelopmentTeam = 4U39LJL48R;
+						DevelopmentTeam = 96G68N9225;
 					};
 				};
 			};
@@ -1588,16 +1588,16 @@
 		37E98A77153E0D71001B9BFE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Diego Fernando Vidal Illera (9JA65WT89C)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Diego Fernando Vidal Illera (9JA65WT89C)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Ekoobot 3D/Ekoobot 3D-Prefix.pch";
 				INFOPLIST_FILE = "Ekoobot 3D/Ekoobot 3D-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9B8B7950-F1F9-453D-B9C0-D16EA4D00DC7";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9B8B7950-F1F9-453D-B9C0-D16EA4D00DC7";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1606,16 +1606,16 @@
 		37E98A78153E0D71001B9BFE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Diego Fernando Vidal Illera (9JA65WT89C)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Diego Fernando Vidal Illera (9JA65WT89C)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Ekoobot 3D/Ekoobot 3D-Prefix.pch";
 				INFOPLIST_FILE = "Ekoobot 3D/Ekoobot 3D-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0C1E9164-F94C-44B1-B349-EBCC577E5EF1";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0C1E9164-F94C-44B1-B349-EBCC577E5EF1";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1690,16 +1690,16 @@
 		75E995DD164AF28000C7452E /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: iAm Studio S.A.S. (4U39LJL48R)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: iAm Studio S.A.S. (4U39LJL48R)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ekoomedia Ltda. (96G68N9225)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ekoomedia Ltda. (96G68N9225)";
 				COMPRESS_PNG_FILES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Ekoobot 3D/Ekoobot 3D-Prefix.pch";
 				INFOPLIST_FILE = "Ekoobot 3D/Ekoobot 3D-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "317659E4-2B38-433F-A699-F2B3B4FB44AB";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "317659E4-2B38-433F-A699-F2B3B4FB44AB";
+				PROVISIONING_PROFILE = "BEBE0C31-0A5F-4B9F-9B64-0F87AD73EE7B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "BEBE0C31-0A5F-4B9F-9B64-0F87AD73EE7B";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

@@ -761,7 +761,7 @@
             [projectDictionary setObject:finishesImagesArray forKey:@"finishImages"];
             
             [self goToProjectScreenWithProjectDic:projectDictionary];
-        
+            
         } else {
             NSManagedObjectContext *context = self.databaseDocument.managedObjectContext;
             NSMutableArray *rendersArray = [Render rendersForProjectWithID:projectID inManagedObjectContext:context];

@@ -11,9 +11,15 @@
 #import "Finish+AddOns.h"
 
 @interface AcabadosView() <UICollectionViewDataSource, UICollectionViewDelegate>
+@property (strong, nonatomic) UICollectionView *collectionView;
 @end
 
 @implementation AcabadosView
+
+-(void)setFinishesArray:(NSArray *)finishesArray {
+    _finishesArray = finishesArray;
+    [self.collectionView reloadData];
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -38,15 +44,15 @@
         collectionViewFlowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
         collectionViewFlowLayout.itemSize = CGSizeMake(frame.size.width, frame.size.width/3.0 + 20.0);
         
-        UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0, titleLabel.frame.origin.y + titleLabel.frame.size.height, frame.size.width, frame.size.height - (titleLabel.frame.origin.y + titleLabel.frame.size.height)) collectionViewLayout:collectionViewFlowLayout];
-        collectionView.showsVerticalScrollIndicator = NO;
-        collectionView.delegate = self;
-        collectionView.dataSource = self;
-        collectionView.alwaysBounceVertical = YES;
-        collectionView.contentInset = UIEdgeInsetsMake(20.0, 40.0, 0.0, 40.0);
-        [collectionView registerClass:[AcabadosCollectionViewCell class] forCellWithReuseIdentifier:@"CellIdentifier"];
-        collectionView.backgroundColor = [UIColor clearColor];
-        [self addSubview:collectionView];
+        self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0, titleLabel.frame.origin.y + titleLabel.frame.size.height, frame.size.width, frame.size.height - (titleLabel.frame.origin.y + titleLabel.frame.size.height)) collectionViewLayout:collectionViewFlowLayout];
+        self.collectionView.showsVerticalScrollIndicator = NO;
+        self.collectionView.delegate = self;
+        self.collectionView.dataSource = self;
+        self.collectionView.alwaysBounceVertical = YES;
+        self.collectionView.contentInset = UIEdgeInsetsMake(20.0, 40.0, 0.0, 40.0);
+        [self.collectionView registerClass:[AcabadosCollectionViewCell class] forCellWithReuseIdentifier:@"CellIdentifier"];
+        self.collectionView.backgroundColor = [UIColor clearColor];
+        [self addSubview:self.collectionView];
     }
     return self;
 }

@@ -113,6 +113,7 @@
             [self.finishesArray addObject:finish];
         }
     }
+    self.acabadosView.finishesArray = self.finishesArray;
 }
 
 -(void)changeFinishesImagesArray {
@@ -120,32 +121,35 @@
     
     //Finish *finish = self.finishesArray[0];
     Finish *finish = self.finishesArray[acabadoSeleccionado];
-    
+    FinishImage *finishImage;
     for (int i = 0; i < [self.projectDic[@"finishImages"] count]; i++) {
-        FinishImage *finishImage = self.projectDic[@"finishImages"][i];
+        finishImage = self.projectDic[@"finishImages"][i];
         if ([finishImage.finish isEqualToString:finish.identifier]) {
             [self.finishesImagesArray addObject:finishImage];
         }
     }
+    finishImage = nil;
 }
 
 -(void)changeCarasIds {
+    FinishImage *finishImage;
     for (int i = 0; i < [self.finishesImagesArray count]; i++) {
-        FinishImage *finishImage = self.finishesImagesArray[i];
+        finishImage = self.finishesImagesArray[i];
         if ([finishImage.type isEqualToString:@"back"]) {
-            [_carasIds setObject:finishImage.identifier forKey:@"back"];
+            [self.carasIds setObject:finishImage.identifier forKey:@"back"];
         } else if ([finishImage.type isEqualToString:@"top"]) {
-            [_carasIds setObject:finishImage.identifier forKey:@"top"];
+            [self.carasIds setObject:finishImage.identifier forKey:@"top"];
         } else if ([finishImage.type isEqualToString:@"down"] || [finishImage.type isEqualToString:@"bottom"]) {
-            [_carasIds setObject:finishImage.identifier forKey:@"down"];
+            [self.carasIds setObject:finishImage.identifier forKey:@"down"];
         } else if ([finishImage.type isEqualToString:@"left"]) {
-            [_carasIds setObject:finishImage.identifier forKey:@"left"];
+            [self.carasIds setObject:finishImage.identifier forKey:@"left"];
         } else if ([finishImage.type isEqualToString:@"right"]) {
-            [_carasIds setObject:finishImage.identifier forKey:@"right"];
+            [self.carasIds setObject:finishImage.identifier forKey:@"right"];
         } else if ([finishImage.type isEqualToString:@"front"]) {
-            [_carasIds setObject:finishImage.identifier forKey:@"front"];
+            [self.carasIds setObject:finishImage.identifier forKey:@"front"];
         }
     }
+    finishImage = nil;
 }
 
 #pragma mark - View Lifecycle
@@ -193,6 +197,24 @@
     [self stopDeviceMotion];
     [self.inertiaTimer invalidate];
     self.inertiaTimer = nil;
+    
+    [self tearDownGL];
+}
+
+-(void)tearDownGL {
+    NSLog(@"Nileaaaaannnndooooooooo");
+    [EAGLContext setCurrentContext:nil];
+    
+    GLuint name = self.cubemapTexture.name;
+    glDeleteTextures(1, &name);
+    
+    self.skyboxEffect = nil;
+    self.cubemapTexture = nil;
+    self.acabadosView = nil;
+    self.more3DScenesView = nil;
+    self.finishesArray = nil;
+    self.carasIds = nil;
+    self.finishesImagesArray = nil;
 }
 
 -(void)setupUI {
@@ -306,14 +328,14 @@
     //Set GLContext
     self.preferredFramesPerSecond = 60.0;
     GLKView *view = (GLKView *)self.view;
+    //view.layer.minificationFilter = kCAFilterNearest;
+    //view.layer.magnificationFilter = kCAFilterNearest;
+    
     view.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     [EAGLContext setCurrentContext:view.context];
     
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
     
     [self resizeCubeImages];
     /*NSArray *skyboxArray = @[[self pathForJPEGResourceWithName:@"Derecha" ID:@"Spaces_16_2013-01-30 19:40:28"],
@@ -334,6 +356,10 @@
     
     NSError *error;
     NSDictionary *options = @{GLKTextureLoaderOriginBottomLeft: @NO};
+    
+    GLuint name = self.cubemapTexture.name;
+    glDeleteTextures(1, &name);
+    
     self.cubemapTexture = [GLKTextureLoader cubeMapWithContentsOfFiles:skyboxArray options:options error:&error];
     if (self.cubemapTexture) {
         NSLog(@"se pudo cargar la textura, %d, %d", self.cubemapTexture.height, self.cubemapTexture.width);
@@ -346,6 +372,15 @@
     self.skyboxEffect.textureCubeMap.target = self.cubemapTexture.target;
     self.skyboxEffect.transform.projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), screenBounds.size.width/screenBounds.size.height, 1.0, 100.0);
     self.skyboxEffect.transform.modelviewMatrix = GLKMatrix4MakeScale(10.0, 10.0, 10.0);
+    self.skyboxEffect.center = GLKVector3Make(0.0, 0.0, 0.0);
+    [self.skyboxEffect prepareToDraw];
+
+    /*glEnable(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);*/
+    
 }
 
 #pragma mark - GLKViewDelegate
@@ -370,12 +405,13 @@
     modelviewMatrix = GLKMatrix4Rotate(modelviewMatrix, rotZAxis, 0.0, 0.0, 1.0);
     modelviewMatrix = GLKMatrix4Scale(modelviewMatrix, 10.0, 10.0, 10.0);
     self.skyboxEffect.transform.modelviewMatrix = modelviewMatrix;
+    [self.skyboxEffect prepareToDraw];
+
     [self rotateCompassWithRadians:-rotZAxis];
 }
 
 -(void)glkView:(GLKView *)view drawInRect:(CGRect)rect {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    [self.skyboxEffect prepareToDraw];
     [self.skyboxEffect draw];
 }
 
@@ -510,47 +546,49 @@
     NSLog(@"entré a resize cube images");
     UIImage *theImage;
     NSLog(@"*** Número de imágenes para el acabado seleccionado: %d", [self.finishesImagesArray count]);
+    FinishImage *finishImage;
     for (int i = 0; i < [self.finishesImagesArray count]; i++) {
-        FinishImage *finishImage = self.finishesImagesArray[i];
+        finishImage = self.finishesImagesArray[i];
         
         if ([finishImage.type isEqualToString:@"back"]) {
             theImage = [finishImage finishImage];
-            theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
+            //theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
             [self saveImage:theImage withName:@"FlippedAtras" identifier:finishImage.identifier format:@"png"];
         
         } else if ([finishImage.type isEqualToString:@"left"]) {
             theImage = [finishImage finishImage];
-            theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
+            //theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
             theImage = [theImage rotateImage:theImage onDegrees:90.0];
             theImage = [theImage flippedImageByAxis:MVImageFlipYAxis];
             [self saveImage:theImage withName:@"FlippedIzquierda" identifier:finishImage.identifier format:@"png"];
         
         } else if ([finishImage.type isEqualToString:@"front"]) {
             theImage = [finishImage finishImage];
-            theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
+            //theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
             theImage = [theImage flippedImageByAxis:MVImageFlipYAxis];
             [self saveImage:theImage withName:@"FlippedFrente" identifier:finishImage.identifier format:@"png"];
 
         } else if ([finishImage.type isEqualToString:@"right"]) {
             theImage = [finishImage finishImage];
-            theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
+            //theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
             theImage = [theImage rotateImage:theImage onDegrees:90.0];
             theImage = [theImage flippedImageByAxis:MVImageFlipXAxisAndYAxis];
             [self saveImage:theImage withName:@"FlippedDerecha" identifier:finishImage.identifier format:@"png"];
 
         } else if ([finishImage.type isEqualToString:@"top"]) {
             theImage = [finishImage finishImage];
-            theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
+            //theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
             theImage = [theImage flippedImageByAxis:MVImageFlipXAxisAndYAxis];
             [self saveImage:theImage withName:@"FlippedArriba" identifier:finishImage.identifier format:@"png"];
         
         } else if ([finishImage.type isEqualToString:@"down"] || [finishImage.type isEqualToString:@"bottom"]) {
             theImage = [finishImage finishImage];
-            theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
+            //theImage = [UIImage imageWithImage:theImage scaledToSize:CGSizeMake(512.0, 512.0)];
             theImage = [theImage flippedImageByAxis:MVImageFlipYAxis];
             [self saveImage:theImage withName:@"FlippedAbajo" identifier:finishImage.identifier format:@"png"];
         }
     }
+    finishImage = nil;
     
     /*Espacio3D *espacio3D = self.arregloDeEspacios3D[self.espacioSeleccionado];
     Caras *caras = espacio3D.arrayCaras[0];
@@ -624,7 +662,7 @@
     }
 }
 
--(void)updateViewWithRotX:(float)rotX rotY:(float)rotY rotZ:(float)rotZ {
+/*-(void)updateViewWithRotX:(float)rotX rotY:(float)rotY rotZ:(float)rotZ {
     GLKMatrix4 identity = GLKMatrix4Identity;
     GLKMatrix4 modelviewMatrix = GLKMatrix4Translate(identity, x, y, z);
     
@@ -633,7 +671,7 @@
     modelviewMatrix = GLKMatrix4Rotate(modelviewMatrix, rotZAxis, 0.0, 0.0, 1.0);
     modelviewMatrix = GLKMatrix4Scale(modelviewMatrix, 10.0, 10.0, 10.0);
     self.skyboxEffect.transform.modelviewMatrix = modelviewMatrix;
-}
+}*/
 
 -(void)stopDeviceMotion {
     [[CMMotionManager sharedMotionManager] stopDeviceMotionUpdates];
@@ -653,6 +691,7 @@
 }
 
 -(void)showLoadingOpacityView {
+    acabadoSeleccionado = 0;
     self.opacityView = [[UIView alloc] initWithFrame:self.view.bounds];
     self.opacityView.backgroundColor = [UIColor blackColor];
     self.opacityView.alpha = 0.0;
@@ -694,6 +733,9 @@
 }
 
 -(void)changeCubeImages {
+    GLuint name = self.cubemapTexture.name;
+    glDeleteTextures(1, &name);
+    
     [self resizeCubeImages];
     
     NSArray *skyboxArray = @[[self pathForPNGResourceWithName:@"FlippedDerecha" ID:self.carasIds[@"right"]],
@@ -702,11 +744,14 @@
                              [self pathForPNGResourceWithName:@"FlippedAtras" ID:self.carasIds[@"back"]],
                              [self pathForPNGResourceWithName:@"FlippedArriba" ID:self.carasIds[@"top"]],
                              [self pathForPNGResourceWithName:@"FlippedAbajo" ID:self.carasIds[@"down"]]];
+    
     self.cubemapTexture = [GLKTextureLoader cubeMapWithContentsOfFiles:skyboxArray options:nil error:NULL];
     self.skyboxEffect.textureCubeMap.name = self.cubemapTexture.name;
     self.skyboxEffect.textureCubeMap.target = self.cubemapTexture.target;
-    self.skyboxEffect.transform.projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), screenBounds.size.width/screenBounds.size.height, 1.0, 100.0);
-    self.skyboxEffect.transform.modelviewMatrix = GLKMatrix4MakeScale(10.0, 10.0, 10.0);
+    //self.skyboxEffect.transform.projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), screenBounds.size.width/screenBounds.size.height, 1.0, 100.0);
+    //self.skyboxEffect.transform.modelviewMatrix = GLKMatrix4MakeScale(10.0, 10.0, 10.0);
+    //[self.skyboxEffect prepareToDraw];
+    
     [self removeOpacityView];
 }
 

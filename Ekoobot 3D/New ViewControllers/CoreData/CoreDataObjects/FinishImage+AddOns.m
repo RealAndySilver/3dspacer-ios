@@ -29,17 +29,21 @@
         NSLog(@"La imagen del acabado ya existía en la base de datos");
         finishImage = [matches firstObject];
         
-        if (![finishImage.imageURL isEqualToString:dictionary[@"image"]]) {
+        /*if (![finishImage.imageURL isEqualToString:dictionary[@"image"]]) {
             finishImage.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:dictionary[@"image"]]];
-        }
+        }*/
         
         finishImage.project = dictionary[@"project"];
         finishImage.identifier = finishImageID;
         finishImage.imageURL = dictionary[@"image"];
         finishImage.miniURL = dictionary[@"mini"];
         finishImage.type = dictionary[@"type"];
+        if ([finishImage.type isEqualToString:@"bottom"]) {
+            finishImage.type = @"down";
+        }
         finishImage.lastUpdate = dictionary[@"lastUpdate"];
         finishImage.finish = dictionary[@"finish"];
+        finishImage.imagePath = [NSString stringWithFormat:@"finishImage_%@_%@_%@.jpg", finishImage.project, finishImage.identifier, finishImage.type];
         
     } else {
         //The render did not exist on the database, so we have to create it
@@ -51,9 +55,13 @@
         finishImage.imageURL = dictionary[@"image"];
         finishImage.miniURL = dictionary[@"mini"];
         finishImage.type = dictionary[@"type"];
+        if ([finishImage.type isEqualToString:@"bottom"]) {
+            finishImage.type = @"down";
+        }
         finishImage.lastUpdate = dictionary[@"lastUpdate"];
         finishImage.finish = dictionary[@"finish"];
-        finishImage.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:finishImage.imageURL]];
+        finishImage.imagePath = [NSString stringWithFormat:@"finishImage_%@_%@_%@", finishImage.project, finishImage.identifier, finishImage.type];
+        //finishImage.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:finishImage.imageURL]];
     }
     
     return finishImage;

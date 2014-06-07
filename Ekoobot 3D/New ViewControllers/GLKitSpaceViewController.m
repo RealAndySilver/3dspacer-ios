@@ -16,6 +16,7 @@
 #import "Finish.h"
 #import "Space.h"
 #import "FinishImage+AddOns.h"
+#import "Project.h"
 
 @interface GLKitSpaceViewController () <More3DScenesViewDelegate, UIGestureRecognizerDelegate, CLLocationManagerDelegate, AcabadosViewDelegate>
 @property (strong, nonatomic) GLKTextureInfo *cubemapTexture;
@@ -33,6 +34,7 @@
 @property (strong, nonatomic) NSMutableArray *finishesArray;
 @property (strong, nonatomic) NSMutableArray *finishesImagesArray;
 @property (strong, nonatomic) NSMutableDictionary *carasIds;
+@property (strong, nonatomic) NSMutableDictionary *finishImagesPathNames;
 @end
 
 @implementation GLKitSpaceViewController {
@@ -49,6 +51,29 @@
 }
 
 #pragma mark - Lazy Instantiation 
+
+-(NSMutableDictionary *)finishImagesPathNames {
+    //NSLog(@"Numero de imagenes en finishes images array: %d", [self.finishesImagesArray count]);
+    if (!_finishImagesPathNames) {
+        _finishImagesPathNames = [[NSMutableDictionary alloc] init];
+        FinishImage *finishImage;
+        for (int i = 0; i < [self.finishesImagesArray count]; i++) {
+            finishImage = self.finishesImagesArray[i];
+            [_finishImagesPathNames setObject:finishImage.imagePath forKey:finishImage.type];
+            NSLog(@"*** Guardé el path %@ en finishImagesPathNames", finishImage.imagePath);
+        }
+    }
+    return _finishImagesPathNames;
+}
+
+-(void)changeFinishImagesPathNames {
+    FinishImage *finishImage;
+    for (int i = 0; i < [self.finishesImagesArray count]; i++) {
+        finishImage = self.finishesImagesArray[i];
+        [self.finishImagesPathNames setObject:finishImage.imagePath forKey:finishImage.type];
+    }
+    finishImage = nil;
+}
 
 -(NSMutableDictionary *)carasIds {
     if (!_carasIds) {
@@ -204,6 +229,7 @@
 -(void)tearDownGL {
     NSLog(@"Nileaaaaannnndooooooooo");
     [EAGLContext setCurrentContext:nil];
+    ((GLKView *)self.view).context = nil;
     
     GLuint name = self.cubemapTexture.name;
     glDeleteTextures(1, &name);
@@ -271,7 +297,8 @@
                 for (int k = 0; k < [self.projectDic[@"finishImages"] count]; k++) {
                     FinishImage *finishImage = self.projectDic[@"finishImages"][k];
                     if ([finishImage.finish isEqualToString:finish.identifier] && [finishImage.type isEqualToString:@"back"]) {
-                        [thumbsArray addObject:[finishImage finishImage]];
+                        //[thumbsArray addObject:[finishImage finishImage]];
+                        [thumbsArray addObject:[self imageFromFinishImageAtPath:finishImage.imagePath]];
                         break;
                     }
                 }
@@ -303,6 +330,13 @@
     [self.view addSubview:self.acabadosView];
 }
 
+-(UIImage *)imageFromFinishImageAtPath:(NSString *)jpegImagePath {
+    NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+    NSString *jpegFilePath = [docDir stringByAppendingPathComponent:jpegImagePath];
+    UIImage *image = [UIImage imageWithContentsOfFile:jpegFilePath];
+    return image;
+}
+
 -(void)createGestureRecognizers {
     self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(rotateScene:)];
     
@@ -324,6 +358,7 @@
 #pragma mark - OpenGL Stuff
 
 -(void)setupGL {
+    
     magnetomerIsActive = YES;
     //Set GLContext
     self.preferredFramesPerSecond = 60.0;
@@ -337,7 +372,6 @@
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glEnable(GL_DEPTH_TEST);
     
-    [self resizeCubeImages];
     /*NSArray *skyboxArray = @[[self pathForJPEGResourceWithName:@"Derecha" ID:@"Spaces_16_2013-01-30 19:40:28"],
                              [self pathForJPEGResourceWithName:@"Izquierda" ID:@"Spaces_14_2013-01-30 19:40:28"],
                              [self pathForJPEGResourceWithName:@"Arriba" ID:@"Spaces_18_2013-01-30 19:40:28"],
@@ -347,12 +381,22 @@
     
     //Espacio3D *espacio3D = self.arregloDeEspacios3D[self.espacioSeleccionado];
     //Caras *caras = espacio3D.arrayCaras[0];
-    NSArray *skyboxArray = @[[self pathForPNGResourceWithName:@"FlippedDerecha" ID:self.carasIds[@"right"]],
+    
+    //[self resizeCubeImages];
+    //finishImage_idproyecto_idImage_type
+    /*NSArray *skyboxArray = @[[self pathForPNGResourceWithName:@"FlippedDerecha" ID:self.carasIds[@"right"]],
                              [self pathForPNGResourceWithName:@"FlippedIzquierda" ID:self.carasIds[@"left"]],
                              [self pathForPNGResourceWithName:@"FlippedFrente" ID:self.carasIds[@"front"]],
                              [self pathForPNGResourceWithName:@"FlippedAtras" ID:self.carasIds[@"back"]],
                              [self pathForPNGResourceWithName:@"FlippedArriba" ID:self.carasIds[@"top"]],
-                             [self pathForPNGResourceWithName:@"FlippedAbajo" ID:self.carasIds[@"down"]]];
+                             [self pathForPNGResourceWithName:@"FlippedAbajo" ID:self.carasIds[@"down"]]];*/
+    
+    NSArray *skyboxArray = @[[self pathForFinishImageWithName:self.finishImagesPathNames[@"right"]],
+                             [self pathForFinishImageWithName:self.finishImagesPathNames[@"left"]],
+                             [self pathForFinishImageWithName:self.finishImagesPathNames[@"front"]],
+                             [self pathForFinishImageWithName:self.finishImagesPathNames[@"back"]],
+                             [self pathForFinishImageWithName:self.finishImagesPathNames[@"top"]],
+                             [self pathForFinishImageWithName:self.finishImagesPathNames[@"down"]]];
     
     NSError *error;
     NSDictionary *options = @{GLKTextureLoaderOriginBottomLeft: @NO};
@@ -380,7 +424,6 @@
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);*/
-    
 }
 
 #pragma mark - GLKViewDelegate
@@ -542,6 +585,7 @@
 
 #pragma mark - Custom Methods
 
+
 -(void)resizeCubeImages {
     NSLog(@"entré a resize cube images");
     UIImage *theImage;
@@ -589,40 +633,6 @@
         }
     }
     finishImage = nil;
-    
-    /*Espacio3D *espacio3D = self.arregloDeEspacios3D[self.espacioSeleccionado];
-    Caras *caras = espacio3D.arrayCaras[0];
-    
-    UIImage *image = [UIImage imageWithContentsOfFile:[self pathForJPEGResourceWithName:@"Frente" ID:caras.idFrente]];
-    UIImage *resizeImage = [UIImage imageWithImage:image scaledToSize:CGSizeMake(512.0, 512.0)];
-    resizeImage = [resizeImage flippedImageByAxis:MVImageFlipYAxis];
-    [self saveImage:resizeImage withName:@"FlippedFrente" identifier:caras.idFrente format:@"png"];
-    
-    image = [UIImage imageWithContentsOfFile:[self pathForJPEGResourceWithName:@"Izquierda" ID:caras.idIzquierda]];
-    resizeImage = [UIImage imageWithImage:image scaledToSize:CGSizeMake(512.0, 512.0)];
-    resizeImage = [resizeImage rotateImage:resizeImage onDegrees:90.0];
-    resizeImage = [resizeImage flippedImageByAxis:MVImageFlipYAxis];
-    [self saveImage:resizeImage withName:@"FlippedIzquierda" identifier:caras.idIzquierda format:@"png"];
-    
-    image = [UIImage imageWithContentsOfFile:[self pathForJPEGResourceWithName:@"Derecha" ID:caras.idDerecha]];
-    resizeImage = [UIImage imageWithImage:image scaledToSize:CGSizeMake(512.0, 512.0)];
-    resizeImage = [resizeImage rotateImage:resizeImage onDegrees:90.0];
-    resizeImage = [resizeImage flippedImageByAxis:MVImageFlipXAxisAndYAxis];
-    [self saveImage:resizeImage withName:@"FlippedDerecha" identifier:caras.idDerecha format:@"png"];
-    
-    image = [UIImage imageWithContentsOfFile:[self pathForJPEGResourceWithName:@"Arriba" ID:caras.idArriba]];
-    resizeImage = [UIImage imageWithImage:image scaledToSize:CGSizeMake(512.0, 512.0)];
-    resizeImage = [resizeImage flippedImageByAxis:MVImageFlipXAxisAndYAxis];
-    [self saveImage:resizeImage withName:@"FlippedArriba" identifier:caras.idArriba format:@"png"];
-
-    image = [UIImage imageWithContentsOfFile:[self pathForJPEGResourceWithName:@"Abajo" ID:caras.idAbajo]];
-    resizeImage = [UIImage imageWithImage:image scaledToSize:CGSizeMake(512.0, 512.0)];
-    resizeImage = [resizeImage flippedImageByAxis:MVImageFlipYAxis];
-    [self saveImage:resizeImage withName:@"FlippedAbajo" identifier:caras.idAbajo format:@"png"];
-    
-    image = [UIImage imageWithContentsOfFile:[self pathForJPEGResourceWithName:@"Atras" ID:caras.idAtras]];
-    resizeImage = [UIImage imageWithImage:image scaledToSize:CGSizeMake(512.0, 512.0)];
-    [self saveImage:resizeImage withName:@"FlippedAtras" identifier:caras.idAtras format:@"png"];*/
 }
 
 -(void)startDeviceMotion {
@@ -707,7 +717,8 @@
                      } completion:^(BOOL finished){
                          [self changeFinishesArray];
                          [self changeFinishesImagesArray];
-                         [self changeCarasIds];
+                         //[self changeCarasIds];
+                         [self changeFinishImagesPathNames];
                          [self changeCubeImages];
                      }];
 }
@@ -727,7 +738,8 @@
                          self.opacityView.alpha = 0.75;
                      } completion:^(BOOL finished){
                          [self changeFinishesImagesArray];
-                         [self changeCarasIds];
+                         //[self changeCarasIds];
+                         [self changeFinishImagesPathNames];
                          [self changeCubeImages];
                      }];
 }
@@ -736,14 +748,21 @@
     GLuint name = self.cubemapTexture.name;
     glDeleteTextures(1, &name);
     
-    [self resizeCubeImages];
+    //[self resizeCubeImages];
     
-    NSArray *skyboxArray = @[[self pathForPNGResourceWithName:@"FlippedDerecha" ID:self.carasIds[@"right"]],
+    /*NSArray *skyboxArray = @[[self pathForPNGResourceWithName:@"FlippedDerecha" ID:self.carasIds[@"right"]],
                              [self pathForPNGResourceWithName:@"FlippedIzquierda" ID:self.carasIds[@"left"]],
                              [self pathForPNGResourceWithName:@"FlippedFrente" ID:self.carasIds[@"front"]],
                              [self pathForPNGResourceWithName:@"FlippedAtras" ID:self.carasIds[@"back"]],
                              [self pathForPNGResourceWithName:@"FlippedArriba" ID:self.carasIds[@"top"]],
-                             [self pathForPNGResourceWithName:@"FlippedAbajo" ID:self.carasIds[@"down"]]];
+                             [self pathForPNGResourceWithName:@"FlippedAbajo" ID:self.carasIds[@"down"]]];*/
+    
+    NSArray *skyboxArray = @[[self pathForFinishImageWithName:self.finishImagesPathNames[@"right"]],
+                             [self pathForFinishImageWithName:self.finishImagesPathNames[@"left"]],
+                             [self pathForFinishImageWithName:self.finishImagesPathNames[@"front"]],
+                             [self pathForFinishImageWithName:self.finishImagesPathNames[@"back"]],
+                             [self pathForFinishImageWithName:self.finishImagesPathNames[@"top"]],
+                             [self pathForFinishImageWithName:self.finishImagesPathNames[@"down"]]];
     
     self.cubemapTexture = [GLKTextureLoader cubeMapWithContentsOfFiles:skyboxArray options:nil error:NULL];
     self.skyboxEffect.textureCubeMap.name = self.cubemapTexture.name;
@@ -806,6 +825,13 @@
     } else {
         NSLog(@"La imagen ya existía, así que no la guardé en documents directory");
     }
+}
+
+-(NSString *)pathForFinishImageWithName:(NSString *)name {
+    NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+    NSString *jpegFilePath = [docDir stringByAppendingPathComponent:name];
+    NSLog(@"Path for finishImage: %@", jpegFilePath);
+    return jpegFilePath;
 }
 
 -(NSString*)pathForJPEGResourceWithName:(NSString*)name ID:(NSString*)ID{

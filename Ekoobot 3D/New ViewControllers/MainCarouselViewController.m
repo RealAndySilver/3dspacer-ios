@@ -35,6 +35,7 @@
 #import "Finish+AddOns.h"
 #import "FinishImage+AddOns.h"
 #import "DownloadView.h"
+#import "UIImage+Resize.h"
 
 @interface MainCarouselViewController () <iCarouselDataSource, iCarouselDelegate, UIAlertViewDelegate, ServerCommunicatorDelegate, UIActionSheetDelegate, DownloadViewDelegate, TermsAndConditionsDelegate>
 @property (strong, nonatomic) iCarousel *carousel;
@@ -700,6 +701,22 @@
     
     if (self.databaseDocument.documentState == UIDocumentStateNormal) {
         NSManagedObjectContext *context = self.databaseDocument.managedObjectContext;
+        
+        //Delete all the project finishes images from documents directory
+        /*NSArray *finishesImagesArray = [FinishImage finishesImagesArrayForProjectWithID:projectID inManagedObjectContext:context];
+        NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+        for (int i = 0; i < [finishesImagesArray count]; i++) {
+            FinishImage *finishImage = self.finishesImagesArray[i];
+            NSString *finishImagePath = [docDir stringByAppendingPathComponent:finishImage.imagePath];
+            BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:finishImagePath];
+            if (fileExist) {
+                [[NSFileManager defaultManager] removeItemAtPath:finishImagePath error:NULL];
+                NSLog(@"Borrando finish image del proyecto %@ en la ruta %@", project.identifier, finishImagePath);
+            } else {
+                NSLog(@"No había archivo del proyecto %@ en la ruta %@", project.identifier, finishImagePath);
+            }
+        }*/
+        
         [Render deleteRendersForProjectWithID:projectID inManagedObjectContext:context];
         [Urbanization deleteUrbanizationsForProjectWithID:projectID inManagedObjectContext:context];
         [Group deleteGroupsForProjectWithID:projectID inManagedObjectContext:context];
@@ -722,7 +739,11 @@
             NSLog(@"removiendo el id %@", savedProjectID);
         }
     }
-    [fileSaver setDictionary:@{@"projectIDsArray": projectIDsArray} withName:@"downloadedProjectsIDs"];
+    if ([projectIDsArray count] > 0) {
+        [fileSaver setDictionary:@{@"projectIDsArray": projectIDsArray} withName:@"downloadedProjectsIDs"];
+    } else {
+        [fileSaver setDictionary:@{@"projectIDsArray": @[]} withName:@"downloadedProjectsIDs"];
+    }
     [self carouselDidEndScrollingAnimation:self.carousel];
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [[[UIAlertView alloc] initWithTitle:@"Delete Complete" message:@"The project has been deleted successfully." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
@@ -920,11 +941,17 @@
             
             //Save finishes images in Core Data
             NSMutableArray *finishesImagesArray = [[NSMutableArray alloc] initWithCapacity:[self.finishesImagesArray count]];
+            NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+
             for (int i = 0; i < [self.finishesImagesArray count]; i++) {
                 if (!downloadWasCancelled) {
                     FinishImage *finishImage = [FinishImage finishImageWithServerInfo:self.finishesImagesArray[i] inManagedObjectContext:context];
                     [context save:NULL];
                     [finishesImagesArray addObject:finishImage];
+                    
+                    //Save image in documents directory
+                    NSString *jpegFilePath = [docDir stringByAppendingPathComponent:finishImage.imagePath];
+                    [self saveImageInDocumentsDirectoryAtPath:jpegFilePath usingImageURL:finishImage.imageURL];
                     
                     filesDownloadedCounter ++;
                     progressCompleted = filesDownloadedCounter / numberOfFiles;
@@ -958,6 +985,46 @@
         NSLog(@"me salí del bloqueee");
     }
 }
+
+-(void)saveImageInDocumentsDirectoryAtPath:(NSString *)jpegFilePath usingImageURL:(NSString *)finishImageURL {
+    NSLog(@"Entré a guardar la imagen");
+    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
+    if (!fileExist) {
+        NSLog(@"La imagen no existía en documents directory, así que la guardaré");
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:finishImageURL]];
+        UIImage *image = [UIImage imageWithData:data];
+        //UIImage *newImage = [self transformImage:image positionInCube:position];
+        NSData *imageData = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0)];
+        [imageData writeToFile:jpegFilePath atomically:YES];
+    } else {
+        NSLog(@"La imagen ya existía, así que no la guardé en documents directory");
+    }
+}
+
+/*-(UIImage *)transformImage:(UIImage *)image positionInCube:(NSString *)positionInCube {
+    
+    if ([positionInCube isEqualToString:@"back"]) {
+     
+        
+    } else if ([positionInCube isEqualToString:@"left"]) {
+        image = [image rotateImage:image onDegrees:90.0];
+        image = [image flippedImageByAxis:MVImageFlipYAxis];
+        
+    } else if ([positionInCube isEqualToString:@"front"]) {
+        image = [image flippedImageByAxis:MVImageFlipYAxis];
+        
+    } else if ([positionInCube isEqualToString:@"right"]) {
+        image = [image rotateImage:image onDegrees:90.0];
+        image = [image flippedImageByAxis:MVImageFlipXAxisAndYAxis];
+        
+    } else if ([positionInCube isEqualToString:@"top"]) {
+        image = [image flippedImageByAxis:MVImageFlipXAxisAndYAxis];
+        
+    } else if ([positionInCube isEqualToString:@"down"] || [positionInCube isEqualToString:@"bottom"]) {
+        image = [image flippedImageByAxis:MVImageFlipYAxis];
+    }
+    return image;
+}*/
 
 -(void)showDownloadCanceledAlert {
     downloadWasCancelled = NO;

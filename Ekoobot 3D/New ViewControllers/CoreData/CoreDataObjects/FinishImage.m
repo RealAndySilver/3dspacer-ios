@@ -2,7 +2,7 @@
 //  FinishImage.m
 //  Ekoobot 3D
 //
-//  Created by Diego Vidal on 25/05/14.
+//  Created by Diego Vidal on 6/06/14.
 //  Copyright (c) 2014 Ekoomedia. All rights reserved.
 //
 
@@ -11,13 +11,14 @@
 
 @implementation FinishImage
 
-@dynamic project;
-@dynamic identifier;
-@dynamic imageURL;
-@dynamic imageData;
-@dynamic miniURL;
-@dynamic type;
-@dynamic lastUpdate;
 @dynamic finish;
+@dynamic identifier;
+@dynamic imageData;
+@dynamic imageURL;
+@dynamic lastUpdate;
+@dynamic miniURL;
+@dynamic project;
+@dynamic type;
+@dynamic imagePath;
 
 @end

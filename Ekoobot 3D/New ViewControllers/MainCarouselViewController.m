@@ -698,7 +698,8 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     Project *project = self.userProjectsArray[self.carousel.currentItemIndex];
     NSString *projectID = [NSString stringWithFormat:@"%d", [project.identifier intValue]];
-    
+    NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+
     if (self.databaseDocument.documentState == UIDocumentStateNormal) {
         NSManagedObjectContext *context = self.databaseDocument.managedObjectContext;
         
@@ -716,6 +717,18 @@
                 NSLog(@"No había archivo del proyecto %@ en la ruta %@", project.identifier, finishImagePath);
             }
         }*/
+        
+        NSArray *imagePathsForFinishImages = [FinishImage imagesPathsForFinishImagesWithProjectID:projectID inManagedObjectContext:context];
+        for (int i = 0; i < [imagePathsForFinishImages count]; i++) {
+            NSString *finishImagePath = [docDir stringByAppendingPathComponent:imagePathsForFinishImages[i]];
+            BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:finishImagePath];
+            if (fileExist) {
+                [[NSFileManager defaultManager] removeItemAtPath:finishImagePath error:NULL];
+                NSLog(@"Borrando finish image del proyecto %@ en la ruta %@", project.identifier, finishImagePath);
+            } else {
+                NSLog(@"No había archivo del proyecto %@ en la ruta %@", project.identifier, finishImagePath);
+            }
+        }
         
         [Render deleteRendersForProjectWithID:projectID inManagedObjectContext:context];
         [Urbanization deleteUrbanizationsForProjectWithID:projectID inManagedObjectContext:context];

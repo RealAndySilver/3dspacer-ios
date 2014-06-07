@@ -16,4 +16,6 @@
                          inManagedObjectContext:(NSManagedObjectContext *)context;
 +(void)deleteFinishesImagesForProjectWithID:(NSString *)projectID
                      inManagedObjectContext:(NSManagedObjectContext *)context;
++(NSArray *)imagesPathsForFinishImagesWithProjectID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context;
+
 @end

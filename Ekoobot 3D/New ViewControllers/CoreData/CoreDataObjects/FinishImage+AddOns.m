@@ -67,6 +67,20 @@
     return finishImage;
 }
 
++(NSArray *)imagesPathsForFinishImagesWithProjectID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSMutableArray *imagePaths = [[NSMutableArray alloc] init];
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"FinishImage"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    for (int i = 0; i < [matches count]; i++) {
+        FinishImage *finishImage = matches[i];
+        [imagePaths addObject:finishImage.imagePath];
+    }
+    
+    return imagePaths;
+}
+
 +(NSArray *)finishesImagesArrayForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"FinishImage"];
     request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];

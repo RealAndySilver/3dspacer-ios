@@ -122,6 +122,7 @@
 #pragma mark - Server Stuff
 
 -(void)sendForgotPassword {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     userIsTryingToLogin = NO;
     if (![self.emailTextfield.text length] > 0) {
         [[[UIAlertView alloc] initWithTitle:@"Error" message:@"You must specify an email." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
@@ -136,12 +137,14 @@
 }
 
 -(void)login {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     [self.usernameTextfield resignFirstResponder];
     [self.passwordTextfield resignFirstResponder];
     
     userIsTryingToLogin = YES;
-    self.spinner.hidden = NO;
-    [self.spinner startAnimating];
+    //self.spinner.hidden = NO;
+    //[self.spinner startAnimating];
     
     [UserInfo sharedInstance].userName = self.usernameTextfield.text;
     [UserInfo sharedInstance].password = self.passwordTextfield.text;
@@ -152,10 +155,11 @@
 }
 
 -(void)receivedDataFromServer:(NSDictionary *)dictionary withMethodName:(NSString *)methodName {
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [UserInfo sharedInstance].sendEmailAsAuth = NO;
     
-    [self.spinner stopAnimating];
-    self.spinner.hidden = YES;
+    //[self.spinner stopAnimating];
+    //self.spinner.hidden = YES;
     if ([methodName isEqualToString:@"getProjectsByUser"]) {
         if (dictionary) {
             if (dictionary[@"code"]) {
@@ -178,6 +182,11 @@
     } else if ([methodName isEqualToString:@"user/resetting/request"]) {
         if (dictionary) {
             NSLog(@"Recibí respuesta valida del reseteo de contraseña: %@", dictionary);
+            if ([dictionary[@"code"] intValue] == 401) {
+                [[[UIAlertView alloc] initWithTitle:@"Error" message:dictionary[@"message"] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+            } else if (dictionary[@"message"]) {
+                [[[UIAlertView alloc] initWithTitle:nil message:dictionary[@"message"] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+            }
         } else {
             NSLog(@"La respuesta del reseteo de contraseña fue null: %@", dictionary);
         }
@@ -188,8 +197,9 @@
 
 -(void)serverError:(NSError *)error {
     [UserInfo sharedInstance].sendEmailAsAuth = NO;
-    [self.spinner stopAnimating];
-    self.spinner.hidden = YES;
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    //[self.spinner stopAnimating];
+    //self.spinner.hidden = YES;
 
     if (userIsTryingToLogin) {
         [self loginWithoutConnection];
@@ -229,8 +239,9 @@
 #pragma mark - CoreData Stuff
 
 -(void)startCoreDataSavingProcess {
-    [self.spinner startAnimating];
-    self.spinner.hidden = NO;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    //[self.spinner startAnimating];
+    //self.spinner.hidden = NO;
     
     //Get the Datababase Document path
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -306,8 +317,9 @@
 }
 
 -(void)goToHomeScreenVCWithProjectsArray:(NSMutableArray *)projectsArray {
-    [self.spinner stopAnimating];
-    self.spinner.hidden = YES;
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    //[self.spinner stopAnimating];
+    //self.spinner.hidden = YES;
     
     NavController *navController = (NavController *)self.navigationController;
     [navController setOrientationType:0];

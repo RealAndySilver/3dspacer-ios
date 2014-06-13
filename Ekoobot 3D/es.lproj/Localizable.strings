@@ -33,6 +33,7 @@
 "AreaTotal"="Área total:";
 
 "DescargandoProyecto"="SU PROYECTO SE ESTÁ DESCARGANDO, POR FAVOR ESPERE";
+"DescargandoVideo" = "SU VIDEO SE ESTÁ DESCARGANDO, POR FAVOR ESPERE";
 
 "AgregarComentario"="Debe agregar un comentario.";
 "AgregarEmail"="Debe ingresar un correo electrónico.";
@@ -49,3 +50,6 @@
 
 "ProyectoDesactualizado" = "Listado de Proyectos Desactualizado";
 "MensajeProyectoDesactualizado" = "La lista de proyectos está desactualizada. Debe regresar al menú principal y actualizar el proyecto si es necesario";
+
+"Importante" = "IMPORTANTE";
+"DescargaCancelada" = "Descarga Cancelada";

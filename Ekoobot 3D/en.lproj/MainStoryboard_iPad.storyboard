@@ -339,6 +339,21 @@
             </objects>
             <point key="canvasLocation" x="-5261" y="3101"/>
         </scene>
+        <!--Video Player View Controller-->
+        <scene sceneID="q1k-Lr-n82">
+            <objects>
+                <viewController storyboardIdentifier="VideoPlayer" id="bv1-yv-qG9" customClass="VideoPlayerViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="bfa-RF-aY5">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ej0-82-2HD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4206" y="3097"/>
+        </scene>
         <!--Terms And Conditions View Controller-->
         <scene sceneID="mvt-Qi-CHQ">
             <objects>

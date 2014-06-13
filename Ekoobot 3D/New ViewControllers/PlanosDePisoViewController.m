@@ -19,13 +19,17 @@
 #import "Group.h"
 #import "Space.h"
 #import "CMMotionManager+Shared.h"
+#import "ServerCommunicator.h"
+#import "Project.h"
+#import "UserInfo.h"
 
-@interface PlanosDePisoViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PisoCollectionViewCellDelegate>
+@interface PlanosDePisoViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PisoCollectionViewCellDelegate, ServerCommunicatorDelegate>
 @property (strong, nonatomic) UICollectionView *collectionView;
 @property (strong, nonatomic) NSMutableArray *arrayNombresPiso;
 @property (strong, nonatomic) UIPageControl *pageControl;
 @property (strong, nonatomic) NSMutableArray *floorsArray;
 @property (strong, nonatomic) NSArray *productsArray;
+@property (strong, nonatomic) NSDictionary *productAnalyticsDic;
 @end
 
 @implementation PlanosDePisoViewController {
@@ -164,31 +168,91 @@
     return cell;
 }
 
-#pragma mark - Custom Methods
+-(void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    ((PisoCollectionViewCell *)cell).zoomScale = 1.0;
+}
 
-/*-(UIImage *)imageFromPisoAtIndex:(NSUInteger)index {
-    TipoDePiso *tipoDePiso = self.grupo.arrayTiposDePiso[index];
+-(NSString *)generateProductJSONString {
+    PisoCollectionViewCell *cell = [[self.collectionView visibleCells] firstObject];
+    NSUInteger currentCellIndex = [self.collectionView indexPathForCell:cell].item;
+    Floor *floor = self.floorsArray[currentCellIndex];
+                    
+    //Generate date string
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+    NSDate *date = [NSDate date];
+    NSString *formattedDateString = [dateFormatter stringFromDate:date];
     
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *jpegFilePath = [NSString stringWithFormat:@"%@/tipoDePiso%@.jpeg",docDir,tipoDePiso.idTipoPiso];
-    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
-    if (!fileExists) {
-        //NSLog(@"no existe tipo piso img %@",jpegFilePath);
-        NSURL *urlImagen=[NSURL URLWithString:tipoDePiso.imagen];
-        NSData *data=[NSData dataWithContentsOfURL:urlImagen];
-        UIImage *image = [UIImage imageWithData:data];
-        NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0f)];//1.0f = 100% quality
-        if (image) {
-            [data2 writeToFile:jpegFilePath atomically:YES];
+    NSDictionary *userDic = @{@"id": [UserInfo sharedInstance].userName};
+    NSDictionary *productIDDic = @{@"id": floor.identifier};
+    self.productAnalyticsDic = @{@"user": userDic, @"product" : productIDDic, @"date" : formattedDateString};
+    
+    FileSaver *fileSaver = [[FileSaver alloc] init];
+    if ([fileSaver getDictionary:@"ProductAnalyticsDic"][@"ProductAnalyticsArray"]) {
+        NSMutableArray *productsAnalyticsArray = [NSMutableArray arrayWithArray:[fileSaver getDictionary:@"ProductAnalyticsDic"][@"ProductAnalyticsArray"]];
+        [productsAnalyticsArray addObject:self.productAnalyticsDic];
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:productsAnalyticsArray
+                                                           options:NSJSONWritingPrettyPrinted
+                                                             error:&error];
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Json String: %@", jsonString);
+        return jsonString;
+        
+    } else {
+        NSArray *projectArray = @[self.productAnalyticsDic];
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:projectArray
+                                                           options:NSJSONWritingPrettyPrinted
+                                                             error:&error];
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Json String: %@", jsonString);
+        return jsonString;
+    }
+}
+
+#pragma mark - Server Stuff
+
+-(void)sendAnalytics {
+    ServerCommunicator *serverCommunicator = [[ServerCommunicator alloc] init];
+    serverCommunicator.delegate = self;
+    NSString *projectString = nil;
+    NSString *productString = [self generateProductJSONString];
+    NSString *parameter = [NSString stringWithFormat:@"projectAnalytics=%@&productAnalytics=%@", projectString, productString];
+    [serverCommunicator callServerWithPOSTMethod:@"setAnalytics" andParameter:parameter httpMethod:@"POST"];
+}
+
+-(void)receivedDataFromServer:(NSDictionary *)dictionary withMethodName:(NSString *)methodName {
+    if ([methodName isEqualToString:@"setAnalytics"]) {
+        if (dictionary) {
+            NSLog(@"Llegó respuesta correcta del analytics: %@", dictionary);
+            //Remove the saved analytics in FileSaver
+            FileSaver *fileSaver = [[FileSaver alloc] init];
+            if ([fileSaver getDictionary:@"ProductAnalyticsDic"][@"ProductAnalyticsArray"]) {
+                [fileSaver setDictionary:@{@"ProductAnalyticsArray": @[]} withName:@"ProductAnalyticsDic"];
+            }
+            
+        } else {
+            NSLog(@"No llegó respuesta del analytics: %@", dictionary);
         }
-        return image;
     }
-    else {
-        //NSLog(@"si existe tipo piso img %@",jpegFilePath);
-        UIImage *image = [UIImage imageWithContentsOfFile:jpegFilePath];
-        return image;
+}
+
+-(void)serverError:(NSError *)error {
+    FileSaver *fileSaver = [[FileSaver alloc] init];
+    if ([fileSaver getDictionary:@"ProductAnalyticsDic"][@"ProductAnalyticsArray"]) {
+        NSLog(@"Ya existía el arreglo en file saver de productsAnalytics");
+        NSMutableArray *productsAnalyticsArray = [NSMutableArray arrayWithArray:[fileSaver getDictionary:@"ProductAnalyticsDic"][@"ProductAnalyticsArray"]];
+        [productsAnalyticsArray addObject:self.productAnalyticsDic];
+        [fileSaver setDictionary:@{@"ProductAnalyticsArray": productsAnalyticsArray} withName:@"ProductAnalyticsDic"];
+        
+    } else {
+        NSLog(@"No existía en file saver el arreglo de analytics, asi que lo crearé");
+        NSArray *productsAnalyticsArray = @[self.productAnalyticsDic];
+        [fileSaver setDictionary:@{@"ProductAnalyticsArray": productsAnalyticsArray} withName:@"ProductAnalyticsDic"];
     }
-}*/
+}
 
 #pragma mark - UIScrollViewDelegate
 
@@ -214,6 +278,8 @@
 }
 
 -(void)pinButtonWasSelectedWithIndex:(NSUInteger)index inCell:(PisoCollectionViewCell *)cell {
+    [self sendAnalytics];
+    
     NSLog(@"toqué el pin en la posición: %d", index);
     
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];

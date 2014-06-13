@@ -19,6 +19,7 @@
 #import "ProyectoViewController.h"
 #import "ProgressView.h"
 #import "Project+AddOn.h"
+#import "Project+ParseInfoFromServer.h"
 #import "UserInfo.h"
 #import "TermsAndConditionsViewController.h"
 #import "NSArray+NullReplacement.h"
@@ -56,6 +57,9 @@
 @property (strong, nonatomic) NSArray *finishesArray;
 @property (strong, nonatomic) NSArray *finishesImagesArray;
 
+@property (strong, nonatomic) NSArray *projectMainRendersArray;
+@property (strong, nonatomic) NSArray *referenceProjectsArray;
+@property (strong, nonatomic) NSString *currentUserName;
 @property (strong, nonatomic) UIView *opacityView;
 @property (strong, nonatomic) DownloadView *downloadView;
 @end
@@ -66,6 +70,8 @@
     BOOL getProjectFromTheDatabase;
     BOOL fetchOnlyRenders;
     BOOL downloadEntireProject;
+    BOOL downloadWasCancelled;
+    BOOL searchingForUpdates;
 }
 
 #pragma mark - Lazy Instantiation
@@ -109,6 +115,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     //[self startMainProjectImagesSavingProcess];
     [self setupUI];
+    [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(searchForUpdatesInServer) userInfo:nil repeats:YES];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -128,6 +135,7 @@
     self.carousel.dataSource = self;
     self.carousel.type = iCarouselTypeCustom;
     self.carousel.scrollSpeed = 0.5;
+    self.carousel.bounceDistance = 0.3;
     self.carousel.backgroundColor = [UIColor clearColor];
     [self.view addSubview:self.carousel];
     
@@ -449,6 +457,13 @@
 
 #pragma mark - Server Stuff
 
+-(void)searchForUpdatesInServer {
+    searchingForUpdates = YES;
+    ServerCommunicator *serverCommunicator = [[ServerCommunicator alloc] init];
+    serverCommunicator.delegate = self;
+    [serverCommunicator callServerWithGETMethod:@"getProjectsByUser" andParameter:@""];
+}
+
 -(void)getRendersFromServer {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     downloadEntireProject = NO;
@@ -495,6 +510,7 @@
 }
 
 -(void)receivedDataFromServer:(NSDictionary *)dictionary withMethodName:(NSString *)methodName {
+    searchingForUpdates = NO;
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     
     if ([methodName isEqualToString:@"getProjectById"]) {
@@ -525,25 +541,188 @@
                 }
                 
             }
-        } else {
+        }  else {
             NSLog(@"NO llegó respuesta del getProjectById");
         }
+        
+    } else if ([methodName isEqualToString:@"getProjectsByUser"]) {
+        if (dictionary) {
+            NSLog(@"Llegó correctamente la respuesta del getProjectsByUser: %@", dictionary);
+            self.currentUserName = dictionary[@"user"][@"username"];
+            NSLog(@"*** current user: %@", self.currentUserName);
+            self.referenceProjectsArray = [dictionary[@"projects"] arrayByReplacingNullsWithBlanks];
+            self.projectMainRendersArray = [dictionary[@"renders"] arrayByReplacingNullsWithBlanks];
+            [self compareProjectsUpdateDatesUsingReferenceDic:dictionary];
+        } else {
+            NSLog(@"Llegó Null la respuesta del getProjectsByUser: %@", dictionary);
+        }
+        
     } else {
         NSLog(@"La respuesta no corresponde con los métodos enviados");
     }
 }
 
 -(void)serverError:(NSError *)error {
+    self.downloadView.hidden = YES;
+    self.opacityView.hidden = YES;
+    
     NSLog(@"error en el server con código %d: %@ %@", error.code, error, [error localizedDescription]);
-    if (error.code == -1009) {
+    if (error.code == -1009 && !searchingForUpdates) {
         //Network Error
         [[[UIAlertView alloc] initWithTitle:@"Error" message:@"You need to be connected to internet to download the latest project version." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
         
     }
+    searchingForUpdates = NO;
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 }
 
+-(void)compareProjectsUpdateDatesUsingReferenceDic:(NSDictionary *)userProjectsDic {
+    NSArray *referenceProjectsArray = userProjectsDic[@"projects"];
+    for (int i = 0; i < [self.userProjectsArray count]; i++) {
+        Project *project = self.userProjectsArray[i];
+        for (int j = 0; j < [referenceProjectsArray count]; j++) {
+            NSDictionary *referenceProjectDic = [referenceProjectsArray[j] dictionaryByReplacingNullWithBlanks];
+            if ([referenceProjectDic[@"id"] intValue] == [project.identifier intValue]) {
+                //We found the projects to compare the dates (the project that we have
+                //store in CoreData with the downloaded project from the server)
+                [self compareUpdateDateOfProject:project withReferenceProject:referenceProjectDic];
+                break;
+            }
+        }
+    }
+}
+
+-(void)compareUpdateDateOfProject:(Project *)project withReferenceProject:(NSDictionary *)referenceProjectDic {
+    //Check if the project has been download
+    FileSaver *fileSaver = [[FileSaver alloc] init];
+    if ([fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"]) {
+        NSMutableArray *savedProjectIDs = [fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"];
+        if ([savedProjectIDs containsObject:project.identifier]) {
+            NSLog(@"El proyecto con id %@ esta descargado", project.identifier);
+            
+            //Check if the project is updated
+            if ([project.lastUpdate isEqualToString:referenceProjectDic[@"last_update"]]) {
+                //The project is updated, do nothing
+                NSLog(@"EL proyecto con id %@ está actualizado", project.identifier);
+                NSLog(@"Última actualizacion descargada: %@\nÚltima actualización disponible: %@", project.lastUpdate, referenceProjectDic[@"last_update"]);
+            } else {
+                //The project is not updated
+                NSLog(@"El proyecto con id %@ está desactualizado", project.identifier);
+                NSLog(@"Última actualizacion descargada: %@\nÚltima actualización disponible: %@", project.lastUpdate, referenceProjectDic[@"last_update"]);
+                
+                //Remove the project id from fileSaver
+                [savedProjectIDs removeObject:project.identifier];
+                [fileSaver setDictionary:@{@"projectIDsArray": savedProjectIDs} withName:@"downloadedProjectsIDs"];
+                [self carouselDidEndScrollingAnimation:self.carousel];
+                [self startUpdatingProjectProcessInCoreDataUsingProjectDic:referenceProjectDic];
+            }
+            
+        } else {
+            NSLog(@"El proyecto con id %@ no se ha descargado aún", project.identifier);
+        }
+        
+    } else {
+        NSLog(@"No se ha descargado ningún proyecto aún");
+    }
+}
+
+-(NSString *)getImageURLOfProjectWithID:(NSNumber *)projectIdentifier {
+    NSString *imageURL = nil;
+    for (int i = 0; i < [self.projectMainRendersArray count]; i++) {
+        NSDictionary *renderDic = self.projectMainRendersArray[i];
+        if ([renderDic[@"project"] intValue] == [projectIdentifier intValue]) {
+            imageURL = [@"http://ekoobot.com/new_bot/web/" stringByAppendingString:renderDic[@"url"]];
+            break;
+        }
+    }
+    return imageURL;
+}
+
 #pragma mark - CoreData Stuff
+
+-(void)startUpdatingProjectProcessInCoreDataUsingProjectDic:(NSDictionary *)newProjectDic {
+    //Get the Datababase Document path
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSURL *documentsDirectory = [[fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject];
+    NSString *documentName = @"MyDocument";
+    NSURL *url = [documentsDirectory URLByAppendingPathComponent:documentName];
+    self.databaseDocument = [[UIManagedDocument alloc] initWithFileURL:url];
+    
+    //Check if the document exist
+    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:[url path]];
+    if (fileExist) {
+        //Open The Database Document
+        [self.databaseDocument openWithCompletionHandler:^(BOOL success){
+            if (success) {
+                if (self.databaseDocument.documentState == UIDocumentStateNormal) {
+                    NSManagedObjectContext *context = self.databaseDocument.managedObjectContext;
+                    Project *project = [Project projectWithServerInfo:newProjectDic inManagedObjectContext:context];
+                    project.imageURL = [self getImageURLOfProjectWithID:project.identifier];
+                    project.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:project.imageURL]];
+                    for (int i = 0; i < [self.userProjectsArray count]; i++) {
+                        Project *theProject = self.userProjectsArray[i];
+                        if ([theProject.identifier isEqualToNumber:project.identifier]) {
+                            [self.userProjectsArray replaceObjectAtIndex:i withObject:project];
+                            break;
+                        }
+                    }
+                    //Save the new project info in FileSaver
+                    FileSaver *fileSaver = [[FileSaver alloc] init];
+                    if ([fileSaver getDictionary:@"UserInfoDic"]) {
+                        NSMutableDictionary *userInfoDic = [NSMutableDictionary dictionaryWithDictionary:[fileSaver getDictionary:@"UserInfoDic"]];
+                        [userInfoDic setValue:self.referenceProjectsArray forKey:@"Projects"];
+                        [fileSaver setDictionary:userInfoDic withName:@"UserInfoDic"];
+                    }
+                    
+                    if ([fileSaver getDictionary:self.currentUserName]) {
+                        NSMutableDictionary *currentUserDic = [NSMutableDictionary dictionaryWithDictionary:[fileSaver getDictionary:self.currentUserName]];
+                        [currentUserDic setValue:self.referenceProjectsArray forKey:@"Projects"];
+                        [fileSaver setDictionary:currentUserDic withName:self.currentUserName];
+                    }
+                    [self.carousel reloadData];
+                }
+                
+            } else {
+                NSLog(@"Could not open the document at %@", url);
+            }
+        }];
+    } else {
+        //The documents does not exist on disk, so create it
+        [self.databaseDocument saveToURL:self.databaseDocument.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success){
+            if (success) {
+                if (self.databaseDocument.documentState == UIDocumentStateNormal) {
+                    NSManagedObjectContext *context = self.databaseDocument.managedObjectContext;
+                    Project *project = [Project projectWithServerInfo:newProjectDic inManagedObjectContext:context];
+                    project.imageURL = [self getImageURLOfProjectWithID:project.identifier];
+                    project.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:project.imageURL]];
+                    for (int i = 0; i < [self.userProjectsArray count]; i++) {
+                        Project *theProject = self.userProjectsArray[i];
+                        if ([theProject.identifier isEqualToNumber:project.identifier]) {
+                            [self.userProjectsArray replaceObjectAtIndex:i withObject:project];
+                            break;
+                        }
+                    }
+                    //Save the new project info in FileSaver
+                    FileSaver *fileSaver = [[FileSaver alloc] init];
+                    if ([fileSaver getDictionary:@"UserInfoDic"]) {
+                        NSMutableDictionary *userInfoDic = [NSMutableDictionary dictionaryWithDictionary:[fileSaver getDictionary:@"UserInfoDic"]];
+                        [userInfoDic setValue:self.referenceProjectsArray forKey:@"Projects"];
+                        [fileSaver setDictionary:userInfoDic withName:@"UserInfoDic"];
+                    }
+                    if ([fileSaver getDictionary:self.currentUserName]) {
+                        NSMutableDictionary *currentUserDic = [NSMutableDictionary dictionaryWithDictionary:[fileSaver getDictionary:self.currentUserName]];
+                        [currentUserDic setValue:self.referenceProjectsArray forKey:@"Projects"];
+                        [fileSaver setDictionary:currentUserDic withName:self.currentUserName];
+                    }
+                    [self.carousel reloadData];
+                }
+                
+            } else {
+                NSLog(@"could not create the document at %@", url);
+            }
+        }];
+    }
+}
 
 -(void)startDeletionProcessInCoreData {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -625,9 +804,24 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     Project *project = self.userProjectsArray[self.carousel.currentItemIndex];
     NSString *projectID = [NSString stringWithFormat:@"%d", [project.identifier intValue]];
+    NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
     
     if (self.databaseDocument.documentState == UIDocumentStateNormal) {
         NSManagedObjectContext *context = self.databaseDocument.managedObjectContext;
+        
+        NSArray *imagePathsForFinishImages = [FinishImage imagesPathsForFinishImagesWithProjectID:projectID inManagedObjectContext:context];
+        NSLog(@"Número de imagepaths: %d", [imagePathsForFinishImages count]);
+        for (int i = 0; i < [imagePathsForFinishImages count]; i++) {
+            NSString *finishImagePath = [docDir stringByAppendingPathComponent:imagePathsForFinishImages[i]];
+            BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:finishImagePath];
+            if (fileExist) {
+                [[NSFileManager defaultManager] removeItemAtPath:finishImagePath error:NULL];
+                NSLog(@"Borrando finish image del proyecto %@ en la ruta %@", project.identifier, finishImagePath);
+            } else {
+                NSLog(@"No había archivo del proyecto %@ en la ruta %@", project.identifier, finishImagePath);
+            }
+        }
+        
         [Render deleteRendersForProjectWithID:projectID inManagedObjectContext:context];
         [Urbanization deleteUrbanizationsForProjectWithID:projectID inManagedObjectContext:context];
         [Group deleteGroupsForProjectWithID:projectID inManagedObjectContext:context];
@@ -650,7 +844,11 @@
             NSLog(@"removiendo el id %@", savedProjectID);
         }
     }
-    [fileSaver setDictionary:@{@"projectIDsArray": projectIDsArray} withName:@"downloadedProjectsIDs"];
+    if ([projectIDsArray count] > 0) {
+        [fileSaver setDictionary:@{@"projectIDsArray": projectIDsArray} withName:@"downloadedProjectsIDs"];
+    } else {
+        [fileSaver setDictionary:@{@"projectIDsArray": @[]} withName:@"downloadedProjectsIDs"];
+    }
     [self carouselDidEndScrollingAnimation:self.carousel];
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [[[UIAlertView alloc] initWithTitle:@"Delete Complete" message:@"The project has been deleted successfully." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
@@ -720,10 +918,25 @@
             //Save render objects in core data
             NSMutableArray *rendersArray = [[NSMutableArray alloc] initWithCapacity:[self.rendersArray count]]; //Of Renders
             for (int i = 0; i < [self.rendersArray count]; i++) {
-                NSDictionary *renderInfoDic = self.rendersArray[i];
-                Render *render = [Render renderWithServerInfo:renderInfoDic inManagedObjectContext:context];
+                if (!downloadWasCancelled) {
+                    NSDictionary *renderInfoDic = self.rendersArray[i];
+                    Render *render = [Render renderWithServerInfo:renderInfoDic inManagedObjectContext:context];
+                    [context save:NULL];
+                    [rendersArray addObject:render];
+                    filesDownloadedCounter ++;
+                    progressCompleted = filesDownloadedCounter / numberOfFiles;
+                    NSLog(@"progresooo: %f", progressCompleted);
+                    number = @(progressCompleted);
+                    [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+                }
+            }
+            
+            //Save urbanization object in core data
+            NSMutableArray *urbanizationsArray = [[NSMutableArray alloc] init];
+            if (!downloadWasCancelled) {
+                Urbanization *urbanization = [Urbanization urbanizationWithServerInfo:self.urbanizationDic inManagedObjectContext:context];
                 [context save:NULL];
-                [rendersArray addObject:render];
+                [urbanizationsArray addObject:urbanization];
                 filesDownloadedCounter ++;
                 progressCompleted = filesDownloadedCounter / numberOfFiles;
                 NSLog(@"progresooo: %f", progressCompleted);
@@ -731,127 +944,164 @@
                 [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
             }
             
-            //Save urbanization object in core data
-            NSMutableArray *urbanizationsArray = [[NSMutableArray alloc] init];
-            Urbanization *urbanization = [Urbanization urbanizationWithServerInfo:self.urbanizationDic inManagedObjectContext:context];
-            [context save:NULL];
-            [urbanizationsArray addObject:urbanization];
-            filesDownloadedCounter ++;
-            progressCompleted = filesDownloadedCounter / numberOfFiles;
-            NSLog(@"progresooo: %f", progressCompleted);
-            number = @(progressCompleted);
-            [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
-            
             //Save group objects in Core Data
             NSMutableArray *groupsArray = [[NSMutableArray alloc] initWithCapacity:[self.groupsArray count]];
             for (int i = 0; i < [self.groupsArray count]; i++) {
-                Group *group = [Group groupWithServerInfo:self.groupsArray[i] inManagedObjectContext:context];
-                [context save:NULL];
-                [groupsArray addObject:group];
-                
-                filesDownloadedCounter ++;
-                progressCompleted = filesDownloadedCounter / numberOfFiles;
-                NSLog(@"progresooo: %f", progressCompleted);
-                number = @(progressCompleted);
-                [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+                if (!downloadWasCancelled) {
+                    Group *group = [Group groupWithServerInfo:self.groupsArray[i] inManagedObjectContext:context];
+                    [context save:NULL];
+                    [groupsArray addObject:group];
+                    
+                    filesDownloadedCounter ++;
+                    progressCompleted = filesDownloadedCounter / numberOfFiles;
+                    NSLog(@"progresooo: %f", progressCompleted);
+                    number = @(progressCompleted);
+                    [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+                }
             }
             
             //Save Floor products in Core Data
             NSMutableArray *floorsArray = [[NSMutableArray alloc] initWithCapacity:[self.floorsArray count]];
             for (int i = 0; i < [self.floorsArray count]; i++) {
-                Floor *floor = [Floor floorWithServerInfo:self.floorsArray[i] inManagedObjectContext:context];
-                [context save:NULL];
-                [floorsArray addObject:floor];
-                
-                filesDownloadedCounter ++;
-                progressCompleted = filesDownloadedCounter / numberOfFiles;
-                number = @(progressCompleted);
-                [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+                if (!downloadWasCancelled) {
+                    Floor *floor = [Floor floorWithServerInfo:self.floorsArray[i] inManagedObjectContext:context];
+                    [context save:NULL];
+                    [floorsArray addObject:floor];
+                    
+                    filesDownloadedCounter ++;
+                    progressCompleted = filesDownloadedCounter / numberOfFiles;
+                    number = @(progressCompleted);
+                    [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+                }
             }
             
             //Save product objects in Core Data
             NSMutableArray *producstArray = [[NSMutableArray alloc] initWithCapacity:[self.productsArray count]];
             for (int i = 0; i < [self.productsArray count]; i++) {
-                Product *product = [Product productWithServerInfo:self.productsArray[i] inManagedObjectContext:context];
-                [context save:NULL];
-                [producstArray addObject:product];
-                
-                filesDownloadedCounter ++;
-                progressCompleted = filesDownloadedCounter / numberOfFiles;
-                number = @(progressCompleted);
-                [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+                if (!downloadWasCancelled) {
+                    Product *product = [Product productWithServerInfo:self.productsArray[i] inManagedObjectContext:context];
+                    [context save:NULL];
+                    [producstArray addObject:product];
+                    
+                    filesDownloadedCounter ++;
+                    progressCompleted = filesDownloadedCounter / numberOfFiles;
+                    number = @(progressCompleted);
+                    [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+                }
             }
             
             //Save plants objects in Core Data
             NSMutableArray *plantsArray = [[NSMutableArray alloc] initWithCapacity:[self.plantsArray count]];
             for (int i = 0; i < [self.plantsArray count]; i++) {
-                Plant *plant = [Plant plantWithServerInfo:self.plantsArray[i] inManagedObjectContext:context];
-                [context save:NULL];
-                [plantsArray addObject:plant];
-                
-                filesDownloadedCounter ++;
-                progressCompleted = filesDownloadedCounter / numberOfFiles;
-                number = @(progressCompleted);
-                [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+                if (!downloadWasCancelled) {
+                    Plant *plant = [Plant plantWithServerInfo:self.plantsArray[i] inManagedObjectContext:context];
+                    [context save:NULL];
+                    [plantsArray addObject:plant];
+                    
+                    filesDownloadedCounter ++;
+                    progressCompleted = filesDownloadedCounter / numberOfFiles;
+                    number = @(progressCompleted);
+                    [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+                }
             }
             
             //Save spaces object in Core Data
             NSMutableArray *spacesArray = [[NSMutableArray alloc] initWithCapacity:[self.spacesArray count]];
             for (int i = 0; i < [self.spacesArray count]; i++) {
-                Space *space = [Space spaceWithServerInfo:self.spacesArray[i] inManagedObjectContext:context];
-                [context save:NULL];
-                [spacesArray addObject:space];
-                
-                filesDownloadedCounter ++;
-                progressCompleted = filesDownloadedCounter / numberOfFiles;
-                number = @(progressCompleted);
-                [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+                if (!downloadWasCancelled) {
+                    Space *space = [Space spaceWithServerInfo:self.spacesArray[i] inManagedObjectContext:context];
+                    [context save:NULL];
+                    [spacesArray addObject:space];
+                    
+                    filesDownloadedCounter ++;
+                    progressCompleted = filesDownloadedCounter / numberOfFiles;
+                    number = @(progressCompleted);
+                    [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+                }
             }
             
             //Save finishes in Core Data
             NSMutableArray *finishesArray = [[NSMutableArray alloc] initWithCapacity:[self.finishesArray count]];
             for (int i = 0; i < [self.finishesArray count]; i++) {
-                Finish *finish = [Finish finishWithServerInfo:self.finishesArray[i] inManagedObjectContext:context];
-                [context save:NULL];
-                [finishesArray addObject:finish];
-                
-                filesDownloadedCounter ++;
-                progressCompleted = filesDownloadedCounter / numberOfFiles;
-                number = @(progressCompleted);
-                [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+                if (!downloadWasCancelled) {
+                    Finish *finish = [Finish finishWithServerInfo:self.finishesArray[i] inManagedObjectContext:context];
+                    [context save:NULL];
+                    [finishesArray addObject:finish];
+                    
+                    filesDownloadedCounter ++;
+                    progressCompleted = filesDownloadedCounter / numberOfFiles;
+                    number = @(progressCompleted);
+                    [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+                }
             }
             
             //Save finishes images in Core Data
             NSMutableArray *finishesImagesArray = [[NSMutableArray alloc] initWithCapacity:[self.finishesImagesArray count]];
+            NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+
             for (int i = 0; i < [self.finishesImagesArray count]; i++) {
-                FinishImage *finishImage = [FinishImage finishImageWithServerInfo:self.finishesImagesArray[i] inManagedObjectContext:context];
-                [context save:NULL];
-                [finishesImagesArray addObject:finishImage];
-                
-                filesDownloadedCounter ++;
-                progressCompleted = filesDownloadedCounter / numberOfFiles;
-                number = @(progressCompleted);
-                [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+                if (!downloadWasCancelled) {
+                    FinishImage *finishImage = [FinishImage finishImageWithServerInfo:self.finishesImagesArray[i] inManagedObjectContext:context];
+                    [context save:NULL];
+                    [finishesImagesArray addObject:finishImage];
+                    
+                    //Save image in documents directory
+                    NSString *jpegFilePath = [docDir stringByAppendingPathComponent:finishImage.imagePath];
+                    [self saveImageInDocumentsDirectoryAtPath:jpegFilePath usingImageURL:finishImage.imageURL];
+                    
+                    filesDownloadedCounter ++;
+                    progressCompleted = filesDownloadedCounter / numberOfFiles;
+                    number = @(progressCompleted);
+                    [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+                }
             }
             
             NSLog(@"Terminé de guardar toda la vaina");
             
-            //Save all core data objects in our dictionary
-            [projectDictionary setObject:self.userProjectsArray[self.carousel.currentItemIndex] forKey:@"project"];
-            [projectDictionary setObject:rendersArray forKey:@"renders"];
-            [projectDictionary setObject:urbanizationsArray forKey:@"urbanizations"];
-            [projectDictionary setObject:groupsArray forKey:@"groups"];
-            [projectDictionary setObject:floorsArray forKey:@"floors"];
-            [projectDictionary setObject:producstArray forKey:@"products"];
-            [projectDictionary setObject:plantsArray forKey:@"plants"];
-            [projectDictionary setObject:spacesArray forKey:@"spaces"];
-            [projectDictionary setObject:finishesArray forKey:@"finishes"];
-            [projectDictionary setObject:finishesImagesArray forKey:@"finishImages"];
+            if (!downloadWasCancelled) {
+                //Save all core data objects in our dictionary
+                [projectDictionary setObject:self.userProjectsArray[self.carousel.currentItemIndex] forKey:@"project"];
+                [projectDictionary setObject:rendersArray forKey:@"renders"];
+                [projectDictionary setObject:urbanizationsArray forKey:@"urbanizations"];
+                [projectDictionary setObject:groupsArray forKey:@"groups"];
+                [projectDictionary setObject:floorsArray forKey:@"floors"];
+                [projectDictionary setObject:producstArray forKey:@"products"];
+                [projectDictionary setObject:plantsArray forKey:@"plants"];
+                [projectDictionary setObject:spacesArray forKey:@"spaces"];
+                [projectDictionary setObject:finishesArray forKey:@"finishes"];
+                [projectDictionary setObject:finishesImagesArray forKey:@"finishImages"];
+                
+                [self performSelectorOnMainThread:@selector(finishSavingProcessOnMainThread:) withObject:projectDictionary waitUntilDone:NO];
             
-            [self performSelectorOnMainThread:@selector(finishSavingProcessOnMainThread:) withObject:projectDictionary waitUntilDone:NO];
+            } else {
+                [self performSelectorOnMainThread:@selector(showDownloadCanceledAlert) withObject:nil waitUntilDone:NO];
+            }
         }];
         NSLog(@"me salí del bloqueee");
     }
+}
+
+-(void)saveImageInDocumentsDirectoryAtPath:(NSString *)jpegFilePath usingImageURL:(NSString *)finishImageURL {
+    NSLog(@"Entré a guardar la imagen");
+    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
+    if (!fileExist) {
+        NSLog(@"La imagen no existía en documents directory, así que la guardaré");
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:finishImageURL]];
+        UIImage *image = [UIImage imageWithData:data];
+        //UIImage *newImage = [self transformImage:image positionInCube:position];
+        NSData *imageData = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0)];
+        [imageData writeToFile:jpegFilePath atomically:YES];
+    } else {
+        NSLog(@"La imagen ya existía, así que no la guardé en documents directory");
+    }
+}
+
+-(void)showDownloadCanceledAlert {
+    downloadWasCancelled = NO;
+    self.downloadView.hidden = YES;
+    self.downloadView.progress = 0;
+    self.opacityView.hidden = YES;
+    [[[UIAlertView alloc] initWithTitle:nil message:@"Download Cancelled" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
 }
 
 -(void)finishSavingProcessOnMainThread:(NSDictionary *)projectDic {
@@ -1075,6 +1325,7 @@
 
 -(void)cancelButtonWasTappedInDownloadView:(DownloadView *)downloadView {
     NSLog(@"*** Cancelé la download");
+    downloadWasCancelled = YES;
 }
 
 -(void)downloadViewWillDisappear:(DownloadView *)downloadView {

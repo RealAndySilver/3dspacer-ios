@@ -16,6 +16,7 @@
 
 @interface PlanosCollectionViewCell : UICollectionViewCell
 @property (strong, nonatomic) UIImageView *planoImageView;
+@property (assign, nonatomic) CGFloat zoomScale;
 @property (strong, nonatomic) UILabel *areaTotalLabel;
 @property (assign, nonatomic) BOOL showCompass;
 @property (strong, nonatomic) id <PlanoCollectionViewCellDelegate> delegate;

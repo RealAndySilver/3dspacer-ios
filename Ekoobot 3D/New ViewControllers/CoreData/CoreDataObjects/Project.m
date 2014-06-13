@@ -2,7 +2,7 @@
 //  Project.m
 //  Ekoobot 3D
 //
-//  Created by Diego Vidal on 23/05/14.
+//  Created by Developer on 13/06/14.
 //  Copyright (c) 2014 Ekoomedia. All rights reserved.
 //
 
@@ -17,9 +17,10 @@
 @dynamic imageData;
 @dynamic imageURL;
 @dynamic lastUpdate;
-@dynamic logoURL;
 @dynamic logoData;
+@dynamic logoURL;
 @dynamic name;
 @dynamic terms;
+@dynamic enter;
 
 @end

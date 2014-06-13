@@ -11,7 +11,7 @@
 #import "UserInfo.h"
 
 @interface SendInfoViewController () <ServerCommunicatorDelegate>
-
+@property (strong, nonatomic) NSDictionary *messageDic;
 @end
 
 @implementation SendInfoViewController
@@ -47,14 +47,14 @@
     NSString *langID = [[NSLocale preferredLanguages] objectAtIndex:0];
     lang = [[NSLocale currentLocale] displayNameForKey:NSLocaleLanguageCode value:langID];
     NSLog(@"Language is %@",lang);
-    FileSaver *file=[[FileSaver alloc]init];
-    NSDictionary *pendingDic=[file getDictionary:@"SendInfoDictionary"];
-    if ([[pendingDic objectForKey:@"SentState"]isEqualToString:@"false"]) {
+    //FileSaver *file=[[FileSaver alloc]init];
+    //NSDictionary *pendingDic=[file getDictionary:@"SendInfoDictionary"];
+    /*if ([[pendingDic objectForKey:@"SentState"]isEqualToString:@"false"]) {
         nombreTF.text=[pendingDic objectForKey:@"Name"];
         emailTF.text=[pendingDic objectForKey:@"Email"];
         comentarioTV.text=[pendingDic objectForKey:@"Comment"];
         [self pendingAlert];
-    }
+    }*/
 	// Do any additional setup after loading the view.
 }
 -(void)viewWillAppear:(BOOL)animated{
@@ -121,7 +121,7 @@
             [alert show];
         }
     }
-    NSMutableDictionary *dictionary=[[NSMutableDictionary alloc]init];
+    /*NSMutableDictionary *dictionary=[[NSMutableDictionary alloc]init];
     [dictionary setObject:usuario forKey:@"Username"];
     [dictionary setObject:contrasena forKey:@"Password"];
     [dictionary setObject:lang forKey:@"Language"];
@@ -133,7 +133,7 @@
     [dictionary setObject:methodName forKey:@"MethodName"];
     FileSaver *file=[[FileSaver alloc]init];
     [file setDictionary:dictionary withName:@"SendInfoDictionary"];
-    NSLog(@"Ditcionary dude %@",[file getDictionary:@"SendInfoDictionary"]);
+    NSLog(@"Ditcionary dude %@",[file getDictionary:@"SendInfoDictionary"]);*/
 }
 
 -(NSString *)generateJSONString {
@@ -146,14 +146,31 @@
     NSDictionary *finalInfoDic = @{@"user": userDic,
                                    @"project" : projectDic};
     
-    NSArray *finalInfoArray = @[finalInfoDic];
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:finalInfoArray
-                                                       options:NSJSONWritingPrettyPrinted
-                                                         error:&error];
-    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    NSLog(@"JSON String: %@", jsonString);
-    return jsonString;
+    self.messageDic = finalInfoDic;
+    //NSArray *finalInfoArray = @[finalInfoDic];
+   
+    FileSaver *fileSaver = [[FileSaver alloc] init];
+    if ([fileSaver getDictionary:@"MessagesStoredDic"][@"MessagesStoredArray"]) {
+        NSMutableArray *messagesArray = [NSMutableArray arrayWithArray:[fileSaver getDictionary:@"MessagesStoredDic"][@"MessagesStoredArray"]];
+        [messagesArray addObject:self.messageDic];
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:messagesArray
+                                                           options:NSJSONWritingPrettyPrinted
+                                                             error:&error];
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Json String: %@", jsonString);
+        return jsonString;
+        
+    } else {
+        NSArray *messageArray = @[self.messageDic];
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:messageArray
+                                                           options:NSJSONWritingPrettyPrinted
+                                                             error:&error];
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Json String: %@", jsonString);
+        return jsonString;
+    }
 }
 
 -(void)sendInfoToServer {
@@ -194,6 +211,20 @@
 
 -(void)serverError:(NSError *)error {
     NSLog(@"Error en el server: %@ %@", error, [error localizedDescription]);
+    [[[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+    
+    FileSaver *fileSaver = [[FileSaver alloc] init];
+    if ([fileSaver getDictionary:@"MessagesStoredDic"][@"MessagesStoredArray"]) {
+        NSLog(@"Ya exitía el arreglo de mensajes en file saver");
+        NSMutableArray *messagesArray = [NSMutableArray arrayWithArray:[fileSaver getDictionary:@"MessagesStoredDic"][@"MessagesStoredArray"]];
+        [messagesArray addObject:self.messageDic];
+        [fileSaver setDictionary:@{@"MessagesStoredArray": messagesArray} withName:@"MessagesStoredDic"];
+        
+    } else {
+        NSLog(@"No existía el arreglo de mensajes en file saver");
+        NSArray *messagesStoredArray = @[self.messageDic];
+        [fileSaver setDictionary:@{@"MessagesStoredArray": messagesStoredArray} withName:@"MessagesStoredDic"];
+    }
 }
 
 -(IBAction)cancel:(id)sender{

@@ -49,20 +49,20 @@
         
         //Title
         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 10.0, frame.size.width, 40.0)];
-        titleLabel.text = @"IMPORTANT";
+        titleLabel.text = NSLocalizedString(@"Importante", nil);
         titleLabel.font = [UIFont boldSystemFontOfSize:15.0];
         titleLabel.textColor = [UIColor lightGrayColor];
         titleLabel.textAlignment = NSTextAlignmentLeft;
         [self addSubview:titleLabel];
         
         //Description Label
-        UILabel *descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 40.0, frame.size.width - 40.0, 80.0)];
-        descriptionLabel.text = @"YOUR PROJECT IS DOWNLOADING. PLEASE WAIT.";
-        descriptionLabel.textColor = [UIColor lightGrayColor];
-        descriptionLabel.font = [UIFont boldSystemFontOfSize:15.0];
-        descriptionLabel.numberOfLines = 0;
-        descriptionLabel.textAlignment = NSTextAlignmentCenter;
-        [self addSubview:descriptionLabel];
+        self.descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 40.0, frame.size.width - 40.0, 80.0)];
+        self.descriptionLabel.text = NSLocalizedString(@"DescargandoProyecto", nil);
+        self.descriptionLabel.textColor = [UIColor lightGrayColor];
+        self.descriptionLabel.font = [UIFont boldSystemFontOfSize:15.0];
+        self.descriptionLabel.numberOfLines = 0;
+        self.descriptionLabel.textAlignment = NSTextAlignmentCenter;
+        [self addSubview:self.descriptionLabel];
       
         //Spinner
         /*UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];

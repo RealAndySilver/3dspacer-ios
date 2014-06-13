@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        self.backgroundColor = [UIColor orangeColor];
+        self.backgroundColor = [UIColor blackColor];
         
         self.sceneNameLabel = [[UILabel alloc] init];
         self.sceneNameLabel.textColor = [UIColor whiteColor];

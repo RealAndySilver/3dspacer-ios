@@ -34,6 +34,7 @@
 #import "Space+AddOns.h"
 #import "Finish+AddOns.h"
 #import "FinishImage+AddOns.h"
+#import "Video+AddOns.h"
 #import "DownloadView.h"
 #import "UIImage+Resize.h"
 
@@ -49,11 +50,13 @@
 @property (strong, nonatomic) UIButton *logoutButton;
 //@property (strong, nonatomic) ProgressView *progressView;
 @property (strong, nonatomic) UIManagedDocument *databaseDocument;
+@property (strong, nonatomic) NSURL *databaseDocumentURL;
 
 //Project objects
 @property (strong, nonatomic) NSDictionary *projectDic;
 @property (strong, nonatomic) NSArray *rendersArray;
 @property (strong, nonatomic) NSDictionary *urbanizationDic;
+@property (strong, nonatomic) NSArray *videoArray;
 @property (strong, nonatomic) NSArray *groupsArray;
 @property (strong, nonatomic) NSArray *floorsArray;
 @property (strong, nonatomic) NSArray *productsArray;
@@ -81,6 +84,27 @@
 }
 
 #pragma mark - Lazy Instantiation
+
+-(NSURL *)databaseDocumentURL {
+    if (!_databaseDocumentURL) {
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSURL *documentsDirectory = [[fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject];
+        NSString *documentName = @"MyDocument";
+        _databaseDocumentURL = [documentsDirectory URLByAppendingPathComponent:documentName];
+    }
+    return _databaseDocumentURL;
+}
+
+-(UIManagedDocument *)databaseDocument {
+    if (!_databaseDocument) {
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSURL *documentsDirectory = [[fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject];
+        NSString *documentName = @"MyDocument";
+        NSURL *url = [documentsDirectory URLByAppendingPathComponent:documentName];
+        _databaseDocument = [[UIManagedDocument alloc] initWithFileURL:url];
+    }
+    return _databaseDocument;
+}
 
 -(UIView *)opacityView {
     if (!_opacityView) {
@@ -112,11 +136,21 @@
 
 #pragma mark - View Lifecycle
 
+/*-(void)savePVROnDocuments {
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *pvr1FileName = @"PVR1.pvr";
+    NSString *pvr1FilePath = [docDir stringByAppendingPathComponent:pvr1FileName];
+    
+    NSString *PVR1Path = [[NSBundle mainBundle] pathForResource:@"encoded1" ofType:@"pvr"];
+    NSData *PVR1Data = [NSData dataWithContentsOfFile:PVR1Path];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:pvr1FilePath]) {
+        [PVR1Data writeToFile:pvr1FilePath atomically:NO];
+    }
+}*/
+
 -(void)viewDidLoad {
     [super viewDidLoad];
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFinished:) name:@"updates" object:nil];
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertViewAppear) name:@"alert" object:nil];
-    //[self performSelectorInBackground:@selector(saveMainProjectImages) withObject:nil];
+    //[self savePVROnDocuments];
     self.view.backgroundColor = [UIColor grayColor];
     [self setupUI];
     [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(searchForUpdatesInServer) userInfo:nil repeats:YES];
@@ -411,7 +445,11 @@
         if (dictionary) {
             NSLog(@"Llegó respuesta del getProjectByID");
             if (dictionary[@"code"]) {
-                NSLog(@"Ocurrió algún error y no se devolvió la info");
+                NSLog(@"Ocurrió algún error y no se devolvió la info: %@", dictionary);
+                self.downloadView.hidden = YES;
+                self.opacityView.hidden = YES;
+                [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Error en el servidor. Por favor intenta de nuevo en un momento." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+                
             } else {
                 NSLog(@"Respuesta del getProjectByID: %@", dictionary);
                 if (!downloadEntireProject) {
@@ -425,6 +463,7 @@
                     self.projectDic = [dictionary[@"project"] dictionaryByReplacingNullWithBlanks];
                     self.rendersArray = [dictionary[@"renders"] arrayByReplacingNullsWithBlanks];
                     self.urbanizationDic = [dictionary[@"urbanization"] dictionaryByReplacingNullWithBlanks];
+                    self.videoArray = [dictionary[@"videos"] arrayByReplacingNullsWithBlanks];
                     self.groupsArray = [dictionary[@"groups"] arrayByReplacingNullsWithBlanks];
                     self.floorsArray = [dictionary[@"floors"] arrayByReplacingNullsWithBlanks];
                     self.productsArray = [dictionary[@"products"] arrayByReplacingNullsWithBlanks];
@@ -462,7 +501,7 @@
     NSLog(@"error en el server con código %d: %@ %@", error.code, error, [error localizedDescription]);
     if (error.code == -1009 && !searchingForUpdates) {
         //Network Error
-        [[[UIAlertView alloc] initWithTitle:@"Error" message:@"You need to be connected to internet to download the latest project version." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+        [[[UIAlertView alloc] initWithTitle:@"Error" message:NSLocalizedString(@"ErrorConexion", nil) delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
 
     }
     searchingForUpdates = NO;
@@ -535,14 +574,14 @@
 
 -(void)startUpdatingProjectProcessInCoreDataUsingProjectDic:(NSDictionary *)newProjectDic {
     //Get the Datababase Document path
-    NSFileManager *fileManager = [NSFileManager defaultManager];
+    /*NSFileManager *fileManager = [NSFileManager defaultManager];
     NSURL *documentsDirectory = [[fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject];
     NSString *documentName = @"MyDocument";
     NSURL *url = [documentsDirectory URLByAppendingPathComponent:documentName];
-    self.databaseDocument = [[UIManagedDocument alloc] initWithFileURL:url];
+    self.databaseDocument = [[UIManagedDocument alloc] initWithFileURL:url];*/
     
     //Check if the document exist
-    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:[url path]];
+    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:[self.databaseDocumentURL path]];
     if (fileExist) {
         //Open The Database Document
         [self.databaseDocument openWithCompletionHandler:^(BOOL success){
@@ -576,7 +615,7 @@
                 }
                 
             } else {
-                NSLog(@"Could not open the document at %@", url);
+                NSLog(@"Could not open the document at %@", self.databaseDocumentURL);
             }
         }];
     } else {
@@ -611,7 +650,7 @@
                 }
 
             } else {
-                NSLog(@"could not create the document at %@", url);
+                NSLog(@"could not create the document at %@", self.databaseDocumentURL);
             }
         }];
     }
@@ -621,21 +660,21 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     //Get the Datababase Document path
-    NSFileManager *fileManager = [NSFileManager defaultManager];
+    /*NSFileManager *fileManager = [NSFileManager defaultManager];
     NSURL *documentsDirectory = [[fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject];
     NSString *documentName = @"MyDocument";
     NSURL *url = [documentsDirectory URLByAppendingPathComponent:documentName];
-    self.databaseDocument = [[UIManagedDocument alloc] initWithFileURL:url];
+    self.databaseDocument = [[UIManagedDocument alloc] initWithFileURL:url];*/
     
     //Check if the document exist
-    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:[url path]];
+    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:[self.databaseDocumentURL path]];
     if (fileExist) {
         //Open The Database Document
         [self.databaseDocument openWithCompletionHandler:^(BOOL success){
             if (success) {
                 [self databaseDocumentIsReadyForDeletion];
             } else {
-                NSLog(@"Could not open the document at %@", url);
+                NSLog(@"Could not open the document at %@", self.databaseDocumentURL);
             }
         }];
     } else {
@@ -644,7 +683,7 @@
             if (success) {
                 [self databaseDocumentIsReadyForDeletion];
             } else {
-                NSLog(@"Could not open the document at %@", url);
+                NSLog(@"Could not open the document at %@", self.databaseDocumentURL);
             }
         }];
     }
@@ -656,14 +695,14 @@
     }
     
     //Get the Datababase Document path
-    NSFileManager *fileManager = [NSFileManager defaultManager];
+    /*NSFileManager *fileManager = [NSFileManager defaultManager];
     NSURL *documentsDirectory = [[fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject];
     NSString *documentName = @"MyDocument";
     NSURL *url = [documentsDirectory URLByAppendingPathComponent:documentName];
-    self.databaseDocument = [[UIManagedDocument alloc] initWithFileURL:url];
+    self.databaseDocument = [[UIManagedDocument alloc] initWithFileURL:url];*/
     
     //Check if the document exist
-    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:[url path]];
+    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:[self.databaseDocumentURL path]];
     if (fileExist) {
         //Open The Database Document
         [self.databaseDocument openWithCompletionHandler:^(BOOL success){
@@ -675,7 +714,7 @@
                 }
 
             } else {
-                NSLog(@"Could not open the document at %@", url);
+                NSLog(@"Could not open the document at %@", self.databaseDocumentURL);
             }
         }];
     } else {
@@ -688,7 +727,7 @@
                     [self databaseDocumentIsReadyForFetchingEntities];
                 }
             } else {
-                NSLog(@"Could not open the document at %@", url);
+                NSLog(@"Could not open the document at %@", self.databaseDocumentURL);
             }
         }];
     }
@@ -701,44 +740,48 @@
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
 
     if (self.databaseDocument.documentState == UIDocumentStateNormal) {
-        NSManagedObjectContext *context = self.databaseDocument.managedObjectContext;
-        
-        //Delete all the project finishes images from documents directory
-        /*NSArray *finishesImagesArray = [FinishImage finishesImagesArrayForProjectWithID:projectID inManagedObjectContext:context];
-        NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
-        for (int i = 0; i < [finishesImagesArray count]; i++) {
-            FinishImage *finishImage = self.finishesImagesArray[i];
-            NSString *finishImagePath = [docDir stringByAppendingPathComponent:finishImage.imagePath];
-            BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:finishImagePath];
-            if (fileExist) {
-                [[NSFileManager defaultManager] removeItemAtPath:finishImagePath error:NULL];
-                NSLog(@"Borrando finish image del proyecto %@ en la ruta %@", project.identifier, finishImagePath);
-            } else {
-                NSLog(@"No había archivo del proyecto %@ en la ruta %@", project.identifier, finishImagePath);
+        NSManagedObjectContext *context = self.databaseDocument.managedObjectContext.parentContext;
+        [context performBlockAndWait:^(){
+            
+            //Delete all the project finishes images from documents directory
+            NSArray *imagePathsForFinishImages = [FinishImage imagesPathsForFinishImagesWithProjectID:projectID inManagedObjectContext:context];
+            NSLog(@"Número de imagepaths: %d", [imagePathsForFinishImages count]);
+            for (int i = 0; i < [imagePathsForFinishImages count]; i++) {
+                NSString *finishImagePath = [docDir stringByAppendingPathComponent:imagePathsForFinishImages[i]];
+                BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:finishImagePath];
+                if (fileExist) {
+                    [[NSFileManager defaultManager] removeItemAtPath:finishImagePath error:NULL];
+                    NSLog(@"Borrando finish image del proyecto %@ en la ruta %@", project.identifier, finishImagePath);
+                } else {
+                    NSLog(@"No había archivo del proyecto %@ en la ruta %@", project.identifier, finishImagePath);
+                }
             }
-        }*/
-        
-        NSArray *imagePathsForFinishImages = [FinishImage imagesPathsForFinishImagesWithProjectID:projectID inManagedObjectContext:context];
-        for (int i = 0; i < [imagePathsForFinishImages count]; i++) {
-            NSString *finishImagePath = [docDir stringByAppendingPathComponent:imagePathsForFinishImages[i]];
-            BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:finishImagePath];
-            if (fileExist) {
-                [[NSFileManager defaultManager] removeItemAtPath:finishImagePath error:NULL];
-                NSLog(@"Borrando finish image del proyecto %@ en la ruta %@", project.identifier, finishImagePath);
-            } else {
-                NSLog(@"No había archivo del proyecto %@ en la ruta %@", project.identifier, finishImagePath);
+            
+            //Delete al videos from documents directory
+            NSArray *videoPaths = [Video videoPathsForVideosWithProjectID:projectID inManagedObjectContext:context];
+            NSLog(@"Número de video paths: %d", [videoPaths count]);
+            for (int i = 0; i < [videoPaths count]; i++) {
+                NSString *videoPath = [docDir stringByAppendingPathComponent:videoPaths[i]];
+                if ([[NSFileManager defaultManager] fileExistsAtPath:videoPath]) {
+                    NSLog(@"Borrando video del proyecto %@ en la ruta %@", project.identifier, videoPath);
+                    [[NSFileManager defaultManager] removeItemAtPath:videoPath error:NULL];
+                } else {
+                    NSLog(@"No había video del proyecto %@ en la ruta %@", project.identifier, videoPath);
+                }
             }
-        }
-        
-        [Render deleteRendersForProjectWithID:projectID inManagedObjectContext:context];
-        [Urbanization deleteUrbanizationsForProjectWithID:projectID inManagedObjectContext:context];
-        [Group deleteGroupsForProjectWithID:projectID inManagedObjectContext:context];
-        [Floor deleteFloorsForProjectWithID:projectID inManagedObjectContext:context];
-        [Product deleteProductsForProjectWithID:projectID inManagedObjectContext:context];
-        [Plant deletePlantsForProjectWithID:projectID inManagedObjectContext:context];
-        [Space deleteSpacesForProjectWithID:projectID inManagedObjectContext:context];
-        [Finish deleteFinishesForProjectWithID:projectID inManagedObjectContext:context];
-        [FinishImage deleteFinishesImagesForProjectWithID:projectID inManagedObjectContext:context];
+            
+            [Render deleteRendersForProjectWithID:projectID inManagedObjectContext:context];
+            [Urbanization deleteUrbanizationsForProjectWithID:projectID inManagedObjectContext:context];
+            [Video deleteVideosForProjectWithID:projectID inManagedObjectContext:context];
+            [Group deleteGroupsForProjectWithID:projectID inManagedObjectContext:context];
+            [Floor deleteFloorsForProjectWithID:projectID inManagedObjectContext:context];
+            [Product deleteProductsForProjectWithID:projectID inManagedObjectContext:context];
+            [Plant deletePlantsForProjectWithID:projectID inManagedObjectContext:context];
+            [Space deleteSpacesForProjectWithID:projectID inManagedObjectContext:context];
+            [Finish deleteFinishesForProjectWithID:projectID inManagedObjectContext:context];
+            [FinishImage deleteFinishesImagesForProjectWithID:projectID inManagedObjectContext:context];
+            [context save:NULL];
+        }];
     }
     
     //Erase the project id from the ids array stored in filesaver
@@ -772,8 +815,11 @@
         if (!fetchOnlyRenders) {
             //Get our context
             NSManagedObjectContext *context = self.databaseDocument.managedObjectContext;
+            context.undoManager = nil;
+            
             NSArray *rendersArray = [Render rendersForProjectWithID:projectID inManagedObjectContext:context];
             NSArray *urbanizationsArray = [Urbanization urbanizationsArrayForProjectWithID:projectID inManagedObjectContext:context];
+            NSArray *videosArray = [Video videosArrayForProjectWithID:projectID inManagedObjectContext:context];
             NSArray *groupsArray = [Group groupsArrayForProjectWithID:projectID inManagedObjectContext:context];
             NSArray *floorsArray = [Floor floorsArrayForProjectWithID:projectID inManagedObjectContext:context];
             NSArray *productsArray = [Product productsArrayForProjectWithID:projectID inManagedObjectContext:context];
@@ -786,6 +832,7 @@
             [projectDictionary setObject:self.userProjectsArray[projectToDownloadIndex] forKey:@"project"];
             [projectDictionary setObject:rendersArray forKey:@"renders"];
             [projectDictionary setObject:urbanizationsArray forKey:@"urbanizations"];
+            [projectDictionary setObject:videosArray forKey:@"videos"];
             [projectDictionary setObject:groupsArray forKey:@"groups"];
             [projectDictionary setObject:floorsArray forKey:@"floors"];
             [projectDictionary setObject:productsArray forKey:@"products"];
@@ -795,7 +842,7 @@
             [projectDictionary setObject:finishesImagesArray forKey:@"finishImages"];
             
             [self goToProjectScreenWithProjectDic:projectDictionary];
-            
+                        
         } else {
             NSManagedObjectContext *context = self.databaseDocument.managedObjectContext;
             NSMutableArray *rendersArray = [Render rendersForProjectWithID:projectID inManagedObjectContext:context];
@@ -859,6 +906,20 @@
                 NSLog(@"progresooo: %f", progressCompleted);
                 number = @(progressCompleted);
                 [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+            }
+            
+            NSMutableArray *videosArray = [[NSMutableArray alloc] init];
+            for (int i = 0; i < [self.videoArray count]; i++) {
+                if (!downloadWasCancelled) {
+                    Video *video = [Video videoWithServerInfo:self.videoArray[i] nManagedObjectContext:context];
+                    [context save:NULL];
+                    [videosArray addObject:video];
+                    filesDownloadedCounter ++;
+                    progressCompleted = filesDownloadedCounter / numberOfFiles;
+                    NSLog(@"progresooo: %f", progressCompleted);
+                    number = @(progressCompleted);
+                    [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+                }
             }
             
             //Save group objects in Core Data
@@ -981,6 +1042,7 @@
                 [projectDictionary setObject:project forKey:@"project"];
                 [projectDictionary setObject:rendersArray forKey:@"renders"];
                 [projectDictionary setObject:urbanizationsArray forKey:@"urbanizations"];
+                [projectDictionary setObject:videosArray forKey:@"videos"];
                 [projectDictionary setObject:groupsArray forKey:@"groups"];
                 [projectDictionary setObject:floorsArray forKey:@"floors"];
                 [projectDictionary setObject:producstArray forKey:@"products"];
@@ -1044,7 +1106,7 @@
     self.downloadView.hidden = YES;
     self.downloadView.progress = 0;
     self.opacityView.hidden = YES;
-    [[[UIAlertView alloc] initWithTitle:nil message:@"Download Cancelled" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+    [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"DescargaCancelada", nil) delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
 }
 
 -(void)finishSavingProcessOnMainThread:(NSDictionary *)projectDic {
@@ -1078,7 +1140,7 @@
 
 -(NSUInteger)getNumberOfFilesToDownload {
     NSUInteger numberOfFiles = 0;
-    numberOfFiles = [self.rendersArray count] + 1 + [self.groupsArray count] + [self.productsArray count] + [self.floorsArray count] + [self.plantsArray count] + [self.spacesArray count] + [self.finishesArray count] + [self.finishesImagesArray count];
+    numberOfFiles = [self.rendersArray count] + 1 + 1 + [self.groupsArray count] + [self.productsArray count] + [self.floorsArray count] + [self.plantsArray count] + [self.spacesArray count] + [self.finishesArray count] + [self.finishesImagesArray count]; // + 2 because of the video dic and the urbanization dic
     return numberOfFiles;
 }
 

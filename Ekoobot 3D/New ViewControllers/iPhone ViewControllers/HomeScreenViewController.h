@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface HomeScreenViewController : UIViewController
-@property (strong, nonatomic) NSArray *userProjectsArray; //Of Project
+@property (strong, nonatomic) NSMutableArray *userProjectsArray; //Of Project
 @end

@@ -8,11 +8,17 @@
 
 #import "ProyectoCollectionViewCell.h"
 
-@interface ProyectoCollectionViewCell()
-@property (strong, nonatomic) UIButton *zoomButton;
+@interface ProyectoCollectionViewCell() <UIScrollViewDelegate>
+//@property (strong, nonatomic) UIButton *zoomButton;
+@property (strong, nonatomic) UIScrollView *scrollView;
 @end
 
 @implementation ProyectoCollectionViewCell
+
+-(void)setZoomScale:(CGFloat)zoomScale {
+    _zoomScale = zoomScale;
+    self.scrollView.zoomScale = zoomScale;
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -21,16 +27,31 @@
         // Initialization code
         self.contentView.backgroundColor = [UIColor blackColor];
         
+        //ScrollView
+        self.scrollView = [[UIScrollView alloc] init];
+        self.scrollView.showsHorizontalScrollIndicator = NO;
+        self.scrollView.showsVerticalScrollIndicator = NO;
+        self.scrollView.maximumZoomScale = 3.0;
+        self.scrollView.minimumZoomScale = 1.0;
+        self.scrollView.delegate = self;
+        [self.contentView addSubview:self.scrollView];
+        
         self.imageView = [[UIImageView alloc] init];
         self.imageView.contentMode = UIViewContentModeScaleAspectFill;
+        self.imageView.userInteractionEnabled = YES;
         self.imageView.clipsToBounds = YES;
-        [self.contentView addSubview:self.imageView];
+        [self.scrollView addSubview:self.imageView];
+        
+        //Zoom gesture
+        UITapGestureRecognizer *doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(makeZoom:)];
+        doubleTapGesture.numberOfTapsRequired = 2;
+        [self.imageView addGestureRecognizer:doubleTapGesture];
         
         //Zooom button
-        self.zoomButton = [[UIButton alloc] init];
+        /*self.zoomButton = [[UIButton alloc] init];
         [self.zoomButton setImage:[UIImage imageNamed:@"zoom.png"] forState:UIControlStateNormal];
         [self.zoomButton addTarget:self action:@selector(zoomButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-        [self.contentView addSubview:self.zoomButton];
+        [self.contentView addSubview:self.zoomButton];*/
         
     }
     return self;
@@ -39,18 +60,60 @@
 -(void)layoutSubviews {
     [super layoutSubviews];
     CGRect contentRect = self.contentView.bounds;
-    self.imageView.frame = CGRectMake(0.0, 0.0, contentRect.size.width, contentRect.size.height);
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+    self.scrollView.frame = CGRectMake(0.0, 0.0, contentRect.size.width, contentRect.size.height);
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.scrollView.frame.size.height);
+    self.imageView.frame = CGRectMake(0.0, 0.0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
+    /*if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         self.zoomButton.frame = CGRectMake(53, 540, 40, 40);
     } else {
         self.zoomButton.frame = CGRectMake(10.0, 220.0, 40.0, 40.0);
+    }*/
+}
+
+#pragma mark - Actions
+
+-(void)makeZoom:(UITapGestureRecognizer *)recognizer {
+    NSLog(@"hice double tap");
+    if(self.scrollView.zoomScale>=1.0 && self.scrollView.zoomScale<=1.5){
+        CGPoint Pointview=[recognizer locationInView:self.scrollView];
+        CGFloat newZoomscal=3.0;
+        
+        newZoomscal=MIN(newZoomscal, 5.0);
+        
+        CGSize scrollViewSize=self.scrollView.bounds.size;
+        
+        CGFloat w=scrollViewSize.width/newZoomscal;
+        CGFloat h=scrollViewSize.height/newZoomscal;
+        CGFloat x= Pointview.x-(w/2.0);
+        CGFloat y = Pointview.y-(h/2.0);
+        
+        CGRect rectTozoom=CGRectMake(x, y, w, h);
+        [self.scrollView zoomToRect:rectTozoom animated:YES];
+        
+        [self.scrollView setZoomScale:2.0 animated:YES];
+    }
+    else{
+        [self.scrollView setZoomScale:1.0 animated:YES];
     }
 }
 
-#pragma mark - Actions 
-
--(void)zoomButtonTapped {
+/*-(void)zoomButtonTapped {
     [self.delegate zoomButtonTappedInCell:self];
+}*/
+
+#pragma mark - UIScrollViewDelegate
+
+-(UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
+    return self.imageView;
+}
+
+-(void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
+    NSLog(@"Terminé de zoomearme: %f", scale);
+    if (scale != 1.0) {
+        [self.delegate cellIsZoomed:self];
+    } else {
+        [self.delegate cellIsAtInitialZoomScale:self];
+    }
 }
 
 @end

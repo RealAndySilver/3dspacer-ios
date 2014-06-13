@@ -159,7 +159,6 @@
 	}
 }
 
-
 - (void) connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     progress.hidden = NO;
@@ -177,7 +176,6 @@
     [progress setProgress:progressive];
     progressLabel.text=[NSString stringWithFormat:@"%.1f%%",progressive*100];
     NSLog(@"El progreso es: %f y lo esperado es: %lld",progressive,expectedBytes);
-    
 }
 
 - (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {

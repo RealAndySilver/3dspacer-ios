@@ -48,6 +48,7 @@
     NSUInteger acabadoSeleccionado;
     CMMotionManager *motionManager;
     BOOL magnetomerIsActive;
+    GLfloat skyboxCenter;
 }
 
 #pragma mark - Lazy Instantiation 
@@ -358,11 +359,13 @@
 #pragma mark - OpenGL Stuff
 
 -(void)setupGL {
-    
     magnetomerIsActive = YES;
     //Set GLContext
     self.preferredFramesPerSecond = 60.0;
     GLKView *view = (GLKView *)self.view;
+    view.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888;
+    view.drawableDepthFormat = GLKViewDrawableDepthFormatNone;
+    
     //view.layer.minificationFilter = kCAFilterNearest;
     //view.layer.magnificationFilter = kCAFilterNearest;
     
@@ -372,24 +375,8 @@
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glEnable(GL_DEPTH_TEST);
     
-    /*NSArray *skyboxArray = @[[self pathForJPEGResourceWithName:@"Derecha" ID:@"Spaces_16_2013-01-30 19:40:28"],
-                             [self pathForJPEGResourceWithName:@"Izquierda" ID:@"Spaces_14_2013-01-30 19:40:28"],
-                             [self pathForJPEGResourceWithName:@"Arriba" ID:@"Spaces_18_2013-01-30 19:40:28"],
-                             [self pathForJPEGResourceWithName:@"Abajo" ID:@"Spaces_17_2013-01-30 19:40:28"],
-                             [self pathForJPEGResourceWithName:@"Atras" ID:@"Spaces_13_2013-01-30 19:40:28"],
-                             [self pathForJPEGResourceWithName:@"Frente" ID:@"Spaces_15_2013-01-30 19:40:28"]];*/
-    
-    //Espacio3D *espacio3D = self.arregloDeEspacios3D[self.espacioSeleccionado];
-    //Caras *caras = espacio3D.arrayCaras[0];
-    
     //[self resizeCubeImages];
     //finishImage_idproyecto_idImage_type
-    /*NSArray *skyboxArray = @[[self pathForPNGResourceWithName:@"FlippedDerecha" ID:self.carasIds[@"right"]],
-                             [self pathForPNGResourceWithName:@"FlippedIzquierda" ID:self.carasIds[@"left"]],
-                             [self pathForPNGResourceWithName:@"FlippedFrente" ID:self.carasIds[@"front"]],
-                             [self pathForPNGResourceWithName:@"FlippedAtras" ID:self.carasIds[@"back"]],
-                             [self pathForPNGResourceWithName:@"FlippedArriba" ID:self.carasIds[@"top"]],
-                             [self pathForPNGResourceWithName:@"FlippedAbajo" ID:self.carasIds[@"down"]]];*/
     
     NSArray *skyboxArray = @[[self pathForFinishImageWithName:self.finishImagesPathNames[@"right"]],
                              [self pathForFinishImageWithName:self.finishImagesPathNames[@"left"]],
@@ -397,6 +384,19 @@
                              [self pathForFinishImageWithName:self.finishImagesPathNames[@"back"]],
                              [self pathForFinishImageWithName:self.finishImagesPathNames[@"top"]],
                              [self pathForFinishImageWithName:self.finishImagesPathNames[@"down"]]];
+    
+    /*NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *pvrName = @"PVR1.pvr";
+    NSString *filePath = [docDir stringByAppendingPathComponent:pvrName];
+    
+    NSArray *skyboxArray = @[filePath, filePath, filePath, filePath, filePath, filePath];*/
+    
+    /*NSArray *skyboxArray = @[[[NSBundle mainBundle] pathForResource:@"encoded4" ofType:@"pvr"],
+                             [[NSBundle mainBundle] pathForResource:@"encoded2" ofType:@"pvr"],
+                             [[NSBundle mainBundle] pathForResource:@"encoded3" ofType:@"pvr"],
+                             [[NSBundle mainBundle] pathForResource:@"encoded1" ofType:@"pvr"],
+                             [[NSBundle mainBundle] pathForResource:@"encoded5" ofType:@"pvr"],
+                             [[NSBundle mainBundle] pathForResource:@"encoded6" ofType:@"pvr"]];*/
     
     NSError *error;
     NSDictionary *options = @{GLKTextureLoaderOriginBottomLeft: @NO};
@@ -414,9 +414,9 @@
     self.skyboxEffect.label = @"SkyboxEffect";
     self.skyboxEffect.textureCubeMap.name = self.cubemapTexture.name;
     self.skyboxEffect.textureCubeMap.target = self.cubemapTexture.target;
-    self.skyboxEffect.transform.projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), screenBounds.size.width/screenBounds.size.height, 1.0, 100.0);
+    self.skyboxEffect.transform.projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(75.0), screenBounds.size.width/screenBounds.size.height, 1.0, 100.0);
     self.skyboxEffect.transform.modelviewMatrix = GLKMatrix4MakeScale(10.0, 10.0, 10.0);
-    self.skyboxEffect.center = GLKVector3Make(0.0, 0.0, 0.0);
+    
     [self.skyboxEffect prepareToDraw];
 
     /*glEnable(GL_TEXTURE_2D);
@@ -569,7 +569,7 @@
 }
 
 -(void)zoomIn:(UIPinchGestureRecognizer *)pinchGesture {
-    /*const GLfloat factorEscalamiento = 0.02;
+    const GLfloat factorEscalamiento = 0.04;
     static GLfloat currentScale = 0;
     static GLfloat lastScale = 0;
     
@@ -579,8 +579,9 @@
     if (currentScale > 1) z += currentScale * factorEscalamiento;
     else if (currentScale < 1) z -= currentScale * factorEscalamiento;
     if (z <= -0.3272) z = -0.3272;
+    else if (z>=3.5) z = 3.5;
     pinchGesture.scale = 1.0;
-    NSLog(@"z:%f", z);*/
+    NSLog(@"z:%f", z);
 }
 
 #pragma mark - Custom Methods
@@ -834,7 +835,7 @@
     return jpegFilePath;
 }
 
--(NSString*)pathForJPEGResourceWithName:(NSString*)name ID:(NSString*)ID{
+/*-(NSString*)pathForJPEGResourceWithName:(NSString*)name ID:(NSString*)ID{
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cara%@%@.jpeg",docDir,name,ID];
     return jpegFilePath;
@@ -844,7 +845,7 @@
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
     NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cara%@%@.png",docDir,name,ID];
     return jpegFilePath;
-}
+}*/
 
 #pragma mark - Device Orientation Notification
 

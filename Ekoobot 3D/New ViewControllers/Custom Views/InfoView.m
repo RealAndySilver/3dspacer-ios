@@ -15,8 +15,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        self.layer.borderColor = [UIColor whiteColor].CGColor;
-        self.layer.borderWidth = 1.0;
+        //self.layer.borderColor = [UIColor whiteColor].CGColor;
+        //self.layer.borderWidth = 1.0;
         self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.8];
         
         //Top Label

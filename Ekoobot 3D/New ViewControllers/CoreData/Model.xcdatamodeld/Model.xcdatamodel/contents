@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5063" systemVersion="13C64" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5063" systemVersion="13D65" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Finish" representedClassName="Finish" syncable="YES">
         <attribute name="enabled" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="iconData" optional="YES" attributeType="Binary" syncable="YES"/>
@@ -78,6 +78,7 @@
     <entity name="Project" representedClassName="Project" syncable="YES">
         <attribute name="adress" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="enabled" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="enter" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="identifier" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="imageData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
@@ -124,6 +125,16 @@
         <attribute name="northDegrees" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="project" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="Video" representedClassName="Video" syncable="YES">
+        <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastUpdate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="order" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="project" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="thumb" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="videoPath" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <elements>
         <element name="Finish" positionX="-9" positionY="135" width="128" height="178"/>
         <element name="FinishImage" positionX="0" positionY="144" width="128" height="180"/>
@@ -131,9 +142,10 @@
         <element name="Group" positionX="-18" positionY="144" width="128" height="180"/>
         <element name="Plant" positionX="36" positionY="189" width="128" height="240"/>
         <element name="Product" positionX="18" positionY="180" width="128" height="195"/>
-        <element name="Project" positionX="-63" positionY="-18" width="128" height="195"/>
+        <element name="Project" positionX="-63" positionY="-18" width="128" height="210"/>
         <element name="Render" positionX="-54" positionY="63" width="128" height="180"/>
         <element name="Space" positionX="-9" positionY="135" width="128" height="223"/>
         <element name="Urbanization" positionX="-36" positionY="108" width="128" height="195"/>
+        <element name="Video" positionX="-9" positionY="135" width="128" height="163"/>
     </elements>
 </model>

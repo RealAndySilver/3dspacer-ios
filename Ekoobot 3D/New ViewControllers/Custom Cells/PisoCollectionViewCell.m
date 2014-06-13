@@ -16,6 +16,11 @@
 
 @implementation PisoCollectionViewCell
 
+-(void)setZoomScale:(CGFloat)zoomScale {
+    _zoomScale = zoomScale;
+    self.scrollView.zoomScale = zoomScale;
+}
+
 -(void)setShowCompass:(BOOL)showCompass {
     _showCompass = showCompass;
     if (showCompass) {

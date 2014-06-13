@@ -32,6 +32,7 @@
         project.identifier = @([projectID intValue]);
         project.terms = dictionary[@"terms"];
         project.name = dictionary[@"name"];
+        project.enter = dictionary[@"enter"];
         project.adress = dictionary[@"adress"];
         project.logoURL = dictionary[@"logo"];
         project.lastUpdate = dictionary[@"last_update"];
@@ -45,6 +46,7 @@
         project.identifier = @([projectID intValue]);
         project.terms = dictionary[@"terms"];
         project.name = dictionary[@"name"];
+        project.enter = dictionary[@"enter"];
         project.adress = dictionary[@"adress"];
         project.logoURL = dictionary[@"logo"];
         project.lastUpdate = dictionary[@"last_update"];

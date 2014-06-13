@@ -157,6 +157,10 @@
     return cell;
 }
 
+-(void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    ((PlanosCollectionViewCell *)cell).zoomScale = 1.0;
+}
+
 #pragma mark - Custom Methods
 
 /*-(UIImage *)imageFromPlantaAtIndex:(NSUInteger)index {

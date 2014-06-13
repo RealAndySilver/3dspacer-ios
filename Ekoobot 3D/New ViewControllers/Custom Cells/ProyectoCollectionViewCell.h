@@ -10,10 +10,13 @@
 @class ProyectoCollectionViewCell;
 
 @protocol ProyectoCollectionViewCellDelegate <NSObject>
--(void)zoomButtonTappedInCell:(ProyectoCollectionViewCell *)cell;
+//-(void)zoomButtonTappedInCell:(ProyectoCollectionViewCell *)cell;
+-(void)cellIsZoomed:(ProyectoCollectionViewCell *)cell;
+-(void)cellIsAtInitialZoomScale:(ProyectoCollectionViewCell *)cell;
 @end
 
 @interface ProyectoCollectionViewCell : UICollectionViewCell
 @property (strong, nonatomic) UIImageView *imageView;
+@property (assign, nonatomic) CGFloat zoomScale;
 @property (strong, nonatomic) id <ProyectoCollectionViewCellDelegate> delegate;
 @end

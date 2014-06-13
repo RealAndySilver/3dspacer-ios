@@ -33,6 +33,7 @@
 "AreaTotal"="Total area:";
 
 "DescargandoProyecto"="YOUR PROJECT IS BEING DOWNLOADED, PLEASE WAIT";
+"DescargandoVideo" = "YOUR VIDEO IS BEING DOWNLOADED, PLEASE WAIT";
 
 "AgregarComentario"="You must place a comment.";
 "AgregarEmail"="You must add an email address.";
@@ -49,3 +50,6 @@
 
 "ProyectoDesactualizado" = "Project list outdated";
 "MensajeProyectoDesactualizado" = "Your project list is outdated. You must return to the main menu and update this project if necessary.";
+
+"Importante" = "IMPORTANT";
+"DescargaCancelada" = "Download Cancelled";

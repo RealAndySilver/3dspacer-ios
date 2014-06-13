@@ -18,5 +18,6 @@
 
 @interface DownloadView : UIView
 @property (strong, nonatomic) id <DownloadViewDelegate> delegate;
+@property (strong, nonatomic) UILabel *descriptionLabel;
 @property (assign, nonatomic) float progress;
 @end

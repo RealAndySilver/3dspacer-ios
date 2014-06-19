@@ -1067,10 +1067,19 @@
     if (!fileExist) {
         NSLog(@"La imagen no existía en documents directory, así que la guardaré");
         NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:finishImageURL]];
-        UIImage *image = [UIImage imageWithData:data];
-        //UIImage *newImage = [self transformImage:image positionInCube:position];
-        NSData *imageData = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0)];
-        [imageData writeToFile:jpegFilePath atomically:YES];
+        
+        if ([finishImageURL rangeOfString:@".jpg"].location == NSNotFound) {
+            //PVR Image
+            NSLog(@"Guardando imagen PVR");
+            [data writeToFile:jpegFilePath atomically:YES];
+        } else {
+            //JPG Image
+            UIImage *image = [UIImage imageWithData:data];
+            //UIImage *newImage = [self transformImage:image positionInCube:position];
+            NSData *imageData = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0)];
+            [imageData writeToFile:jpegFilePath atomically:YES];
+        }
+        
     } else {
         NSLog(@"La imagen ya existía, así que no la guardé en documents directory");
     }

@@ -53,3 +53,5 @@
 
 "Importante" = "IMPORTANTE";
 "DescargaCancelada" = "Descarga Cancelada";
+
+"ErrorServidor" = "Hay un problema en el servidor. Por favor intenta de nuevo en un momento.";

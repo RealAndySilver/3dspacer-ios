@@ -58,6 +58,7 @@
 @property (strong, nonatomic) NSArray *finishesArray;
 @property (strong, nonatomic) NSArray *finishesImagesArray;
 
+//UI Elements
 @property (strong, nonatomic) UIView *opacityView;
 @property (strong, nonatomic) DownloadView *downloadView;
 @property (strong, nonatomic) UILabel *tituloProyecto;
@@ -72,12 +73,14 @@
 
 @property (strong, nonatomic) NSDictionary *projectAnalyticsDic;
 @property (strong, nonatomic) NSMutableData *receivedVideoData;
+@property (strong, nonatomic) NSURLSessionDataTask *dataTask;
 @end
 
 @implementation ProyectoViewController {
     CGRect screenBounds;
     BOOL sendingAnalytics;
     long long expectedBytes;
+    BOOL downloadVideo;
 }
 
 #pragma mark - Lazy Instantiation
@@ -223,26 +226,26 @@
     //SendInfoButton
     self.sendInfoButton = [[UIButton alloc] initWithFrame:sendInfoButtonFrame];
     [self.sendInfoButton addTarget:self action:@selector(sendInfo) forControlEvents:UIControlEventTouchUpInside];
-    [self.sendInfoButton setImage:[UIImage imageNamed:@"mensaje.png"] forState:UIControlStateNormal];
+    [self.sendInfoButton setImage:[UIImage imageNamed:@"msg.png"] forState:UIControlStateNormal];
     [self.view addSubview:self.sendInfoButton];
     
     //Video Button
     if ([self.projectDic[@"videos"] count] > 0) {
         self.videoButton = [[UIButton alloc] initWithFrame:videoButtonFrame];
         [self.videoButton addTarget:self action:@selector(watchVideo) forControlEvents:UIControlEventTouchUpInside];
-        [self.videoButton setBackgroundImage:[UIImage imageNamed:@"video.png"] forState:UIControlStateNormal];
+        [self.videoButton setBackgroundImage:[UIImage imageNamed:@"video2.png"] forState:UIControlStateNormal];
         [self.view addSubview:self.videoButton];
     }
     
     //Slideshow Button
     self.slideshowButton = [[UIButton alloc] initWithFrame:slideshowButtonFrame];
-    [self.slideshowButton setImage:[UIImage imageNamed:NSLocalizedString(@"tv2.png", nil)] forState:UIControlStateNormal];
+    [self.slideshowButton setImage:[UIImage imageNamed:NSLocalizedString(@"tv.png", nil)] forState:UIControlStateNormal];
     [self.slideshowButton addTarget:self action:@selector(goToSlideShow) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.slideshowButton];
     
     //Info button
     self.infoButton = [[UIButton alloc] initWithFrame:infoButtonFrame];
-    [self.infoButton setBackgroundImage:[UIImage imageNamed:@"ayuda_off.png"] forState:UIControlStateNormal];
+    [self.infoButton setBackgroundImage:[UIImage imageNamed:@"info_off.png"] forState:UIControlStateNormal];
     [self.infoButton addTarget:self action:@selector(showInfoView) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.infoButton];
     
@@ -308,6 +311,8 @@
 #pragma mark - Actions
 
 -(void)watchVideo {
+    downloadVideo = YES;
+    
     Video *video = [self.projectDic[@"videos"] firstObject];
     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *videoFilePath = [docDir stringByAppendingPathComponent:video.videoPath];
@@ -336,8 +341,8 @@
     [request setValue:@"" forHTTPHeaderField:@"Accept-Encoding"];
     NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:[NSOperationQueue mainQueue]];
-    NSURLSessionDataTask *dataTask = [urlSession dataTaskWithRequest:request];
-    [dataTask resume];
+    self.dataTask = [urlSession dataTaskWithRequest:request];
+    [self.dataTask resume];
 }
 
 -(void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler {
@@ -418,9 +423,6 @@
     
     SlideshowViewController *ssVC=[[SlideshowViewController alloc]init];
     ssVC.imagesArray = tempRendersArray;
-    //ssVC.imagePathArray = [self arrayOfProjectImagesPaths];
-    //ssVC.imagePathArray = [renderPathArray objectAtIndex:sender.tag-3500];
-    
     SlideControlViewController *cVC=[[SlideControlViewController alloc]init];
     cVC=[self.storyboard instantiateViewControllerWithIdentifier:@"SlideControl"];
     if ([[UIScreen screens] count] > 1)
@@ -645,6 +647,8 @@
 }
 
 -(void)downloadProject {
+    downloadVideo = NO;
+    
     [self showDownloadingView];
     //[MBProgressHUD showHUDAddedTo:self.view animated:YES];
     Project *project = self.projectDic[@"project"];
@@ -883,10 +887,16 @@
             
             //Save finishes images in Core Data
             NSMutableArray *finishesImagesArray = [[NSMutableArray alloc] initWithCapacity:[self.finishesImagesArray count]];
+            NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+
             for (int i = 0; i < [self.finishesImagesArray count]; i++) {
                 FinishImage *finishImage = [FinishImage finishImageWithServerInfo:self.finishesImagesArray[i] inManagedObjectContext:context];
                 [context save:NULL];
                 [finishesImagesArray addObject:finishImage];
+                
+                //Save image in documents directory
+                NSString *jpegFilePath = [docDir stringByAppendingPathComponent:finishImage.imagePath];
+                [self saveImageInDocumentsDirectoryAtPath:jpegFilePath usingImageURL:finishImage.imageURL];
                 
                 filesDownloadedCounter ++;
                 progressCompleted = filesDownloadedCounter / numberOfFiles;
@@ -911,6 +921,29 @@
             [self performSelectorOnMainThread:@selector(finishSavingProcessOnMainThread:) withObject:projectDictionary waitUntilDone:NO];
         }];
         NSLog(@"me salí del bloqueee");
+    }
+}
+
+-(void)saveImageInDocumentsDirectoryAtPath:(NSString *)jpegFilePath usingImageURL:(NSString *)finishImageURL {
+    NSLog(@"Entré a guardar la imagen");
+    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
+    if (!fileExist) {
+        NSLog(@"La imagen no existía en documents directory, así que la guardaré");
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:finishImageURL]];
+        
+        if ([finishImageURL rangeOfString:@".jpg"].location == NSNotFound) {
+            //PVR Image
+            [data writeToFile:jpegFilePath atomically:YES];
+        } else {
+            //JPG Image
+            UIImage *image = [UIImage imageWithData:data];
+            //UIImage *newImage = [self transformImage:image positionInCube:position];
+            NSData *imageData = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0)];
+            [imageData writeToFile:jpegFilePath atomically:YES];
+        }
+        
+    } else {
+        NSLog(@"La imagen ya existía, así que no la guardé en documents directory");
     }
 }
 
@@ -1151,6 +1184,10 @@
 
 -(void)cancelButtonWasTappedInDownloadView:(DownloadView *)downloadView {
     NSLog(@"*** Cancelé la download");
+    if (downloadVideo) {
+        [self.dataTask cancel];
+        self.receivedVideoData = nil;
+    }
 }
 
 -(void)downloadViewWillDisappear:(DownloadView *)downloadView {

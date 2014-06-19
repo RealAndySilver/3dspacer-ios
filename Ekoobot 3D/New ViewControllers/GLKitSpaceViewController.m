@@ -35,6 +35,7 @@
 @property (strong, nonatomic) NSMutableArray *finishesImagesArray;
 @property (strong, nonatomic) NSMutableDictionary *carasIds;
 @property (strong, nonatomic) NSMutableDictionary *finishImagesPathNames;
+@property (strong, nonatomic) NSTimer *zoomTimer;
 @end
 
 @implementation GLKitSpaceViewController {
@@ -49,6 +50,10 @@
     CMMotionManager *motionManager;
     BOOL magnetomerIsActive;
     GLfloat skyboxCenter;
+    CGFloat fieldOfView;
+    BOOL viewIsZooming;
+    BOOL viewIsZoomed;
+    CGFloat northAdjustmentValue;
 }
 
 #pragma mark - Lazy Instantiation 
@@ -196,9 +201,6 @@
     
     CGRect screen = [UIScreen mainScreen].bounds;
     screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
-    x = 0;
-    y = 0;
-    z = -0.3272;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         rotationFactor = 0.002;
     } else {
@@ -299,6 +301,7 @@
                     FinishImage *finishImage = self.projectDic[@"finishImages"][k];
                     if ([finishImage.finish isEqualToString:finish.identifier] && [finishImage.type isEqualToString:@"back"]) {
                         //[thumbsArray addObject:[finishImage finishImage]];
+                        NSLog(@"Encontré el thumb image del acabado");
                         [thumbsArray addObject:[self imageFromFinishImageAtPath:finishImage.imagePath]];
                         break;
                     }
@@ -332,9 +335,11 @@
 }
 
 -(UIImage *)imageFromFinishImageAtPath:(NSString *)jpegImagePath {
-    NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *jpegFilePath = [docDir stringByAppendingPathComponent:jpegImagePath];
+    NSLog(@"Thumb image path: %@", jpegFilePath);
     UIImage *image = [UIImage imageWithContentsOfFile:jpegFilePath];
+    //UIImage *image = [UIImage imageNamed:@"GrayImage.png"];
     return image;
 }
 
@@ -345,20 +350,29 @@
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(compassPlaceholderTapped)];
     [self.compassPlaceholder addGestureRecognizer:tapGesture];
     
+    //Add a double tap gesture to make zoom in the scene
+    UITapGestureRecognizer *doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapDetected:)];
+    doubleTapGesture.numberOfTapsRequired = 2;
+    [self.view addGestureRecognizer:doubleTapGesture];
+    
     //Add a tap gesture to show the navigation bar and the lower view
     UITapGestureRecognizer *showViewsTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleComplementaryViews)];
     showViewsTapGesture.cancelsTouchesInView = NO;
     showViewsTapGesture.delegate = self;
+    [showViewsTapGesture requireGestureRecognizerToFail:doubleTapGesture];
     [self.view addGestureRecognizer:showViewsTapGesture];
-    
-    //Pinch Gesture to amke zoom
-    UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(zoomIn:)];
-    [self.view addGestureRecognizer:pinchGesture];
 }
 
 #pragma mark - OpenGL Stuff
 
 -(void)setupGL {
+    northAdjustmentValue = GLKMathDegreesToRadians(25.0);
+    viewIsZooming = NO;
+    viewIsZoomed = NO;
+    x = 0;
+    y = 0;
+    z = -0.3272;
+    fieldOfView = 75.0;
     magnetomerIsActive = YES;
     //Set GLContext
     self.preferredFramesPerSecond = 60.0;
@@ -366,17 +380,14 @@
     view.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888;
     view.drawableDepthFormat = GLKViewDrawableDepthFormatNone;
     
-    //view.layer.minificationFilter = kCAFilterNearest;
-    //view.layer.magnificationFilter = kCAFilterNearest;
-    
     view.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     [EAGLContext setCurrentContext:view.context];
     
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glEnable(GL_DEPTH_TEST);
     
-    //[self resizeCubeImages];
-    //finishImage_idproyecto_idImage_type
+    
+    //[self resizeCubeImages]; //************************ solo para pruebas, quitar éste método *********************//
     
     NSArray *skyboxArray = @[[self pathForFinishImageWithName:self.finishImagesPathNames[@"right"]],
                              [self pathForFinishImageWithName:self.finishImagesPathNames[@"left"]],
@@ -385,18 +396,26 @@
                              [self pathForFinishImageWithName:self.finishImagesPathNames[@"top"]],
                              [self pathForFinishImageWithName:self.finishImagesPathNames[@"down"]]];
     
+    /*NSArray *skyboxArray = @[[self pathForFinishImageWithName:@"imagenpruebaright.jpg"],
+                             [self pathForFinishImageWithName:@"imagenpruebaleft.jpg"],
+                             [self pathForFinishImageWithName:@"imagenpruebafront.jpg"],
+                             [self pathForFinishImageWithName:@"imagenpruebaback.jpg"],
+                             [self pathForFinishImageWithName:@"imagenpruebatop.jpg"],
+                             [self pathForFinishImageWithName:@"imagenpruebadown.jpg"]];*/
+
+    
     /*NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *pvrName = @"PVR1.pvr";
     NSString *filePath = [docDir stringByAppendingPathComponent:pvrName];
     
     NSArray *skyboxArray = @[filePath, filePath, filePath, filePath, filePath, filePath];*/
     
-    /*NSArray *skyboxArray = @[[[NSBundle mainBundle] pathForResource:@"encoded4" ofType:@"pvr"],
-                             [[NSBundle mainBundle] pathForResource:@"encoded2" ofType:@"pvr"],
-                             [[NSBundle mainBundle] pathForResource:@"encoded3" ofType:@"pvr"],
-                             [[NSBundle mainBundle] pathForResource:@"encoded1" ofType:@"pvr"],
-                             [[NSBundle mainBundle] pathForResource:@"encoded5" ofType:@"pvr"],
-                             [[NSBundle mainBundle] pathForResource:@"encoded6" ofType:@"pvr"]];*/
+    /*NSArray *skyboxArray = @[[[NSBundle mainBundle] pathForResource:@"newencoded1" ofType:@"pvr"],
+                             [[NSBundle mainBundle] pathForResource:@"newencoded1" ofType:@"pvr"],
+                             [[NSBundle mainBundle] pathForResource:@"newencoded1" ofType:@"pvr"],
+                             [[NSBundle mainBundle] pathForResource:@"newencoded1" ofType:@"pvr"],
+                             [[NSBundle mainBundle] pathForResource:@"newencoded1" ofType:@"pvr"],
+                             [[NSBundle mainBundle] pathForResource:@"newencoded1" ofType:@"pvr"]];*/
     
     NSError *error;
     NSDictionary *options = @{GLKTextureLoaderOriginBottomLeft: @NO};
@@ -408,22 +427,16 @@
     if (self.cubemapTexture) {
         NSLog(@"se pudo cargar la textura, %d, %d", self.cubemapTexture.height, self.cubemapTexture.width);
     }
-    
+
     //Setup the skybox shader
     self.skyboxEffect = [[GLKSkyboxEffect alloc] init];
     self.skyboxEffect.label = @"SkyboxEffect";
     self.skyboxEffect.textureCubeMap.name = self.cubemapTexture.name;
     self.skyboxEffect.textureCubeMap.target = self.cubemapTexture.target;
-    self.skyboxEffect.transform.projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(75.0), screenBounds.size.width/screenBounds.size.height, 1.0, 100.0);
+    self.skyboxEffect.transform.projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(fieldOfView), screenBounds.size.width/screenBounds.size.height, 1.0, 100.0);
     self.skyboxEffect.transform.modelviewMatrix = GLKMatrix4MakeScale(10.0, 10.0, 10.0);
     
     [self.skyboxEffect prepareToDraw];
-
-    /*glEnable(GL_TEXTURE_2D);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);*/
 }
 
 #pragma mark - GLKViewDelegate
@@ -438,6 +451,26 @@
             rotXAxis = -motionManager.deviceMotion.attitude.roll;
             rotZAxis = -motionManager.deviceMotion.attitude.yaw;
             rotYAxis = motionManager.deviceMotion.attitude.pitch;
+            //NSLog(@"Z:%f", rotZAxis);
+        }
+    }
+    
+    if (viewIsZooming) {
+        if (!viewIsZoomed) {
+            fieldOfView -= 1.5;
+            if (fieldOfView <= 35.0) {
+                fieldOfView = 35.0;
+                viewIsZooming = NO;
+                viewIsZoomed = YES;
+            }
+        
+        } else {
+            fieldOfView += 1.5;
+            if (fieldOfView >= 75.0) {
+                fieldOfView = 75.0;
+                viewIsZooming = NO;
+                viewIsZoomed = NO;
+            }
         }
     }
     
@@ -447,10 +480,11 @@
     modelviewMatrix = GLKMatrix4Rotate(modelviewMatrix, rotYAxis, 0.0, 1.0, 0.0);
     modelviewMatrix = GLKMatrix4Rotate(modelviewMatrix, rotZAxis, 0.0, 0.0, 1.0);
     modelviewMatrix = GLKMatrix4Scale(modelviewMatrix, 10.0, 10.0, 10.0);
+    self.skyboxEffect.transform.projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(fieldOfView), screenBounds.size.width/screenBounds.size.height, 1.0, 100.0);
     self.skyboxEffect.transform.modelviewMatrix = modelviewMatrix;
     [self.skyboxEffect prepareToDraw];
 
-    [self rotateCompassWithRadians:-rotZAxis];
+    [self rotateCompassWithRadians:-rotZAxis + northAdjustmentValue];
 }
 
 -(void)glkView:(GLKView *)view drawInRect:(CGRect)rect {
@@ -469,7 +503,8 @@
                          animations:^(){
                              [self.navigationController setNavigationBarHidden:NO animated:YES];
                              self.more3DScenesView.transform = CGAffineTransformMakeTranslation(0.0, -160.0);
-                             self.acabadosView.transform = CGAffineTransformMakeTranslation(178.0, 0.0);
+                             if ([self.acabadosView.finishesArray count] > 1)
+                                 self.acabadosView.transform = CGAffineTransformMakeTranslation(178.0, 0.0);
                          } completion:^(BOOL finished){}];
         viewsAreVisible = YES;
     } else {
@@ -515,6 +550,12 @@
 }
 
 -(void)rotateScene:(UIPanGestureRecognizer *)recognizer {
+    if (viewIsZoomed) {
+        rotationFactor = 0.001;
+    } else {
+        rotationFactor = 0.002;
+    }
+    
     static CGPoint panPrevious;
     static CGPoint point1;
     if (recognizer.state == UIGestureRecognizerStateBegan) {
@@ -534,7 +575,7 @@
         }
         rotZAxis -= panDelta.x*rotationFactor;
         NSLog(@"rot x: %f, rot y: %f, rot z: %f", rotXAxis, rotYAxis, rotZAxis);
-        [self rotateCompassWithRadians:-rotZAxis];
+        [self rotateCompassWithRadians:-rotZAxis + northAdjustmentValue];
         point1 = panPrevious;
         panPrevious = panLocation;
         
@@ -565,29 +606,43 @@
         self.inertiaTimer = nil;
     }
     
-    [self rotateCompassWithRadians:-rotZAxis];
+    [self rotateCompassWithRadians:-rotZAxis + northAdjustmentValue];
 }
 
--(void)zoomIn:(UIPinchGestureRecognizer *)pinchGesture {
-    const GLfloat factorEscalamiento = 0.04;
-    static GLfloat currentScale = 0;
-    static GLfloat lastScale = 0;
-    
-    currentScale += pinchGesture.scale - lastScale;
-    lastScale = pinchGesture.scale;
-    
-    if (currentScale > 1) z += currentScale * factorEscalamiento;
-    else if (currentScale < 1) z -= currentScale * factorEscalamiento;
-    if (z <= -0.3272) z = -0.3272;
-    else if (z>=3.5) z = 3.5;
-    pinchGesture.scale = 1.0;
-    NSLog(@"z:%f", z);
+-(void)doubleTapDetected:(UITapGestureRecognizer *)doubleTapRecognizer {
+    viewIsZooming = YES;
+    NSLog(@"Reconocí el double tap");
 }
 
 #pragma mark - Custom Methods
 
+/*-(void)resizeCubeImages {
+    UIImage *topImage = [UIImage imageWithContentsOfFile:[self pathForFinishImageWithName:self.finishImagesPathNames[@"top"]]];
+    topImage = [UIImage imageWithImage:topImage scaledToSize:CGSizeMake(1536, 1536)];
+    [self saveImage:topImage AtPath:@"imagenpruebatop.jpg"];
+    
+    UIImage *downImage = [UIImage imageWithContentsOfFile:[self pathForFinishImageWithName:self.finishImagesPathNames[@"down"]]];
+    downImage = [UIImage imageWithImage:downImage scaledToSize:CGSizeMake(1536, 1536)];
+    [self saveImage:downImage AtPath:@"imagenpruebadown.jpg"];
+    
+    UIImage *frontImage = [UIImage imageWithContentsOfFile:[self pathForFinishImageWithName:self.finishImagesPathNames[@"front"]]];
+    frontImage = [UIImage imageWithImage:frontImage scaledToSize:CGSizeMake(1536, 1536)];
+    [self saveImage:frontImage AtPath:@"imagenpruebafront.jpg"];
+    
+    UIImage *backImage = [UIImage imageWithContentsOfFile:[self pathForFinishImageWithName:self.finishImagesPathNames[@"back"]]];
+    backImage = [UIImage imageWithImage:backImage scaledToSize:CGSizeMake(1536, 1536)];
+    [self saveImage:backImage AtPath:@"imagenpruebaback.jpg"];
+    
+    UIImage *rightImage = [UIImage imageWithContentsOfFile:[self pathForFinishImageWithName:self.finishImagesPathNames[@"right"]]];
+    rightImage = [UIImage imageWithImage:rightImage scaledToSize:CGSizeMake(1536, 1536)];
+    [self saveImage:rightImage AtPath:@"imagenpruebaright.jpg"];
+    
+    UIImage *leftImage = [UIImage imageWithContentsOfFile:[self pathForFinishImageWithName:self.finishImagesPathNames[@"left"]]];
+    leftImage = [UIImage imageWithImage:leftImage scaledToSize:CGSizeMake(1536, 1536)];
+    [self saveImage:leftImage AtPath:@"imagenpruebaleft.jpg"];
+}*/
 
--(void)resizeCubeImages {
+/*-(void)resizeCubeImages {
     NSLog(@"entré a resize cube images");
     UIImage *theImage;
     NSLog(@"*** Número de imágenes para el acabado seleccionado: %d", [self.finishesImagesArray count]);
@@ -634,7 +689,7 @@
         }
     }
     finishImage = nil;
-}
+}*/
 
 -(void)startDeviceMotion {
     CMAttitudeReferenceFrame attitude;
@@ -653,36 +708,11 @@
         NSLog(@"** Entré a calcular valores del sensor ***");
         motionManager.deviceMotionUpdateInterval = 1.0/60.0;
         [motionManager startDeviceMotionUpdatesUsingReferenceFrame:attitude];
-        /*[motionManager startDeviceMotionUpdatesUsingReferenceFrame:attitude toQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motion, NSError *error){
-            if (deviceIsLeftRotated) {
-                
-                rotXAxis = motion.attitude.roll;
-                rotZAxis = -motion.attitude.yaw - M_PI;
-                rotYAxis = -motion.attitude.pitch;
-            } else {
-                rotXAxis = -motion.attitude.roll;
-                rotZAxis = -motion.attitude.yaw;
-                rotYAxis = motion.attitude.pitch;
-            }
-            [self updateViewWithRotX:rotXAxis rotY:rotYAxis rotZ:rotZAxis];;
-            //NSLog(@"Attitude X:%f, Y:%f, Z:%f", rotXAxis, rotYAxis, rotZAxis);
-            [self rotateCompassWithRadians:-rotZAxis];
-        }];*/
+       
     } else {
         NSLog(@"*** el sensor no está disponible ***");
     }
 }
-
-/*-(void)updateViewWithRotX:(float)rotX rotY:(float)rotY rotZ:(float)rotZ {
-    GLKMatrix4 identity = GLKMatrix4Identity;
-    GLKMatrix4 modelviewMatrix = GLKMatrix4Translate(identity, x, y, z);
-    
-    modelviewMatrix = GLKMatrix4Rotate(modelviewMatrix, rotXAxis, 1.0, 0.0, 0.0);
-    modelviewMatrix = GLKMatrix4Rotate(modelviewMatrix, rotYAxis, 0.0, 1.0, 0.0);
-    modelviewMatrix = GLKMatrix4Rotate(modelviewMatrix, rotZAxis, 0.0, 0.0, 1.0);
-    modelviewMatrix = GLKMatrix4Scale(modelviewMatrix, 10.0, 10.0, 10.0);
-    self.skyboxEffect.transform.modelviewMatrix = modelviewMatrix;
-}*/
 
 -(void)stopDeviceMotion {
     [[CMMotionManager sharedMotionManager] stopDeviceMotionUpdates];
@@ -814,19 +844,16 @@
 
 #pragma mark - Image Saving and stuff
 
--(void)saveImage:(UIImage *)image withName:(NSString *)name identifier:(NSString *)identifier format:(NSString *)format{
-    NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
-    NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cara%@%@.%@", docDir, name, identifier, format];
-    NSLog(@"Entré a guardar la imagen");
-    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
-    if (!fileExist) {
-        NSLog(@"La imagen no existía en documents directory, así que la guardaré");
-        NSData *imageData = [NSData dataWithData:UIImagePNGRepresentation(image)];
-        [imageData writeToFile:jpegFilePath atomically:YES];
+/*-(void)saveImage:(UIImage *)image AtPath:(NSString *)path {
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *jpegFilePath = [docDir stringByAppendingPathComponent:path];
+    NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
+    if([imageData writeToFile:jpegFilePath atomically:YES]) {
+        NSLog(@"pudé guardar la imagen top de prueba");
     } else {
-        NSLog(@"La imagen ya existía, así que no la guardé en documents directory");
+        NSLog(@"No pude guardar la imagen top de prueba");
     }
-}
+}*/
 
 -(NSString *)pathForFinishImageWithName:(NSString *)name {
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
@@ -834,18 +861,6 @@
     NSLog(@"Path for finishImage: %@", jpegFilePath);
     return jpegFilePath;
 }
-
-/*-(NSString*)pathForJPEGResourceWithName:(NSString*)name ID:(NSString*)ID{
-    NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
-    NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cara%@%@.jpeg",docDir,name,ID];
-    return jpegFilePath;
-}
-
--(NSString*)pathForPNGResourceWithName:(NSString*)name ID:(NSString*)ID{
-    NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
-    NSString *jpegFilePath = [NSString stringWithFormat:@"%@/cara%@%@.png",docDir,name,ID];
-    return jpegFilePath;
-}*/
 
 #pragma mark - Device Orientation Notification
 

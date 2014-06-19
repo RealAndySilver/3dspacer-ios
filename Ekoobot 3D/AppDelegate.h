@@ -10,7 +10,7 @@
 #import "FileSaver.h"
 #import <CoreMotion/CoreMotion.h>
 #import "SqlHandler.h"
-@interface AppDelegate : UIResponder <UIApplicationDelegate>{
+@interface AppDelegate : UIResponder <UIApplicationDelegate, ServerCommunicatorDelegate>{
     //ServerCommunicator *server;
     //NSString *methodName;
     //int test;

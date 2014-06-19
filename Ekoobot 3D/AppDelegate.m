@@ -8,7 +8,9 @@
 
 #import "AppDelegate.h"
 
-@implementation AppDelegate
+@implementation AppDelegate {
+    ServerCommunicator *serverCommunicator;
+}
 
 @synthesize window = _window;
 
@@ -21,6 +23,10 @@
     server.caller=self;
     server.tag=1;
     motionManager = [[CMMotionManager alloc] init];*/
+    
+    serverCommunicator = [[ServerCommunicator alloc] init];
+    serverCommunicator.delegate = self;
+    
     [SqlHandler createEditableCopyOfDatabaseIfNeeded];
     return YES;
 }
@@ -46,6 +52,8 @@
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     //[self enviarPendientes];
+    NSLog(@"Me volví activo");
+    [self sendPendingMessages];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -65,7 +73,64 @@
         NSLog(@"No hay pendientes");
     }*/
 }
+
 #pragma mark server methods
+
+-(void)sendPendingMessages {
+    FileSaver *fileSaver = [[FileSaver alloc] init];
+    if ([fileSaver getDictionary:@"MessagesStoredDic"][@"MessagesStoredArray"]) {
+        NSArray *messagesStoredArray = [fileSaver getDictionary:@"MessagesStoredDic"][@"MessagesStoredArray"];
+        if ([messagesStoredArray count] > 0) {
+            NSError *error;
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:messagesStoredArray
+                                                               options:NSJSONWritingPrettyPrinted
+                                                                 error:&error];
+            NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            NSString *parameter = [NSString stringWithFormat:@"projectUser=%@", jsonString];
+            NSLog(@"Json string = %@", jsonString);
+            [serverCommunicator callServerWithPOSTMethod:@"sendProjects" andParameter:parameter httpMethod:@"POST"];
+        
+        } else {
+            NSLog(@"No hay mensjaes pendientes");
+        }
+    } else {
+        NSLog(@"No se ha guardado ningún mensaje para enviar");
+    }
+}
+
+-(void)receivedDataFromServer:(NSDictionary *)dictionary withMethodName:(NSString *)methodName {
+    if ([methodName isEqualToString:@"sendProjects"]) {
+        if (dictionary) {
+            NSLog(@"Llego correctamente el diccionario de sendProject: %@", dictionary);
+            if ([dictionary[@"success"] boolValue]) {
+                /*NSMutableDictionary *dictionary=[[NSMutableDictionary alloc]init];
+                 [dictionary setObject:@"true" forKey:@"SentState"];
+                 FileSaver *file=[[FileSaver alloc]init];
+                 [file setDictionary:dictionary withName:@"SendInfoDictionary"];*/
+                
+                FileSaver *fileSaver = [[FileSaver alloc] init];
+                [fileSaver setDictionary:@{@"MessagesStoredArray": @[]} withName:@"MessagesStoredDic"];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ProyectoEnviado", nil)
+                                                                message:NSLocalizedString(@"ProyectoEnviadoExito", nil)
+                                                               delegate:self
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil,nil];
+                [alert show];
+            }
+            else{
+                //[self errorAlert];
+            }
+            
+        } else {
+            NSLog(@"La respuesta del sendPRojects fue Null");
+        }
+    }
+}
+
+-(void)serverError:(NSError *)error {
+    NSLog(@"Error en el server intentando enviar los proyectos pendientes");
+}
+
 -(void)receivedDataFromServerRegister:(id)sender{
     /*server=sender;
     NSMutableDictionary *dictionary=[[NSMutableDictionary alloc]init];

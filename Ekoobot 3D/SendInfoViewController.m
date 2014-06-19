@@ -184,12 +184,14 @@
     if ([theMethodName isEqualToString:@"sendProjects"]) {
         if (dictionary) {
             NSLog(@"Llego correctamente el diccionario de sendProject: %@", dictionary);
-            if ([dictionary[@"message"] isEqualToString:@"Success invitation was sended"]) {
-                NSMutableDictionary *dictionary=[[NSMutableDictionary alloc]init];
+            if ([dictionary[@"success"] boolValue]) {
+                /*NSMutableDictionary *dictionary=[[NSMutableDictionary alloc]init];
                 [dictionary setObject:@"true" forKey:@"SentState"];
                 FileSaver *file=[[FileSaver alloc]init];
-                [file setDictionary:dictionary withName:@"SendInfoDictionary"];
+                [file setDictionary:dictionary withName:@"SendInfoDictionary"];*/
                 
+                FileSaver *fileSaver = [[FileSaver alloc] init];
+                [fileSaver setDictionary:@{@"MessagesStoredArray": @[]} withName:@"MessagesStoredDic"];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ProyectoEnviado", nil)
                                                                 message:NSLocalizedString(@"ProyectoEnviadoExito", nil)
                                                                delegate:self

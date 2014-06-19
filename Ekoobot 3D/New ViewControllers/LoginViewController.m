@@ -178,6 +178,7 @@
             
         } else {
             NSLog(@"Error en la respuesta de getProjectsByUser: %@", dictionary);
+            [[[UIAlertView alloc] initWithTitle:@"Error" message:NSLocalizedString(@"ErrorServidor", nil) delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
         }
     } else if ([methodName isEqualToString:@"user/resetting/request"]) {
         if (dictionary) {

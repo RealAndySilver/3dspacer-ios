@@ -43,7 +43,14 @@
         }
         finishImage.lastUpdate = dictionary[@"lastUpdate"];
         finishImage.finish = dictionary[@"finish"];
-        finishImage.imagePath = [NSString stringWithFormat:@"finishImage_%@_%@_%@.jpg", finishImage.project, finishImage.identifier, finishImage.type];
+        
+        if ([finishImage.imageURL rangeOfString:@".jpg"].location == NSNotFound) {
+            //No es .jpg, sino .pvr
+            NSLog(@"La imagen es PVR");
+             finishImage.imagePath = [NSString stringWithFormat:@"finishImage_%@_%@_%@.pvr", finishImage.project, finishImage.identifier, finishImage.type];
+        } else {
+            finishImage.imagePath = [NSString stringWithFormat:@"finishImage_%@_%@_%@.jpg", finishImage.project, finishImage.identifier, finishImage.type];
+        }
         
     } else {
         //The render did not exist on the database, so we have to create it
@@ -60,8 +67,13 @@
         }
         finishImage.lastUpdate = dictionary[@"lastUpdate"];
         finishImage.finish = dictionary[@"finish"];
-        finishImage.imagePath = [NSString stringWithFormat:@"finishImage_%@_%@_%@", finishImage.project, finishImage.identifier, finishImage.type];
-        //finishImage.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:finishImage.imageURL]];
+        if ([finishImage.imageURL rangeOfString:@".jpg"].location == NSNotFound) {
+            //No es .jpg, sino .pvr
+            NSLog(@"La imagen es PVR");
+            finishImage.imagePath = [NSString stringWithFormat:@"finishImage_%@_%@_%@.pvr", finishImage.project, finishImage.identifier, finishImage.type];
+        } else {
+            finishImage.imagePath = [NSString stringWithFormat:@"finishImage_%@_%@_%@.jpg", finishImage.project, finishImage.identifier, finishImage.type];
+        }        //finishImage.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:finishImage.imageURL]];
     }
     
     return finishImage;

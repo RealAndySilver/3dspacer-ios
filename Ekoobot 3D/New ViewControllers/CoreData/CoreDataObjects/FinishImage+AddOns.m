@@ -17,7 +17,7 @@
 +(FinishImage *)finishImageWithServerInfo:(NSDictionary *)dictionary inManagedObjectContext:(NSManagedObjectContext *)context {
     FinishImage *finishImage = nil;
     
-    NSString *finishImageID = dictionary[@"id"];
+    NSNumber *finishImageID = dictionary[@"id"];
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"FinishImage"];
     request.predicate = [NSPredicate predicateWithFormat:@"identifier = %@", finishImageID];
     NSError *error;
@@ -38,6 +38,8 @@
         finishImage.imageURL = dictionary[@"image"];
         finishImage.miniURL = dictionary[@"mini"];
         finishImage.type = dictionary[@"type"];
+        finishImage.size = dictionary[@"size"];
+        finishImage.finalSize = dictionary[@"finalSize"];
         if ([finishImage.type isEqualToString:@"bottom"]) {
             finishImage.type = @"down";
         }
@@ -62,6 +64,8 @@
         finishImage.imageURL = dictionary[@"image"];
         finishImage.miniURL = dictionary[@"mini"];
         finishImage.type = dictionary[@"type"];
+        finishImage.size = dictionary[@"size"];
+        finishImage.finalSize = dictionary[@"finalSize"];
         if ([finishImage.type isEqualToString:@"bottom"]) {
             finishImage.type = @"down";
         }

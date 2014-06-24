@@ -14,14 +14,16 @@
         <attribute name="space" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="FinishImage" representedClassName="FinishImage" syncable="YES">
+        <attribute name="finalSize" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="finish" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="identifier" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="imageData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="imagePath" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lastUpdate" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="miniURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="project" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="size" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Floor" representedClassName="Floor" syncable="YES">
@@ -139,7 +141,7 @@
     </entity>
     <elements>
         <element name="Finish" positionX="-9" positionY="135" width="128" height="210"/>
-        <element name="FinishImage" positionX="0" positionY="144" width="128" height="180"/>
+        <element name="FinishImage" positionX="0" positionY="144" width="128" height="208"/>
         <element name="Floor" positionX="0" positionY="171" width="128" height="240"/>
         <element name="Group" positionX="-18" positionY="144" width="128" height="180"/>
         <element name="Plant" positionX="36" positionY="189" width="128" height="240"/>

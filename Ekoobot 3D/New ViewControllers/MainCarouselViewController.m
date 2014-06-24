@@ -1055,9 +1055,17 @@
         } else {
             //JPG Image
             UIImage *image = [UIImage imageWithData:data];
-            //UIImage *newImage = [self transformImage:image positionInCube:position];
-            NSData *imageData = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0)];
-            [imageData writeToFile:jpegFilePath atomically:YES];
+            if ([finishImage.finalSize intValue] != [finishImage.size intValue]) {
+                NSLog(@"Cambiaré el tamaño de la imagen");
+                UIImage *newImage = [UIImage imageWithImage:image scaledToSize:CGSizeMake([finishImage.finalSize intValue], [finishImage.finalSize intValue])];
+                NSData *imageData = [NSData dataWithData:UIImageJPEGRepresentation(newImage, 1.0)];
+                [imageData writeToFile:jpegFilePath atomically:YES];
+                
+            } else {
+                NSLog(@"No tuve que cambiar el tamaño de la imagen");
+                NSData *imageData = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0)];
+                [imageData writeToFile:jpegFilePath atomically:YES];
+            }
         }
         
     } else {
@@ -1065,7 +1073,7 @@
     }
 }
 
--(void)saveImageInDocumentsDirectoryAtPath:(NSString *)jpegFilePath usingImageURL:(NSString *)finishImageURL {
+/*-(void)saveImageInDocumentsDirectoryAtPath:(NSString *)jpegFilePath usingImageURL:(NSString *)finishImageURL {
     NSLog(@"Entré a guardar la imagen");
     BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     if (!fileExist) {
@@ -1087,7 +1095,7 @@
     } else {
         NSLog(@"La imagen ya existía, así que no la guardé en documents directory");
     }
-}
+}*/
 
 /*-(UIImage *)transformImage:(UIImage *)image positionInCube:(NSString *)positionInCube {
     

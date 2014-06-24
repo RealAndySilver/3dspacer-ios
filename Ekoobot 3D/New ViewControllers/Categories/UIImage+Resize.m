@@ -36,11 +36,12 @@
 //New Scale Methooooood
 + (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize {
     if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
-        if ([[UIScreen mainScreen] scale] == 2.0) {
+        UIGraphicsBeginImageContext(newSize);
+        /*if ([[UIScreen mainScreen] scale] == 2.0) {
             UIGraphicsBeginImageContextWithOptions(newSize, YES, 2.0);
         } else {
             UIGraphicsBeginImageContext(newSize);
-        }
+        }*/
     } else {
         UIGraphicsBeginImageContext(newSize);
     }

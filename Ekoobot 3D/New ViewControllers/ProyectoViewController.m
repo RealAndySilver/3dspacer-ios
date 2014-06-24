@@ -39,6 +39,7 @@
 #import "Video.h"
 #import "VideoPlayerViewController.h"
 #import "DownloadView.h"
+#import "UIImage+Resize.h"
 
 @interface ProyectoViewController () <UICollectionViewDataSource, UICollectionViewDelegate, ProyectoCollectionViewCellDelegate, ServerCommunicatorDelegate, DownloadViewDelegate, NSURLSessionDataDelegate>
 @property (strong, nonatomic) UICollectionView *collectionView;
@@ -896,7 +897,8 @@
                 
                 //Save image in documents directory
                 NSString *jpegFilePath = [docDir stringByAppendingPathComponent:finishImage.imagePath];
-                [self saveImageInDocumentsDirectoryAtPath:jpegFilePath usingImageURL:finishImage.imageURL];
+                [self saveFinishImage:finishImage atPath:jpegFilePath];
+                //[self saveImageInDocumentsDirectoryAtPath:jpegFilePath usingImageURL:finishImage.imageURL];
                 
                 filesDownloadedCounter ++;
                 progressCompleted = filesDownloadedCounter / numberOfFiles;
@@ -924,7 +926,37 @@
     }
 }
 
--(void)saveImageInDocumentsDirectoryAtPath:(NSString *)jpegFilePath usingImageURL:(NSString *)finishImageURL {
+-(void)saveFinishImage:(FinishImage *)finishImage atPath:(NSString *)jpegFilePath {
+    NSLog(@"Entré a guardar la imagen");
+    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
+    if (!fileExist) {
+        NSLog(@"La imagen no existía en documents directory, así que la guardaré");
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:finishImage.imageURL]];
+        
+        if ([finishImage.imageURL rangeOfString:@".jpg"].location == NSNotFound) {
+            //PVR Image
+            NSLog(@"Guardando imagen PVR");
+            [data writeToFile:jpegFilePath atomically:YES];
+        } else {
+            //JPG Image
+            UIImage *image = [UIImage imageWithData:data];
+            if ([finishImage.finalSize intValue] != [finishImage.size intValue]) {
+                UIImage *newImage = [UIImage imageWithImage:image scaledToSize:CGSizeMake([finishImage.finalSize intValue], [finishImage.finalSize intValue])];
+                NSData *imageData = [NSData dataWithData:UIImageJPEGRepresentation(newImage, 1.0)];
+                [imageData writeToFile:jpegFilePath atomically:YES];
+                
+            } else {
+                NSData *imageData = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0)];
+                [imageData writeToFile:jpegFilePath atomically:YES];
+            }
+        }
+        
+    } else {
+        NSLog(@"La imagen ya existía, así que no la guardé en documents directory");
+    }
+}
+
+/*-(void)saveImageInDocumentsDirectoryAtPath:(NSString *)jpegFilePath usingImageURL:(NSString *)finishImageURL {
     NSLog(@"Entré a guardar la imagen");
     BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     if (!fileExist) {
@@ -945,7 +977,7 @@
     } else {
         NSLog(@"La imagen ya existía, así que no la guardé en documents directory");
     }
-}
+}*/
 
 -(void)finishSavingProcessOnMainThread:(NSDictionary *)projectDictionary {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"downloadCompleted" object:nil userInfo:nil];

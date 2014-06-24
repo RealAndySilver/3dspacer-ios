@@ -2,6 +2,7 @@
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5063" systemVersion="13D65" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Finish" representedClassName="Finish" syncable="YES">
         <attribute name="enabled" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="finalSize" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="iconData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="iconURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
@@ -9,6 +10,7 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="order" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="project" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="size" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="space" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="FinishImage" representedClassName="FinishImage" syncable="YES">
@@ -136,7 +138,7 @@
         <attribute name="videoPath" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Finish" positionX="-9" positionY="135" width="128" height="178"/>
+        <element name="Finish" positionX="-9" positionY="135" width="128" height="210"/>
         <element name="FinishImage" positionX="0" positionY="144" width="128" height="180"/>
         <element name="Floor" positionX="0" positionY="171" width="128" height="240"/>
         <element name="Group" positionX="-18" positionY="144" width="128" height="180"/>

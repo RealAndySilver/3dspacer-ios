@@ -41,6 +41,8 @@
         finish.enabled = dictionary[@"enabled"];
         finish.lastUpdate = dictionary[@"lastUpdate"];
         finish.space = dictionary[@"space"];
+        finish.size = dictionary[@"size"];
+        finish.finalSize = dictionary[@"finalSize"];
         
     } else {
         //The render did not exist on the database, so we have to create it
@@ -55,6 +57,8 @@
         finish.enabled = dictionary[@"enabled"];
         finish.lastUpdate = dictionary[@"lastUpdate"];
         finish.space = dictionary[@"space"];
+        finish.size = dictionary[@"size"];
+        finish.finalSize = dictionary[@"finalSize"];
         finish.iconData = [NSData dataWithContentsOfURL:[NSURL URLWithString:finish.iconURL]];
     }
     

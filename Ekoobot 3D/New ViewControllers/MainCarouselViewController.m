@@ -13,11 +13,8 @@
 #import "SendInfoViewController.h"
 #import "SlideshowViewController.h"
 #import "SlideControlViewController.h"
-//#import "ProjectDownloader.h"
 #import "MBProgressHud.h"
 #import "ProjectsListViewController.h"
-//#import "TermsViewController.h"
-//#import "ProgressView.h"
 #import "Project+AddOn.h"
 #import "Project+ParseInfoFromServer.h"
 #import "TermsAndConditionsViewController.h"
@@ -48,7 +45,6 @@
 @property (strong, nonatomic) UIButton *messageButton;
 @property (strong, nonatomic) UIButton *deleteButton;
 @property (strong, nonatomic) UIButton *logoutButton;
-//@property (strong, nonatomic) ProgressView *progressView;
 @property (strong, nonatomic) UIManagedDocument *databaseDocument;
 @property (strong, nonatomic) NSURL *databaseDocumentURL;
 
@@ -191,12 +187,6 @@
     self.projectNameLabel.font = [UIFont boldSystemFontOfSize:25.0];
     [self.view addSubview:self.projectNameLabel];
     
-    //Ekoomedia Logo
-    /*UIImageView *ekoomediaLogo = [[UIImageView alloc] initWithFrame:CGRectMake(screenRect.size.width - 100.0, 20.0, 80.0, 80.0)];
-    ekoomediaLogo.image = [UIImage imageNamed:@"logo.png"];
-    ekoomediaLogo.contentMode = UIViewContentModeScaleAspectFit;
-    [self.view addSubview:ekoomediaLogo];*/
-    
     //Delete button
     self.deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(screenRect.size.width/2.0 - 15.0 + 40.0, screenRect.size.height - 110.0, 35.0, 35.0)];
     [self.deleteButton setBackgroundImage:[UIImage imageNamed:@"NewDeleteIcon.png"] forState:UIControlStateNormal];
@@ -220,17 +210,6 @@
     [self.logoutButton setBackgroundImage:[UIImage imageNamed:@"NewLogoutIcon.png"] forState:UIControlStateNormal];
     [self.logoutButton addTarget:self action:@selector(showLogoutAlert) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.logoutButton];
-    
-    /*Proyecto *proyecto = self.usuario.arrayProyectos[0];
-    if (![proyecto.arrayAdjuntos count] > 0) {
-        self.slideShowButton.hidden = YES;
-    }*/
-    
-    //ProgressView
-    /*self.progressView=[[ProgressView alloc]initWithFrame:CGRectMake(0, 0, self.navigationController.view.frame.size.height, self.navigationController.view.frame.size.width)];
-    
-    [self.navigationController.view addSubview:self.progressView];
-    [self.view bringSubviewToFront:self.progressView];*/
     
     [self.view addSubview:self.opacityView];
     [self.view addSubview:self.downloadView];
@@ -1025,7 +1004,8 @@
                     
                     //Save image in documents directory
                     NSString *jpegFilePath = [docDir stringByAppendingPathComponent:finishImage.imagePath];
-                    [self saveImageInDocumentsDirectoryAtPath:jpegFilePath usingImageURL:finishImage.imageURL];
+                    [self saveFinishImage:finishImage atPath:jpegFilePath];
+                    //[self saveImageInDocumentsDirectoryAtPath:jpegFilePath usingImageURL:finishImage.imageURL];
                     
                     filesDownloadedCounter ++;
                     progressCompleted = filesDownloadedCounter / numberOfFiles;
@@ -1058,6 +1038,30 @@
             }
         }];
         NSLog(@"me salí del bloqueee");
+    }
+}
+
+-(void)saveFinishImage:(FinishImage *)finishImage atPath:(NSString *)jpegFilePath {
+    NSLog(@"Entré a guardar la imagen");
+    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
+    if (!fileExist) {
+        NSLog(@"La imagen no existía en documents directory, así que la guardaré");
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:finishImage.imageURL]];
+        
+        if ([finishImage.imageURL rangeOfString:@".jpg"].location == NSNotFound) {
+            //PVR Image
+            NSLog(@"Guardando imagen PVR");
+            [data writeToFile:jpegFilePath atomically:YES];
+        } else {
+            //JPG Image
+            UIImage *image = [UIImage imageWithData:data];
+            //UIImage *newImage = [self transformImage:image positionInCube:position];
+            NSData *imageData = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0)];
+            [imageData writeToFile:jpegFilePath atomically:YES];
+        }
+        
+    } else {
+        NSLog(@"La imagen ya existía, así que no la guardé en documents directory");
     }
 }
 

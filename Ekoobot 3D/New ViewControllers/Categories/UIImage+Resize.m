@@ -10,7 +10,7 @@
 
 @implementation UIImage (Resize)
 
-+ (UIImage*)imageWithImage:(UIImage *)image
+/*+ (UIImage*)imageWithImage:(UIImage *)image
               scaledToSize:(CGSize)newSize
 {
     float heightToWidthRatio = image.size.height / image.size.width;
@@ -30,6 +30,23 @@
     UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
+    return newImage;
+}*/
+
+//New Scale Methooooood
++ (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize {
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
+        if ([[UIScreen mainScreen] scale] == 2.0) {
+            UIGraphicsBeginImageContextWithOptions(newSize, YES, 2.0);
+        } else {
+            UIGraphicsBeginImageContext(newSize);
+        }
+    } else {
+        UIGraphicsBeginImageContext(newSize);
+    }
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
     return newImage;
 }
 

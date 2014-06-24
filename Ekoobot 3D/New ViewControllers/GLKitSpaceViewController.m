@@ -387,21 +387,21 @@
     glEnable(GL_DEPTH_TEST);
     
     
-    //[self resizeCubeImages]; //************************ solo para pruebas, quitar éste método *********************//
+    [self resizeCubeImages]; //************************ solo para pruebas, quitar éste método *********************//
     
-    NSArray *skyboxArray = @[[self pathForFinishImageWithName:self.finishImagesPathNames[@"right"]],
+    /*NSArray *skyboxArray = @[[self pathForFinishImageWithName:self.finishImagesPathNames[@"right"]],
                              [self pathForFinishImageWithName:self.finishImagesPathNames[@"left"]],
                              [self pathForFinishImageWithName:self.finishImagesPathNames[@"front"]],
                              [self pathForFinishImageWithName:self.finishImagesPathNames[@"back"]],
                              [self pathForFinishImageWithName:self.finishImagesPathNames[@"top"]],
-                             [self pathForFinishImageWithName:self.finishImagesPathNames[@"down"]]];
+                             [self pathForFinishImageWithName:self.finishImagesPathNames[@"down"]]];*/
     
-    /*NSArray *skyboxArray = @[[self pathForFinishImageWithName:@"imagenpruebaright.jpg"],
+    NSArray *skyboxArray = @[[self pathForFinishImageWithName:@"imagenpruebaright.jpg"],
                              [self pathForFinishImageWithName:@"imagenpruebaleft.jpg"],
                              [self pathForFinishImageWithName:@"imagenpruebafront.jpg"],
                              [self pathForFinishImageWithName:@"imagenpruebaback.jpg"],
                              [self pathForFinishImageWithName:@"imagenpruebatop.jpg"],
-                             [self pathForFinishImageWithName:@"imagenpruebadown.jpg"]];*/
+                             [self pathForFinishImageWithName:@"imagenpruebadown.jpg"]];
 
     
     /*NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
@@ -616,31 +616,31 @@
 
 #pragma mark - Custom Methods
 
-/*-(void)resizeCubeImages {
+-(void)resizeCubeImages {
     UIImage *topImage = [UIImage imageWithContentsOfFile:[self pathForFinishImageWithName:self.finishImagesPathNames[@"top"]]];
-    topImage = [UIImage imageWithImage:topImage scaledToSize:CGSizeMake(1536, 1536)];
+    topImage = [UIImage imageWithImage:topImage scaledToSize:CGSizeMake(1024, 1024)];
     [self saveImage:topImage AtPath:@"imagenpruebatop.jpg"];
     
     UIImage *downImage = [UIImage imageWithContentsOfFile:[self pathForFinishImageWithName:self.finishImagesPathNames[@"down"]]];
-    downImage = [UIImage imageWithImage:downImage scaledToSize:CGSizeMake(1536, 1536)];
+    downImage = [UIImage imageWithImage:downImage scaledToSize:CGSizeMake(1024, 1024)];
     [self saveImage:downImage AtPath:@"imagenpruebadown.jpg"];
     
     UIImage *frontImage = [UIImage imageWithContentsOfFile:[self pathForFinishImageWithName:self.finishImagesPathNames[@"front"]]];
-    frontImage = [UIImage imageWithImage:frontImage scaledToSize:CGSizeMake(1536, 1536)];
+    frontImage = [UIImage imageWithImage:frontImage scaledToSize:CGSizeMake(1024, 1024)];
     [self saveImage:frontImage AtPath:@"imagenpruebafront.jpg"];
     
     UIImage *backImage = [UIImage imageWithContentsOfFile:[self pathForFinishImageWithName:self.finishImagesPathNames[@"back"]]];
-    backImage = [UIImage imageWithImage:backImage scaledToSize:CGSizeMake(1536, 1536)];
+    backImage = [UIImage imageWithImage:backImage scaledToSize:CGSizeMake(1024, 1024)];
     [self saveImage:backImage AtPath:@"imagenpruebaback.jpg"];
     
     UIImage *rightImage = [UIImage imageWithContentsOfFile:[self pathForFinishImageWithName:self.finishImagesPathNames[@"right"]]];
-    rightImage = [UIImage imageWithImage:rightImage scaledToSize:CGSizeMake(1536, 1536)];
+    rightImage = [UIImage imageWithImage:rightImage scaledToSize:CGSizeMake(1024, 1024)];
     [self saveImage:rightImage AtPath:@"imagenpruebaright.jpg"];
     
     UIImage *leftImage = [UIImage imageWithContentsOfFile:[self pathForFinishImageWithName:self.finishImagesPathNames[@"left"]]];
-    leftImage = [UIImage imageWithImage:leftImage scaledToSize:CGSizeMake(1536, 1536)];
+    leftImage = [UIImage imageWithImage:leftImage scaledToSize:CGSizeMake(1024, 1024)];
     [self saveImage:leftImage AtPath:@"imagenpruebaleft.jpg"];
-}*/
+}
 
 /*-(void)resizeCubeImages {
     NSLog(@"entré a resize cube images");
@@ -844,7 +844,7 @@
 
 #pragma mark - Image Saving and stuff
 
-/*-(void)saveImage:(UIImage *)image AtPath:(NSString *)path {
+-(void)saveImage:(UIImage *)image AtPath:(NSString *)path {
     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *jpegFilePath = [docDir stringByAppendingPathComponent:path];
     NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
@@ -853,7 +853,7 @@
     } else {
         NSLog(@"No pude guardar la imagen top de prueba");
     }
-}*/
+}
 
 -(NSString *)pathForFinishImageWithName:(NSString *)name {
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];

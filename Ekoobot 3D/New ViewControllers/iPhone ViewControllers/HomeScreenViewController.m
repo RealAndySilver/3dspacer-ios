@@ -34,6 +34,7 @@
 #import "Finish+AddOns.h"
 #import "FinishImage+AddOns.h"
 #import "DownloadView.h"
+#import "UIImage+Resize.h"
 
 @interface HomeScreenViewController () <iCarouselDataSource, iCarouselDelegate, TermsAndConditionsDelegate, ServerCommunicatorDelegate, UIAlertViewDelegate, UIActionSheetDelegate, DownloadViewDelegate>
 @property (strong, nonatomic) iCarousel *carousel;
@@ -610,6 +611,12 @@
                 NSLog(@"El proyecto con id %@ está desactualizado", project.identifier);
                 NSLog(@"Última actualizacion descargada: %@\nÚltima actualización disponible: %@", project.lastUpdate, referenceProjectDic[@"last_update"]);
                 
+                //Post a notification in case the user is on the project view controller
+                //of the outdated project.
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"OutdatedProjectNotification"
+                                                                    object:nil
+                                                                  userInfo:@{@"OutdatedProjectIdentifier": project.identifier}];
+                
                 //Remove the project id from fileSaver
                 [savedProjectIDs removeObject:project.identifier];
                 [fileSaver setDictionary:@{@"projectIDsArray": savedProjectIDs} withName:@"downloadedProjectsIDs"];
@@ -1047,7 +1054,8 @@
                     
                     //Save image in documents directory
                     NSString *jpegFilePath = [docDir stringByAppendingPathComponent:finishImage.imagePath];
-                    [self saveImageInDocumentsDirectoryAtPath:jpegFilePath usingImageURL:finishImage.imageURL];
+                    [self saveFinishImage:finishImage atPath:jpegFilePath];
+                    //[self saveImageInDocumentsDirectoryAtPath:jpegFilePath usingImageURL:finishImage.imageURL];
                     
                     filesDownloadedCounter ++;
                     progressCompleted = filesDownloadedCounter / numberOfFiles;
@@ -1081,7 +1089,39 @@
     }
 }
 
--(void)saveImageInDocumentsDirectoryAtPath:(NSString *)jpegFilePath usingImageURL:(NSString *)finishImageURL {
+-(void)saveFinishImage:(FinishImage *)finishImage atPath:(NSString *)jpegFilePath {
+    NSLog(@"Entré a guardar la imagen");
+    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
+    if (!fileExist) {
+        NSLog(@"La imagen no existía en documents directory, así que la guardaré");
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:finishImage.imageURL]];
+        
+        if ([finishImage.imageURL rangeOfString:@".jpg"].location == NSNotFound) {
+            //PVR Image
+            NSLog(@"Guardando imagen PVR");
+            [data writeToFile:jpegFilePath atomically:YES];
+        } else {
+            //JPG Image
+            UIImage *image = [UIImage imageWithData:data];
+            if ([finishImage.finalSize intValue] != [finishImage.size intValue]) {
+                NSLog(@"Cambiaré el tamaño de la imagen");
+                UIImage *newImage = [UIImage imageWithImage:image scaledToSize:CGSizeMake([finishImage.finalSize intValue], [finishImage.finalSize intValue])];
+                NSData *imageData = [NSData dataWithData:UIImageJPEGRepresentation(newImage, 1.0)];
+                [imageData writeToFile:jpegFilePath atomically:YES];
+                
+            } else {
+                NSLog(@"No tuve que cambiar el tamaño de la imagen");
+                NSData *imageData = [NSData dataWithData:UIImageJPEGRepresentation(image, 1.0)];
+                [imageData writeToFile:jpegFilePath atomically:YES];
+            }
+        }
+        
+    } else {
+        NSLog(@"La imagen ya existía, así que no la guardé en documents directory");
+    }
+}
+
+/*-(void)saveImageInDocumentsDirectoryAtPath:(NSString *)jpegFilePath usingImageURL:(NSString *)finishImageURL {
     NSLog(@"Entré a guardar la imagen");
     BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     if (!fileExist) {
@@ -1094,7 +1134,7 @@
     } else {
         NSLog(@"La imagen ya existía, así que no la guardé en documents directory");
     }
-}
+}*/
 
 -(void)showDownloadCanceledAlert {
     downloadWasCancelled = NO;
@@ -1336,7 +1376,6 @@
     self.opacityView.hidden = YES;
     self.downloadView.hidden = YES;
     self.downloadView.progress = 0;
-    
 }
 
 #pragma mark - Notification Handlers

@@ -147,6 +147,10 @@
 -(void)viewDidLoad {
     [super viewDidLoad];
     //[self savePVROnDocuments];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(ProjectUpdatedNotificationReceived:)
+                                                 name:@"ProjectUpdatedNotification"
+                                               object:nil];
     self.view.backgroundColor = [UIColor grayColor];
     [self setupUI];
     [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(searchForUpdatesInServer) userInfo:nil repeats:YES];
@@ -520,6 +524,12 @@
                 //The project is not updated
                 NSLog(@"El proyecto con id %@ está desactualizado", project.identifier);
                 NSLog(@"Última actualizacion descargada: %@\nÚltima actualización disponible: %@", project.lastUpdate, referenceProjectDic[@"last_update"]);
+                
+                //Post a notification in case the user is on the project view controller
+                //of the outdated project.
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"OutdatedProjectNotification"
+                                                                    object:nil
+                                                                  userInfo:@{@"OutdatedProjectIdentifier": project.identifier}];
                 
                 //Remove the project id from fileSaver
                 [savedProjectIDs removeObject:project.identifier];
@@ -1453,6 +1463,13 @@
     button.tag = 1000 + self.carousel.currentItemIndex;
     
     [self downloadProjectFromServer:button];
+}
+
+#pragma mark - Notification Handlers
+
+-(void)ProjectUpdatedNotificationReceived:(NSNotification *)notification {
+    NSLog(@"*************************** Me llegó la notificación de que actualizaron un proyecto ***********************************");
+    [self carouselDidEndScrollingAnimation:self.carousel];
 }
 
 @end

@@ -164,6 +164,8 @@
 		8BC64FFA19199AC50005548D /* PlanosCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC64FF919199AC50005548D /* PlanosCollectionViewCell.m */; };
 		8BD2940F191D75500006AB2A /* PlanosDePisoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BD2940E191D75500006AB2A /* PlanosDePisoViewController.m */; };
 		8BD29412191D764E0006AB2A /* PisoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BD29411191D764E0006AB2A /* PisoCollectionViewCell.m */; };
+		8BDA62B2195C58C2005ED742 /* info_on_new.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BDA62B0195C58C2005ED742 /* info_on_new.png */; };
+		8BDA62B3195C58C2005ED742 /* info_on_new@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BDA62B1195C58C2005ED742 /* info_on_new@2x.png */; };
 		A029EADF1924250D00E57ECF /* LaunchImagePhoneR4.png in Resources */ = {isa = PBXBuildFile; fileRef = A029EADE1924250D00E57ECF /* LaunchImagePhoneR4.png */; };
 		A029EAE319242F5E00E57ECF /* HomeScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A029EAE219242F5E00E57ECF /* HomeScreenViewController.m */; };
 		A081542F1936400A004F25B3 /* ServerCommunicator.m in Sources */ = {isa = PBXBuildFile; fileRef = A081542E1936400A004F25B3 /* ServerCommunicator.m */; };
@@ -459,6 +461,8 @@
 		8BD2940E191D75500006AB2A /* PlanosDePisoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlanosDePisoViewController.m; path = "New ViewControllers/PlanosDePisoViewController.m"; sourceTree = "<group>"; };
 		8BD29410191D764E0006AB2A /* PisoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PisoCollectionViewCell.h; path = "New ViewControllers/Custom Cells/PisoCollectionViewCell.h"; sourceTree = "<group>"; };
 		8BD29411191D764E0006AB2A /* PisoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PisoCollectionViewCell.m; path = "New ViewControllers/Custom Cells/PisoCollectionViewCell.m"; sourceTree = "<group>"; };
+		8BDA62B0195C58C2005ED742 /* info_on_new.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info_on_new.png; sourceTree = "<group>"; };
+		8BDA62B1195C58C2005ED742 /* info_on_new@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info_on_new@2x.png"; sourceTree = "<group>"; };
 		A029EADE1924250D00E57ECF /* LaunchImagePhoneR4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LaunchImagePhoneR4.png; path = Resources/LaunchImagePhoneR4.png; sourceTree = "<group>"; };
 		A029EAE119242F5E00E57ECF /* HomeScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomeScreenViewController.h; path = "New ViewControllers/iPhone ViewControllers/HomeScreenViewController.h"; sourceTree = "<group>"; };
 		A029EAE219242F5E00E57ECF /* HomeScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HomeScreenViewController.m; path = "New ViewControllers/iPhone ViewControllers/HomeScreenViewController.m"; sourceTree = "<group>"; };
@@ -1025,6 +1029,8 @@
 		8B6FB9341950CEEF00EB2C4E /* New */ = {
 			isa = PBXGroup;
 			children = (
+				8BDA62B0195C58C2005ED742 /* info_on_new.png */,
+				8BDA62B1195C58C2005ED742 /* info_on_new@2x.png */,
 				8B6FB9351950CEEF00EB2C4E /* info_off.png */,
 				8B6FB9361950CEEF00EB2C4E /* info_off@2x.png */,
 				8B6FB9371950CEEF00EB2C4E /* info_on.png */,
@@ -1361,6 +1367,7 @@
 				3731935B158B840E00B49F1E /* SimpleFragment.glsl in Resources */,
 				8B6FB9451950CEEF00EB2C4E /* tv.png in Resources */,
 				8B9A41A5194769E00001B53B /* 5.jpg in Resources */,
+				8BDA62B2195C58C2005ED742 /* info_on_new.png in Resources */,
 				8B0621E919217B670017DD20 /* CarouselBackground@2x.png in Resources */,
 				8B6FB9461950CEEF00EB2C4E /* tv@2x.png in Resources */,
 				3731935C158B840E00B49F1E /* SimpleVertex.glsl in Resources */,
@@ -1379,6 +1386,7 @@
 				757BEC17161B8A69002B251A /* ekoomediaWterMark.png in Resources */,
 				7589BB36161CF32D0027453E /* botonEntrar.png in Resources */,
 				8B9A4199194766A30001B53B /* encoded5.pvr in Resources */,
+				8BDA62B3195C58C2005ED742 /* info_on_new@2x.png in Resources */,
 				A0A0B3B71934FEDD00BB48E0 /* NewBackground.jpg in Resources */,
 				75550744162F0FF300479537 /* play-video.png in Resources */,
 				7595183B1635FC5F00336C0A /* pin.png in Resources */,
@@ -1732,8 +1740,8 @@
 				INFOPLIST_FILE = "Ekoobot 3D/Ekoobot 3D-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "FDBB5DD1-3779-4D46-8E3C-BDBECF2E8D1A";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FDBB5DD1-3779-4D46-8E3C-BDBECF2E8D1A";
+				PROVISIONING_PROFILE = "CD114A10-B418-43E4-A18A-FB001776B03B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CD114A10-B418-43E4-A18A-FB001776B03B";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1826,7 +1834,7 @@
 		75E995DD164AF28000C7452E /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ekoomedia Ltda. (96G68N9225)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ekoomedia Ltda. (96G68N9225)";
 				COMPRESS_PNG_FILES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1834,8 +1842,8 @@
 				INFOPLIST_FILE = "Ekoobot 3D/Ekoobot 3D-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "C0D0B152-F7C4-4BAE-81F8-33204B8AC065";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C0D0B152-F7C4-4BAE-81F8-33204B8AC065";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

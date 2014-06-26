@@ -82,6 +82,7 @@
     BOOL sendingAnalytics;
     long long expectedBytes;
     BOOL downloadVideo;
+    BOOL projectIsOutdated;
 }
 
 #pragma mark - Lazy Instantiation
@@ -114,6 +115,12 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    projectIsOutdated = NO;
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(OutdatedProjectNotificationReceived:)
+                                                 name:@"OutdatedProjectNotification"
+                                               object:nil];
+    
     CGRect screen = [UIScreen mainScreen].bounds;
     screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -247,9 +254,12 @@
     //Info button
     self.infoButton = [[UIButton alloc] initWithFrame:infoButtonFrame];
     [self.infoButton setBackgroundImage:[UIImage imageNamed:@"info_off.png"] forState:UIControlStateNormal];
+    [self.infoButton setBackgroundImage:[UIImage imageNamed:@"info_on_new.png"] forState:UIControlStateHighlighted];
+    [self.infoButton setBackgroundImage:[UIImage imageNamed:@"info_on_new.png"] forState:UIControlStateSelected];
     [self.infoButton addTarget:self action:@selector(showInfoView) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.infoButton];
     
+    //Info View setup
     self.infoView = [[InfoView alloc] initWithFrame:CGRectMake(self.infoButton.frame.origin.x + self.infoButton.frame.size.width/2.0, self.infoButton.frame.origin.y, 260.0, 40.0)];
     self.infoView.topLabelColor = [UIColor greenColor];
     self.infoView.alpha = 0.0;
@@ -394,7 +404,9 @@
     NSLog(@"toque el botoncito de info");
     static BOOL viewIsTransparent = YES;
     if (viewIsTransparent) {
-        [UIView animateWithDuration:0.2
+        self.infoButton.highlighted = YES;
+        self.infoButton.selected = YES;
+        [UIView animateWithDuration:0.1
                               delay:0.0
                             options:UIViewAnimationOptionCurveLinear
                          animations:^(){
@@ -403,7 +415,9 @@
                              viewIsTransparent = NO;
                          }];
     } else {
-        [UIView animateWithDuration:0.2
+        self.infoButton.highlighted = NO;
+        self.infoButton.selected = NO;
+        [UIView animateWithDuration:0.1
                               delay:0.0
                             options:UIViewAnimationOptionCurveLinear
                          animations:^(){
@@ -980,6 +994,29 @@
 }*/
 
 -(void)finishSavingProcessOnMainThread:(NSDictionary *)projectDictionary {
+    Project *project = self.projectDic[@"project"];
+    
+    if (projectIsOutdated) {
+        FileSaver *fileSaver = [[FileSaver alloc] init];
+        NSMutableArray *savedProjectIDs = [fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"];
+        if (![savedProjectIDs containsObject:project.identifier]) {
+            NSLog(@"*********************************** Volveré a agregar este proyecto a file saver");
+            [savedProjectIDs addObject:project.identifier];
+            [fileSaver setDictionary:@{@"projectIDsArray": savedProjectIDs} withName:@"downloadedProjectsIDs"];
+            
+            //Post a notification to update the carousel view controller, because we updated a project
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"ProjectUpdatedNotification" object:nil];
+        }
+        projectIsOutdated = NO;
+        
+        //Change the info view text
+        self.infoView.topLabel.text = NSLocalizedString(@"UltimaVersion", nil);
+        self.infoView.topLabel.textColor = [UIColor greenColor];
+        NSString *updatedString = NSLocalizedString(@"ActualizadoEl", nil);
+        self.infoView.bottomLabel.text = [NSString stringWithFormat:@"%@ %@", updatedString, project.lastUpdate];
+        self.enterButton.hidden = NO;
+    }
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:@"downloadCompleted" object:nil userInfo:nil];
     [self goToPlanosVC];
 }
@@ -1212,6 +1249,28 @@
     [[[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil] show];
 }*/
 
+#pragma mark - Notification Handlers 
+
+-(void)OutdatedProjectNotificationReceived:(NSNotification *)notification {
+    NSLog(@"**************************** Me llegó la notificación de proyecto desactualizado ************************************");
+    Project *project = self.projectDic[@"project"];
+    
+    NSDictionary *infoDic = [notification userInfo];
+    NSNumber *outdatedProjectID = infoDic[@"OutdatedProjectIdentifier"];
+    if ([outdatedProjectID intValue] == [project.identifier intValue]) {
+        NSLog(@"************************************ Este proyecto está desactualizado ********************************************");
+        //This project is outdated, so hidde the "enter button" and
+        //update the info view
+        self.enterButton.hidden = YES;
+        self.infoView.topLabel.textColor = [UIColor redColor];
+        self.infoView.topLabel.text = NSLocalizedString(@"NuevaVersion", nil);
+        self.infoView.bottomLabel.text = NSLocalizedString(@"Descarga", nil);
+        [[[UIAlertView alloc] initWithTitle:@"Nueva actualización" message:@"Existe una nueva actualización disponible para este proyecto." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+        
+        projectIsOutdated = YES;
+    }
+}
+
 #pragma mark - DownloadViewDelegate
 
 -(void)cancelButtonWasTappedInDownloadView:(DownloadView *)downloadView {
@@ -1230,7 +1289,6 @@
     self.opacityView.hidden = YES;
     self.downloadView.hidden = YES;
     self.downloadView.progress = 0;
-    
 }
 
 @end

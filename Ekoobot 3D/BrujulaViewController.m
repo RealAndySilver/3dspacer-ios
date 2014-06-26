@@ -95,7 +95,7 @@
                                                            toQueue:[NSOperationQueue mainQueue]
                                                        withHandler:^(CMDeviceMotion *motion, NSError *error){
                                                            attitude = motion.attitude;
-                                                           NSLog(@"Z: %f", attitude.yaw);
+                                                           //NSLog(@"Z: %f", attitude.yaw);
                                                            [self update];
                                                        }];
     }

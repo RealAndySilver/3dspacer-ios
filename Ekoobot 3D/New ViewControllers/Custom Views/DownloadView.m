@@ -9,8 +9,7 @@
 #import "DownloadView.h"
 
 @interface DownloadView()
-@property (strong, nonatomic) UIProgressView *progressView;
-@property (strong, nonatomic) UILabel *progressLabel;
+
 @end
 
 @implementation DownloadView
@@ -84,14 +83,26 @@
         [self addSubview:self.progressLabel];
         
         //Cancel Button
-        UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(frame.size.width/2.0 - 22.0, frame.size.height/2.0, 44.0, 44.0)];
-        [cancelButton setBackgroundImage:[UIImage imageNamed:@"NewCancelDownloadIcon.png"] forState:UIControlStateNormal];
-        [cancelButton addTarget:self action:@selector(cancelDownload) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:cancelButton];
+        self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(frame.size.width/2.0 - 22.0, frame.size.height/2.0, 44.0, 44.0)];
+        [self.cancelButton setBackgroundImage:[UIImage imageNamed:@"NewCancelDownloadIcon.png"] forState:UIControlStateNormal];
+        [self.cancelButton addTarget:self action:@selector(cancelDownload) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:self.cancelButton];
+        
+        //DownloadVideo Button
+        self.downloadVideoButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        self.downloadVideoButton.frame = CGRectMake(frame.size.width/2.0 - 20.0 - 44.0, frame.size.height/2.0, 44.0, 44.0);
+        [self.downloadVideoButton setBackgroundImage:[UIImage imageNamed:@"DownloadVideoIcon.png"] forState:UIControlStateNormal];
+        self.downloadVideoButton.hidden = YES;
+        [self.downloadVideoButton addTarget:self action:@selector(downloadVideo) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:self.downloadVideoButton];
         
         //[self animateOpacity];
     }
     return self;
+}
+
+-(void)downloadVideo {
+    [self.delegate downloadVideoButtonWasTappedInDownloadView:self];
 }
 
 /*-(void)animateOpacity {

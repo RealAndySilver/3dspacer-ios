@@ -143,6 +143,7 @@
     for (int i = 0; i < [self.spacesArray count]; i++) {
         Space *space = self.spacesArray[i];
         if ([space.plant isEqualToString:plant.identifier]) {
+            NSLog(@"Agregaré un pin a la planta en el index %d", indexPath.item);
             [pinsArrayForPlant addObject:space];
         }
     }

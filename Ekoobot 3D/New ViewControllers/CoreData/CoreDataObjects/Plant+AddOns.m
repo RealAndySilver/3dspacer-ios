@@ -17,7 +17,7 @@
 +(Plant *)plantWithServerInfo:(NSDictionary *)dictionary inManagedObjectContext:(NSManagedObjectContext *)context {
     Plant *plant = nil;
     
-    NSString *plantID = dictionary[@"id"];
+    NSString *plantID = [NSString stringWithFormat:@"%d", [dictionary[@"id"] intValue]];
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Plant"];
     request.predicate = [NSPredicate predicateWithFormat:@"identifier = %@", plantID];
     NSError *error;
@@ -33,50 +33,50 @@
             plant.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:dictionary[@"image"]]];
         }
         
-        plant.project = dictionary[@"project"];
+        plant.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         plant.identifier = plantID;
         plant.name = dictionary[@"name"];
         plant.imageURL = dictionary[@"image"];
         plant.miniURL = dictionary[@"mini"];
-        plant.imageWidth = dictionary[@"imageWidth"];
-        plant.imageHeight = dictionary[@"imageHeight"];
-        plant.northDegs = dictionary[@"northDegs"];
+        plant.imageWidth = dictionary[@"image_width"];
+        plant.imageHeight = dictionary[@"image_height"];
+        plant.northDegs = dictionary[@"north_degs"];
         plant.enabled = dictionary[@"enabled"];
         plant.order = dictionary[@"order"];
-        plant.lastUpdate = dictionary[@"lastUpdate"];
-        plant.product = dictionary[@"product"];
+        plant.lastUpdate = dictionary[@"last_update"];
+        plant.product = [NSString stringWithFormat:@"%d", [dictionary[@"product"] intValue]];
         
     } else {
         //The render did not exist on the database, so we have to create it
         NSLog(@"la planta no existía, así que crearemos uno nuevo.");
         
         plant = [NSEntityDescription insertNewObjectForEntityForName:@"Plant" inManagedObjectContext:context];
-        plant.project = dictionary[@"project"];
+        plant.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         plant.identifier = plantID;
         plant.name = dictionary[@"name"];
         plant.imageURL = dictionary[@"image"];
         plant.miniURL = dictionary[@"mini"];
         
-        if ([dictionary[@"imageWidth"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"imageWidth"] isEqualToString:@""]) {
+        if ([dictionary[@"image_width"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"image_width"] isEqualToString:@""]) {
                 plant.imageWidth = @(0);
             }
         } else {
-            plant.imageWidth = dictionary[@"imageWidth"];
+            plant.imageWidth = dictionary[@"image_width"];
         }
         
-        if ([dictionary[@"imageHeight"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"imageHeight"] isEqualToString:@""]) {
+        if ([dictionary[@"image_height"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"image_height"] isEqualToString:@""]) {
                 plant.imageWidth = @(0);
             }
         } else {
-            plant.imageHeight = dictionary[@"imageHeight"];
+            plant.imageHeight = dictionary[@"image_height"];
         }
-        plant.northDegs = dictionary[@"northDegs"];
+        plant.northDegs = dictionary[@"north_degs"];
         plant.enabled = dictionary[@"enabled"];
         plant.order = dictionary[@"order"];
-        plant.lastUpdate = dictionary[@"lastUpdate"];
-        plant.product = dictionary[@"product"];
+        plant.lastUpdate = dictionary[@"last_update"];
+        plant.product = [NSString stringWithFormat:@"%d", [dictionary[@"product"] intValue]];
         plant.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:plant.imageURL]];
     }
     

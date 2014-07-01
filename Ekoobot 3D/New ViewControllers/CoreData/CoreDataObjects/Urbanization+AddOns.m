@@ -18,7 +18,7 @@
                      inManagedObjectContext:(NSManagedObjectContext *)context {
     Urbanization *urbanization = nil;
     
-    NSString *urbanizationID = dictionary[@"id"];
+    NSString *urbanizationID = [NSString stringWithFormat:@"%d", [dictionary[@"id"] intValue]];
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Urbanization"];
     request.predicate = [NSPredicate predicateWithFormat:@"identifier = %@", urbanizationID];
     NSError *error;
@@ -38,27 +38,27 @@
         urbanization.imageURL = dictionary[@"image"];
         urbanization.miniURL = dictionary[@"mini"];
         
-        if ([dictionary[@"imageWidth"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"imageWidth"] isEqualToString:@""]) {
+        if ([dictionary[@"image_width"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"image_width"] isEqualToString:@""]) {
                 urbanization.imageWidth = @(0);
             }
         }
          else {
-            urbanization.imageWidth = dictionary[@"imageWidth"];
+            urbanization.imageWidth = dictionary[@"image_width"];
         }
         
-        if ([dictionary[@"imageHeight"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"imageHeight"] isEqualToString:@""]) {
+        if ([dictionary[@"image_height"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"image_height"] isEqualToString:@""]) {
                 urbanization.imageHeight = @(0);
             }
         }
         else {
-            urbanization.imageHeight = dictionary[@"imageHeight"];
+            urbanization.imageHeight = dictionary[@"image_height"];
         }
-        urbanization.northDegrees = dictionary[@"northDegs"];
+        urbanization.northDegrees = dictionary[@"north_degs"];
         urbanization.enabled = dictionary[@"enabled"];
-        urbanization.lastUpdate = dictionary[@"lastUpdate"];
-        urbanization.project = dictionary[@"project"];
+        urbanization.lastUpdate = dictionary[@"last_update"];
+        urbanization.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         
         
     } else {
@@ -69,27 +69,27 @@
         urbanization.identifier = urbanizationID;
         urbanization.imageURL = dictionary[@"image"];
         urbanization.miniURL = dictionary[@"mini"];
-        if ([dictionary[@"imageWidth"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"imageWidth"] isEqualToString:@""]) {
+        if ([dictionary[@"image_width"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"image_width"] isEqualToString:@""]) {
                 urbanization.imageWidth = @(0);
             }
         }
         else {
-            urbanization.imageWidth = dictionary[@"imageWidth"];
+            urbanization.imageWidth = dictionary[@"image_width"];
         }
         
-        if ([dictionary[@"imageHeight"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"imageHeight"] isEqualToString:@""]) {
+        if ([dictionary[@"image_height"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"image_height"] isEqualToString:@""]) {
                 urbanization.imageHeight = @(0);
             }
         }
         else {
-            urbanization.imageHeight = dictionary[@"imageHeight"];
+            urbanization.imageHeight = dictionary[@"image_height"];
         }
-        urbanization.northDegrees = dictionary[@"northDegs"];
+        urbanization.northDegrees = dictionary[@"north_degs"];
         urbanization.enabled = dictionary[@"enabled"];
-        urbanization.lastUpdate = dictionary[@"lastUpdate"];
-        urbanization.project = dictionary[@"project"];
+        urbanization.lastUpdate = dictionary[@"last_update"];
+        urbanization.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         urbanization.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:urbanization.imageURL]];
     }
     return urbanization;

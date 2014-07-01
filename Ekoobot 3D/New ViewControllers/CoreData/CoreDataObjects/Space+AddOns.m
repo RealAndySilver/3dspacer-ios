@@ -13,7 +13,7 @@
 +(Space *)spaceWithServerInfo:(NSDictionary *)dictionary inManagedObjectContext:(NSManagedObjectContext *)context {
     Space *space = nil;
     
-    NSString *spaceID = dictionary[@"id"];
+    NSString *spaceID = [NSString stringWithFormat:@"%d", [dictionary[@"id"] intValue]];
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Space"];
     request.predicate = [NSPredicate predicateWithFormat:@"identifier = %@", spaceID];
     NSError *error;
@@ -25,44 +25,44 @@
         NSLog(@"El espacio ya existía en la base de datos");
         space = [matches firstObject];
         space.identifier = spaceID;
-        space.urbanization = dictionary[@"urbanization"];
-        space.project = dictionary[@"project"];
+        space.urbanization = [NSString stringWithFormat:@"%d", [dictionary[@"urbanization"] intValue]];
+        space.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         space.name = dictionary[@"name"];
-        if ([dictionary[@"xCoord"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"xCoord"] isEqualToString:@""]) {
+        if ([dictionary[@"x_coord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"x_coord"] isEqualToString:@""]) {
                 space.xCoord = @(0);
             }
         } else {
-            space.xCoord = dictionary[@"xCoord"];
+            space.xCoord = dictionary[@"x_coord"];
         }
         
-        if ([dictionary[@"yCoord"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"yCoord"] isEqualToString:@""]) {
+        if ([dictionary[@"y_coord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"y_coord"] isEqualToString:@""]) {
                 space.yCoord = @(0);
             }
         } else {
-            space.yCoord = dictionary[@"yCoord"];
+            space.yCoord = dictionary[@"y_coord"];
         }
         
-        if ([dictionary[@"xLimit"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"xLimit"] isEqualToString:@""]) {
+        if ([dictionary[@"x_limit"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"x_limit"] isEqualToString:@""]) {
                 space.xLimit = @(0);
             }
         } else {
-            space.xLimit = dictionary[@"xLimit"];
+            space.xLimit = dictionary[@"x_limit"];
         }
         
-        if ([dictionary[@"yLimit"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"yLimit"] isEqualToString:@""]) {
+        if ([dictionary[@"y_limiit"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"y_limiit"] isEqualToString:@""]) {
                 space.yLimit = @(0);
             }
         } else {
-            space.yLimit = dictionary[@"yLimit"];
+            space.yLimit = dictionary[@"y_limiit"];
         }
         space.common = dictionary[@"common"];
         space.enabled = dictionary[@"enabled"];
-        space.lastUpdate = dictionary[@"lastUpdate"];
-        space.plant = dictionary[@"plant"];
+        space.lastUpdate = dictionary[@"last_update"];
+        space.plant = [NSString stringWithFormat:@"%d", [dictionary[@"plant"] intValue]];
         
     } else {
         //The render did not exist on the database, so we have to create it
@@ -70,45 +70,45 @@
         
         space = [NSEntityDescription insertNewObjectForEntityForName:@"Space" inManagedObjectContext:context];
         space.identifier = spaceID;
-        space.urbanization = dictionary[@"urbanization"];
-        space.project = dictionary[@"project"];
+        space.urbanization = [NSString stringWithFormat:@"%d", [dictionary[@"urbanization"] intValue]];
+        space.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         space.name = dictionary[@"name"];
         
-        if ([dictionary[@"xCoord"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"xCoord"] isEqualToString:@""]) {
+        if ([dictionary[@"x_coord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"x_coord"] isEqualToString:@""]) {
                 space.xCoord = @(0);
             }
         } else {
-            space.xCoord = dictionary[@"xCoord"];
+            space.xCoord = dictionary[@"x_coord"];
         }
         
-        if ([dictionary[@"yCoord"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"yCoord"] isEqualToString:@""]) {
+        if ([dictionary[@"y_coord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"y_coord"] isEqualToString:@""]) {
                 space.yCoord = @(0);
             }
         } else {
-            space.yCoord = dictionary[@"yCoord"];
+            space.yCoord = dictionary[@"y_coord"];
         }
         
-        if ([dictionary[@"xLimit"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"xLimit"] isEqualToString:@""]) {
+        if ([dictionary[@"x_limit"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"x_limit"] isEqualToString:@""]) {
                 space.xLimit = @(0);
             }
         } else {
-            space.xLimit = dictionary[@"xLimit"];
+            space.xLimit = dictionary[@"x_limit"];
         }
         
-        if ([dictionary[@"yLimit"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"yLimit"] isEqualToString:@""]) {
+        if ([dictionary[@"y_limiit"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"y_limiit"] isEqualToString:@""]) {
                 space.yLimit = @(0);
             }
         } else {
-            space.yLimit = dictionary[@"yLimit"];
+            space.yLimit = dictionary[@"y_limiit"];
         }
         space.common = dictionary[@"common"];
         space.enabled = dictionary[@"enabled"];
-        space.lastUpdate = dictionary[@"lastUpdate"];
-        space.plant = dictionary[@"plant"];
+        space.lastUpdate = dictionary[@"last_update"];
+        space.plant = [NSString stringWithFormat:@"%d", [dictionary[@"plant"] intValue]];
     }
     
     return space;

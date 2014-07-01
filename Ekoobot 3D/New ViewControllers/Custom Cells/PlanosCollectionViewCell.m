@@ -60,6 +60,7 @@
             [pinButton setImage:[UIImage imageNamed:@"pin.png"] forState:UIControlStateNormal];
             [pinButton addTarget:self action:@selector(espacio3DButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             pinButton.tag = i + 1;
+            NSLog(@"Agregué un pin en la posición %@", NSStringFromCGRect(pinButton.frame));
             [self.planoImageView addSubview:pinButton];
             
             //Button Label

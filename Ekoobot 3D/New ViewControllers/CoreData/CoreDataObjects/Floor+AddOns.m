@@ -17,7 +17,7 @@
 +(Floor *)floorWithServerInfo:(NSDictionary *)dictionary inManagedObjectContext:(NSManagedObjectContext *)context {
     Floor *floor = nil;
     
-    NSString *floorID = dictionary[@"id"];
+    NSString *floorID = [NSString stringWithFormat:@"%d", [dictionary[@"id"] intValue]];
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Floor"];
     request.predicate = [NSPredicate predicateWithFormat:@"identifier = %@", floorID];
     NSError *error;
@@ -33,31 +33,31 @@
             floor.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:dictionary[@"image"]]];
         }
         
-        floor.project = dictionary[@"project"];
+        floor.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         floor.identifier = floorID;
         floor.name = dictionary[@"name"];
         floor.imageURL = dictionary[@"image"];
         floor.miniURL = dictionary[@"mini"];
-        if ([dictionary[@"imageWidth"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"imageWidth"] isEqualToString:@""]) {
+        if ([dictionary[@"image_width"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"image_width"] isEqualToString:@""]) {
                 floor.imageWidth = @(0);
             }
         } else {
-            floor.imageWidth = dictionary[@"imageWidth"];
+            floor.imageWidth = dictionary[@"image_width"];
         }
         
-        if ([dictionary[@"imageHeight"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"imageHeight"] isEqualToString:@""]) {
+        if ([dictionary[@"image_height"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"image_height"] isEqualToString:@""]) {
                 floor.imageHeight = @(0);
             }
         } else {
-            floor.imageHeight = dictionary[@"imageHeight"];
+            floor.imageHeight = dictionary[@"image_height"];
         }
-        floor.northDegrees = dictionary[@"northDegs"];
+        floor.northDegrees = dictionary[@"north_degs"];
         floor.enabled = dictionary[@"enabled"];
         floor.order = dictionary[@"order"];
-        floor.lastUpdate = dictionary[@"lastUpdate"];
-        floor.group = dictionary[@"group"];
+        floor.lastUpdate = dictionary[@"last_update"];
+        floor.group = [NSString stringWithFormat:@"%d", [dictionary[@"group"] intValue]];
         
         
     } else {
@@ -65,31 +65,31 @@
         NSLog(@"El piso no existía, así que crearemos uno nuevo.");
         
         floor = [NSEntityDescription insertNewObjectForEntityForName:@"Floor" inManagedObjectContext:context];
-        floor.project = dictionary[@"project"];
+        floor.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         floor.identifier = floorID;
         floor.name = dictionary[@"name"];
         floor.imageURL = dictionary[@"image"];
         floor.miniURL = dictionary[@"mini"];
-        if ([dictionary[@"imageWidth"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"imageWidth"] isEqualToString:@""]) {
+        if ([dictionary[@"image_width"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"image_width"] isEqualToString:@""]) {
                 floor.imageWidth = @(0);
             }
         } else {
-            floor.imageWidth = dictionary[@"imageWidth"];
+            floor.imageWidth = dictionary[@"image_width"];
         }
         
-        if ([dictionary[@"imageHeight"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"imageHeight"] isEqualToString:@""]) {
+        if ([dictionary[@"image_height"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"image_height"] isEqualToString:@""]) {
                 floor.imageHeight = @(0);
             }
         } else {
-            floor.imageHeight = dictionary[@"imageHeight"];
+            floor.imageHeight = dictionary[@"image_height"];
         }
-        floor.northDegrees = dictionary[@"northDegs"];
+        floor.northDegrees = dictionary[@"north_degs"];
         floor.enabled = dictionary[@"enabled"];
         floor.order = dictionary[@"order"];
-        floor.lastUpdate = dictionary[@"lastUpdate"];
-        floor.group = dictionary[@"group"];
+        floor.lastUpdate = dictionary[@"last_update"];
+        floor.group = [NSString stringWithFormat:@"%d", [dictionary[@"group"] intValue]];
         floor.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:floor.imageURL]];
     }
     

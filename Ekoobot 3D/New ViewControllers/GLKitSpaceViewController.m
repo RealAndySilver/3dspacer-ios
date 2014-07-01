@@ -457,7 +457,7 @@
     
     if (viewIsZooming) {
         if (!viewIsZoomed) {
-            fieldOfView -= 1.5;
+            fieldOfView -= 2.5;
             if (fieldOfView <= 35.0) {
                 fieldOfView = 35.0;
                 viewIsZooming = NO;
@@ -465,7 +465,7 @@
             }
         
         } else {
-            fieldOfView += 1.5;
+            fieldOfView += 2.5;
             if (fieldOfView >= 75.0) {
                 fieldOfView = 75.0;
                 viewIsZooming = NO;

@@ -166,6 +166,7 @@
 		8BD29412191D764E0006AB2A /* PisoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BD29411191D764E0006AB2A /* PisoCollectionViewCell.m */; };
 		8BDA62B2195C58C2005ED742 /* info_on_new.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BDA62B0195C58C2005ED742 /* info_on_new.png */; };
 		8BDA62B3195C58C2005ED742 /* info_on_new@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BDA62B1195C58C2005ED742 /* info_on_new@2x.png */; };
+		8BFFE1D219634E6800DAAAB8 /* DownloadVideoIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BFFE1D119634E6800DAAAB8 /* DownloadVideoIcon.png */; };
 		A029EADF1924250D00E57ECF /* LaunchImagePhoneR4.png in Resources */ = {isa = PBXBuildFile; fileRef = A029EADE1924250D00E57ECF /* LaunchImagePhoneR4.png */; };
 		A029EAE319242F5E00E57ECF /* HomeScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A029EAE219242F5E00E57ECF /* HomeScreenViewController.m */; };
 		A081542F1936400A004F25B3 /* ServerCommunicator.m in Sources */ = {isa = PBXBuildFile; fileRef = A081542E1936400A004F25B3 /* ServerCommunicator.m */; };
@@ -463,6 +464,7 @@
 		8BD29411191D764E0006AB2A /* PisoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PisoCollectionViewCell.m; path = "New ViewControllers/Custom Cells/PisoCollectionViewCell.m"; sourceTree = "<group>"; };
 		8BDA62B0195C58C2005ED742 /* info_on_new.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info_on_new.png; sourceTree = "<group>"; };
 		8BDA62B1195C58C2005ED742 /* info_on_new@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info_on_new@2x.png"; sourceTree = "<group>"; };
+		8BFFE1D119634E6800DAAAB8 /* DownloadVideoIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DownloadVideoIcon.png; path = Resources/iPad/DownloadVideoIcon.png; sourceTree = "<group>"; };
 		A029EADE1924250D00E57ECF /* LaunchImagePhoneR4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LaunchImagePhoneR4.png; path = Resources/LaunchImagePhoneR4.png; sourceTree = "<group>"; };
 		A029EAE119242F5E00E57ECF /* HomeScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomeScreenViewController.h; path = "New ViewControllers/iPhone ViewControllers/HomeScreenViewController.h"; sourceTree = "<group>"; };
 		A029EAE219242F5E00E57ECF /* HomeScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HomeScreenViewController.m; path = "New ViewControllers/iPhone ViewControllers/HomeScreenViewController.m"; sourceTree = "<group>"; };
@@ -931,6 +933,7 @@
 		8B0621E519217B4F0017DD20 /* New Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8BFFE1D119634E6800DAAAB8 /* DownloadVideoIcon.png */,
 				8B6FB9341950CEEF00EB2C4E /* New */,
 				8B9A418E194766A30001B53B /* PVRPrueba */,
 				8B14EF1D1945F28200F54C18 /* NewInfoIconBlack.png */,
@@ -1424,6 +1427,7 @@
 				75FF14501652EA2700C39705 /* compassOn.png in Resources */,
 				A0D1A5981938BC84004285A1 /* GrayImage.png in Resources */,
 				8B9A4198194766A30001B53B /* encoded4.pvr in Resources */,
+				8BFFE1D219634E6800DAAAB8 /* DownloadVideoIcon.png in Resources */,
 				8B9A41A3194769E00001B53B /* 3.jpg in Resources */,
 				A0D1A59F193943B3004285A1 /* NewUpdateIcon.jpg in Resources */,
 				A0CF3F6A1937B019000E9986 /* ImagenProyectoDefecto.png in Resources */,

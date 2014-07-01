@@ -33,7 +33,7 @@
             finishImage.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:dictionary[@"image"]]];
         }*/
         
-        finishImage.project = dictionary[@"project"];
+        finishImage.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         finishImage.identifier = finishImageID;
         finishImage.imageURL = dictionary[@"image"];
         finishImage.miniURL = dictionary[@"mini"];
@@ -43,8 +43,8 @@
         if ([finishImage.type isEqualToString:@"bottom"]) {
             finishImage.type = @"down";
         }
-        finishImage.lastUpdate = dictionary[@"lastUpdate"];
-        finishImage.finish = dictionary[@"finish"];
+        finishImage.lastUpdate = dictionary[@"last_update"];
+        finishImage.finish = [NSString stringWithFormat:@"%d", [dictionary[@"finish"] intValue]];
         
         if ([finishImage.imageURL rangeOfString:@".jpg"].location == NSNotFound) {
             //No es .jpg, sino .pvr
@@ -59,7 +59,7 @@
         NSLog(@"La imagen del acabado no existía, así que crearemos uno nuevo.");
         
         finishImage = [NSEntityDescription insertNewObjectForEntityForName:@"FinishImage" inManagedObjectContext:context];
-        finishImage.project = dictionary[@"project"];
+        finishImage.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         finishImage.identifier = finishImageID;
         finishImage.imageURL = dictionary[@"image"];
         finishImage.miniURL = dictionary[@"mini"];
@@ -69,8 +69,8 @@
         if ([finishImage.type isEqualToString:@"bottom"]) {
             finishImage.type = @"down";
         }
-        finishImage.lastUpdate = dictionary[@"lastUpdate"];
-        finishImage.finish = dictionary[@"finish"];
+        finishImage.lastUpdate = dictionary[@"last_update"];
+        finishImage.finish = [NSString stringWithFormat:@"%d", [dictionary[@"finish"] intValue]];
         if ([finishImage.imageURL rangeOfString:@".jpg"].location == NSNotFound) {
             //No es .jpg, sino .pvr
             NSLog(@"La imagen es PVR");

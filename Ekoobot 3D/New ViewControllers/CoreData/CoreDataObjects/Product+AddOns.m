@@ -13,7 +13,7 @@
 +(Product *)productWithServerInfo:(NSDictionary *)dictionary inManagedObjectContext:(NSManagedObjectContext *)context {
     Product *product = nil;
     
-    NSString *productID = dictionary[@"id"];
+    NSString *productID = [NSString stringWithFormat:@"%d", [dictionary[@"id"] intValue]];
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Product"];
     request.predicate = [NSPredicate predicateWithFormat:@"identifier = %@", productID];
     NSError *error;
@@ -25,30 +25,30 @@
         NSLog(@"El producto ya existía en la base de datos");
         product = [matches firstObject];
         product.identifier = productID;
-        product.project = dictionary[@"project"];
+        product.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         product.name = dictionary[@"name"];
         product.area = dictionary[@"area"];
-        if ([dictionary[@"xCoord"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"xCoord"] isEqualToString:@""]) {
+        if ([dictionary[@"x_coord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"x_coord"] isEqualToString:@""]) {
                 product.xCoord = @(0);
             }
         }
          else {
-            product.xCoord = dictionary[@"xCoord"];
+            product.xCoord = dictionary[@"x_coord"];
         }
         
-        if ([dictionary[@"yCoord"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"yCoord"] isEqualToString:@""]) {
+        if ([dictionary[@"y_coord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"y_coord"] isEqualToString:@""]) {
                 product.yCoord = @(0);
             }
         }
          else {
-            product.yCoord = dictionary[@"yCoord"];
+            product.yCoord = dictionary[@"y_coord"];
         }
-        product.startPlant = dictionary[@"startPlant"];
+        product.startPlant = [NSString stringWithFormat:@"%d", [dictionary[@"start_plant"] intValue]];
         product.enabled = dictionary[@"enabled"];
-        product.lastUpdate = dictionary[@"lastUpdate"];
-        product.floor = dictionary[@"floor"];
+        product.lastUpdate = dictionary[@"last_update"];
+        product.floor = [NSString stringWithFormat:@"%d", [dictionary[@"floor"] intValue]];
         
         
     } else {
@@ -57,31 +57,31 @@
         
         product = [NSEntityDescription insertNewObjectForEntityForName:@"Product" inManagedObjectContext:context];
         product.identifier = productID;
-        product.project = dictionary[@"project"];
+        product.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         product.name = dictionary[@"name"];
         product.area = dictionary[@"area"];
         
-        if ([dictionary[@"xCoord"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"xCoord"] isEqualToString:@""]) {
+        if ([dictionary[@"x_coord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"x_coord"] isEqualToString:@""]) {
                 product.xCoord = @(0);
             }
         }
         else {
-            product.xCoord = dictionary[@"xCoord"];
+            product.xCoord = dictionary[@"x_coord"];
         }
         
-        if ([dictionary[@"yCoord"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"yCoord"] isEqualToString:@""]) {
+        if ([dictionary[@"y_coord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"y_coord"] isEqualToString:@""]) {
                 product.yCoord = @(0);
             }
         }
         else {
-            product.yCoord = dictionary[@"yCoord"];
+            product.yCoord = dictionary[@"y_coord"];
         }
-        product.startPlant = dictionary[@"startPlant"];
+        product.startPlant = [NSString stringWithFormat:@"%d", [dictionary[@"start_plant"] intValue]];
         product.enabled = dictionary[@"enabled"];
-        product.lastUpdate = dictionary[@"lastUpdate"];
-        product.floor = dictionary[@"floor"];
+        product.lastUpdate = dictionary[@"last_update"];
+        product.floor = [NSString stringWithFormat:@"%d", [dictionary[@"floor"] intValue]];
     }
     return product;
 }

@@ -13,7 +13,7 @@
 //#define ENDPOINT @"http://sweetwater.jit.su"
 //#define ENDPOINT @"http://appsbetadev.caracolplay.com"
 //#define ENDPOINT @"http://apps.caracolplay.com"
-#define ENDPOINT @"http://ekoobot.com/new_bot/web/app.php/api/v2_0"
+#define ENDPOINT @"https://ekoobot.com/new_bot/web/app.php/api/v2_0"
 
 #import "IAmCoder.h"
 #import "UserInfo.h"

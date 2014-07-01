@@ -338,9 +338,13 @@
         //The video doesn't exist
         NSLog(@"El video %@ del proyecto %@ no existe", video.identifier, video.project);
         self.downloadView.hidden = NO;
+        self.downloadView.downloadVideoButton.hidden = NO;
+        self.downloadView.cancelButton.transform = CGAffineTransformMakeTranslation(40.0, 0.0);
         self.downloadView.descriptionLabel.text = NSLocalizedString(@"DescargandoVideo", nil);
+        self.downloadView.progressLabel.hidden = YES;
+        self.downloadView.progressView.hidden = YES;
         self.opacityView .hidden = NO;
-        [self downloadVideoWithNSUrlSession:video];
+        //[self downloadVideoWithNSUrlSession:video];
     }
 }
 
@@ -1273,12 +1277,24 @@
 
 #pragma mark - DownloadViewDelegate
 
+-(void)downloadVideoButtonWasTappedInDownloadView:(DownloadView *)downloadView {
+    NSLog(@"descargaréeeeeee");
+    Video *video = [self.projectDic[@"videos"] firstObject];
+    downloadView.progressLabel.hidden = NO;
+    downloadView.progressView.hidden = NO;
+    [self downloadVideoWithNSUrlSession:video];
+}
+
 -(void)cancelButtonWasTappedInDownloadView:(DownloadView *)downloadView {
     NSLog(@"*** Cancelé la download");
     if (downloadVideo) {
         [self.dataTask cancel];
         self.receivedVideoData = nil;
     }
+    
+    self.opacityView.hidden = YES;
+    self.downloadView.hidden = YES;
+    self.downloadView.progress = 0;
 }
 
 -(void)downloadViewWillDisappear:(DownloadView *)downloadView {

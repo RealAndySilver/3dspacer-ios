@@ -17,7 +17,7 @@
 +(Render *)renderWithServerInfo:(NSDictionary *)dictionary inManagedObjectContext:(NSManagedObjectContext *)context {
     Render *render = nil;
     
-    NSString *renderID = dictionary[@"id"];
+    NSString *renderID = [NSString stringWithFormat:@"%d", [dictionary[@"id"] intValue]];
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Render"];
     request.predicate = [NSPredicate predicateWithFormat:@"identifier = %@", renderID];
     NSError *error;
@@ -39,8 +39,8 @@
         render.miniURL = dictionary[@"mini"];
         render.thumbURL = dictionary[@"thumb"];
         render.order = dictionary[@"order"];
-        render.lastUpdate = dictionary[@"lastUpdate"];
-        render.project = dictionary[@"project"];
+        render.lastUpdate = dictionary[@"last_update"];
+        render.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         
     } else {
         //The render did not exist on the database, so we have to create it
@@ -53,8 +53,8 @@
         render.miniURL = dictionary[@"mini"];
         render.thumbURL = dictionary[@"thumb"];
         render.order = dictionary[@"order"];
-        render.lastUpdate = dictionary[@"lastUpdate"];
-        render.project = dictionary[@"project"];
+        render.lastUpdate = dictionary[@"last_update"];
+        render.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         render.mainImageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:render.mainURL]];
     }
     return render;

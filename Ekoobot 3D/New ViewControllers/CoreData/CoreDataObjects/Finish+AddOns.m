@@ -17,7 +17,7 @@
 +(Finish *)finishWithServerInfo:(NSDictionary *)dictionary inManagedObjectContext:(NSManagedObjectContext *)context {
     Finish *finish = nil;
     
-    NSString *finishID = dictionary[@"id"];
+    NSString *finishID = [NSString stringWithFormat:@"%d", [dictionary[@"id"] intValue]];
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Finish"];
     request.predicate = [NSPredicate predicateWithFormat:@"identifier = %@", finishID];
     NSError *error;
@@ -33,32 +33,32 @@
             finish.iconData = [NSData dataWithContentsOfURL:[NSURL URLWithString:dictionary[@"icon"]]];
         }
         
-        finish.project = dictionary[@"project"];
+        finish.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         finish.identifier = finishID;
         finish.name = dictionary[@"name"];
         finish.iconURL = dictionary[@"icon"];
         finish.order = dictionary[@"order"];
         finish.enabled = dictionary[@"enabled"];
-        finish.lastUpdate = dictionary[@"lastUpdate"];
-        finish.space = dictionary[@"space"];
+        finish.lastUpdate = dictionary[@"last_update"];
+        finish.space = [NSString stringWithFormat:@"%d", [dictionary[@"space"] intValue]];
         finish.size = dictionary[@"size"];
-        finish.finalSize = dictionary[@"finalSize"];
+        finish.finalSize = dictionary[@"final_size"];
         
     } else {
         //The render did not exist on the database, so we have to create it
         NSLog(@"EL acabado no existía, así que crearemos uno nuevo.");
         
         finish = [NSEntityDescription insertNewObjectForEntityForName:@"Finish" inManagedObjectContext:context];
-        finish.project = dictionary[@"project"];
+        finish.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         finish.identifier = finishID;
         finish.name = dictionary[@"name"];
         finish.iconURL = dictionary[@"icon"];
         finish.order = dictionary[@"order"];
         finish.enabled = dictionary[@"enabled"];
-        finish.lastUpdate = dictionary[@"lastUpdate"];
-        finish.space = dictionary[@"space"];
+        finish.lastUpdate = dictionary[@"last_update"];
+        finish.space = [NSString stringWithFormat:@"%d", [dictionary[@"space"] intValue]];
         finish.size = dictionary[@"size"];
-        finish.finalSize = dictionary[@"finalSize"];
+        finish.finalSize = dictionary[@"final_size"];
         finish.iconData = [NSData dataWithContentsOfURL:[NSURL URLWithString:finish.iconURL]];
     }
     

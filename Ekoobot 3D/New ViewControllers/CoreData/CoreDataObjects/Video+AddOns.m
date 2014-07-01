@@ -13,7 +13,7 @@
 +(Video *)videoWithServerInfo:(NSDictionary *)dictionary nManagedObjectContext:(NSManagedObjectContext *)context {
     Video *video = nil;
     
-    NSString *videoID = dictionary[@"id"];
+    NSString *videoID = [NSString stringWithFormat:@"%d", [dictionary[@"id"] intValue]];
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Video"];
     request.predicate = [NSPredicate predicateWithFormat:@"identifier = %@", videoID];
     NSError *error;
@@ -30,7 +30,7 @@
         video.thumb = dictionary[@"thumb"];
         video.order = dictionary[@"order"];
         video.lastUpdate = dictionary[@"lastUpdate"];
-        video.project = dictionary[@"project"];
+        video.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         video.videoPath = [NSString stringWithFormat:@"video_%@_%@.mp4", video.project, video.identifier];
         
     } else {
@@ -43,7 +43,7 @@
         video.thumb = dictionary[@"thumb"];
         video.order = dictionary[@"order"];
         video.lastUpdate = dictionary[@"lastUpdate"];
-        video.project = dictionary[@"project"];
+        video.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         video.videoPath = [NSString stringWithFormat:@"video_%@_%@.mp4", video.project, video.identifier];
         NSLog(@"El video no existía, así que crearemos uno nuevo con la url %@", video.url);
     }

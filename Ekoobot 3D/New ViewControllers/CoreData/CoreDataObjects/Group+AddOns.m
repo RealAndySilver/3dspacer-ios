@@ -14,7 +14,7 @@
        inManagedObjectContext:(NSManagedObjectContext *)context {
     Group *group = nil;
     
-    NSString *groupID = dictionary[@"id"];
+    NSString *groupID = [NSString stringWithFormat:@"%d", [dictionary[@"id"] intValue]];
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Group"];
     request.predicate = [NSPredicate predicateWithFormat:@"identifier = %@", groupID];
     NSError *error;
@@ -28,29 +28,29 @@
         group.identifier = groupID;
         group.name = dictionary[@"name"];
         
-        if ([dictionary[@"xCoord"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"xCoord"] isEqualToString:@""]) {
+        if ([dictionary[@"x_coord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"x_coord"] isEqualToString:@""]) {
                 group.xCoord = @(0);
             }
         }
         else {
-            group.xCoord = dictionary[@"xCoord"];
+            group.xCoord = dictionary[@"x_coord"];
         }
         
-        if ([dictionary[@"yCoord"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"yCoord"] isEqualToString:@""]) {
+        if ([dictionary[@"y_coord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"y_coord"] isEqualToString:@""]) {
                 group.yCoord = @(0);
             }
         }
         else {
-            group.yCoord = dictionary[@"yCoord"];
+            group.yCoord = dictionary[@"y_coord"];
         }
         
-        group.startFloor = dictionary[@"startFloor"];
+        group.startFloor = dictionary[@"start_floor"];
         group.enabled = dictionary[@"enabled"];
-        group.lastUpdate = dictionary[@"lastUpdate"];
-        group.urbanization = dictionary[@"urbanization"];
-        group.project = dictionary[@"project"];
+        group.lastUpdate = dictionary[@"last_update"];
+        group.urbanization = [NSString stringWithFormat:@"%d", [dictionary[@"urbanization"] intValue]];
+        group.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         
     } else {
         //The render did not exist on the database, so we have to create it
@@ -60,29 +60,29 @@
         group.identifier = groupID;
         group.name = dictionary[@"name"];
         
-        if ([dictionary[@"xCoord"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"xCoord"] isEqualToString:@""]) {
+        if ([dictionary[@"x_coord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"x_coord"] isEqualToString:@""]) {
                 group.xCoord = @(0);
             }
         }
         else {
-            group.xCoord = dictionary[@"xCoord"];
+            group.xCoord = dictionary[@"x_coord"];
         }
         
-        if ([dictionary[@"yCoord"] isKindOfClass:[NSString class]]) {
-            if ([dictionary[@"yCoord"] isEqualToString:@""]) {
+        if ([dictionary[@"y_coord"] isKindOfClass:[NSString class]]) {
+            if ([dictionary[@"y_coord"] isEqualToString:@""]) {
                 group.yCoord = @(0);
             }
         }
         else {
-            group.yCoord = dictionary[@"yCoord"];
+            group.yCoord = dictionary[@"y_coord"];
         }
         
-        group.startFloor = dictionary[@"startFloor"];
+        group.startFloor = dictionary[@"start_floor"];
         group.enabled = dictionary[@"enabled"];
-        group.lastUpdate = dictionary[@"lastUpdate"];
-        group.urbanization = dictionary[@"urbanization"];
-        group.project = dictionary[@"project"];
+        group.lastUpdate = dictionary[@"last_update"];
+        group.urbanization = [NSString stringWithFormat:@"%d", [dictionary[@"urbanization"] intValue]];
+        group.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
     }
     return group;
 }

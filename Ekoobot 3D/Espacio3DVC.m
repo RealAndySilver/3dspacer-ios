@@ -25,7 +25,7 @@
     //NSLog(@"El Array Epacial %@",arregloEspacial);
     NavController *navController = (NavController *)self.navigationController;
     //[navController setOrientationType:1];
-    [navController setInterfaceOrientation:NO];
+    //[navController setInterfaceOrientation:NO]; ***********************
 }
 
 - (void)viewDidUnload
@@ -50,7 +50,7 @@
 }
 -(void)viewWillDisappear:(BOOL)animated{
     NavController *navController = (NavController *)self.navigationController;
-    [navController setInterfaceOrientation:YES];
+    //[navController setInterfaceOrientation:YES]; ***************************
 }
 -(void)didReceiveMemoryWarning{
     NSLog(@"Cara Warning %@, %@",espacio3D.nombre,arregloEspacial);

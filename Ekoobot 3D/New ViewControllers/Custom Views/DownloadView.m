@@ -103,6 +103,13 @@
 
 -(void)downloadVideo {
     [self.delegate downloadVideoButtonWasTappedInDownloadView:self];
+    [UIView animateWithDuration:0.2
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^(){
+                         self.downloadVideoButton.alpha = 0.0;
+                         self.cancelButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+                     } completion:^(BOOL finished){}];
 }
 
 /*-(void)animateOpacity {
@@ -118,6 +125,8 @@
 
 -(void)cancelDownload {
     [self.delegate cancelButtonWasTappedInDownloadView:self];
+    self.downloadVideoButton.alpha = 1.0;
+    self.cancelButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
 }
 
 /*-(void)closeView {

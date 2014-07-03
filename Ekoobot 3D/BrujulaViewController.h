@@ -22,8 +22,8 @@
     UIScrollView *scrollViewImagen;
     UIImageView *imageViewZoomImage;
     CMAttitude *attitude;
-    CMMotionManager *_motionManager;
-    NSTimer *timer;
+    //CMMotionManager *_motionManager;
+    //NSTimer *timer;
     BrujulaView *brujula;
     float diferenciaRotacion;
     float adicionalGrados;

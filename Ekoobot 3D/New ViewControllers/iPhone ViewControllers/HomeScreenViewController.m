@@ -35,6 +35,7 @@
 #import "FinishImage+AddOns.h"
 #import "DownloadView.h"
 #import "UIImage+Resize.h"
+#import "Video+AddOns.h"
 
 @interface HomeScreenViewController () <iCarouselDataSource, iCarouselDelegate, TermsAndConditionsDelegate, ServerCommunicatorDelegate, UIAlertViewDelegate, UIActionSheetDelegate, DownloadViewDelegate>
 @property (strong, nonatomic) iCarousel *carousel;
@@ -48,6 +49,7 @@
 @property (strong, nonatomic) UIManagedDocument *databaseDocument;
 
 //Project objects
+@property (strong, nonatomic) NSArray *videoArray;
 @property (strong, nonatomic) NSArray *rendersArray;
 @property (strong, nonatomic) NSDictionary *urbanizationDic;
 @property (strong, nonatomic) NSArray *groupsArray;
@@ -439,7 +441,7 @@
 
 -(NSUInteger)getNumberOfFilesToDownload {
     NSUInteger numberOfFiles = 0;
-    numberOfFiles = [self.rendersArray count] + 1 + [self.groupsArray count] + [self.productsArray count] + [self.floorsArray count] + [self.plantsArray count] + [self.spacesArray count] + [self.finishesArray count] + [self.finishesImagesArray count];
+    numberOfFiles = [self.rendersArray count] + 1 + 1 +[self.groupsArray count] + [self.productsArray count] + [self.floorsArray count] + [self.plantsArray count] + [self.spacesArray count] + [self.finishesArray count] + [self.finishesImagesArray count];
     return numberOfFiles;
 }
 
@@ -529,6 +531,7 @@
                     
                 } else {
                     //Download entire project
+                    self.videoArray = [dictionary[@"videos"] arrayByReplacingNullsWithBlanks];
                     self.rendersArray = [dictionary[@"renders"] arrayByReplacingNullsWithBlanks];
                     self.urbanizationDic = [dictionary[@"urbanization"] dictionaryByReplacingNullWithBlanks];
                     self.groupsArray = [dictionary[@"groups"] arrayByReplacingNullsWithBlanks];
@@ -638,7 +641,8 @@
     for (int i = 0; i < [self.projectMainRendersArray count]; i++) {
         NSDictionary *renderDic = self.projectMainRendersArray[i];
         if ([renderDic[@"project"] intValue] == [projectIdentifier intValue]) {
-            imageURL = [@"http://ekoobot.com/new_bot/web/" stringByAppendingString:renderDic[@"url"]];
+            //imageURL = [@"http://ekoobot.com/new_bot/web/" stringByAppendingString:renderDic[@"url"]];
+            imageURL = renderDic[@"url"];
             break;
         }
     }
@@ -829,8 +833,22 @@
             }
         }
         
+        //Delete al videos from documents directory
+        NSArray *videoPaths = [Video videoPathsForVideosWithProjectID:projectID inManagedObjectContext:context];
+        NSLog(@"Número de video paths: %d", [videoPaths count]);
+        for (int i = 0; i < [videoPaths count]; i++) {
+            NSString *videoPath = [docDir stringByAppendingPathComponent:videoPaths[i]];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:videoPath]) {
+                NSLog(@"Borrando video del proyecto %@ en la ruta %@", project.identifier, videoPath);
+                [[NSFileManager defaultManager] removeItemAtPath:videoPath error:NULL];
+            } else {
+                NSLog(@"No había video del proyecto %@ en la ruta %@", project.identifier, videoPath);
+            }
+        }
+        
         [Render deleteRendersForProjectWithID:projectID inManagedObjectContext:context];
         [Urbanization deleteUrbanizationsForProjectWithID:projectID inManagedObjectContext:context];
+        [Video deleteVideosForProjectWithID:projectID inManagedObjectContext:context];
         [Group deleteGroupsForProjectWithID:projectID inManagedObjectContext:context];
         [Floor deleteFloorsForProjectWithID:projectID inManagedObjectContext:context];
         [Product deleteProductsForProjectWithID:projectID inManagedObjectContext:context];
@@ -838,6 +856,7 @@
         [Space deleteSpacesForProjectWithID:projectID inManagedObjectContext:context];
         [Finish deleteFinishesForProjectWithID:projectID inManagedObjectContext:context];
         [FinishImage deleteFinishesImagesForProjectWithID:projectID inManagedObjectContext:context];
+        [context save:NULL];
     }
     
     //Erase the project id from the ids array stored in filesaver
@@ -872,6 +891,7 @@
             NSManagedObjectContext *context = self.databaseDocument.managedObjectContext;
             NSArray *rendersArray = [Render rendersForProjectWithID:projectID inManagedObjectContext:context];
             NSArray *urbanizationsArray = [Urbanization urbanizationsArrayForProjectWithID:projectID inManagedObjectContext:context];
+            NSArray *videosArray = [Video videosArrayForProjectWithID:projectID inManagedObjectContext:context];
             NSArray *groupsArray = [Group groupsArrayForProjectWithID:projectID inManagedObjectContext:context];
             NSArray *floorsArray = [Floor floorsArrayForProjectWithID:projectID inManagedObjectContext:context];
             NSArray *productsArray = [Product productsArrayForProjectWithID:projectID inManagedObjectContext:context];
@@ -884,6 +904,7 @@
             [projectDictionary setObject:self.userProjectsArray[self.carousel.currentItemIndex] forKey:@"project"];
             [projectDictionary setObject:rendersArray forKey:@"renders"];
             [projectDictionary setObject:urbanizationsArray forKey:@"urbanizations"];
+            [projectDictionary setObject:videosArray forKey:@"videos"];
             [projectDictionary setObject:groupsArray forKey:@"groups"];
             [projectDictionary setObject:floorsArray forKey:@"floors"];
             [projectDictionary setObject:productsArray forKey:@"products"];
@@ -949,6 +970,20 @@
                 NSLog(@"progresooo: %f", progressCompleted);
                 number = @(progressCompleted);
                 [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+            }
+            
+            NSMutableArray *videosArray = [[NSMutableArray alloc] init];
+            for (int i = 0; i < [self.videoArray count]; i++) {
+                if (!downloadWasCancelled) {
+                    Video *video = [Video videoWithServerInfo:self.videoArray[i] nManagedObjectContext:context];
+                    [context save:NULL];
+                    [videosArray addObject:video];
+                    filesDownloadedCounter ++;
+                    progressCompleted = filesDownloadedCounter / numberOfFiles;
+                    NSLog(@"progresooo: %f", progressCompleted);
+                    number = @(progressCompleted);
+                    [self performSelectorOnMainThread:@selector(updateLabel:) withObject:number waitUntilDone:YES];
+                }
             }
             
             //Save group objects in Core Data
@@ -1071,6 +1106,7 @@
                 [projectDictionary setObject:self.userProjectsArray[self.carousel.currentItemIndex] forKey:@"project"];
                 [projectDictionary setObject:rendersArray forKey:@"renders"];
                 [projectDictionary setObject:urbanizationsArray forKey:@"urbanizations"];
+                [projectDictionary setObject:videosArray forKey:@"videos"];
                 [projectDictionary setObject:groupsArray forKey:@"groups"];
                 [projectDictionary setObject:floorsArray forKey:@"floors"];
                 [projectDictionary setObject:producstArray forKey:@"products"];

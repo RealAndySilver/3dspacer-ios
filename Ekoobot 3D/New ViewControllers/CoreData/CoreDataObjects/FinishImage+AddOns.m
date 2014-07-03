@@ -39,7 +39,7 @@
         finishImage.miniURL = dictionary[@"mini"];
         finishImage.type = dictionary[@"type"];
         finishImage.size = dictionary[@"size"];
-        finishImage.finalSize = dictionary[@"finalSize"];
+        finishImage.finalSize = dictionary[@"final_size"];
         if ([finishImage.type isEqualToString:@"bottom"]) {
             finishImage.type = @"down";
         }
@@ -65,7 +65,7 @@
         finishImage.miniURL = dictionary[@"mini"];
         finishImage.type = dictionary[@"type"];
         finishImage.size = dictionary[@"size"];
-        finishImage.finalSize = dictionary[@"finalSize"];
+        finishImage.finalSize = dictionary[@"final_size"];
         if ([finishImage.type isEqualToString:@"bottom"]) {
             finishImage.type = @"down";
         }

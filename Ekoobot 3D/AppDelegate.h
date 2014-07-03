@@ -17,6 +17,8 @@
     //CMMotionManager *motionManager;
 }
 
+@property (assign, nonatomic) BOOL screenIsLandscapeLeftOnly;
+@property (assign, nonatomic) BOOL screenIsLandscapeRightOnly;
 @property (strong, nonatomic) UIWindow *window;
 
 @end

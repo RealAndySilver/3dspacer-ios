@@ -324,8 +324,8 @@
     //self.spinner.hidden = YES;
     
     NavController *navController = (NavController *)self.navigationController;
-    [navController setOrientationType:0];
-    [navController forceLandscapeMode];
+    //[navController setOrientationType:0]; **********************************
+    //[navController forceLandscapeMode]; ************************************
     CATransition *transition = [CATransition animation];
     transition.duration = 0.3f;
     transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];

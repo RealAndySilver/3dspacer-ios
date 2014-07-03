@@ -83,6 +83,7 @@
     long long expectedBytes;
     BOOL downloadVideo;
     BOOL projectIsOutdated;
+    BOOL infoViewIsTransparent;
 }
 
 #pragma mark - Lazy Instantiation
@@ -157,10 +158,10 @@
         enterButtonFrame = CGRectMake(830, 560,170, 170);
 
     } else {
+        videoButtonFrame = CGRectMake(10.0, 120.0, 40.0, 40.0);
         updateButtonFrame = CGRectMake(10.0, 64.0, 40.0, 40.0);
         containerFrame = CGRectMake(40.0, 66.0, 260.0, 35.0);
         slideshowButtonFrame = CGRectMake(10.0, 170.0, 40.0, 40.0);
-        sendInfoButtonFrame = CGRectMake(10.0, 110.0, 40.0, 40.0);
         sendInfoButtonFrame = CGRectMake(10.0, slideshowButtonFrame.origin.y + slideshowButtonFrame.size.height + 10.0, 40.0, 40.0);
         infoButtonFrame = CGRectMake(10.0, sendInfoButtonFrame.origin.y + sendInfoButtonFrame.size.height + 10.0, 40.0, 40.0);
         enterButtonFrame = CGRectMake(screenFrame.size.width - 70.0, screenFrame.size.height - 70.0, 60.0, 60.0);
@@ -260,6 +261,7 @@
     [self.view addSubview:self.infoButton];
     
     //Info View setup
+    infoViewIsTransparent = YES;
     self.infoView = [[InfoView alloc] initWithFrame:CGRectMake(self.infoButton.frame.origin.x + self.infoButton.frame.size.width/2.0, self.infoButton.frame.origin.y, 260.0, 40.0)];
     self.infoView.topLabelColor = [UIColor greenColor];
     self.infoView.alpha = 0.0;
@@ -406,8 +408,7 @@
 
 -(void)showInfoView {
     NSLog(@"toque el botoncito de info");
-    static BOOL viewIsTransparent = YES;
-    if (viewIsTransparent) {
+    if (infoViewIsTransparent) {
         self.infoButton.highlighted = YES;
         self.infoButton.selected = YES;
         [UIView animateWithDuration:0.1
@@ -416,7 +417,7 @@
                          animations:^(){
                              self.infoView.alpha = 1.0;
                          } completion:^(BOOL finished){
-                             viewIsTransparent = NO;
+                             infoViewIsTransparent = NO;
                          }];
     } else {
         self.infoButton.highlighted = NO;
@@ -427,7 +428,7 @@
                          animations:^(){
                              self.infoView.alpha = 0.0;
                          } completion:^(BOOL finished){
-                             viewIsTransparent = YES;
+                             infoViewIsTransparent = YES;
                          }];
     }
 }
@@ -1179,6 +1180,7 @@
                              self.logoImageView.alpha = 1.0;
                              self.enterButton.alpha = 1.0;
                              self.videoButton.alpha = 1.0;
+                             if (!infoViewIsTransparent) self.infoView.alpha = 1.0;
                          } completion:^(BOOL finished){}];
     }
 }
@@ -1200,6 +1202,7 @@
                              self.logoImageView.alpha = 0.0;
                              self.enterButton.alpha = 0.0;
                              self.videoButton.alpha = 0.0;
+                             self.infoView.alpha = 0.0;
                          } completion:^(BOOL finished){}];
     } else {
         NSLog(@"No oculté el container");

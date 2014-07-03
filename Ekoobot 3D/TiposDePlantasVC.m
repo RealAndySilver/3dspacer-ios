@@ -56,7 +56,7 @@
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationController.navigationBarHidden=NO;
     NavController *navController = (NavController *)self.navigationController;
-    [navController setInterfaceOrientation:YES];
+    //[navController setInterfaceOrientation:YES]; ****************************
 }
 -(void)viewDidAppear:(BOOL)animated{
         UIScrollView *sv=[scrollArray objectAtIndex:scrollVar];

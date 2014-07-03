@@ -2,7 +2,7 @@
 //  Space.m
 //  Ekoobot 3D
 //
-//  Created by Diego Vidal on 23/05/14.
+//  Created by Developer on 3/07/14.
 //  Copyright (c) 2014 Ekoomedia. All rights reserved.
 //
 
@@ -11,17 +11,19 @@
 
 @implementation Space
 
-@dynamic identifier;
-@dynamic urbanization;
-@dynamic project;
-@dynamic name;
-@dynamic xCoord;
-@dynamic yCoord;
-@dynamic xLimit;
-@dynamic yLimit;
 @dynamic common;
 @dynamic enabled;
+@dynamic identifier;
 @dynamic lastUpdate;
+@dynamic name;
 @dynamic plant;
+@dynamic project;
+@dynamic urbanization;
+@dynamic xCoord;
+@dynamic xLimit;
+@dynamic yCoord;
+@dynamic yLimit;
+@dynamic thumb;
+@dynamic thumbData;
 
 @end

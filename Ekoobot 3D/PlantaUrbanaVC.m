@@ -18,7 +18,7 @@
 #import "Space.h"
 #import "CMMotionManager+Shared.h"
 
-@interface PlantaUrbanaVC ()
+@interface PlantaUrbanaVC () <BrujulaViewDelegate>
 @property (strong, nonatomic) CMMotionManager *motionManager;
 @property (strong, nonatomic) NSMutableArray *commonSpacesArray;
 @end
@@ -53,7 +53,7 @@
     NSLog(@"Entré a PlantaUrbanaVC");
     
     NavController *navController = (NavController *)self.navigationController;
-    [navController setInterfaceOrientation:YES];
+    //[navController setInterfaceOrientation:YES]; *******************************
     self.automaticallyAdjustsScrollViewInsets=NO;
 
     self.navigationItem.title = NSLocalizedString(@"PlantaUrbana", nil);
@@ -84,16 +84,15 @@
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     [spinner stopAnimating];
     [self.view sendSubviewToBack:spinner];
-    //_motionManager.showsDeviceMovementDisplay = NO;
     self.motionManager.showsDeviceMovementDisplay = NO;
-    [self.motionManager stopDeviceMotionUpdates];
+    //[self.motionManager stopDeviceMotionUpdates];
     [timer invalidate];
     brujula.alpha=0;
     brujula=nil;
     timer = nil;
     attitude=nil;
     NavController *navController = (NavController *)self.navigationController;
-    [navController setInterfaceOrientation:YES];
+    //[navController setInterfaceOrientation:YES]; ********************************
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -116,13 +115,7 @@
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     [scrollViewUrbanismo setZoomScale:minimumZoomScale animated:NO];
     
-    self.motionManager = [CMMotionManager sharedMotionManager];
-    if (self.motionManager.deviceMotionAvailable) {
-        self.motionManager.deviceMotionUpdateInterval = 1.0/30.0;
-        [self.motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXMagneticNorthZVertical toQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motion, NSError *error){
-            [self update];
-        }];
-    }
+    [self startDeviceMotion];
     
     /*_motionManager = [self motionManager];
     
@@ -133,9 +126,11 @@
     timer=[[NSTimer alloc]init];
     timer =[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(update) userInfo:nil repeats:YES];*/
     
+    self.motionManager = [CMMotionManager sharedMotionManager];
     if (self.motionManager.magnetometerAvailable) {
         NSLog(@"El magnetómetro está disponible entonces mostraré la brújula");
         brujula=[[BrujulaView alloc]initWithFrame:CGRectMake(self.view.frame.size.width-90, 80, 70, 70)];
+        brujula.delegate = self;
         [self.view addSubview:brujula];
         [brujula changeState];
     } else {
@@ -280,7 +275,7 @@
 -(void)update{
     if (brujula.isOn) {
         NavController *navController = (NavController *)self.navigationController;
-        [navController setInterfaceOrientation:NO];
+        //[navController setInterfaceOrientation:NO]; ******************************
         //_motionManager.showsDeviceMovementDisplay = YES;
         self.motionManager.showsDeviceMovementDisplay = YES;
         //attitude = _motionManager.deviceMotion.attitude;
@@ -294,7 +289,7 @@
     }
     else{
         NavController *navController = (NavController *)self.navigationController;
-        [navController setInterfaceOrientation:YES];
+        //[navController setInterfaceOrientation:YES]; ******************************
         //_motionManager.showsDeviceMovementDisplay = NO;
         self.motionManager.showsDeviceMovementDisplay = NO;
         CGAffineTransform swingTransform = CGAffineTransformIdentity;
@@ -383,20 +378,26 @@
 
 -(void)irAEscena3D:(UIButton *)sender {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.motionManager stopDeviceMotionUpdates];
+
     [self performSelector:@selector(goToGLKView:) withObject:sender afterDelay:0.3];
 }
 
 -(void)goToGLKView:(UIButton *)sender {
+    
+    NSLog(@"************************************ Iré a la escena 3ddddddd ******************************************");
     GLKitSpaceViewController *glkitSpaceVC = [self.storyboard instantiateViewControllerWithIdentifier:@"GLKitSpace"];
     glkitSpaceVC.espacioSeleccionado = 0;
     Space *space = self.commonSpacesArray[sender.tag - 1000];
-    glkitSpaceVC.arregloDeEspacios3D= [NSMutableArray arrayWithObject:space];
+    glkitSpaceVC.arregloDeEspacios3D = [@[space] mutableCopy];
     glkitSpaceVC.projectDic = self.projectDic;
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [self.navigationController pushViewController:glkitSpaceVC animated:YES];
 }
 
 -(void)irAlSiguienteViewController:(UIButton*)sender{
+    [self.motionManager stopDeviceMotionUpdates];
+    
     hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.labelText=NSLocalizedString(@"Cargando", nil);
     [self performSelector:@selector(delayedAction:) withObject:sender afterDelay:0.3];
@@ -404,6 +405,7 @@
     //NSLog(@"hecho por acá");
 }
 -(void)delayedAction:(UIButton*)sender{
+    
     /*ItemUrbanismo *itemUrbanismo=[proyecto.arrayItemsUrbanismo objectAtIndex:0];
     Grupo *grupo=[itemUrbanismo.arrayGrupos objectAtIndex:sender.tag];
     NSString *string =grupo.idGrupo;*/
@@ -413,7 +415,7 @@
     NSString *string = group.identifier;
 
     if ([string rangeOfString:@"Urbanizationspaces"].location != NSNotFound) {
-        NSLog(@"voy pa espacios...");
+        /*NSLog(@"*************************** voy pa espacios...*****************************************************");
         
         //Get the first floor of the group
         Floor *floor;
@@ -451,11 +453,12 @@
             }
         }
         
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         GLKitSpaceViewController *glkKitSpaceViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"GLKitSpace"];
         glkKitSpaceViewController.arregloDeEspacios3D = spacesArrayForPlant;
         glkKitSpaceViewController.projectDic = self.projectDic;
         glkKitSpaceViewController.espacioSeleccionado = 0;
-        [self.navigationController pushViewController:glkKitSpaceViewController animated:YES];
+        [self.navigationController pushViewController:glkKitSpaceViewController animated:YES];*/
         
        /* TipoDePiso *tipoDePiso = grupo.arrayTiposDePiso[0];
         Producto *producto = tipoDePiso.arrayProductos[0];
@@ -602,6 +605,37 @@
         [scrollViewUrbanismo setZoomScale:1.0 animated:YES];
         zoomCheck=YES;
     }
+}
+
+-(void)startDeviceMotion {
+    self.motionManager = [CMMotionManager sharedMotionManager];
+    if (self.motionManager.deviceMotionAvailable) {
+        self.motionManager.showsDeviceMovementDisplay = YES;
+        self.motionManager.deviceMotionUpdateInterval = 1.0/60.0;
+        [self.motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXMagneticNorthZVertical toQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motion, NSError *error){
+            [self update];
+        }];
+    }
+}
+
+#pragma mark - BrujulaViewDelegate
+
+-(void)brujulaViewWasTapped:(BrujulaView *)brujulaView {
+    /*NSLog(@"********************** Estado de la brújula: %d", brujulaView.isOn);
+    if (brujula.isOn) {
+        [self startDeviceMotion];
+    } else {
+        NavController *navController = (NavController *)self.navigationController;
+        [navController setInterfaceOrientation:YES];
+        //_motionManager.showsDeviceMovementDisplay = NO;
+        self.motionManager.showsDeviceMovementDisplay = NO;
+        CGAffineTransform swingTransform = CGAffineTransformIdentity;
+        swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(0)]);
+        scrollViewUrbanismo.transform = swingTransform;
+        brujula.cursor.transform = swingTransform;
+        
+        [self.motionManager stopDeviceMotionUpdates];
+    }*/
 }
 
 @end

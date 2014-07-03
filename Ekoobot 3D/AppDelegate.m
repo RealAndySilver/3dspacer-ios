@@ -167,5 +167,15 @@
     return motionManager;
 }*/
 
+- (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window{
+    if (self.screenIsLandscapeLeftOnly) {
+        return UIInterfaceOrientationMaskLandscapeLeft;
+    } else if (self.screenIsLandscapeRightOnly) {
+        return UIInterfaceOrientationMaskLandscapeRight;
+    } else {
+        return UIInterfaceOrientationMaskLandscape;
+    }
+}
+
 
 @end

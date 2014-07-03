@@ -89,7 +89,7 @@
     [self inicializarRootViewControllerConAnimaciones];
     keyboardIsMoved = NO;
     NavController *navController = (NavController *)self.navigationController;
-    [navController setOrientationType:1];
+    //[navController setOrientationType:1];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
@@ -133,8 +133,8 @@
     [self.navigationController pushViewController:lVC animated:NO];*/
     
     NavController *navController = (NavController *)self.navigationController;
-    [navController setOrientationType:0];
-    [navController forceLandscapeMode];
+    //[navController setOrientationType:0]; *********************************************
+    //[navController forceLandscapeMode]; ***********************************************
     CATransition *transition = [CATransition animation];
     transition.duration = 0.3f;
     transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];

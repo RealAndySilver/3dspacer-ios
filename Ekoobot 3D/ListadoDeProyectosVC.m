@@ -52,7 +52,7 @@
     //self.navigationItem.rightBarButtonItem = refresh;
     
     NavController *navController = (NavController *)self.navigationController;
-    [navController setOrientationType:0];
+    //[navController setOrientationType:0]; *************************
     nombreDeUsuario=usuarioActual.usuario;
     passwordUsuario=usuarioActual.contrasena;
     self.automaticallyAdjustsScrollViewInsets=NO;

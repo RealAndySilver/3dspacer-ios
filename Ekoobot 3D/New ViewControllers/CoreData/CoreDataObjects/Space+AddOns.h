@@ -9,6 +9,7 @@
 #import "Space.h"
 
 @interface Space (AddOns)
+-(UIImage *)thumbImage;
 +(Space *)spaceWithServerInfo:(NSDictionary *)dictionary
            inManagedObjectContext:(NSManagedObjectContext *)context;
 +(NSArray *)spacesArrayForProjectWithID:(NSString *)projectID

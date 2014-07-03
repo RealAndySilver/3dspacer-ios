@@ -41,7 +41,7 @@
         plant.imageWidth = dictionary[@"image_width"];
         plant.imageHeight = dictionary[@"image_height"];
         plant.northDegs = dictionary[@"north_degs"];
-        plant.enabled = dictionary[@"enabled"];
+        plant.enabled = [NSString stringWithFormat:@"%d", [dictionary[@"enabled"] intValue]];
         plant.order = dictionary[@"order"];
         plant.lastUpdate = dictionary[@"last_update"];
         plant.product = [NSString stringWithFormat:@"%d", [dictionary[@"product"] intValue]];
@@ -73,7 +73,7 @@
             plant.imageHeight = dictionary[@"image_height"];
         }
         plant.northDegs = dictionary[@"north_degs"];
-        plant.enabled = dictionary[@"enabled"];
+        plant.enabled = [NSString stringWithFormat:@"%d", [dictionary[@"enabled"] intValue]];
         plant.order = dictionary[@"order"];
         plant.lastUpdate = dictionary[@"last_update"];
         plant.product = [NSString stringWithFormat:@"%d", [dictionary[@"product"] intValue]];

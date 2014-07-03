@@ -13,7 +13,6 @@
 @end
 
 @implementation NavController
-@synthesize orient,orientationType;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -26,8 +25,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    orient=YES;
-    orientationType=1;//all orientations
+    //orient=YES;
+    //orientationType=1;//all orientations
 	// Do any additional setup after loading the view.
 }
 
@@ -36,7 +35,7 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
--(BOOL)shouldAutorotate{
+/*-(BOOL)shouldAutorotate{
     return orient;
 }
 -(NSUInteger)supportedInterfaceOrientations{
@@ -67,31 +66,6 @@
             NSLog(@"dentro del if portrait");
         }
     }
-    /*else if(UIDeviceOrientationIsLandscape(self.interfaceOrientation)){
-        int type = [[UIDevice currentDevice] orientation];
-        BOOL leftRotated=NO;
-        if(type ==3){
-            leftRotated=NO;
-        }
-        else if(type==4){
-            leftRotated=YES;
-        }
-        if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)])
-            
-        {
-            if (leftRotated) {
-                objc_msgSend([UIDevice currentDevice], @selector(setOrientation:), UIInterfaceOrientationLandscapeLeft );
-                NSLog(@"dentro del 1er if landscapeleft");
-                return;
-            }
-            else{
-                objc_msgSend([UIDevice currentDevice], @selector(setOrientation:), UIInterfaceOrientationLandscapeRight );
-                NSLog(@"dentro del 2ndo if landscaperight");
-                return;
-            }
-            
-        }
-    }*/
 }
 -(void)forceLandscapeFromLandscape{
     if(UIDeviceOrientationIsLandscape(self.interfaceOrientation)){
@@ -118,7 +92,7 @@
             }
         }
     }
-}
+}*/
 
 - (UIViewController *)popViewControllerAnimated:(BOOL)animated
 {

@@ -14,9 +14,10 @@
 #import "MBProgressHud.h"
 #import "AcabadosView.h"
 #import "Finish.h"
-#import "Space.h"
+#import "Space+AddOns.h"
 #import "FinishImage+AddOns.h"
 #import "Project.h"
+#import "AppDelegate.h"
 
 @interface GLKitSpaceViewController () <More3DScenesViewDelegate, UIGestureRecognizerDelegate, CLLocationManagerDelegate, AcabadosViewDelegate>
 @property (strong, nonatomic) GLKTextureInfo *cubemapTexture;
@@ -54,6 +55,11 @@
     BOOL viewIsZooming;
     BOOL viewIsZoomed;
     CGFloat northAdjustmentValue;
+    BOOL panningInteractionEnabled;
+    BOOL isPad;
+    //CGPoint panPrevious;
+    //CGPoint inertialPoint1;
+    //CGPoint inertialPoint2;
 }
 
 #pragma mark - Lazy Instantiation 
@@ -187,10 +193,15 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        isPad = YES;
+    } else {
+        isPad = NO;
+    }
     [self setupFinishesArray];
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification
-                                               object:[UIDevice currentDevice]];
+    //[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    /*[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification
+                                               object:[UIDevice currentDevice]];*/
     UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
     NSLog(@"device orientation: %d", deviceOrientation);
     if (deviceOrientation == 3) {
@@ -211,13 +222,37 @@
     self.navigationController.navigationBarHidden = YES;
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     [self setupUI];
+    [self startDeviceMotion];
     [self setupGL];
     [self createGestureRecognizers];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self startDeviceMotion];
+}
+
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self landscapeLock];
+}
+
+-(void) landscapeLock {
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSUInteger orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    if (orientation == 3) {
+        appDelegate.screenIsLandscapeLeftOnly = NO;
+        appDelegate.screenIsLandscapeRightOnly = YES;
+    } else if (orientation == 4) {
+        appDelegate.screenIsLandscapeLeftOnly = YES;
+        appDelegate.screenIsLandscapeRightOnly = NO;
+    }
+  
+}
+
+-(void) landscapeUnlock {
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.screenIsLandscapeLeftOnly = NO;
+    appDelegate.screenIsLandscapeRightOnly = NO;
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -227,6 +262,7 @@
     self.inertiaTimer = nil;
     
     [self tearDownGL];
+    [self landscapeUnlock];
 }
 
 -(void)tearDownGL {
@@ -291,7 +327,7 @@
     self.more3DScenesView.espacios3DArray = self.arregloDeEspacios3D;
     
     //Search for the thumbs images to display in the inferior view
-    NSMutableArray *thumbsArray = [[NSMutableArray alloc] init];
+    /*NSMutableArray *thumbsArray = [[NSMutableArray alloc] init];
     for (int i = 0; i < [self.arregloDeEspacios3D count]; i++) {
         Space *space = self.arregloDeEspacios3D[i];
         for (int j = 0; j < [self.projectDic[@"finishes"] count]; j++) {
@@ -309,7 +345,20 @@
                 break;
             }
         }
+    }*/
+    
+    //Get the thumbs images to diaply in the inferior view
+    NSMutableArray *thumbsArray = [[NSMutableArray alloc] init];
+    for (int i = 0; i < [self.arregloDeEspacios3D count]; i++) {
+        Space *space = self.arregloDeEspacios3D[i];
+        UIImage *thumbImage = [space thumbImage];
+        if (thumbImage) {
+            [thumbsArray addObject:[space thumbImage]];
+        } else {
+            [thumbsArray addObject:[UIImage imageNamed:@"GrayImage.png"]];
+        }
     }
+    
     NSLog(@"Thumbs encontrados: %lu", (unsigned long)[thumbsArray count]);
     self.more3DScenesView.thumbsArray = thumbsArray;
     Space *space = self.arregloDeEspacios3D[self.espacioSeleccionado];
@@ -344,10 +393,9 @@
 }
 
 -(void)createGestureRecognizers {
-    self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(rotateScene:)];
-    
     //Add a tap gesture to the CompassPlaceholder
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(compassPlaceholderTapped)];
+    tapGesture.numberOfTapsRequired = 1;
     [self.compassPlaceholder addGestureRecognizer:tapGesture];
     
     //Add a double tap gesture to make zoom in the scene
@@ -361,11 +409,20 @@
     showViewsTapGesture.delegate = self;
     [showViewsTapGesture requireGestureRecognizerToFail:doubleTapGesture];
     [self.view addGestureRecognizer:showViewsTapGesture];
+    
+    //Add pinch gesture recognizer
+    UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinch:)];
+    
+    [self.view addGestureRecognizer:pinchGesture];
+    
+    //Pan Gesture
+    self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(rotateScene:)];
 }
 
 #pragma mark - OpenGL Stuff
 
 -(void)setupGL {
+    panningInteractionEnabled = NO;
     northAdjustmentValue = GLKMathDegreesToRadians(25.0);
     viewIsZooming = NO;
     viewIsZoomed = NO;
@@ -521,7 +578,6 @@
 }
 
 -(void)setupInteractionType {
-    static BOOL panningInteractionEnabled = NO;
     if (!panningInteractionEnabled) {
         //Activate panning interaction
         magnetomerIsActive = NO;
@@ -549,23 +605,39 @@
     }
 }
 
--(void)rotateScene:(UIPanGestureRecognizer *)recognizer {
-    if (viewIsZoomed) {
-        rotationFactor = 0.001;
-    } else {
-        rotationFactor = 0.002;
-    }
+- (void)pinch:(UIPinchGestureRecognizer *)senderGestureRecognizer
+{
+    NSLog(@"****************************** Entré al pinch *************************************");
+    const GLfloat factorEscalamiento = 1.5;
+    static GLfloat currentScale = 0;
+    static GLfloat lastScale = 0;
     
-    static CGPoint panPrevious;
-    static CGPoint point1;
-    if (recognizer.state == UIGestureRecognizerStateBegan) {
+    currentScale += senderGestureRecognizer.scale - lastScale;
+    lastScale = senderGestureRecognizer.scale;
+    
+    if (currentScale > 1) fieldOfView -= currentScale * factorEscalamiento;
+    else if (currentScale < 1) fieldOfView += currentScale * factorEscalamiento;
+    if (fieldOfView <= 35.0) fieldOfView = 35.0;
+    else if (fieldOfView >= 75.0) fieldOfView = 75.0;
+    senderGestureRecognizer.scale = 1.0;
+}
+
+/*-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (panningInteractionEnabled) {
+        NSLog(@"Empezé a tocar");
         [self.inertiaTimer invalidate];
         self.inertiaTimer = nil;
         
-        panPrevious = [recognizer locationInView:self.view];
-        
-    } else if (recognizer.state != UIGestureRecognizerStateEnded){
-        CGPoint panLocation = [recognizer locationInView:self.view];
+        UITouch *touch = [touches anyObject];
+        panPrevious = [touch locationInView:self.view];
+    }
+}
+
+-(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (panningInteractionEnabled) {
+        NSLog(@"Moviendoooo");
+        UITouch *touch = [touches anyObject];
+        CGPoint panLocation = [touch locationInView:self.view];
         CGPoint panDelta = CGPointMake(panLocation.x - panPrevious.x, panLocation.y - panPrevious.y);
         rotXAxis -= panDelta.y*rotationFactor;
         if (rotXAxis < - 2.90) {
@@ -576,16 +648,71 @@
         rotZAxis -= panDelta.x*rotationFactor;
         NSLog(@"rot x: %f, rot y: %f, rot z: %f", rotXAxis, rotYAxis, rotZAxis);
         [self rotateCompassWithRadians:-rotZAxis + northAdjustmentValue];
-        point1 = panPrevious;
+        inertialPoint1 = panPrevious;
         panPrevious = panLocation;
-        
-    } else if (recognizer.state == UIGestureRecognizerStateEnded) {
-        CGPoint point2 = [recognizer locationInView:self.view];
-        NSLog(@"Point 1: %@", NSStringFromCGPoint(point1));
-        NSLog(@"Point 2: %@", NSStringFromCGPoint(point2));
-        movementVector = CGPointMake(point2.x - point1.x, point2.y - point1.y);
+    }
+}
+
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (panningInteractionEnabled) {
+        UITouch *touch = [touches anyObject];
+        inertialPoint2 = [touch locationInView:self.view];
+        NSLog(@"Point 1: %@", NSStringFromCGPoint(inertialPoint1));
+        NSLog(@"Point 2: %@", NSStringFromCGPoint(inertialPoint2));
+        movementVector = CGPointMake(inertialPoint2.x - inertialPoint1.x, inertialPoint2.y - inertialPoint1.y);
         NSLog(@"Vector: %@", NSStringFromCGPoint(movementVector));
         [self stopSceneRotationWithInertia];
+    }
+}*/
+
+-(void)rotateScene:(UIPanGestureRecognizer *)recognizer {
+    if (recognizer.numberOfTouches == 0 || recognizer.numberOfTouches == 1) {
+        //NSLog(@"***************************** Entré a rotate sceneeeeee ***************************");
+        if (viewIsZoomed) {
+            if (isPad) {
+                rotationFactor = 0.001;
+            } else {
+                rotationFactor = 0.002;
+            }
+        } else {
+            if (isPad) {
+                rotationFactor = 0.002;
+            } else {
+                rotationFactor = 0.004;
+            }
+        }
+        
+        static CGPoint panPrevious;
+        static CGPoint point1;
+        if (recognizer.state == UIGestureRecognizerStateBegan) {
+            [self.inertiaTimer invalidate];
+            self.inertiaTimer = nil;
+            
+            panPrevious = [recognizer locationInView:self.view];
+            
+        } else if (recognizer.state != UIGestureRecognizerStateEnded){
+            CGPoint panLocation = [recognizer locationInView:self.view];
+            CGPoint panDelta = CGPointMake(panLocation.x - panPrevious.x, panLocation.y - panPrevious.y);
+            rotXAxis -= panDelta.y*rotationFactor;
+            if (rotXAxis < - 2.90) {
+                rotXAxis = -2.90;
+            } else if (rotXAxis > 0) {
+                rotXAxis = 0;
+            }
+            rotZAxis -= panDelta.x*rotationFactor;
+            //NSLog(@"rot x: %f, rot y: %f, rot z: %f", rotXAxis, rotYAxis, rotZAxis);
+            [self rotateCompassWithRadians:-rotZAxis + northAdjustmentValue];
+            point1 = panPrevious;
+            panPrevious = panLocation;
+            
+        } else if (recognizer.state == UIGestureRecognizerStateEnded) {
+            CGPoint point2 = [recognizer locationInView:self.view];
+            NSLog(@"Point 1: %@", NSStringFromCGPoint(point1));
+            NSLog(@"Point 2: %@", NSStringFromCGPoint(point2));
+            movementVector = CGPointMake(point2.x - point1.x, point2.y - point1.y);
+            NSLog(@"Vector: %@", NSStringFromCGPoint(movementVector));
+            [self stopSceneRotationWithInertia];
+        }
     }
 }
 
@@ -694,6 +821,7 @@
 -(void)startDeviceMotion {
     CMAttitudeReferenceFrame attitude;
     motionManager = [CMMotionManager sharedMotionManager];
+    motionManager.showsDeviceMovementDisplay = YES;
     
     if (motionManager.magnetometerAvailable) {
         NSLog(@"*** El magnetómetro está disponible ***");
@@ -864,7 +992,7 @@
 
 #pragma mark - Device Orientation Notification
 
-- (void) orientationChanged:(NSNotification *)note
+/*- (void)orientationChanged:(NSNotification *)note
 {
     UIDevice * device = note.object;
     switch(device.orientation)
@@ -880,6 +1008,19 @@
         default:
             break;
     };
+}*/
+
+- (BOOL)shouldAutorotate {
+    return NO;
 }
+
+- (NSUInteger) application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
+{
+    return UIInterfaceOrientationMaskLandscapeLeft;
+}
+
+/*- (NSUInteger)supportedInterfaceOrientations {
+    return [[UIApplication sharedApplication] statusBarOrientation];
+}*/
 
 @end

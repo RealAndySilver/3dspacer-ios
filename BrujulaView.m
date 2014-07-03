@@ -44,13 +44,12 @@
     if (isOn) {
         isOn=NO;
         compassOverlay.alpha=1;
-        return;
     }
     else{
         isOn=YES;
         compassOverlay.alpha=0;
-        return;
     }
+    [self.delegate brujulaViewWasTapped:self];
 }
 /*
  // Only override drawRect: if you perform custom drawing.

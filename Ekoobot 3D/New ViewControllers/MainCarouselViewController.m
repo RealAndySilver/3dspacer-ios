@@ -554,7 +554,8 @@
     for (int i = 0; i < [self.projectMainRendersArray count]; i++) {
         NSDictionary *renderDic = self.projectMainRendersArray[i];
         if ([renderDic[@"project"] intValue] == [projectIdentifier intValue]) {
-            imageURL = [@"http://ekoobot.com/new_bot/web/" stringByAppendingString:renderDic[@"url"]];
+            //imageURL = [@"http://ekoobot.com/new_bot/web/" stringByAppendingString:renderDic[@"url"]];
+            imageURL = renderDic[@"url"];
             break;
         }
     }

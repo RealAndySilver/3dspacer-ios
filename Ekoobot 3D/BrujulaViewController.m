@@ -17,8 +17,10 @@
 @synthesize path,externalImageView,gradosExtra;
 
 - (void)viewDidLoad{
+    [super viewDidLoad];
+    
     NavController *navController = (NavController *)self.navigationController;
-    [navController setInterfaceOrientation:NO];
+    //[navController setInterfaceOrientation:NO]; ********************************
     UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
     adicionalGrados=DegreesToRadians(gradosExtra);
     if (UIInterfaceOrientationIsLandscape(orientation)) {
@@ -31,7 +33,6 @@
             diferenciaRotacion=0.5;
         }
     }
-    [super viewDidLoad];
     self.navigationItem.title = NSLocalizedString(@"Compass View", nil);
     self.navigationController.navigationBar.barStyle=UIBarStyleBlackTranslucent;
     scrollViewRotar=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.height, self.view.frame.size.width)];
@@ -57,6 +58,9 @@
     [self.view addSubview:brujula];
     //[self.navigationItem setHidesBackButton:YES];
     // Do any additional setup after loading the view.
+    
+    [self startDeviceMotion];
+
 }
 
 -(void)update{
@@ -88,36 +92,27 @@
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    CMMotionManager *motionManager = [CMMotionManager sharedMotionManager];
-    if (motionManager.isDeviceMotionAvailable) {
-        motionManager.deviceMotionUpdateInterval = 1.0/30.0;
-        [motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXMagneticNorthZVertical
-                                                           toQueue:[NSOperationQueue mainQueue]
-                                                       withHandler:^(CMDeviceMotion *motion, NSError *error){
-                                                           attitude = motion.attitude;
-                                                           //NSLog(@"Z: %f", attitude.yaw);
-                                                           [self update];
-                                                       }];
-    }
     
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     [scrollViewImagen setZoomScale:minimumZoomScale animated:NO];
     //[brujula changeState];
 }
 -(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     //[scrollViewUrbanismo setZoomScale:0.3 animated:NO];
 }
 -(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     //_motionManager.showsDeviceMovementDisplay = NO;
-    [timer invalidate];
-    timer = nil;
+    //[timer invalidate];
+    //timer = nil;
     //[_motionManager stopMagnetometerUpdates];
     //[_motionManager stopDeviceMotionUpdates];
     //_motionManager=nil;
     [[CMMotionManager sharedMotionManager] stopDeviceMotionUpdates];
     attitude=nil;
     NavController *navController = (NavController *)self.navigationController;
-    [navController setInterfaceOrientation:YES];
+    //[navController setInterfaceOrientation:YES]; **********************************
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
     NSLog(@"Orientation");
@@ -199,14 +194,30 @@
         zoomCheck=YES;
     }
 }
--(CMMotionManager *)motionManager{
+
+/*-(CMMotionManager *)motionManager{
     CMMotionManager *motionManager = nil;
     id appDelegate = [UIApplication sharedApplication].delegate;
     if ([appDelegate respondsToSelector:@selector(motionManager)]) {
         motionManager = [appDelegate motionManager];
     }
     return motionManager;
+}*/
+
+-(void)startDeviceMotion {
+    CMMotionManager *motionManager = [CMMotionManager sharedMotionManager];
+    if (motionManager.isDeviceMotionAvailable) {
+        motionManager.deviceMotionUpdateInterval = 1.0/60.0;
+        [motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXMagneticNorthZVertical
+                                                           toQueue:[NSOperationQueue mainQueue]
+                                                       withHandler:^(CMDeviceMotion *motion, NSError *error){
+                                                           attitude = motion.attitude;
+                                                           //NSLog(@"Z: %f", attitude.yaw);
+                                                           [self update];
+                                                       }];
+    }
 }
+
 -(void)back{
     [self.navigationController popViewControllerAnimated:YES];
 }

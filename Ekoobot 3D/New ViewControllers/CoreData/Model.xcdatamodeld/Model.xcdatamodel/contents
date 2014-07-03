@@ -111,6 +111,8 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="plant" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="project" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="thumb" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="thumbData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="urbanization" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="xCoord" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="xLimit" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -148,7 +150,7 @@
         <element name="Product" positionX="18" positionY="180" width="128" height="195"/>
         <element name="Project" positionX="-63" positionY="-18" width="128" height="210"/>
         <element name="Render" positionX="-54" positionY="63" width="128" height="180"/>
-        <element name="Space" positionX="-9" positionY="135" width="128" height="223"/>
+        <element name="Space" positionX="-9" positionY="135" width="128" height="253"/>
         <element name="Urbanization" positionX="-36" positionY="108" width="128" height="195"/>
         <element name="Video" positionX="-9" positionY="135" width="128" height="163"/>
     </elements>

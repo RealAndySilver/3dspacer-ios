@@ -10,6 +10,10 @@
 
 @implementation Space (AddOns)
 
+-(UIImage *)thumbImage {
+    return [UIImage imageWithData:self.thumbData];
+}
+
 +(Space *)spaceWithServerInfo:(NSDictionary *)dictionary inManagedObjectContext:(NSManagedObjectContext *)context {
     Space *space = nil;
     
@@ -59,6 +63,8 @@
         } else {
             space.yLimit = dictionary[@"y_limiit"];
         }
+        space.thumb = dictionary[@"thumb"];
+        space.thumbData = [NSData dataWithContentsOfURL:[NSURL URLWithString:space.thumb]];
         space.common = dictionary[@"common"];
         space.enabled = dictionary[@"enabled"];
         space.lastUpdate = dictionary[@"last_update"];
@@ -105,6 +111,8 @@
         } else {
             space.yLimit = dictionary[@"y_limiit"];
         }
+        space.thumb = dictionary[@"thumb"];
+        space.thumbData = [NSData dataWithContentsOfURL:[NSURL URLWithString:space.thumb]];
         space.common = dictionary[@"common"];
         space.enabled = dictionary[@"enabled"];
         space.lastUpdate = dictionary[@"last_update"];

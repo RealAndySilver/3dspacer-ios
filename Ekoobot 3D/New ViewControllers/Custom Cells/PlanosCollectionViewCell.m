@@ -49,11 +49,14 @@
             
             //Pin Button
             CGRect pinButtonFrame;
+            CGFloat fontSize;
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
                 pinButtonFrame = CGRectMake([space.xCoord floatValue], [space.yCoord floatValue] - 30.0, 30.0, 30.0);
+                fontSize = 17.0;
             } else {
-                CGFloat xCoord = (350*[space.xCoord floatValue])/984.0 - 10.0;
-                CGFloat yCoord = (210*[space.yCoord floatValue])/590.0 - 20.0;
+                fontSize = 15.0;
+                CGFloat xCoord = (350*[space.xCoord floatValue])/984.0 + 90.0;
+                CGFloat yCoord = (210*[space.yCoord floatValue])/590.0 - 10.0;
                 pinButtonFrame = CGRectMake(xCoord, yCoord, 25.0, 25.0);
             }
             UIButton *pinButton = [[UIButton alloc] initWithFrame:pinButtonFrame];
@@ -68,7 +71,7 @@
             nameLabel.text = space.name;
             nameLabel.tag = i + 10;
             nameLabel.textColor = [UIColor whiteColor];
-            nameLabel.font = [UIFont boldSystemFontOfSize:17.0];
+            nameLabel.font = [UIFont boldSystemFontOfSize:fontSize];
             nameLabel.layer.shadowColor = [UIColor blackColor].CGColor;
             nameLabel.layer.shadowOffset = CGSizeMake(1.0, 1.0);
             nameLabel.layer.shadowOpacity = 1.0;
@@ -86,6 +89,8 @@
         self.scrollView.minimumZoomScale = 1.0;
         self.scrollView.maximumZoomScale = 2.0;
         self.scrollView.delegate = self;
+        self.scrollView.showsHorizontalScrollIndicator = NO;
+        self.scrollView.showsVerticalScrollIndicator = NO;
         [self.contentView addSubview:self.scrollView];
         
         //Imageview
@@ -126,16 +131,18 @@
     CGRect contentRect = self.contentView.bounds;
     NSLog(@"frame del plano image view: %@", NSStringFromCGRect(self.planoImageView.frame));
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        self.scrollView.frame = CGRectMake(20.0, -10.0, contentRect.size.width - 40.0, contentRect.size.height - 60);
+        //self.scrollView.frame = CGRectMake(20.0, -10.0, contentRect.size.width - 40.0, contentRect.size.height - 60);
+        self.scrollView.frame = CGRectMake(0.0, 0.0, contentRect.size.width, contentRect.size.height - 50.0);
         self.planoImageView.frame = CGRectMake(0.0, 0.0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
         self.brujulaButton.frame = CGRectMake(self.planoImageView.frame.size.width - 100.0, 10.0, 80.0, 80.0);
-        self.areaTotalLabel.frame = CGRectMake(contentRect.size.width/2.0 - 150.0, self.planoImageView.frame.origin.y + self.planoImageView.frame.size.height - 10.0, 300.0, 44.0);
+        self.areaTotalLabel.frame = CGRectMake(contentRect.size.width/2.0 - 150.0, self.scrollView.frame.origin.y + self.scrollView.frame.size.height, 300.0, 44.0);
 
     } else {
-        self.scrollView.frame = CGRectMake(contentRect.size.width/2.0 - 175.0, -10.0, 350.0, contentRect.size.height - 60.0);
+        //self.scrollView.frame = CGRectMake(contentRect.size.width/2.0 - 175.0, -10.0, 350.0, contentRect.size.height - 60.0);
+        self.scrollView.frame = CGRectMake(0.0, 0.0, contentRect.size.width, contentRect.size.height - 30.0);
         self.planoImageView.frame = CGRectMake(0.0, 0.0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
-        self.brujulaButton.frame = CGRectMake(contentRect.size.width - 80.0, -10.0, 70.0, 70.0);
-        self.areaTotalLabel.frame = CGRectMake(10.0, self.planoImageView.frame.origin.y + self.planoImageView.frame.size.height - 4.0, 150.0, 20.0);
+        self.brujulaButton.frame = CGRectMake(contentRect.size.width - 80.0, -10.0, 55.0, 55.0);
+        self.areaTotalLabel.frame = CGRectMake(10.0, self.planoImageView.frame.origin.y + self.planoImageView.frame.size.height + 3.0, 150.0, 20.0);
         
     }
 }

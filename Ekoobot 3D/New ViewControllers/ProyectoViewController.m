@@ -164,7 +164,7 @@
         slideshowButtonFrame = CGRectMake(10.0, 170.0, 40.0, 40.0);
         sendInfoButtonFrame = CGRectMake(10.0, slideshowButtonFrame.origin.y + slideshowButtonFrame.size.height + 10.0, 40.0, 40.0);
         infoButtonFrame = CGRectMake(10.0, sendInfoButtonFrame.origin.y + sendInfoButtonFrame.size.height + 10.0, 40.0, 40.0);
-        enterButtonFrame = CGRectMake(screenFrame.size.width - 70.0, screenFrame.size.height - 70.0, 60.0, 60.0);
+        enterButtonFrame = CGRectMake(screenFrame.size.width - 110.0, screenFrame.size.height - 110.0, 100.0, 100.0);
     }
     
     //ProgressView
@@ -531,9 +531,11 @@
     
     Urbanization *urbanization = [self.projectDic[@"urbanizations"] firstObject];
     if ([urbanization.enabled boolValue]) {
+        NSLog(@"******************* La urbanización estaba activada **************************");
         [self irAPlantaUrbanaVC];
         
     } else {
+        NSLog(@"****************** La urbanización no estaba activada **************************");
         Group *group = [self.projectDic[@"groups"] firstObject];
         
         if ([group.enabled boolValue]) {
@@ -818,7 +820,11 @@
             //Save urbanization object in core data
             NSMutableArray *urbanizationsArray = [[NSMutableArray alloc] init];
             Urbanization *urbanization = [Urbanization urbanizationWithServerInfo:self.urbanizationDic inManagedObjectContext:context];
-            [context save:NULL];
+            if ([context save:NULL]) {
+                NSLog(@"****************************** Guardé el contexto de la urbanización **********************************");
+            } else {
+                NSLog(@"****************************** No guardé el contexto de la urbanización **********************************");
+            }
             [urbanizationsArray addObject:urbanization];
             filesDownloadedCounter ++;
             progressCompleted = filesDownloadedCounter / numberOfFiles;
@@ -938,7 +944,7 @@
             [projectDictionary setObject:spacesArray forKey:@"spaces"];
             [projectDictionary setObject:finishesArray forKey:@"finishes"];
             [projectDictionary setObject:finishesImagesArray forKey:@"finishImages"];
-            
+            self.projectDic = projectDictionary;
             [self performSelectorOnMainThread:@selector(finishSavingProcessOnMainThread:) withObject:projectDictionary waitUntilDone:NO];
         }];
         NSLog(@"me salí del bloqueee");
@@ -999,11 +1005,17 @@
 }*/
 
 -(void)finishSavingProcessOnMainThread:(NSDictionary *)projectDictionary {
+    /*if([self.databaseDocument.managedObjectContext save:NULL]) {
+        NSLog(@"Pude guardar el contexto principal");
+    } else {
+        NSLog(@"No pude guardar el contexto principal");
+    }*/
+    
     Project *project = self.projectDic[@"project"];
     
     if (projectIsOutdated) {
         FileSaver *fileSaver = [[FileSaver alloc] init];
-        NSMutableArray *savedProjectIDs = [fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"];
+        NSMutableArray *savedProjectIDs = [NSMutableArray arrayWithArray:[fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"]];
         if (![savedProjectIDs containsObject:project.identifier]) {
             NSLog(@"*********************************** Volveré a agregar este proyecto a file saver");
             [savedProjectIDs addObject:project.identifier];
@@ -1268,7 +1280,10 @@
         NSLog(@"************************************ Este proyecto está desactualizado ********************************************");
         //This project is outdated, so hidde the "enter button" and
         //update the info view
-        self.enterButton.hidden = YES;
+        
+        if (![[UserInfo sharedInstance].role isEqualToString:@"SELLER"]) {
+            self.enterButton.hidden = YES;
+        }
         self.infoView.topLabel.textColor = [UIColor redColor];
         self.infoView.topLabel.text = NSLocalizedString(@"NuevaVersion", nil);
         self.infoView.bottomLabel.text = NSLocalizedString(@"Descarga", nil);

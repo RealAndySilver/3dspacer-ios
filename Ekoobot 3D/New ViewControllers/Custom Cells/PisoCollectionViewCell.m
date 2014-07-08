@@ -46,11 +46,14 @@
             Product *product = pinsArray[i];
             
             //Pin Button
+            CGFloat fontSize;
             CGRect pinButtonFrame;
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+                fontSize = 17.0;
                 pinButtonFrame = CGRectMake([product.xCoord floatValue], [product.yCoord floatValue] - 30.0, 30.0, 30.0);
             } else {
-                pinButtonFrame = CGRectMake((398*[product.xCoord floatValue])/1004.0, (230.0*[product.yCoord floatValue])/580.0 - 40.0, 25.0, 25.0);
+                fontSize = 15.0;
+                pinButtonFrame = CGRectMake((398*[product.xCoord floatValue])/1004.0 + 90.0, (230.0*[product.yCoord floatValue])/580.0 - 30.0, 25.0, 25.0);
             }
             UIButton *pinButton = [[UIButton alloc] initWithFrame:pinButtonFrame];
             pinButton.tag = i + 1;
@@ -63,7 +66,7 @@
             nameLabel.text = product.name;
             nameLabel.tag = i + 10;
             nameLabel.textColor = [UIColor whiteColor];
-            nameLabel.font = [UIFont boldSystemFontOfSize:16.0];
+            nameLabel.font = [UIFont boldSystemFontOfSize:fontSize];
             nameLabel.layer.shadowColor = [UIColor blackColor].CGColor;
             nameLabel.layer.shadowOffset = CGSizeMake(1.0, 1.0);
             nameLabel.layer.shadowOpacity = 1.0;
@@ -78,16 +81,21 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        self.contentView.backgroundColor = [UIColor colorWithWhite:0.1 alpha:1.0];
+        
         //ScrollView
         self.scrollView = [[UIScrollView alloc] init];
         self.scrollView.minimumZoomScale = 1.0;
         self.scrollView.maximumZoomScale = 2.0;
         self.scrollView.delegate = self;
         self.scrollView.backgroundColor = [UIColor clearColor];
+        self.scrollView.showsVerticalScrollIndicator = NO;
+        self.scrollView.showsHorizontalScrollIndicator = NO;
         [self.contentView addSubview:self.scrollView];
         
         //Piso ImageView
         self.pisoImageView = [[UIImageView alloc] init];
+        self.pisoImageView.backgroundColor = [UIColor blackColor];
         self.pisoImageView.clipsToBounds = YES;
         self.pisoImageView.userInteractionEnabled = YES;
         self.pisoImageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -111,13 +119,15 @@
     [super layoutSubviews];
     CGRect contentRect = self.contentView.bounds;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        self.scrollView.frame = CGRectMake(10.0, 10.0, contentRect.size.width - 20.0, contentRect.size.height - 20.0);
+        self.scrollView.frame = CGRectMake(0.0, 0.0, contentRect.size.width, contentRect.size.height - 40.0);
+        self.brujulaButton.frame = CGRectMake(contentRect.size.width - 85.0, 0.0, 70.0, 70.0);
+
     } else {
-        self.scrollView.frame = CGRectMake(contentRect.size.width/2.0 - 199, 10.0, 398.0, contentRect.size.height - 20.0);
+        self.scrollView.frame = CGRectMake(0.0, 0.0, contentRect.size.width, contentRect.size.height - 20.0);
+        self.brujulaButton.frame = CGRectMake(contentRect.size.width - 85.0, 0.0, 55.0, 55.0);
     }
     self.pisoImageView.frame = CGRectMake(0.0, 0.0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
     NSLog(@"frame piso: %@", NSStringFromCGRect(self.pisoImageView.frame));
-    self.brujulaButton.frame = CGRectMake(contentRect.size.width - 85.0, 0.0, 70.0, 70.0);
 }
 
 #pragma mark - Actions 

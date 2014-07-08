@@ -63,8 +63,10 @@
         } else {
             space.yLimit = dictionary[@"y_limiit"];
         }
-        space.thumb = dictionary[@"thumb"];
-        space.thumbData = [NSData dataWithContentsOfURL:[NSURL URLWithString:space.thumb]];
+        //space.thumb = dictionary[@"thumb"];
+        //NSLog(@"convertiré la url del thumb en Data");
+        //space.thumbData = [NSData dataWithContentsOfURL:[NSURL URLWithString:space.thumb]];
+        //NSLog(@"Convertí la url del thumb en data");
         space.common = dictionary[@"common"];
         space.enabled = dictionary[@"enabled"];
         space.lastUpdate = dictionary[@"last_update"];

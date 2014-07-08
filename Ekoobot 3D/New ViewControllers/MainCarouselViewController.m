@@ -456,7 +456,6 @@
                     self.finishesImagesArray = [dictionary[@"finishImages"] arrayByReplacingNullsWithBlanks];
                     [self startSavingProcessInCoreData];
                 }
-                
             }
         } else {
             NSLog(@"NO llegó respuesta del getProjectById");

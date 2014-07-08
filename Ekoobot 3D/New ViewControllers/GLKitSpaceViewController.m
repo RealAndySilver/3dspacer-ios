@@ -202,7 +202,8 @@
     //[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     /*[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification
                                                object:[UIDevice currentDevice]];*/
-    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+    //UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+    NSUInteger deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     NSLog(@"device orientation: %d", deviceOrientation);
     if (deviceOrientation == 3) {
         deviceIsLeftRotated = YES;
@@ -514,7 +515,7 @@
     
     if (viewIsZooming) {
         if (!viewIsZoomed) {
-            fieldOfView -= 2.5;
+            fieldOfView -= 4.0;
             if (fieldOfView <= 35.0) {
                 fieldOfView = 35.0;
                 viewIsZooming = NO;
@@ -522,7 +523,7 @@
             }
         
         } else {
-            fieldOfView += 2.5;
+            fieldOfView += 4.0;
             if (fieldOfView >= 75.0) {
                 fieldOfView = 75.0;
                 viewIsZooming = NO;
@@ -607,8 +608,8 @@
 
 - (void)pinch:(UIPinchGestureRecognizer *)senderGestureRecognizer
 {
-    NSLog(@"****************************** Entré al pinch *************************************");
-    const GLfloat factorEscalamiento = 1.5;
+    //NSLog(@"****************************** Entré al pinch *************************************");
+    const GLfloat factorEscalamiento = 4.0;
     static GLfloat currentScale = 0;
     static GLfloat lastScale = 0;
     

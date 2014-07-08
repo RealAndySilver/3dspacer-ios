@@ -129,7 +129,11 @@
     self.motionManager = [CMMotionManager sharedMotionManager];
     if (self.motionManager.magnetometerAvailable) {
         NSLog(@"El magnetómetro está disponible entonces mostraré la brújula");
-        brujula=[[BrujulaView alloc]initWithFrame:CGRectMake(self.view.frame.size.width-90, 80, 70, 70)];
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            brujula=[[BrujulaView alloc]initWithFrame:CGRectMake(self.view.frame.size.width-90, 80, 70, 70)];
+        } else {
+            brujula=[[BrujulaView alloc]initWithFrame:CGRectMake(self.view.frame.size.width-90, 80, 55, 55)];
+        }
         brujula.delegate = self;
         [self.view addSubview:brujula];
         [brujula changeState];

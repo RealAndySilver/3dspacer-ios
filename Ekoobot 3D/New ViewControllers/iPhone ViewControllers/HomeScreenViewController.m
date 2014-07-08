@@ -139,6 +139,7 @@
     self.carousel.type = iCarouselTypeCustom;
     self.carousel.scrollSpeed = 0.5;
     self.carousel.bounceDistance = 0.3;
+    self.carousel.pagingEnabled = YES;
     self.carousel.backgroundColor = [UIColor clearColor];
     [self.view addSubview:self.carousel];
     
@@ -155,26 +156,26 @@
     
     //Delete button
     self.deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(screenBounds.size.width/2.0 + 15.0, screenBounds.size.height - 60.0, 40.0, 40.0)];
-    [self.deleteButton setBackgroundImage:[UIImage imageNamed:@"NewDeleteIcon.png"] forState:UIControlStateNormal];
+    [self.deleteButton setBackgroundImage:[UIImage imageNamed:@"delete_icon_phone.png"] forState:UIControlStateNormal];
     [self.deleteButton addTarget:self action:@selector(deleteProject) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.deleteButton];
     
     
     //Meesage button
     self.messageButton = [[UIButton alloc] initWithFrame:CGRectMake(screenBounds.size.width/2.0 - 15.0 - 40.0 - 30.0 - 40.0, screenBounds.size.height - 60.0, 40.0, 40.0)];
-    [self.messageButton setBackgroundImage:[UIImage imageNamed:@"NewShareIcon.png"] forState:UIControlStateNormal];
+    [self.messageButton setBackgroundImage:[UIImage imageNamed:@"share_icon_phone.png"] forState:UIControlStateNormal];
     [self.messageButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.messageButton];
     
     //Logout button
     self.logoutButton = [[UIButton alloc] initWithFrame:CGRectMake(screenBounds.size.width/2.0 + 15.0 + 40.0 + 30.0, screenBounds.size.height - 60.0, 40.0, 40.0)];
-    [self.logoutButton setBackgroundImage:[UIImage imageNamed:@"NewLogoutIcon.png"] forState:UIControlStateNormal];
+    [self.logoutButton setBackgroundImage:[UIImage imageNamed:@"logout_icon_phone.png"] forState:UIControlStateNormal];
     [self.logoutButton addTarget:self action:@selector(showLogoutAlert) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.logoutButton];
     
     //Slideshow button
     self.slideShowButton = [[UIButton alloc] initWithFrame:CGRectMake(screenBounds.size.width/2.0 - 15.0 - 40.0, screenBounds.size.height - 60.0, 40.0, 40.0)];
-    [self.slideShowButton setBackgroundImage:[UIImage imageNamed:@"NewTVIcon.png"] forState:UIControlStateNormal];
+    [self.slideShowButton setBackgroundImage:[UIImage imageNamed:@"tv_icon_phone.png"] forState:UIControlStateNormal];
     [self.slideShowButton addTarget:self action:@selector(startSlideshowProcess) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.slideShowButton];
     

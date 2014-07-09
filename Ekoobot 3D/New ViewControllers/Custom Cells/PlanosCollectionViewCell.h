@@ -16,6 +16,7 @@
 
 @interface PlanosCollectionViewCell : UICollectionViewCell
 @property (strong, nonatomic) UIImageView *planoImageView;
+@property (strong, nonatomic) NSArray *espacios3DArray;
 @property (assign, nonatomic) CGFloat zoomScale;
 @property (strong, nonatomic) UILabel *areaTotalLabel;
 @property (assign, nonatomic) BOOL showCompass;

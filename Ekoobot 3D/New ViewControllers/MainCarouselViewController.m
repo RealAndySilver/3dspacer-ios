@@ -161,6 +161,12 @@
     self.navigationController.navigationBarHidden = YES;
 }
 
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    NSLog(@"************************ Desapareceréeeeeeeee ************************");
+    self.databaseDocument = nil;
+}
+
 -(void)setupUI {
     self.progressLabel.hidden = YES;
     
@@ -804,7 +810,6 @@
         if (!fetchOnlyRenders) {
             //Get our context
             NSManagedObjectContext *context = self.databaseDocument.managedObjectContext;
-            context.undoManager = nil;
             
             NSArray *rendersArray = [Render rendersForProjectWithID:projectID inManagedObjectContext:context];
             NSArray *urbanizationsArray = [Urbanization urbanizationsArrayForProjectWithID:projectID inManagedObjectContext:context];
@@ -830,6 +835,7 @@
             [projectDictionary setObject:finishesArray forKey:@"finishes"];
             [projectDictionary setObject:finishesImagesArray forKey:@"finishImages"];
             
+            //[self clearCoreDataManagedDocument];
             [self goToProjectScreenWithProjectDic:projectDictionary];
                         
         } else {
@@ -839,6 +845,24 @@
         }
     }
 }
+
+/*-(void)clearCoreDataManagedDocument {
+    NSLog(@"********************** Limpiando el contextoooooooooooooooooooooooooo *******************");
+    for (NSManagedObject *mo in [self.databaseDocument.managedObjectContext registeredObjects]) {
+        [self.databaseDocument.managedObjectContext refreshObject:mo mergeChanges:NO];
+    }
+    
+    [NSTimer scheduledTimerWithTimeInterval:0.0
+                                     target:self
+                                   selector:@selector(resetContext)
+                                   userInfo:nil
+                                    repeats:NO];
+}
+
+- (void)resetContext
+{
+    [self.databaseDocument.managedObjectContext reset];
+}*/
 
 -(void)updateLabel:(NSNumber *)aNumber {
      [[NSNotificationCenter defaultCenter] postNotificationName:@"fileDownloaded" object:nil userInfo:@{@"Progress": aNumber}];

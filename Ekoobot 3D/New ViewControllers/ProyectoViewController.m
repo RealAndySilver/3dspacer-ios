@@ -126,10 +126,20 @@
     screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.view.backgroundColor = [UIColor blackColor];
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLabelWithTag:) name:@"updates" object:nil];
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertViewAppear) name:@"alert" object:nil];
-    //[self performSelectorInBackground:@selector(saveProjectAttachedImages) withObject:nil];
     [self setupUI];
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    NSArray *viewControllers = self.navigationController.viewControllers;
+    if (viewControllers.count > 1 && [viewControllers objectAtIndex:viewControllers.count-2] == self) {
+        // View is disappearing because a new view controller was pushed onto the stack
+        NSLog(@"New view controller was pushed");
+    } else if ([viewControllers indexOfObject:self] == NSNotFound) {
+        // View is disappearing because it was popped from the stack
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"OutdatedProjectNotification" object:nil];
+        NSLog(@"View controller was popped");
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -1005,19 +1015,13 @@
 }*/
 
 -(void)finishSavingProcessOnMainThread:(NSDictionary *)projectDictionary {
-    /*if([self.databaseDocument.managedObjectContext save:NULL]) {
-        NSLog(@"Pude guardar el contexto principal");
-    } else {
-        NSLog(@"No pude guardar el contexto principal");
-    }*/
-    
     Project *project = self.projectDic[@"project"];
     
     if (projectIsOutdated) {
         FileSaver *fileSaver = [[FileSaver alloc] init];
         NSMutableArray *savedProjectIDs = [NSMutableArray arrayWithArray:[fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"]];
         if (![savedProjectIDs containsObject:project.identifier]) {
-            NSLog(@"*********************************** Volveré a agregar este proyecto a file saver");
+            NSLog(@"Volveré a agregar este proyecto a file saver");
             [savedProjectIDs addObject:project.identifier];
             [fileSaver setDictionary:@{@"projectIDsArray": savedProjectIDs} withName:@"downloadedProjectsIDs"];
             
@@ -1287,7 +1291,10 @@
         self.infoView.topLabel.textColor = [UIColor redColor];
         self.infoView.topLabel.text = NSLocalizedString(@"NuevaVersion", nil);
         self.infoView.bottomLabel.text = NSLocalizedString(@"Descarga", nil);
-        [[[UIAlertView alloc] initWithTitle:@"Nueva actualización" message:@"Existe una nueva actualización disponible para este proyecto." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+        
+        if (self.downloadView.hidden) {
+              [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ActualizacionDetectada", nil) message:NSLocalizedString(@"DetalleActualizacion", nil) delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+        }
         
         projectIsOutdated = YES;
     }

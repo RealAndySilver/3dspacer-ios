@@ -609,7 +609,7 @@
 - (void)pinch:(UIPinchGestureRecognizer *)senderGestureRecognizer
 {
     //NSLog(@"****************************** Entré al pinch *************************************");
-    const GLfloat factorEscalamiento = 4.0;
+    const GLfloat factorEscalamiento = 2.0;
     static GLfloat currentScale = 0;
     static GLfloat lastScale = 0;
     

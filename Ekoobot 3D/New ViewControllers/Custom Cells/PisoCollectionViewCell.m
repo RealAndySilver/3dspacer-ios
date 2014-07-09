@@ -31,11 +31,19 @@
 }
 
 -(void)removeAllPinsFromArray:(NSArray *)pinsArray {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 20; i++) {
         if ([self.contentView viewWithTag:i + 1]) {
             //Remove the pin button and it's label
-            [[self.pisoImageView viewWithTag:i + 1] removeFromSuperview];
-            [[self.pisoImageView viewWithTag:i + 10] removeFromSuperview];
+            [UIView animateWithDuration:0.5
+                                  delay:0.0
+                                options:UIViewAnimationOptionCurveEaseOut
+                             animations:^(){
+                                 [self.pisoImageView viewWithTag:i + 1].alpha = 0.0;
+                                 [self.pisoImageView viewWithTag:i + 20].alpha = 0.0;
+                             } completion:^(BOOL finished){
+                                 [[self.pisoImageView viewWithTag:i + 1] removeFromSuperview];
+                                 [[self.pisoImageView viewWithTag:i + 20] removeFromSuperview];
+                             }];
         }
     }
 }
@@ -59,19 +67,29 @@
             pinButton.tag = i + 1;
             [pinButton setImage:[UIImage imageNamed:@"pin.png"] forState:UIControlStateNormal];
             [pinButton addTarget:self action:@selector(pinButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+            pinButton.alpha = 0.0;
             [self.pisoImageView addSubview:pinButton];
             
             //Button Label
             UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(pinButton.frame.origin.x + pinButton.frame.size.width, pinButton.frame.origin.y, 200.0, 30.0)];
             nameLabel.text = product.name;
-            nameLabel.tag = i + 10;
+            nameLabel.tag = i + 20;
             nameLabel.textColor = [UIColor whiteColor];
             nameLabel.font = [UIFont boldSystemFontOfSize:fontSize];
             nameLabel.layer.shadowColor = [UIColor blackColor].CGColor;
             nameLabel.layer.shadowOffset = CGSizeMake(1.0, 1.0);
             nameLabel.layer.shadowOpacity = 1.0;
             nameLabel.layer.shadowRadius = 1.0;
+            nameLabel.alpha = 0.0;
             [self.pisoImageView addSubview:nameLabel];
+            
+            [UIView animateWithDuration:0.2
+                                  delay:0.0
+                                options:UIViewAnimationOptionCurveEaseOut
+                             animations:^(){
+                                 pinButton.alpha = 1.0;
+                                 nameLabel.alpha = 1.0;
+                             } completion:^(BOOL finished){}];
         }
     }
 }
@@ -124,7 +142,7 @@
 
     } else {
         self.scrollView.frame = CGRectMake(0.0, 0.0, contentRect.size.width, contentRect.size.height - 20.0);
-        self.brujulaButton.frame = CGRectMake(contentRect.size.width - 85.0, 0.0, 55.0, 55.0);
+        self.brujulaButton.frame = CGRectMake(contentRect.size.width - 85.0, 10.0, 55.0, 55.0);
     }
     self.pisoImageView.frame = CGRectMake(0.0, 0.0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
     NSLog(@"frame piso: %@", NSStringFromCGRect(self.pisoImageView.frame));

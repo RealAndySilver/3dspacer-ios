@@ -24,7 +24,10 @@
 @property (strong, nonatomic) NSMutableArray *nombresPlantasArray;
 @property (strong, nonatomic) NSMutableArray *plantsArray;
 @property (strong, nonatomic) NSArray *spacesArray;
+@property (strong, nonatomic) NSMutableArray *plantsPinsArray;
 @property (strong, nonatomic) PlanosCollectionViewCell *cell;
+@property (strong, nonatomic) PlanosCollectionViewCell *previousCell;
+@property (strong, nonatomic) NSIndexPath *previousCellIndexPath;
 @end
 
 @implementation PlanosDePlantaViewController {
@@ -34,6 +37,27 @@
 }
 
 #pragma mark - Lazy Instantiation
+
+-(NSMutableArray *)plantsPinsArray {
+    if (!_plantsPinsArray) {
+        _plantsPinsArray = [[NSMutableArray alloc] init];
+        for (int i = 0; i < [self.plantsArray count]; i++) {
+            Plant *plant = self.plantsArray[i];
+            NSMutableArray *pinsArrayForPlant = [[NSMutableArray alloc] init];
+            
+            for (int j = 0; j < [self.spacesArray count]; j++) {
+                Space *space = self.spacesArray[j];
+                if ([space.plant isEqualToString:plant.identifier]) {
+                    NSLog(@"Agregué un pin a la planta en el index %i", i);
+                    [pinsArrayForPlant addObject:space];
+                }
+            }
+            NSLog(@"el numero de pines en la planta %i es %i", i, [pinsArrayForPlant count]);
+            [_plantsPinsArray addObject:pinsArrayForPlant];
+        }
+    }
+    return _plantsPinsArray;
+}
 
 -(NSArray *)spacesArray {
     if (!_spacesArray) {
@@ -93,6 +117,13 @@
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 }
 
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    PlanosCollectionViewCell *cell = (PlanosCollectionViewCell *)[[self.collectionView visibleCells] firstObject];
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    [cell setEspacios3DButtonsFromArray:self.plantsPinsArray[indexPath.item]];
+}
+
 -(void)setupUI {
     CGRect screenFrame = screenBounds;
     //Setup CollectionView
@@ -141,8 +172,10 @@
     Plant *plant = self.plantsArray[indexPath.item];
     cell.planoImageView.image = [plant plantImage];
     cell.showCompass = magnetometerIsAvailable;
+    //[cell removeAllPinsFromArray:self.plantsPinsArray[indexPath.item]];
+    //[cell setEspacios3DButtonsFromArray:self.plantsPinsArray[indexPath.item]];
     
-    NSMutableArray *pinsArrayForPlant = [[NSMutableArray alloc] init];
+    /*NSMutableArray *pinsArrayForPlant = [[NSMutableArray alloc] init];
     for (int i = 0; i < [self.spacesArray count]; i++) {
         Space *space = self.spacesArray[i];
         if ([space.plant isEqualToString:plant.identifier]) {
@@ -152,7 +185,7 @@
     }
     
     [cell removeAllPinsFromArray:pinsArrayForPlant];
-    [cell setEspacios3DButtonsFromArray:pinsArrayForPlant];
+    [cell setEspacios3DButtonsFromArray:pinsArrayForPlant];*/
     
     
     NSString *replacedMt=[self.product.area stringByReplacingOccurrencesOfString:@"mt2" withString:@"mt\u00B2"];
@@ -165,38 +198,27 @@
     ((PlanosCollectionViewCell *)cell).zoomScale = 1.0;
 }
 
-#pragma mark - Custom Methods
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    NSLog(@"Terminé de acelerarmeeeee");
+    //Get a reference to the current cell
+    PlanosCollectionViewCell *currentCell = [[self.collectionView visibleCells] firstObject];
+    NSIndexPath *currentCellIndexPath = [self.collectionView indexPathForCell:currentCell];
+    NSLog(@"Celda Anterior: %d, celda actual: %d", self.previousCellIndexPath.item ,currentCellIndexPath.item);
+    
+    if (currentCellIndexPath.item != self.previousCellIndexPath.item) {
+        //The user change to other cell
+        [self.previousCell removeAllPinsFromArray:self.plantsPinsArray[self.previousCellIndexPath.item]];
+        [currentCell setEspacios3DButtonsFromArray:self.plantsPinsArray[currentCellIndexPath.item]];
+    }
+}
 
-/*-(UIImage *)imageFromPlantaAtIndex:(NSUInteger)index {
-    Planta *planta = self.producto.arrayPlantas[index];
-    
-    //Access the image path at the documents directory
-    NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
-    NSString *jpegFilePath = [NSString stringWithFormat:@"%@/planta%@.jpeg",docDir,planta.idPlanta];
-    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
-    
-    if (!fileExists) {
-        //The image doesnt exist
-        NSLog(@"no existe planta img %@",jpegFilePath);
-        NSString *string=[planta.imagenPlanta stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-        NSURL *urlImagen=[NSURL URLWithString:string];
-        NSLog(@"url %@",urlImagen);
-        
-        NSData *data=[NSData dataWithContentsOfURL:urlImagen];
-        UIImage *plantaImage = [UIImage imageWithData:data];
-        NSData *data2 = [NSData dataWithData:UIImageJPEGRepresentation(plantaImage, 1.0f)];//1.0f = 100% quality
-        if (plantaImage) {
-            [data2 writeToFile:jpegFilePath atomically:YES];
-        }
-        return plantaImage;
-    }
-    else {
-        //The image exist
-        NSLog(@"si existe planta img %@",jpegFilePath);
-        UIImage *plantaImage = [UIImage imageWithContentsOfFile:jpegFilePath];
-        return plantaImage;
-    }
-}*/
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.previousCell = (PlanosCollectionViewCell *)[[self.collectionView visibleCells] firstObject];
+    self.previousCellIndexPath = [self.collectionView indexPathForCell:self.previousCell];
+    NSLog(@"****************** index path: %d", self.previousCellIndexPath.item);
+}
+
+#pragma mark - Custom Methods
 
 -(void)goToGLKitView {
     /*[MBProgressHUD hideHUDForView:self.view animated:YES];

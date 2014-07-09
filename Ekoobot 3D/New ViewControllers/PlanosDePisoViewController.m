@@ -30,6 +30,9 @@
 @property (strong, nonatomic) NSMutableArray *floorsArray;
 @property (strong, nonatomic) NSArray *productsArray;
 @property (strong, nonatomic) NSDictionary *productAnalyticsDic;
+@property (strong, nonatomic) PisoCollectionViewCell *previousCell;
+@property (strong, nonatomic) NSIndexPath *previousCellIndexPath;
+@property (strong, nonatomic) NSMutableArray *floorsPinsArray;
 @end
 
 @implementation PlanosDePisoViewController {
@@ -37,7 +40,28 @@
     BOOL magnetometerIsAvailable;
 }
 
-#pragma mark - Lazy Instantiation 
+#pragma mark - Lazy Instantiation
+
+-(NSMutableArray *)floorsPinsArray {
+    if (!_floorsPinsArray) {
+        _floorsPinsArray = [[NSMutableArray alloc] init];
+        for (int i = 0; i < [self.floorsArray count]; i++) {
+            Floor *floor = self.floorsArray[i];
+            NSMutableArray *pinsArrayForFloor = [[NSMutableArray alloc] init];
+            
+            for (int j = 0; j < [self.productsArray count]; j++) {
+                Product *product = self.productsArray[j];
+                if ([product.floor isEqualToString:floor.identifier]) {
+                    NSLog(@"Agregué un pin a la planta en el index %i", i);
+                    [pinsArrayForFloor addObject:product];
+                }
+            }
+            NSLog(@"el numero de pines en el piso %i es %i", i, [pinsArrayForFloor count]);
+            [_floorsPinsArray addObject:pinsArrayForFloor];
+        }
+    }
+    return _floorsPinsArray;
+}
 
 -(NSArray *)productsArray {
     if (!_productsArray) {
@@ -99,6 +123,13 @@
     }
 }
 
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    PisoCollectionViewCell *cell = (PisoCollectionViewCell *)[[self.collectionView visibleCells] firstObject];
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    [cell setPinsButtonsFromArray:self.floorsPinsArray[indexPath.item]];
+}
+
 -(void)setupUI {
     
     CGRect screenFrame = screenBounds;
@@ -157,7 +188,7 @@
     cell.pisoImageView.image = [floor floorImage];
     cell.showCompass = magnetometerIsAvailable;
     
-    NSMutableArray *pinsArrayForFloor = [[NSMutableArray alloc] init];
+    /*NSMutableArray *pinsArrayForFloor = [[NSMutableArray alloc] init];
     for (int i = 0; i < [self.productsArray count]; i++) {
         Product *product = self.productsArray[i];
         if ([product.floor isEqualToString:floor.identifier]) {
@@ -166,9 +197,29 @@
     }
     
     [cell removeAllPinsFromArray:pinsArrayForFloor];
-    [cell setPinsButtonsFromArray:pinsArrayForFloor];
+    [cell setPinsButtonsFromArray:pinsArrayForFloor];*/
     
     return cell;
+}
+
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    NSLog(@"Terminé de acelerarmeeeee");
+    //Get a reference to the current cell
+    PisoCollectionViewCell *currentCell = [[self.collectionView visibleCells] firstObject];
+    NSIndexPath *currentCellIndexPath = [self.collectionView indexPathForCell:currentCell];
+    NSLog(@"Celda Anterior: %d, celda actual: %d", self.previousCellIndexPath.item ,currentCellIndexPath.item);
+    
+    if (currentCellIndexPath.item != self.previousCellIndexPath.item) {
+        //The user change to other cell
+        [self.previousCell removeAllPinsFromArray:self.floorsPinsArray[self.previousCellIndexPath.item]];
+        [currentCell setPinsButtonsFromArray:self.floorsPinsArray[currentCellIndexPath.item]];
+    }
+}
+
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.previousCell = (PisoCollectionViewCell *)[[self.collectionView visibleCells] firstObject];
+    self.previousCellIndexPath = [self.collectionView indexPathForCell:self.previousCell];
+    NSLog(@"****************** index path: %d", self.previousCellIndexPath.item);
 }
 
 -(void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {

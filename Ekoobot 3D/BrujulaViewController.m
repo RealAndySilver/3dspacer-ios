@@ -54,7 +54,12 @@
     zoomCheck=YES;
     /*timer=[[NSTimer alloc]init];
     timer =[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(update) userInfo:nil repeats:YES];*/
-    brujula=[[BrujulaView alloc]initWithFrame:CGRectMake(self.view.frame.size.height-80, 60, 70, 70)];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        brujula=[[BrujulaView alloc]initWithFrame:CGRectMake(self.view.frame.size.height-80, 60, 70, 70)];
+    } else {
+        brujula=[[BrujulaView alloc]initWithFrame:CGRectMake(self.view.frame.size.height-80, 60, 55, 55)];
+    }
     [self.view addSubview:brujula];
     //[self.navigationItem setHidesBackButton:YES];
     // Do any additional setup after loading the view.

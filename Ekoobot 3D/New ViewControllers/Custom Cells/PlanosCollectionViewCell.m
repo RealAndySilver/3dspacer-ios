@@ -33,11 +33,19 @@
 }
 
 -(void)removeAllPinsFromArray:(NSArray *)espacios3DArray {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 50; i++) {
         if ([self.contentView viewWithTag:i + 1]) {
             //Remove the pin button and it's label
-            [[self.planoImageView viewWithTag:i + 1] removeFromSuperview];
-            [[self.planoImageView viewWithTag:i + 10] removeFromSuperview];
+            [UIView animateWithDuration:0.5
+                                  delay:0.0
+                                options:UIViewAnimationOptionCurveEaseOut
+                             animations:^(){
+                                 [self.planoImageView viewWithTag:i + 1].alpha = 0.0;
+                                 [self.planoImageView viewWithTag:i + 50].alpha = 0.0;
+                             } completion:^(BOOL finished){
+                                 [[self.planoImageView viewWithTag:i + 1] removeFromSuperview];
+                                 [[self.planoImageView viewWithTag:i + 50] removeFromSuperview];
+                             }];
         }
     }
 }
@@ -64,19 +72,29 @@
             [pinButton addTarget:self action:@selector(espacio3DButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             pinButton.tag = i + 1;
             NSLog(@"Agregué un pin en la posición %@", NSStringFromCGRect(pinButton.frame));
+            pinButton.alpha = 0.0;
             [self.planoImageView addSubview:pinButton];
             
             //Button Label
             UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(pinButton.frame.origin.x + pinButton.frame.size.width, pinButton.frame.origin.y, 200.0, 30.0)];
             nameLabel.text = space.name;
-            nameLabel.tag = i + 10;
+            nameLabel.tag = i + 50;
             nameLabel.textColor = [UIColor whiteColor];
             nameLabel.font = [UIFont boldSystemFontOfSize:fontSize];
             nameLabel.layer.shadowColor = [UIColor blackColor].CGColor;
             nameLabel.layer.shadowOffset = CGSizeMake(1.0, 1.0);
             nameLabel.layer.shadowOpacity = 1.0;
             nameLabel.layer.shadowRadius = 1.0;
+            nameLabel.alpha = 0.0;
             [self.planoImageView addSubview:nameLabel];
+            
+            [UIView animateWithDuration:0.2
+                                  delay:0.0
+                                options:UIViewAnimationOptionCurveEaseOut
+                             animations:^(){
+                                 pinButton.alpha = 1.0;
+                                 nameLabel.alpha = 1.0;
+                             } completion:^(BOOL finished){}];
         }
     }
 }
@@ -141,7 +159,7 @@
         //self.scrollView.frame = CGRectMake(contentRect.size.width/2.0 - 175.0, -10.0, 350.0, contentRect.size.height - 60.0);
         self.scrollView.frame = CGRectMake(0.0, 0.0, contentRect.size.width, contentRect.size.height - 30.0);
         self.planoImageView.frame = CGRectMake(0.0, 0.0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
-        self.brujulaButton.frame = CGRectMake(contentRect.size.width - 80.0, -10.0, 55.0, 55.0);
+        self.brujulaButton.frame = CGRectMake(contentRect.size.width - 80.0, 10.0, 55.0, 55.0);
         self.areaTotalLabel.frame = CGRectMake(10.0, self.planoImageView.frame.origin.y + self.planoImageView.frame.size.height + 3.0, 150.0, 20.0);
         
     }

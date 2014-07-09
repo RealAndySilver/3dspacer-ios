@@ -55,3 +55,5 @@
 "DescargaCancelada" = "Descarga Cancelada";
 
 "ErrorServidor" = "Hay un problema en el servidor. Por favor intenta de nuevo en un momento.";
+"ActualizacionDetectada" = "Actualización Disponible";
+"DetalleActualizacion" = "Existe una nueva actualización disponible para este proyecto.";

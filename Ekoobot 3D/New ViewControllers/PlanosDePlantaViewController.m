@@ -28,6 +28,7 @@
 @property (strong, nonatomic) PlanosCollectionViewCell *cell;
 @property (strong, nonatomic) PlanosCollectionViewCell *previousCell;
 @property (strong, nonatomic) NSIndexPath *previousCellIndexPath;
+@property (strong, nonatomic) NSMutableArray *plantImagesArray;
 @end
 
 @implementation PlanosDePlantaViewController {
@@ -37,6 +38,22 @@
 }
 
 #pragma mark - Lazy Instantiation
+
+-(NSMutableArray *)plantImagesArray {
+    if (!_plantImagesArray) {
+        _plantImagesArray = [[NSMutableArray alloc] init];
+        NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+        NSUInteger plantsCount = [self.projectDic[@"plants"] count];
+        for (int i = 0; i < plantsCount; i++) {
+            Plant *plant = self.projectDic[@"plants"][i];
+            NSString *imageDir = [docDir stringByAppendingPathComponent:plant.imagePath];
+            UIImage *plantImage = [UIImage imageWithContentsOfFile:imageDir];
+            [_plantImagesArray addObject:plantImage];
+        }
+    }
+    return _plantImagesArray;
+
+}
 
 -(NSMutableArray *)plantsPinsArray {
     if (!_plantsPinsArray) {
@@ -90,10 +107,19 @@
     return _nombresPlantasArray;
 }
 
+/*-(void)initializePlantImagesArray {
+    self.plantImagesArray = [[NSMutableArray alloc] init];
+    for (int i = 0; i < [self.plantsArray count]; i++) {
+        Plant *plant = self.plantsArray[i];
+        [self.plantImagesArray addObject:[plant plantImage]];
+    }
+}*/
+
 #pragma mark View Lifecycle
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    //[self initializePlantImagesArray];
     self.automaticallyAdjustsScrollViewInsets = NO;
     CGRect screen = [UIScreen mainScreen].bounds;
     screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
@@ -168,9 +194,9 @@
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     PlanosCollectionViewCell *cell = (PlanosCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"CellIdentifier" forIndexPath:indexPath];
     cell.delegate = self;
-    //Planta *planta = self.producto.arrayPlantas[indexPath.item];
-    Plant *plant = self.plantsArray[indexPath.item];
-    cell.planoImageView.image = [plant plantImage];
+    //Plant *plant = self.plantsArray[indexPath.item];
+    //cell.planoImageView.image = [plant plantImage];
+    cell.planoImageView.image = self.plantImagesArray[indexPath.item];
     cell.showCompass = magnetometerIsAvailable;
     //[cell removeAllPinsFromArray:self.plantsPinsArray[indexPath.item]];
     //[cell setEspacios3DButtonsFromArray:self.plantsPinsArray[indexPath.item]];
@@ -200,22 +226,47 @@
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSLog(@"Terminé de acelerarmeeeee");
-    //Get a reference to the current cell
+    [self performSelector:@selector(showPinsForNewDisplayedCell) withObject:nil afterDelay:0.1];
+    /*if (currentCellIndexPath.item != self.previousCellIndexPath.item) {
+        //The user change to other cell
+        //[self.previousCell removeAllPinsFromArray:self.plantsPinsArray[self.previousCellIndexPath.item]];
+        [currentCell setEspacios3DButtonsFromArray:self.plantsPinsArray[currentCellIndexPath.item]];
+    }*/
+}
+
+-(void)showPinsForNewDisplayedCell {
     PlanosCollectionViewCell *currentCell = [[self.collectionView visibleCells] firstObject];
     NSIndexPath *currentCellIndexPath = [self.collectionView indexPathForCell:currentCell];
+    [currentCell setEspacios3DButtonsFromArray:self.plantsPinsArray[currentCellIndexPath.item]];
     NSLog(@"Celda Anterior: %d, celda actual: %d", self.previousCellIndexPath.item ,currentCellIndexPath.item);
-    
-    if (currentCellIndexPath.item != self.previousCellIndexPath.item) {
-        //The user change to other cell
-        [self.previousCell removeAllPinsFromArray:self.plantsPinsArray[self.previousCellIndexPath.item]];
-        [currentCell setEspacios3DButtonsFromArray:self.plantsPinsArray[currentCellIndexPath.item]];
-    }
 }
 
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    self.previousCell = (PlanosCollectionViewCell *)[[self.collectionView visibleCells] firstObject];
-    self.previousCellIndexPath = [self.collectionView indexPathForCell:self.previousCell];
-    NSLog(@"****************** index path: %d", self.previousCellIndexPath.item);
+    NSLog(@"Dragiingggggggg");
+    if ([[self.collectionView visibleCells] count] == 1) {
+        self.previousCell = (PlanosCollectionViewCell *)[[self.collectionView visibleCells] firstObject];
+        self.previousCellIndexPath = [self.collectionView indexPathForCell:self.previousCell];
+        [self.previousCell removeAllPinsFromArray:self.plantsPinsArray[self.previousCellIndexPath.item]];
+        //NSLog(@"****************** index path: %d", self.previousCellIndexPath.item);
+    }
+}
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    NSLog(@"Terminé de dragearmeeeee");
+    if (decelerate) {
+        NSLog(@"Entraré al end descelerating");
+    } else {
+        NSLog(@"No entraré al descelerating");
+        [self performSelector:@selector(showPinsWhenDesceleratingIsNo) withObject:nil afterDelay:0.2];
+    }
+}
+
+-(void)showPinsWhenDesceleratingIsNo {
+    [self.previousCell setEspacios3DButtonsFromArray:self.plantsPinsArray[self.previousCellIndexPath.item]];
+}
+
+-(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    NSLog(@"Entré al end scrolliiiinnnggg");
 }
 
 #pragma mark - Custom Methods
@@ -255,7 +306,7 @@
     Plant *plant = self.plantsArray[index];
     
     BrujulaViewController *brujulaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Brujula"];
-    UIImageView *floorImageView = [[UIImageView alloc] initWithImage:[plant plantImage]];
+    UIImageView *floorImageView = [[UIImageView alloc] initWithImage:self.plantImagesArray[index]];
     brujulaVC.externalImageView = floorImageView;
     brujulaVC.gradosExtra = [plant.northDegs floatValue];
     [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];

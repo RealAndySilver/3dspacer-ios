@@ -58,6 +58,7 @@
 @property (strong, nonatomic) NSArray *spacesArray;
 @property (strong, nonatomic) NSArray *finishesArray;
 @property (strong, nonatomic) NSArray *finishesImagesArray;
+@property (strong, nonatomic) NSMutableArray *renderImages;
 
 //UI Elements
 @property (strong, nonatomic) UIView *opacityView;
@@ -112,11 +113,25 @@
     return _downloadView;
 }
 
+-(void)getRenderImages {
+    self.renderImages = [[NSMutableArray alloc] init];
+    NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+    
+    NSUInteger rendersCount = [self.projectDic[@"renders"] count];
+    for (int i = 0; i < rendersCount; i++) {
+        Render *render = self.projectDic[@"renders"][i];
+        NSString *imagePath = [docDir stringByAppendingPathComponent:render.renderPath];
+        UIImage *renderImage = [UIImage imageWithContentsOfFile:imagePath];
+        [self.renderImages addObject:renderImage];
+    }
+}
+
 #pragma mark - View Lifecycle
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-    projectIsOutdated = NO;
+    [self getRenderImages];
+    projectIsOutdated = [self checkIfProjectIsOutdated];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(OutdatedProjectNotificationReceived:)
                                                  name:@"OutdatedProjectNotification"
@@ -127,6 +142,21 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.view.backgroundColor = [UIColor blackColor];
     [self setupUI];
+}
+
+-(BOOL)checkIfProjectIsOutdated {
+    Project *project = self.projectDic[@"project"];
+    
+    FileSaver *fileSaver = [[FileSaver alloc] init];
+    if ([fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"]) {
+        NSArray *outdatedIDs = [fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"];
+        if ([outdatedIDs containsObject:project.identifier]) {
+            NSLog(@"El proyecto está desactualizado");
+            return YES;
+        }
+    }
+    NSLog(@"El proyecto no está desactulizado.");
+    return NO;
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -275,9 +305,16 @@
     self.infoView = [[InfoView alloc] initWithFrame:CGRectMake(self.infoButton.frame.origin.x + self.infoButton.frame.size.width/2.0, self.infoButton.frame.origin.y, 260.0, 40.0)];
     self.infoView.topLabelColor = [UIColor greenColor];
     self.infoView.alpha = 0.0;
-    self.infoView.topLabel.text = NSLocalizedString(@"UltimaVersion", nil);
-    NSString *updatedString = NSLocalizedString(@"ActualizadoEl", nil);
-    self.infoView.bottomLabel.text = [NSString stringWithFormat:@"%@ %@", updatedString,project.lastUpdate];
+    if (!projectIsOutdated) {
+        self.infoView.topLabel.text = NSLocalizedString(@"UltimaVersion", nil);
+        NSString *updatedString = NSLocalizedString(@"ActualizadoEl", nil);
+        self.infoView.bottomLabel.text = [NSString stringWithFormat:@"%@ %@", updatedString,project.lastUpdate];
+    } else {
+        self.infoView.topLabel.textColor = [UIColor redColor];
+        self.infoView.topLabel.text = NSLocalizedString(@"NuevaVersion", nil);
+        self.infoView.bottomLabel.text = NSLocalizedString(@"Descarga", nil);
+    }
+
     [self.view addSubview:self.infoView];
     [self.view bringSubviewToFront:self.infoButton];
     
@@ -297,8 +334,9 @@
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     ProyectoCollectionViewCell *cell = (ProyectoCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"CellIdentifier" forIndexPath:indexPath];
     cell.delegate = self;
-    Render *render = self.projectDic[@"renders"][indexPath.item];
-    cell.imageView.image = [render renderImage];
+    cell.imageView.image = self.renderImages[indexPath.item];
+    //Render *render = self.projectDic[@"renders"][indexPath.item];
+    //cell.imageView.image = [render renderImage];
     return cell;
 }
 
@@ -446,9 +484,12 @@
 -(void)goToSlideShow {
     NSArray *rendersArray = self.projectDic[@"renders"];
     NSMutableArray *tempRendersArray = [NSMutableArray arrayWithCapacity:[rendersArray count]];
+    NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
     for (int i = 0; i < [rendersArray count]; i++) {
         Render *render = rendersArray[i];
-        [tempRendersArray addObject:[render renderImage]];
+        NSString *imageDir = [docDir stringByAppendingPathComponent:render.renderPath];
+        UIImage *image = [UIImage imageWithContentsOfFile:imageDir];
+        [tempRendersArray addObject:image];
     }
     
     SlideshowViewController *ssVC=[[SlideshowViewController alloc]init];
@@ -1016,12 +1057,21 @@
 
 -(void)finishSavingProcessOnMainThread:(NSDictionary *)projectDictionary {
     Project *project = self.projectDic[@"project"];
+    FileSaver *fileSaver = [[FileSaver alloc] init];
+
+    if ([fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"]) {
+        NSMutableArray *outdatedIDs = [NSMutableArray arrayWithArray:[fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"]];
+        if ([outdatedIDs containsObject:project.identifier]) {
+            [outdatedIDs removeObject:project.identifier];
+        }
+        [fileSaver setDictionary:@{@"OutdatedProjectIDsarray": outdatedIDs} withName:@"OutdatedProjectIDsDic"];
+    }
+    
     
     if (projectIsOutdated) {
-        FileSaver *fileSaver = [[FileSaver alloc] init];
         NSMutableArray *savedProjectIDs = [NSMutableArray arrayWithArray:[fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"]];
         if (![savedProjectIDs containsObject:project.identifier]) {
-            NSLog(@"Volveré a agregar este proyecto a file saver");
+            NSLog(@"Volveré a agregar este proyecto a file saver: %@", project.identifier);
             [savedProjectIDs addObject:project.identifier];
             [fileSaver setDictionary:@{@"projectIDsArray": savedProjectIDs} withName:@"downloadedProjectsIDs"];
             

@@ -34,6 +34,7 @@
 
 @property (strong, nonatomic) NSMutableArray *finishesArray;
 @property (strong, nonatomic) NSMutableArray *finishesImagesArray;
+@property (strong, nonatomic) NSMutableArray *thumbsArray;
 @property (strong, nonatomic) NSMutableDictionary *carasIds;
 @property (strong, nonatomic) NSMutableDictionary *finishImagesPathNames;
 @property (strong, nonatomic) NSTimer *zoomTimer;
@@ -63,6 +64,24 @@
 }
 
 #pragma mark - Lazy Instantiation 
+
+-(NSMutableArray *)thumbsArray {
+    if (!_thumbsArray) {
+        _thumbsArray = [[NSMutableArray alloc] init];
+        NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+        for (int i = 0; i < [self.arregloDeEspacios3D count]; i++) {
+            Space *space = self.arregloDeEspacios3D[i];
+            NSString *imageDir = [docDir stringByAppendingPathComponent:space.thumbPath];
+            NSLog(@"************** ImageDir ********** %@", imageDir);
+            UIImage *thumbImage = [UIImage imageWithContentsOfFile:imageDir];
+            if (!thumbImage) {
+                thumbImage = [UIImage imageNamed:@"GrayImage.png"];
+            }
+            [_thumbsArray addObject:thumbImage];
+        }
+    }
+    return _thumbsArray;
+}
 
 -(NSMutableDictionary *)finishImagesPathNames {
     //NSLog(@"Numero de imagenes en finishes images array: %d", [self.finishesImagesArray count]);
@@ -296,8 +315,8 @@
     CGRect acabadosViewFrame;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         more3DScenesRect = CGRectMake(0.0, screenFrame.size.height - 30.0, screenFrame.size.width, 190.0);
-        compassFrame = CGRectMake(screenFrame.size.width - 100.0, screenFrame.size.height/7.68, 80.0, 80.0);
-        acabadosViewFrame = CGRectMake(-180.0, 120.0, 150.0, 400.0);
+        compassFrame = CGRectMake(screenFrame.size.width - 100.0, 70.0, 80.0, 80.0);
+        acabadosViewFrame = CGRectMake(-180.0, 80.0, 150.0, 400.0);
     } else {
         more3DScenesRect = CGRectMake(screenFrame.size.width - 160.0, screenFrame.size.height - 30.0, 160.0, 190.0);
         compassFrame = CGRectMake(screenFrame.size.width - 70.0, 64.0, 50.0, 50.0);
@@ -327,29 +346,8 @@
     self.more3DScenesView.delegate = self;
     self.more3DScenesView.espacios3DArray = self.arregloDeEspacios3D;
     
-    //Search for the thumbs images to display in the inferior view
-    /*NSMutableArray *thumbsArray = [[NSMutableArray alloc] init];
-    for (int i = 0; i < [self.arregloDeEspacios3D count]; i++) {
-        Space *space = self.arregloDeEspacios3D[i];
-        for (int j = 0; j < [self.projectDic[@"finishes"] count]; j++) {
-            Finish *finish = self.projectDic[@"finishes"][j];
-            if ([finish.space isEqualToString:space.identifier]) {
-                for (int k = 0; k < [self.projectDic[@"finishImages"] count]; k++) {
-                    FinishImage *finishImage = self.projectDic[@"finishImages"][k];
-                    if ([finishImage.finish isEqualToString:finish.identifier] && [finishImage.type isEqualToString:@"back"]) {
-                        //[thumbsArray addObject:[finishImage finishImage]];
-                        NSLog(@"Encontré el thumb image del acabado");
-                        [thumbsArray addObject:[self imageFromFinishImageAtPath:finishImage.imagePath]];
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-    }*/
-    
     //Get the thumbs images to diaply in the inferior view
-    NSMutableArray *thumbsArray = [[NSMutableArray alloc] init];
+    /*NSMutableArray *thumbsArray = [[NSMutableArray alloc] init];
     for (int i = 0; i < [self.arregloDeEspacios3D count]; i++) {
         Space *space = self.arregloDeEspacios3D[i];
         UIImage *thumbImage = [space thumbImage];
@@ -358,10 +356,10 @@
         } else {
             [thumbsArray addObject:[UIImage imageNamed:@"GrayImage.png"]];
         }
-    }
+    }*/
     
-    NSLog(@"Thumbs encontrados: %lu", (unsigned long)[thumbsArray count]);
-    self.more3DScenesView.thumbsArray = thumbsArray;
+    NSLog(@"Thumbs encontrados: %lu", (unsigned long)[self.thumbsArray count]);
+    self.more3DScenesView.thumbsArray = self.thumbsArray;
     Space *space = self.arregloDeEspacios3D[self.espacioSeleccionado];
     self.more3DScenesView.titleLabel.text = space.name;
     [self.view addSubview:self.more3DScenesView];
@@ -725,6 +723,12 @@
     NSLog(@"calculando valores de rotacion %@", NSStringFromCGPoint(movementVector));
     rotXAxis -= movementVector.y*rotationFactor;
     rotZAxis -= movementVector.x*rotationFactor;
+    
+    if (rotXAxis < - 2.90) {
+        rotXAxis = -2.90;
+    } else if (rotXAxis > 0) {
+        rotXAxis = 0;
+    }
     
     movementVector.x = movementVector.x/1.2;
     movementVector.y = movementVector.y/1.2;

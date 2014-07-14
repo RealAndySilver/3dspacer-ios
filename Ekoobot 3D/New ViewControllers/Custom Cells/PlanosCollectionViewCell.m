@@ -36,7 +36,7 @@
     for (int i = 0; i < 50; i++) {
         if ([self.contentView viewWithTag:i + 1]) {
             //Remove the pin button and it's label
-            [UIView animateWithDuration:0.5
+            [UIView animateWithDuration:0.2
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveEaseOut
                              animations:^(){
@@ -45,12 +45,14 @@
                              } completion:^(BOOL finished){
                                  [[self.planoImageView viewWithTag:i + 1] removeFromSuperview];
                                  [[self.planoImageView viewWithTag:i + 50] removeFromSuperview];
+                                 
                              }];
         }
     }
 }
 
 -(void)setEspacios3DButtonsFromArray:(NSArray *)spacesArray {
+    
     for (int i = 0; i < [spacesArray count]; i++) {
         if (![self.contentView viewWithTag:i + 1]) {
             Space *space = spacesArray[i];
@@ -161,7 +163,6 @@
         self.planoImageView.frame = CGRectMake(0.0, 0.0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
         self.brujulaButton.frame = CGRectMake(contentRect.size.width - 80.0, 10.0, 55.0, 55.0);
         self.areaTotalLabel.frame = CGRectMake(10.0, self.planoImageView.frame.origin.y + self.planoImageView.frame.size.height + 3.0, 150.0, 20.0);
-        
     }
 }
 

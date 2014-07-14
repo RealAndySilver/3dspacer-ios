@@ -16,4 +16,5 @@
                     inManagedObjectContext:(NSManagedObjectContext *)context;
 +(void)deleteRendersForProjectWithID:(NSString *)projectID
               inManagedObjectContext:(NSManagedObjectContext *)context;
++(NSArray *)imagesPathsForRendersWithProjectID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context;
 @end

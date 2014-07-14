@@ -54,6 +54,12 @@
 "Importante" = "IMPORTANTE";
 "DescargaCancelada" = "Descarga Cancelada";
 
-"ErrorServidor" = "Hay un problema en el servidor. Por favor intenta de nuevo en un momento.";
+"ErrorServidor" = "Hay un problema en el servidor. Por favor intente de nuevo en un momento.";
 "ActualizacionDetectada" = "Actualización Disponible";
 "DetalleActualizacion" = "Existe una nueva actualización disponible para este proyecto.";
+
+"ErrorConexionDescarga" = "No se completó la descarga del proyecto debido a que se perdió la conexión. Por favor intente de nuevo";
+
+"ActionSheetMensaje" = "¿Está seguro de borrar el proyecto?";
+"ActionSheetConfirmar" = "Borrar";
+"ActionSheetCancelar" = "Cancelar";

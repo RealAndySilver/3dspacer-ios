@@ -34,7 +34,7 @@
     for (int i = 0; i < 20; i++) {
         if ([self.contentView viewWithTag:i + 1]) {
             //Remove the pin button and it's label
-            [UIView animateWithDuration:0.5
+            [UIView animateWithDuration:0.2
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveEaseOut
                              animations:^(){

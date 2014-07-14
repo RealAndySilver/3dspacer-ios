@@ -36,6 +36,7 @@
 #import "DownloadView.h"
 #import "UIImage+Resize.h"
 #import "Video+AddOns.h"
+#import "ImageSaver.h"
 
 @interface HomeScreenViewController () <iCarouselDataSource, iCarouselDelegate, TermsAndConditionsDelegate, ServerCommunicatorDelegate, UIAlertViewDelegate, UIActionSheetDelegate, DownloadViewDelegate>
 @property (strong, nonatomic) iCarousel *carousel;
@@ -75,6 +76,7 @@
     BOOL downloadEntireProject;
     BOOL downloadWasCancelled;
     BOOL searchingForUpdates;
+    BOOL connectionError;
 }
 
 #pragma mark - Lazy Instantiation
@@ -109,6 +111,17 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    downloadWasCancelled = NO;
+    connectionError = NO;
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(errorDownloadingReceived:)
+                                                 name:@"ErrorDownloadingNotification"
+                                               object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(ProjectUpdatedNotificationReceived:)
+                                                 name:@"ProjectUpdatedNotification"
+                                               object:nil];
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFinished:) name:@"updates" object:nil];
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertViewAppear) name:@"alert" object:nil];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
@@ -275,11 +288,14 @@
 
 -(void)goToSlideshowWithRendersArray:(NSMutableArray *)rendersArray {
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
     
     NSMutableArray *renderImagesArray = [NSMutableArray arrayWithCapacity:[rendersArray count]];
     for (int i = 0; i < [rendersArray count]; i++) {
         Render *render = rendersArray[i];
-        [renderImagesArray addObject:[render renderImage]];
+        NSString *imageDir = [docDir stringByAppendingPathComponent:render.renderPath];
+        UIImage *image = [UIImage imageWithContentsOfFile:imageDir];
+        [renderImagesArray addObject:image];
     }
     
     SlideshowViewController *ssVC=[[SlideshowViewController alloc]init];
@@ -404,7 +420,7 @@
 }
 
 -(BOOL)userHasDownloadProjectAtIndex:(NSUInteger)index {
-    Project *project = self.userProjectsArray[index];
+    /*Project *project = self.userProjectsArray[index];
     
     FileSaver *fileSaver = [[FileSaver alloc] init];
     if ([fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"]) {
@@ -416,6 +432,39 @@
             }
         }
         return NO;
+    } else {
+        return NO;
+    }*/
+    Project *project = self.userProjectsArray[index];
+    
+    FileSaver *fileSaver = [[FileSaver alloc] init];
+    if ([fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"]) {
+        NSMutableArray *savedProjectIDs = [fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"];
+        if ([savedProjectIDs containsObject:project.identifier]) {
+            return YES;
+        }
+        /*for (int i = 0; i < [savedProjectIDs count]; i++) {
+         NSNumber *identifier = savedProjectIDs[i];
+         if ([project.identifier intValue] == [identifier intValue]) {
+         return YES;
+         }
+         }*/
+        if ([[UserInfo sharedInstance].role isEqualToString:@"SELLER"]) {
+            if ([fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"]) {
+                NSArray *outdatedProjectIDs = [fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"];
+                if ([outdatedProjectIDs containsObject:project.identifier]) {
+                    return YES;
+                }
+                /*for (int i = 0; i < [outdatedProjectIDs count]; i++) {
+                 NSNumber *outdatedID = outdatedProjectIDs[i];
+                 if ([project.identifier intValue] == [outdatedID intValue]) {
+                 return YES;
+                 }
+                 }*/
+            }
+        }
+        return NO;
+        
     } else {
         return NO;
     }
@@ -819,45 +868,51 @@
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
     
     if (self.databaseDocument.documentState == UIDocumentStateNormal) {
-        NSManagedObjectContext *context = self.databaseDocument.managedObjectContext;
+        NSManagedObjectContext *context = self.databaseDocument.managedObjectContext.parentContext;
         
-        NSArray *imagePathsForFinishImages = [FinishImage imagesPathsForFinishImagesWithProjectID:projectID inManagedObjectContext:context];
-        NSLog(@"Número de imagepaths: %d", [imagePathsForFinishImages count]);
-        for (int i = 0; i < [imagePathsForFinishImages count]; i++) {
-            NSString *finishImagePath = [docDir stringByAppendingPathComponent:imagePathsForFinishImages[i]];
-            BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:finishImagePath];
-            if (fileExist) {
-                [[NSFileManager defaultManager] removeItemAtPath:finishImagePath error:NULL];
-                NSLog(@"Borrando finish image del proyecto %@ en la ruta %@", project.identifier, finishImagePath);
-            } else {
-                NSLog(@"No había archivo del proyecto %@ en la ruta %@", project.identifier, finishImagePath);
+        [context performBlockAndWait:^(){
+            
+            //Delete all the project finishes images from documents directory
+            NSArray *imagePathsForRenders = [Render imagesPathsForRendersWithProjectID:projectID inManagedObjectContext:context];
+            NSArray *imagePathsForFinishImages = [FinishImage imagesPathsForFinishImagesWithProjectID:projectID inManagedObjectContext:context];
+            NSArray *imagePathsForUrbanizationImages = [Urbanization imagesPathsForUrbanizationWithProjectID:projectID inManagedObjectContext:context];
+            NSArray *imagePathsForFloorImages = [Floor imagesPathsForFloorWithProjectID:projectID inManagedObjectContext:context];
+            NSArray *imagePathsForPlantImages = [Plant imagesPathsForPlantsWithProjectID:projectID inManagedObjectContext:context];
+            NSArray *imagePathsForSpaceImages = [Space imagesPathsForSpacesWithProjectID:projectID inManagedObjectContext:context];
+            
+            [ImageSaver deleteImagesAtPaths:imagePathsForFinishImages];
+            [ImageSaver deleteImagesAtPaths:imagePathsForRenders];
+            [ImageSaver deleteImagesAtPaths:imagePathsForUrbanizationImages];
+            [ImageSaver deleteImagesAtPaths:imagePathsForFloorImages];
+            [ImageSaver deleteImagesAtPaths:imagePathsForPlantImages];
+            [ImageSaver deleteImagesAtPaths:imagePathsForSpaceImages];
+            
+            //Delete all videos from documents directory
+            NSArray *videoPaths = [Video videoPathsForVideosWithProjectID:projectID inManagedObjectContext:context];
+            NSLog(@"Número de video paths: %d", [videoPaths count]);
+            for (int i = 0; i < [videoPaths count]; i++) {
+                NSString *videoPath = [docDir stringByAppendingPathComponent:videoPaths[i]];
+                if ([[NSFileManager defaultManager] fileExistsAtPath:videoPath]) {
+                    NSLog(@"Borrando video del proyecto %@ en la ruta %@", project.identifier, videoPath);
+                    [[NSFileManager defaultManager] removeItemAtPath:videoPath error:NULL];
+                } else {
+                    NSLog(@"No había video del proyecto %@ en la ruta %@", project.identifier, videoPath);
+                }
             }
-        }
-        
-        //Delete al videos from documents directory
-        NSArray *videoPaths = [Video videoPathsForVideosWithProjectID:projectID inManagedObjectContext:context];
-        NSLog(@"Número de video paths: %d", [videoPaths count]);
-        for (int i = 0; i < [videoPaths count]; i++) {
-            NSString *videoPath = [docDir stringByAppendingPathComponent:videoPaths[i]];
-            if ([[NSFileManager defaultManager] fileExistsAtPath:videoPath]) {
-                NSLog(@"Borrando video del proyecto %@ en la ruta %@", project.identifier, videoPath);
-                [[NSFileManager defaultManager] removeItemAtPath:videoPath error:NULL];
-            } else {
-                NSLog(@"No había video del proyecto %@ en la ruta %@", project.identifier, videoPath);
-            }
-        }
-        
-        [Render deleteRendersForProjectWithID:projectID inManagedObjectContext:context];
-        [Urbanization deleteUrbanizationsForProjectWithID:projectID inManagedObjectContext:context];
-        [Video deleteVideosForProjectWithID:projectID inManagedObjectContext:context];
-        [Group deleteGroupsForProjectWithID:projectID inManagedObjectContext:context];
-        [Floor deleteFloorsForProjectWithID:projectID inManagedObjectContext:context];
-        [Product deleteProductsForProjectWithID:projectID inManagedObjectContext:context];
-        [Plant deletePlantsForProjectWithID:projectID inManagedObjectContext:context];
-        [Space deleteSpacesForProjectWithID:projectID inManagedObjectContext:context];
-        [Finish deleteFinishesForProjectWithID:projectID inManagedObjectContext:context];
-        [FinishImage deleteFinishesImagesForProjectWithID:projectID inManagedObjectContext:context];
-        [context save:NULL];
+            
+            //Delete objects from CoreData
+            [Render deleteRendersForProjectWithID:projectID inManagedObjectContext:context];
+            [Urbanization deleteUrbanizationsForProjectWithID:projectID inManagedObjectContext:context];
+            [Video deleteVideosForProjectWithID:projectID inManagedObjectContext:context];
+            [Group deleteGroupsForProjectWithID:projectID inManagedObjectContext:context];
+            [Floor deleteFloorsForProjectWithID:projectID inManagedObjectContext:context];
+            [Product deleteProductsForProjectWithID:projectID inManagedObjectContext:context];
+            [Plant deletePlantsForProjectWithID:projectID inManagedObjectContext:context];
+            [Space deleteSpacesForProjectWithID:projectID inManagedObjectContext:context];
+            [Finish deleteFinishesForProjectWithID:projectID inManagedObjectContext:context];
+            [FinishImage deleteFinishesImagesForProjectWithID:projectID inManagedObjectContext:context];
+            [context save:NULL];
+        }];
     }
     
     //Erase the project id from the ids array stored in filesaver
@@ -876,6 +931,20 @@
     } else {
         [fileSaver setDictionary:@{@"projectIDsArray": @[]} withName:@"downloadedProjectsIDs"];
     }
+    
+    //Erase the outdated project key in file saver, in case it exist
+    if ([fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"]) {
+        NSMutableArray *outdatedIDs = [fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"];
+        if ([outdatedIDs containsObject:project.identifier]) {
+            [outdatedIDs removeObject:project.identifier];
+        }
+        if ([outdatedIDs count] > 0) {
+            [fileSaver setDictionary:@{@"OutdatedProjectIDsarray": outdatedIDs} withName:@"OutdatedProjectIDsDic"];
+        } else {
+            [fileSaver setDictionary:@{@"OutdatedProjectIDsarray": @[]} withName:@"OutdatedProjectIDsDic"];
+        }
+    }
+
     [self carouselDidEndScrollingAnimation:self.carousel];
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [[[UIAlertView alloc] initWithTitle:@"Delete Complete" message:@"The project has been deleted successfully." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
@@ -941,17 +1010,23 @@
         
         //Dic to store all the core data objects and pass them to the next view controller
         NSMutableDictionary *projectDictionary = [[NSMutableDictionary alloc] init];
+        NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
         
         NSManagedObjectContext *context = self.databaseDocument.managedObjectContext.parentContext;
         [context performBlock:^(){
             //Save render objects in core data
             NSMutableArray *rendersArray = [[NSMutableArray alloc] initWithCapacity:[self.rendersArray count]]; //Of Renders
             for (int i = 0; i < [self.rendersArray count]; i++) {
-                if (!downloadWasCancelled) {
+                if (!downloadWasCancelled && !connectionError) {
                     NSDictionary *renderInfoDic = self.rendersArray[i];
                     Render *render = [Render renderWithServerInfo:renderInfoDic inManagedObjectContext:context];
                     [context save:NULL];
                     [rendersArray addObject:render];
+                    
+                    //Save Render image in Documents Directory
+                    NSString *jpegFilePath = [docDir stringByAppendingPathComponent:render.renderPath];
+                    [ImageSaver saveImageWithURL:render.mainURL atPath:jpegFilePath];
+                    
                     filesDownloadedCounter ++;
                     progressCompleted = filesDownloadedCounter / numberOfFiles;
                     NSLog(@"progresooo: %f", progressCompleted);
@@ -962,10 +1037,15 @@
             
             //Save urbanization object in core data
             NSMutableArray *urbanizationsArray = [[NSMutableArray alloc] init];
-            if (!downloadWasCancelled) {
+            if (!downloadWasCancelled && !connectionError) {
                 Urbanization *urbanization = [Urbanization urbanizationWithServerInfo:self.urbanizationDic inManagedObjectContext:context];
                 [context save:NULL];
                 [urbanizationsArray addObject:urbanization];
+                
+                //Save Urbanization image in Documents Directory
+                NSString *jpegFilePath = [docDir stringByAppendingPathComponent:urbanization.imagePath];
+                [ImageSaver saveImageWithURL:urbanization.imageURL atPath:jpegFilePath];
+                
                 filesDownloadedCounter ++;
                 progressCompleted = filesDownloadedCounter / numberOfFiles;
                 NSLog(@"progresooo: %f", progressCompleted);
@@ -975,7 +1055,7 @@
             
             NSMutableArray *videosArray = [[NSMutableArray alloc] init];
             for (int i = 0; i < [self.videoArray count]; i++) {
-                if (!downloadWasCancelled) {
+                if (!downloadWasCancelled && !connectionError) {
                     Video *video = [Video videoWithServerInfo:self.videoArray[i] nManagedObjectContext:context];
                     [context save:NULL];
                     [videosArray addObject:video];
@@ -990,7 +1070,7 @@
             //Save group objects in Core Data
             NSMutableArray *groupsArray = [[NSMutableArray alloc] initWithCapacity:[self.groupsArray count]];
             for (int i = 0; i < [self.groupsArray count]; i++) {
-                if (!downloadWasCancelled) {
+                if (!downloadWasCancelled && !connectionError) {
                     Group *group = [Group groupWithServerInfo:self.groupsArray[i] inManagedObjectContext:context];
                     [context save:NULL];
                     [groupsArray addObject:group];
@@ -1006,10 +1086,14 @@
             //Save Floor products in Core Data
             NSMutableArray *floorsArray = [[NSMutableArray alloc] initWithCapacity:[self.floorsArray count]];
             for (int i = 0; i < [self.floorsArray count]; i++) {
-                if (!downloadWasCancelled) {
+                if (!downloadWasCancelled && !connectionError) {
                     Floor *floor = [Floor floorWithServerInfo:self.floorsArray[i] inManagedObjectContext:context];
                     [context save:NULL];
                     [floorsArray addObject:floor];
+                    
+                    //Save floor images in Documents Dir
+                    NSString *jpegFilePath = [docDir stringByAppendingPathComponent:floor.imagePath];
+                    [ImageSaver saveImageWithURL:floor.imageURL atPath:jpegFilePath];
                     
                     filesDownloadedCounter ++;
                     progressCompleted = filesDownloadedCounter / numberOfFiles;
@@ -1021,7 +1105,7 @@
             //Save product objects in Core Data
             NSMutableArray *producstArray = [[NSMutableArray alloc] initWithCapacity:[self.productsArray count]];
             for (int i = 0; i < [self.productsArray count]; i++) {
-                if (!downloadWasCancelled) {
+                if (!downloadWasCancelled && !connectionError) {
                     Product *product = [Product productWithServerInfo:self.productsArray[i] inManagedObjectContext:context];
                     [context save:NULL];
                     [producstArray addObject:product];
@@ -1036,10 +1120,14 @@
             //Save plants objects in Core Data
             NSMutableArray *plantsArray = [[NSMutableArray alloc] initWithCapacity:[self.plantsArray count]];
             for (int i = 0; i < [self.plantsArray count]; i++) {
-                if (!downloadWasCancelled) {
+                if (!downloadWasCancelled && !connectionError) {
                     Plant *plant = [Plant plantWithServerInfo:self.plantsArray[i] inManagedObjectContext:context];
                     [context save:NULL];
                     [plantsArray addObject:plant];
+                    
+                    //Save plant images in Documents Dir
+                    NSString *jpegFilePath = [docDir stringByAppendingPathComponent:plant.imagePath];
+                    [ImageSaver saveImageWithURL:plant.imageURL atPath:jpegFilePath];
                     
                     filesDownloadedCounter ++;
                     progressCompleted = filesDownloadedCounter / numberOfFiles;
@@ -1051,10 +1139,14 @@
             //Save spaces object in Core Data
             NSMutableArray *spacesArray = [[NSMutableArray alloc] initWithCapacity:[self.spacesArray count]];
             for (int i = 0; i < [self.spacesArray count]; i++) {
-                if (!downloadWasCancelled) {
+                if (!downloadWasCancelled && !connectionError) {
                     Space *space = [Space spaceWithServerInfo:self.spacesArray[i] inManagedObjectContext:context];
                     [context save:NULL];
                     [spacesArray addObject:space];
+                    
+                    //Save space images in Documents Dir
+                    NSString *jpegFilePath = [docDir stringByAppendingPathComponent:space.thumbPath];
+                    [ImageSaver saveImageWithURL:space.thumb atPath:jpegFilePath];
                     
                     filesDownloadedCounter ++;
                     progressCompleted = filesDownloadedCounter / numberOfFiles;
@@ -1066,7 +1158,7 @@
             //Save finishes in Core Data
             NSMutableArray *finishesArray = [[NSMutableArray alloc] initWithCapacity:[self.finishesArray count]];
             for (int i = 0; i < [self.finishesArray count]; i++) {
-                if (!downloadWasCancelled) {
+                if (!downloadWasCancelled && !connectionError) {
                     Finish *finish = [Finish finishWithServerInfo:self.finishesArray[i] inManagedObjectContext:context];
                     [context save:NULL];
                     [finishesArray addObject:finish];
@@ -1083,15 +1175,14 @@
             NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
 
             for (int i = 0; i < [self.finishesImagesArray count]; i++) {
-                if (!downloadWasCancelled) {
+                if (!downloadWasCancelled && !connectionError) {
                     FinishImage *finishImage = [FinishImage finishImageWithServerInfo:self.finishesImagesArray[i] inManagedObjectContext:context];
                     [context save:NULL];
                     [finishesImagesArray addObject:finishImage];
                     
                     //Save image in documents directory
                     NSString *jpegFilePath = [docDir stringByAppendingPathComponent:finishImage.imagePath];
-                    [self saveFinishImage:finishImage atPath:jpegFilePath];
-                    //[self saveImageInDocumentsDirectoryAtPath:jpegFilePath usingImageURL:finishImage.imageURL];
+                    [ImageSaver saveFinishImage:finishImage atPath:jpegFilePath];
                     
                     filesDownloadedCounter ++;
                     progressCompleted = filesDownloadedCounter / numberOfFiles;
@@ -1102,7 +1193,7 @@
             
             NSLog(@"Terminé de guardar toda la vaina");
             
-            if (!downloadWasCancelled) {
+            if (!downloadWasCancelled && !connectionError) {
                 //Save all core data objects in our dictionary
                 [projectDictionary setObject:self.userProjectsArray[self.carousel.currentItemIndex] forKey:@"project"];
                 [projectDictionary setObject:rendersArray forKey:@"renders"];
@@ -1119,14 +1210,18 @@
                 [self performSelectorOnMainThread:@selector(finishSavingProcessOnMainThread:) withObject:projectDictionary waitUntilDone:NO];
             
             } else {
-                [self performSelectorOnMainThread:@selector(showDownloadCanceledAlert) withObject:nil waitUntilDone:NO];
+                if (downloadWasCancelled) {
+                    [self performSelectorOnMainThread:@selector(showDownloadCanceledAlert) withObject:nil waitUntilDone:NO];
+                } else if (connectionError) {
+                    [self performSelectorOnMainThread:@selector(showConnectionErrorAlert) withObject:nil waitUntilDone:NO];
+                }
             }
         }];
         NSLog(@"me salí del bloqueee");
     }
 }
 
--(void)saveFinishImage:(FinishImage *)finishImage atPath:(NSString *)jpegFilePath {
+/*-(void)saveFinishImage:(FinishImage *)finishImage atPath:(NSString *)jpegFilePath {
     NSLog(@"Entré a guardar la imagen");
     BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:jpegFilePath];
     if (!fileExist) {
@@ -1156,7 +1251,7 @@
     } else {
         NSLog(@"La imagen ya existía, así que no la guardé en documents directory");
     }
-}
+}*/
 
 /*-(void)saveImageInDocumentsDirectoryAtPath:(NSString *)jpegFilePath usingImageURL:(NSString *)finishImageURL {
     NSLog(@"Entré a guardar la imagen");
@@ -1173,8 +1268,20 @@
     }
 }*/
 
+-(void)showConnectionErrorAlert {
+    downloadWasCancelled = NO;
+    connectionError = NO;
+    
+    self.downloadView.hidden = YES;
+    self.downloadView.progress = 0;
+    self.opacityView.hidden = YES;
+    [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"ErrorConexionDescarga", nil) delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+}
+
 -(void)showDownloadCanceledAlert {
     downloadWasCancelled = NO;
+    connectionError = NO;
+    
     self.downloadView.hidden = YES;
     self.downloadView.progress = 0;
     self.opacityView.hidden = YES;
@@ -1182,8 +1289,19 @@
 }
 
 -(void)finishSavingProcessOnMainThread:(NSDictionary *)projectDic {
-    //Save a key with file saver indicating that this project has been downloaded
+    //In case this project was downloaded but outdated, remove the outdated key from file saver
     FileSaver *fileSaver = [[FileSaver alloc] init];
+    Project *project = self.userProjectsArray[projectToDownloadIndex];
+    
+    if ([fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"]) {
+        NSMutableArray *outdatedIDs = [NSMutableArray arrayWithArray:[fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"]];
+        if ([outdatedIDs containsObject:project.identifier]) {
+            [outdatedIDs removeObject:project.identifier];
+        }
+        [fileSaver setDictionary:@{@"OutdatedProjectIDsarray": outdatedIDs} withName:@"OutdatedProjectIDsDic"];
+    }
+    
+    //Save a key with file saver indicating that this project has been downloaded
     if ([fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"]) {
         //Get the array with the project's ids and add the new downloaded project id
         NSMutableArray *projectIDsArray = [NSMutableArray arrayWithArray:[fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"]];
@@ -1261,7 +1379,7 @@
         
         //Project Terms and Conditions button
         UIButton *termsAndConditionsButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        termsAndConditionsButton.frame = CGRectMake(view.frame.size.width - 40.0, 10.0, 30.0, 30.0);
+        termsAndConditionsButton.frame = CGRectMake(view.frame.size.width - 40.0, 20.0, 30.0, 30.0);
         termsAndConditionsButton.tag = 2000 + index;
         [termsAndConditionsButton setBackgroundImage:[UIImage imageNamed:@"NewInfoIcon.png"] forState:UIControlStateNormal];
         [termsAndConditionsButton addTarget:self action:@selector(goToTermsVC) forControlEvents:UIControlEventTouchUpInside];
@@ -1281,7 +1399,7 @@
     }
     
     //Download button
-    UIButton *downloadButton = [[UIButton alloc] initWithFrame:CGRectMake(view.frame.size.width/2.0 - 30.0, 10.0, 60.0, 60.0)];
+    UIButton *downloadButton = [[UIButton alloc] initWithFrame:CGRectMake(view.frame.size.width/2.0 - 30.0, 20.0, 60.0, 60.0)];
     [downloadButton setBackgroundImage:[UIImage imageNamed:@"NewDownloadIcon.png"] forState:UIControlStateNormal];
     downloadButton.tag = 1000 + index;
     
@@ -1416,6 +1534,17 @@
 }
 
 #pragma mark - Notification Handlers
+
+-(void)ProjectUpdatedNotificationReceived:(NSNotification *)notification {
+    NSLog(@"*************************** Me llegó la notificación de que actualizaron un proyecto ***********************************");
+    self.databaseDocument = nil;
+    [self carouselDidEndScrollingAnimation:self.carousel];
+}
+
+-(void)errorDownloadingReceived:(NSNotification *)notification {
+    NSLog(@"Me llegó la notificación de errrrrrrooooooooorrrr");
+    connectionError = YES;
+}
 
 /*-(void)downloadFinished:(NSNotification *)notification {
     [self carouselDidEndScrollingAnimation:self.carousel];

@@ -29,9 +29,9 @@
         NSLog(@"la planta ya existía en la base de datos");
         plant = [matches firstObject];
         
-        if (![plant.imageURL isEqualToString:dictionary[@"image"]]) {
+        /*if (![plant.imageURL isEqualToString:dictionary[@"image"]]) {
             plant.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:dictionary[@"image"]]];
-        }
+        }*/
         
         plant.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         plant.identifier = plantID;
@@ -45,6 +45,7 @@
         plant.order = dictionary[@"order"];
         plant.lastUpdate = dictionary[@"last_update"];
         plant.product = [NSString stringWithFormat:@"%d", [dictionary[@"product"] intValue]];
+        plant.imagePath = [NSString stringWithFormat:@"plant_%@_%@.jpg", plant.project, plant.identifier];
         
     } else {
         //The render did not exist on the database, so we have to create it
@@ -77,10 +78,25 @@
         plant.order = dictionary[@"order"];
         plant.lastUpdate = dictionary[@"last_update"];
         plant.product = [NSString stringWithFormat:@"%d", [dictionary[@"product"] intValue]];
-        plant.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:plant.imageURL]];
+        plant.imagePath = [NSString stringWithFormat:@"plant_%@_%@.jpg", plant.project, plant.identifier];
+        //plant.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:plant.imageURL]];
     }
     
     return plant;
+}
+
++(NSArray *)imagesPathsForPlantsWithProjectID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSMutableArray *imagePaths = [[NSMutableArray alloc] init];
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Plant"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    for (int i = 0; i < [matches count]; i++) {
+        Plant *plant = matches[i];
+        [imagePaths addObject:plant.imagePath];
+    }
+    
+    return imagePaths;
 }
 
 +(NSArray *)plantsArrayForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {

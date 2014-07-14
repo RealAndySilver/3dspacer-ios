@@ -29,9 +29,9 @@
         NSLog(@"El render ya existía en la base de datos");
         render = [matches firstObject];
         
-        if (![render.mainURL isEqualToString:dictionary[@"url"]]) {
+        /*if (![render.mainURL isEqualToString:dictionary[@"url"]]) {
             render.mainImageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:dictionary[@"url"]]];
-        }
+        }*/
         
         render.identifier = renderID;
         render.name = dictionary[@"name"];
@@ -41,6 +41,7 @@
         render.order = dictionary[@"order"];
         render.lastUpdate = dictionary[@"last_update"];
         render.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
+        render.renderPath = [NSString stringWithFormat:@"render_%@_%@.jpg", render.project, render.identifier];
         
     } else {
         //The render did not exist on the database, so we have to create it
@@ -55,9 +56,24 @@
         render.order = dictionary[@"order"];
         render.lastUpdate = dictionary[@"last_update"];
         render.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
-        render.mainImageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:render.mainURL]];
+        render.renderPath = [NSString stringWithFormat:@"render_%@_%@.jpg", render.project, render.identifier];
+        //render.mainImageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:render.mainURL]];
     }
     return render;
+}
+
++(NSArray *)imagesPathsForRendersWithProjectID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSMutableArray *imagePaths = [[NSMutableArray alloc] init];
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Render"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    for (int i = 0; i < [matches count]; i++) {
+        Render *render = matches[i];
+        [imagePaths addObject:render.renderPath];
+    }
+    
+    return imagePaths;
 }
 
 +(NSArray *)rendersForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {

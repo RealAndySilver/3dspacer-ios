@@ -16,4 +16,5 @@
                  inManagedObjectContext:(NSManagedObjectContext *)context;
 +(void)deleteSpacesForProjectWithID:(NSString *)projectID
              inManagedObjectContext:(NSManagedObjectContext *)context;
++(NSArray *)imagesPathsForSpacesWithProjectID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context;
 @end

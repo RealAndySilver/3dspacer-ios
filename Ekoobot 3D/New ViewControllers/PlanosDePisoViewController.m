@@ -33,6 +33,7 @@
 @property (strong, nonatomic) PisoCollectionViewCell *previousCell;
 @property (strong, nonatomic) NSIndexPath *previousCellIndexPath;
 @property (strong, nonatomic) NSMutableArray *floorsPinsArray;
+@property (strong, nonatomic) NSMutableArray *floorsImagesArray;
 @end
 
 @implementation PlanosDePisoViewController {
@@ -41,6 +42,21 @@
 }
 
 #pragma mark - Lazy Instantiation
+
+-(NSMutableArray *)floorsImagesArray {
+    if (!_floorsImagesArray) {
+        _floorsImagesArray = [[NSMutableArray alloc] init];
+        NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+        NSUInteger floorsCount = [self.projectDic[@"floors"] count];
+        for (int i = 0; i < floorsCount; i++) {
+            Floor *floor = self.projectDic[@"floors"][i];
+            NSString *imageDir = [docDir stringByAppendingPathComponent:floor.imagePath];
+            UIImage *floorImage = [UIImage imageWithContentsOfFile:imageDir];
+            [_floorsImagesArray addObject:floorImage];
+        }
+    }
+    return _floorsImagesArray;
+}
 
 -(NSMutableArray *)floorsPinsArray {
     if (!_floorsPinsArray) {
@@ -70,29 +86,8 @@
     return _productsArray;
 }
 
--(NSMutableArray *)floorsArray {
-    if (!_floorsArray) {
-        _floorsArray = [[NSMutableArray alloc] init];
-        for (int i = 0; i < [self.projectDic[@"floors"] count]; i++) {
-            Floor *floor = self.projectDic[@"floors"][i];
-            if ([floor.group isEqualToString:self.group.identifier]) {
-                [_floorsArray addObject:floor];
-            }
-        }
-    }
-    return _floorsArray;
-}
 
 -(NSMutableArray *)arrayNombresPiso {
-    /*if (!_arrayNombresPiso) {
-        _arrayNombresPiso = [[NSMutableArray alloc] init];
-        for (int i = 0; i < [self.grupo.arrayTiposDePiso count]; i++) {
-            TipoDePiso *tipoDePiso = self.grupo.arrayTiposDePiso[i];
-            [_arrayNombresPiso addObject:tipoDePiso.nombre];
-        }
-    }
-    return _arrayNombresPiso;*/
-    
     if (!_arrayNombresPiso) {
         _arrayNombresPiso = [[NSMutableArray alloc] initWithCapacity:[self.floorsArray count]];
         for (int i = 0; i < [self.floorsArray count]; i++) {
@@ -103,8 +98,27 @@
     return _arrayNombresPiso;
 }
 
+-(void)initializeFloorsArray {
+    self.floorsArray = [[NSMutableArray alloc] init];
+    for (int i = 0; i < [self.projectDic[@"floors"] count]; i++) {
+        Floor *floor = self.projectDic[@"floors"][i];
+        if ([floor.group isEqualToString:self.group.identifier]) {
+            [self.floorsArray addObject:floor];
+        }
+    }
+}
+
+/*-(void)initializeFloorImagesArray {
+    self.floorsImagesArray = [[NSMutableArray alloc] init];
+    for (int i = 0; i < [self.floorsArray count]; i++) {
+        Floor *floor = self.floorsArray[i];
+        [self.floorsImagesArray addObject:[floor floorImage]];
+    }
+}*/
+
 -(void)viewDidLoad {
     [super viewDidLoad];
+    [self initializeFloorsArray];
     self.automaticallyAdjustsScrollViewInsets = NO;
     CGRect screen = [UIScreen mainScreen].bounds;
     screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
@@ -184,8 +198,9 @@
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     PisoCollectionViewCell *cell = (PisoCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"CellIdentifier" forIndexPath:indexPath];
     cell.delegate = self;
-    Floor *floor = self.floorsArray[indexPath.item];
-    cell.pisoImageView.image = [floor floorImage];
+    //Floor *floor = self.floorsArray[indexPath.item];
+    //cell.pisoImageView.image = [floor floorImage];
+    cell.pisoImageView.image = self.floorsImagesArray[indexPath.item];
     cell.showCompass = magnetometerIsAvailable;
     
     /*NSMutableArray *pinsArrayForFloor = [[NSMutableArray alloc] init];
@@ -205,21 +220,42 @@
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSLog(@"Terminé de acelerarmeeeee");
     //Get a reference to the current cell
-    PisoCollectionViewCell *currentCell = [[self.collectionView visibleCells] firstObject];
-    NSIndexPath *currentCellIndexPath = [self.collectionView indexPathForCell:currentCell];
-    NSLog(@"Celda Anterior: %d, celda actual: %d", self.previousCellIndexPath.item ,currentCellIndexPath.item);
-    
-    if (currentCellIndexPath.item != self.previousCellIndexPath.item) {
+    [self performSelector:@selector(showPinsForNewDisplayedCell) withObject:nil afterDelay:0.1];
+    /*if (currentCellIndexPath.item != self.previousCellIndexPath.item) {
         //The user change to other cell
         [self.previousCell removeAllPinsFromArray:self.floorsPinsArray[self.previousCellIndexPath.item]];
         [currentCell setPinsButtonsFromArray:self.floorsPinsArray[currentCellIndexPath.item]];
-    }
+    }*/
+}
+
+-(void)showPinsForNewDisplayedCell {
+    PisoCollectionViewCell *currentCell = [[self.collectionView visibleCells] firstObject];
+    NSIndexPath *currentCellIndexPath = [self.collectionView indexPathForCell:currentCell];
+    [currentCell setPinsButtonsFromArray:self.floorsPinsArray[currentCellIndexPath.item]];
+    NSLog(@"Celda Anterior: %d, celda actual: %d", self.previousCellIndexPath.item ,currentCellIndexPath.item);
 }
 
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    self.previousCell = (PisoCollectionViewCell *)[[self.collectionView visibleCells] firstObject];
-    self.previousCellIndexPath = [self.collectionView indexPathForCell:self.previousCell];
-    NSLog(@"****************** index path: %d", self.previousCellIndexPath.item);
+    if ([[self.collectionView visibleCells] count] == 1) {
+        self.previousCell = (PisoCollectionViewCell *)[[self.collectionView visibleCells] firstObject];
+        self.previousCellIndexPath = [self.collectionView indexPathForCell:self.previousCell];
+        [self.previousCell removeAllPinsFromArray:self.floorsPinsArray[self.previousCellIndexPath.item]];
+        NSLog(@"****************** index path: %d", self.previousCellIndexPath.item);
+    }
+}
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    NSLog(@"Terminé de dragearmeeeee");
+    if (decelerate) {
+        NSLog(@"Entraré al end descelerating");
+    } else {
+        NSLog(@"No entraré al descelerating");
+        [self performSelector:@selector(showPinsWhenDesceleratingIsNo) withObject:nil afterDelay:0.2];
+    }
+}
+
+-(void)showPinsWhenDesceleratingIsNo {
+    [self.previousCell setPinsButtonsFromArray:self.floorsPinsArray[self.previousCellIndexPath.item]];
 }
 
 -(void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -326,7 +362,7 @@
     [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
     BrujulaViewController *brujulaVC=[[BrujulaViewController alloc]init];
     brujulaVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Brujula"];
-    brujulaVC.externalImageView = [[UIImageView alloc] initWithImage:[floor floorImage]];
+    brujulaVC.externalImageView = [[UIImageView alloc] initWithImage:self.floorsImagesArray[indexPath.item]];
     brujulaVC.gradosExtra = [floor.northDegrees floatValue];
     [self.navigationController pushViewController:brujulaVC animated:NO];
 }

@@ -29,9 +29,9 @@
         NSLog(@"El piso ya existía en la base de datos");
         floor = [matches firstObject];
         
-        if (![floor.imageURL isEqualToString:dictionary[@"image"]]) {
+        /*if (![floor.imageURL isEqualToString:dictionary[@"image"]]) {
             floor.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:dictionary[@"image"]]];
-        }
+        }*/
         
         floor.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
         floor.identifier = floorID;
@@ -58,6 +58,7 @@
         floor.order = dictionary[@"order"];
         floor.lastUpdate = dictionary[@"last_update"];
         floor.group = [NSString stringWithFormat:@"%d", [dictionary[@"group"] intValue]];
+        floor.imagePath = [NSString stringWithFormat:@"floor_%@_%@", floor.project, floor.identifier];
         
         
     } else {
@@ -90,10 +91,25 @@
         floor.order = dictionary[@"order"];
         floor.lastUpdate = dictionary[@"last_update"];
         floor.group = [NSString stringWithFormat:@"%d", [dictionary[@"group"] intValue]];
-        floor.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:floor.imageURL]];
+        floor.imagePath = [NSString stringWithFormat:@"floor_%@_%@", floor.project, floor.identifier];
+        //floor.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:floor.imageURL]];
     }
     
     return floor;
+}
+
++(NSArray *)imagesPathsForFloorWithProjectID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSMutableArray *imagePaths = [[NSMutableArray alloc] init];
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Floor"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    for (int i = 0; i < [matches count]; i++) {
+        Floor *floor = matches[i];
+        [imagePaths addObject:floor.imagePath];
+    }
+    
+    return imagePaths;
 }
 
 +(NSArray *)floorsArrayForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {

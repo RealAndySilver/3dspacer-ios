@@ -30,9 +30,9 @@
         NSLog(@"La urbanizacion ya existía en la base de datos");
         urbanization = [matches firstObject];
         
-        if (![urbanization.imageURL isEqualToString:dictionary[@"image"]]) {
+        /*if (![urbanization.imageURL isEqualToString:dictionary[@"image"]]) {
             urbanization.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:dictionary[@"image"]]];
-        }
+        }*/
         
         urbanization.identifier = urbanizationID;
         urbanization.imageURL = dictionary[@"image"];
@@ -59,7 +59,7 @@
         urbanization.enabled = dictionary[@"enabled"];
         urbanization.lastUpdate = dictionary[@"last_update"];
         urbanization.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
-        
+        urbanization.imagePath = [NSString stringWithFormat:@"urbanization_%@_%@.jpg", urbanization.project, urbanization.identifier];
         
     } else {
         //The render did not exist on the database, so we have to create it
@@ -90,9 +90,24 @@
         urbanization.enabled = dictionary[@"enabled"];
         urbanization.lastUpdate = dictionary[@"last_update"];
         urbanization.project = [NSString stringWithFormat:@"%d", [dictionary[@"project"] intValue]];
-        urbanization.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:urbanization.imageURL]];
+        urbanization.imagePath = [NSString stringWithFormat:@"urbanization_%@_%@.jpg", urbanization.project, urbanization.identifier];
+        //urbanization.imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:urbanization.imageURL]];
     }
     return urbanization;
+}
+
++(NSArray *)imagesPathsForUrbanizationWithProjectID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSMutableArray *imagePaths = [[NSMutableArray alloc] init];
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Urbanization"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    for (int i = 0; i < [matches count]; i++) {
+        Urbanization *urbanization = matches[i];
+        [imagePaths addObject:urbanization.imagePath];
+    }
+    
+    return imagePaths;
 }
 
 +(NSArray *)urbanizationsArrayForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {

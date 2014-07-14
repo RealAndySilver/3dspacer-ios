@@ -2,7 +2,7 @@
 //  Render.m
 //  Ekoobot 3D
 //
-//  Created by Diego Vidal on 23/05/14.
+//  Created by Developer on 14/07/14.
 //  Copyright (c) 2014 Ekoomedia. All rights reserved.
 //
 
@@ -20,5 +20,6 @@
 @dynamic order;
 @dynamic project;
 @dynamic thumbURL;
+@dynamic renderPath;
 
 @end

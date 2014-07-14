@@ -32,6 +32,7 @@
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="imageHeight" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="imagePath" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageWidth" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="lastUpdate" optional="YES" attributeType="String" syncable="YES"/>
@@ -57,6 +58,7 @@
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="imageHeight" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="imagePath" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageWidth" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="lastUpdate" optional="YES" attributeType="String" syncable="YES"/>
@@ -101,6 +103,7 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="order" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="project" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="renderPath" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="thumbURL" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Space" representedClassName="Space" syncable="YES">
@@ -113,6 +116,7 @@
         <attribute name="project" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="thumb" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="thumbData" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="thumbPath" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="urbanization" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="xCoord" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="xLimit" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -124,6 +128,7 @@
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="imageHeight" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="imagePath" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageWidth" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="lastUpdate" optional="YES" attributeType="String" syncable="YES"/>
@@ -144,14 +149,14 @@
     <elements>
         <element name="Finish" positionX="-9" positionY="135" width="128" height="210"/>
         <element name="FinishImage" positionX="0" positionY="144" width="128" height="208"/>
-        <element name="Floor" positionX="0" positionY="171" width="128" height="240"/>
+        <element name="Floor" positionX="0" positionY="171" width="128" height="255"/>
         <element name="Group" positionX="-18" positionY="144" width="128" height="180"/>
-        <element name="Plant" positionX="36" positionY="189" width="128" height="240"/>
+        <element name="Plant" positionX="36" positionY="189" width="128" height="255"/>
         <element name="Product" positionX="18" positionY="180" width="128" height="195"/>
         <element name="Project" positionX="-63" positionY="-18" width="128" height="210"/>
-        <element name="Render" positionX="-54" positionY="63" width="128" height="180"/>
-        <element name="Space" positionX="-9" positionY="135" width="128" height="253"/>
-        <element name="Urbanization" positionX="-36" positionY="108" width="128" height="195"/>
+        <element name="Render" positionX="-54" positionY="63" width="128" height="195"/>
+        <element name="Space" positionX="-9" positionY="135" width="128" height="268"/>
+        <element name="Urbanization" positionX="-36" positionY="108" width="128" height="210"/>
         <element name="Video" positionX="-9" positionY="135" width="128" height="163"/>
     </elements>
 </model>

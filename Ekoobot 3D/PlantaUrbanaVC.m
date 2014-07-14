@@ -21,11 +21,22 @@
 @interface PlantaUrbanaVC () <BrujulaViewDelegate>
 @property (strong, nonatomic) CMMotionManager *motionManager;
 @property (strong, nonatomic) NSMutableArray *commonSpacesArray;
+@property (strong, nonatomic) UIImage *urbanizationImage;
 @end
 
 @implementation PlantaUrbanaVC
 
 @synthesize scrollViewUrbanismo;
+
+-(UIImage *)urbanizationImage {
+    if (!_urbanizationImage) {
+        Urbanization *urbanization = [self.projectDic[@"urbanizations"] firstObject];
+        NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+        NSString *imageDir = [docDir stringByAppendingPathComponent:urbanization.imagePath];
+        _urbanizationImage = [UIImage imageWithContentsOfFile:imageDir];
+    }
+    return _urbanizationImage;
+}
 
 -(NSMutableArray *)commonSpacesArray {
     if (!_commonSpacesArray) {
@@ -154,8 +165,8 @@
 - (void)loadScrollViewWithMap{
     //NSMutableArray *tempArray=proyecto.arrayItemsUrbanismo;
     //ItemUrbanismo *itemUrbanismo=[tempArray objectAtIndex:0];
-    Urbanization *urbanization = [self.projectDic[@"urbanizations"] firstObject];
-    imageViewUrbanismo=[[UIImageView alloc]initWithImage:[urbanization urbanizationImage]];
+    //Urbanization *urbanization = [self.projectDic[@"urbanizations"] firstObject];
+    imageViewUrbanismo=[[UIImageView alloc]initWithImage:self.urbanizationImage];
     if (imageViewUrbanismo.frame.size.width<self.view.frame.size.height) {
         float ancho=imageViewUrbanismo.frame.size.width;
         float alto=imageViewUrbanismo.frame.size.height;
@@ -166,7 +177,7 @@
         else{
             proporcion=ancho/alto;
         }
-        imageViewUrbanismo.frame=CGRectMake(0, 0, ([urbanization urbanizationImage].size.width*1), ([urbanization urbanizationImage].size.height*1));
+        imageViewUrbanismo.frame=CGRectMake(0, 0, (self.urbanizationImage.size.width*1), (self.urbanizationImage.size.height*1));
         minimumZoomScale=0.6;
         NSLog(@"width %.0f height %.0f",imageViewUrbanismo.frame.size.width,imageViewUrbanismo.frame.size.height);
     }

@@ -16,4 +16,5 @@
                  inManagedObjectContext:(NSManagedObjectContext *)context;
 +(void)deleteFloorsForProjectWithID:(NSString *)projectID
              inManagedObjectContext:(NSManagedObjectContext *)context;
++(NSArray *)imagesPathsForFloorWithProjectID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context;
 @end

@@ -166,6 +166,7 @@
 		8BD29412191D764E0006AB2A /* PisoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BD29411191D764E0006AB2A /* PisoCollectionViewCell.m */; };
 		8BDA62B2195C58C2005ED742 /* info_on_new.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BDA62B0195C58C2005ED742 /* info_on_new.png */; };
 		8BDA62B3195C58C2005ED742 /* info_on_new@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BDA62B1195C58C2005ED742 /* info_on_new@2x.png */; };
+		8BEAB0551974120600C7C67B /* ImageSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BEAB0541974120600C7C67B /* ImageSaver.m */; };
 		8BFFE1D219634E6800DAAAB8 /* DownloadVideoIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BFFE1D119634E6800DAAAB8 /* DownloadVideoIcon.png */; };
 		A029EADF1924250D00E57ECF /* LaunchImagePhoneR4.png in Resources */ = {isa = PBXBuildFile; fileRef = A029EADE1924250D00E57ECF /* LaunchImagePhoneR4.png */; };
 		A029EAE319242F5E00E57ECF /* HomeScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A029EAE219242F5E00E57ECF /* HomeScreenViewController.m */; };
@@ -468,6 +469,8 @@
 		8BD29411191D764E0006AB2A /* PisoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PisoCollectionViewCell.m; path = "New ViewControllers/Custom Cells/PisoCollectionViewCell.m"; sourceTree = "<group>"; };
 		8BDA62B0195C58C2005ED742 /* info_on_new.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info_on_new.png; sourceTree = "<group>"; };
 		8BDA62B1195C58C2005ED742 /* info_on_new@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info_on_new@2x.png"; sourceTree = "<group>"; };
+		8BEAB0531974120600C7C67B /* ImageSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageSaver.h; path = "New ViewControllers/Objects/ImageSaver.h"; sourceTree = "<group>"; };
+		8BEAB0541974120600C7C67B /* ImageSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImageSaver.m; path = "New ViewControllers/Objects/ImageSaver.m"; sourceTree = "<group>"; };
 		8BFFE1D119634E6800DAAAB8 /* DownloadVideoIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DownloadVideoIcon.png; path = Resources/iPad/DownloadVideoIcon.png; sourceTree = "<group>"; };
 		A029EADE1924250D00E57ECF /* LaunchImagePhoneR4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LaunchImagePhoneR4.png; path = Resources/LaunchImagePhoneR4.png; sourceTree = "<group>"; };
 		A029EAE119242F5E00E57ECF /* HomeScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomeScreenViewController.h; path = "New ViewControllers/iPhone ViewControllers/HomeScreenViewController.h"; sourceTree = "<group>"; };
@@ -691,6 +694,7 @@
 		37E98A3F153E0D70001B9BFE /* Ekoobot 3D */ = {
 			isa = PBXGroup;
 			children = (
+				8BEAB052197411D900C7C67B /* Objects */,
 				A081542C1936400A004F25B3 /* ServerCommunicator2 */,
 				A09E56FC192FB7E00099B458 /* MBProgressHUD2 */,
 				A09E56D9192F9C1E0099B458 /* CoreData */,
@@ -1104,6 +1108,15 @@
 				8BC64FF3191941DB0005548D /* UIImage+Resize.m */,
 			);
 			name = Categories;
+			sourceTree = "<group>";
+		};
+		8BEAB052197411D900C7C67B /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				8BEAB0531974120600C7C67B /* ImageSaver.h */,
+				8BEAB0541974120600C7C67B /* ImageSaver.m */,
+			);
+			name = Objects;
 			sourceTree = "<group>";
 		};
 		A029EAE019242F1300E57ECF /* iPhone ViewControllers */ = {
@@ -1563,6 +1576,7 @@
 				7589C5A915A4CF2E000C99AF /* ProjectDownloader.m in Sources */,
 				7589C5AE15A4FC6F000C99AF /* ProgressView.m in Sources */,
 				752DCAFE15A77A8C002B732D /* Grupo.m in Sources */,
+				8BEAB0551974120600C7C67B /* ImageSaver.m in Sources */,
 				8B0E0BA9194A3720007C942A /* VideoPlayerViewController.m in Sources */,
 				A09E570E193013DD0099B458 /* NSArray+NullReplacement.m in Sources */,
 				752DCB0C15A7EB06002B732D /* CustomButton.m in Sources */,

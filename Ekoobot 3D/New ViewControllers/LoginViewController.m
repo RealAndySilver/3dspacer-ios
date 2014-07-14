@@ -311,7 +311,7 @@
         NSDictionary *renderDic = self.rendersArray[i];
         if ([renderDic[@"project"] intValue] == [projectIdentifier intValue]) {
             //imageURL = [@"http://ekoobot.com/new_bot/web/" stringByAppendingString:renderDic[@"url"]];
-            imageURL = renderDic[@"url"];
+            imageURL = renderDic[@"thumb"];
             break;
         }
     }
@@ -350,7 +350,7 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         yTranslation = -450.0;
     } else {
-        yTranslation = -160.0;
+        yTranslation = -140.0;
     }
     
     [UIView animateWithDuration:0.35

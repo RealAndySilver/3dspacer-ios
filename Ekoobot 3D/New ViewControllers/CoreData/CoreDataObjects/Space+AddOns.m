@@ -66,11 +66,12 @@
         //space.thumb = dictionary[@"thumb"];
         //NSLog(@"convertiré la url del thumb en Data");
         //space.thumbData = [NSData dataWithContentsOfURL:[NSURL URLWithString:space.thumb]];
-        //NSLog(@"Convertí la url del thumb en data");
+        space.thumb = dictionary[@"thumb"];
         space.common = dictionary[@"common"];
         space.enabled = dictionary[@"enabled"];
         space.lastUpdate = dictionary[@"last_update"];
         space.plant = [NSString stringWithFormat:@"%d", [dictionary[@"plant"] intValue]];
+        space.thumbPath = [NSString stringWithFormat:@"space_%@_%@.jpg", space.project, space.identifier];
         
     } else {
         //The render did not exist on the database, so we have to create it
@@ -114,14 +115,29 @@
             space.yLimit = dictionary[@"y_limiit"];
         }
         space.thumb = dictionary[@"thumb"];
-        space.thumbData = [NSData dataWithContentsOfURL:[NSURL URLWithString:space.thumb]];
+        //space.thumbData = [NSData dataWithContentsOfURL:[NSURL URLWithString:space.thumb]];
         space.common = dictionary[@"common"];
         space.enabled = dictionary[@"enabled"];
         space.lastUpdate = dictionary[@"last_update"];
         space.plant = [NSString stringWithFormat:@"%d", [dictionary[@"plant"] intValue]];
+        space.thumbPath = [NSString stringWithFormat:@"space_%@_%@.jpg", space.project, space.identifier];
     }
     
     return space;
+}
+
++(NSArray *)imagesPathsForSpacesWithProjectID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {
+    NSMutableArray *imagePaths = [[NSMutableArray alloc] init];
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Space"];
+    request.predicate = [NSPredicate predicateWithFormat:@"project = %@", projectID];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    for (int i = 0; i < [matches count]; i++) {
+        Space *space = matches[i];
+        [imagePaths addObject:space.thumbPath];
+    }
+    
+    return imagePaths;
 }
 
 +(NSArray *)spacesArrayForProjectWithID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context {

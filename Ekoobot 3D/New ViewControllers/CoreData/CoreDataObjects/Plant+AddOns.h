@@ -16,4 +16,5 @@
                  inManagedObjectContext:(NSManagedObjectContext *)context;
 +(void)deletePlantsForProjectWithID:(NSString *)projectID
              inManagedObjectContext:(NSManagedObjectContext *)context;
++(NSArray *)imagesPathsForPlantsWithProjectID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context;
 @end

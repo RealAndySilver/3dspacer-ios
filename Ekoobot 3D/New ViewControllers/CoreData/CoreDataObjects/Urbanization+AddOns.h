@@ -16,4 +16,5 @@
                         inManagedObjectContext:(NSManagedObjectContext *)context;
 +(void)deleteUrbanizationsForProjectWithID:(NSString *)projectID
                     inManagedObjectContext:(NSManagedObjectContext *)context;
++(NSArray *)imagesPathsForUrbanizationWithProjectID:(NSString *)projectID inManagedObjectContext:(NSManagedObjectContext *)context;
 @end

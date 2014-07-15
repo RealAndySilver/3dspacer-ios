@@ -168,14 +168,17 @@
 }*/
 
 - (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window{
-    if (self.screenIsLandscapeLeftOnly) {
-        return UIInterfaceOrientationMaskLandscapeLeft;
-    } else if (self.screenIsLandscapeRightOnly) {
-        return UIInterfaceOrientationMaskLandscapeRight;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        if (self.screenIsLandscapeLeftOnly) {
+            return UIInterfaceOrientationMaskLandscapeLeft;
+        } else if (self.screenIsLandscapeRightOnly) {
+            return UIInterfaceOrientationMaskLandscapeRight;
+        } else {
+            return UIInterfaceOrientationMaskLandscape;
+        }
     } else {
-        return UIInterfaceOrientationMaskLandscape;
+        return UIInterfaceOrientationMaskAll;
     }
 }
-
 
 @end

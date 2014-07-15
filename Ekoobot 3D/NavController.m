@@ -25,8 +25,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    //orient=YES;
-    //orientationType=1;//all orientations
+    self.orient=YES;
+    self.orientationType=1;//all orientations
 	// Do any additional setup after loading the view.
 }
 
@@ -35,19 +35,20 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-/*-(BOOL)shouldAutorotate{
-    return orient;
+-(BOOL)shouldAutorotate{
+    return self.orient;
 }
 -(NSUInteger)supportedInterfaceOrientations{
-    if (orientationType==1) {
+    if (self.orientationType==1) {
         return UIInterfaceOrientationMaskAll;
     }
     else {
         return UIInterfaceOrientationMaskLandscape;
     }
 }
+
 -(void)setInterfaceOrientation:(BOOL)orientation{
-    orient=orientation;
+    self.orient=orientation;
 }
 -(void)forceLandscapeMode{
     if(UIDeviceOrientationIsPortrait(self.interfaceOrientation)){
@@ -92,7 +93,7 @@
             }
         }
     }
-}*/
+}
 
 - (UIViewController *)popViewControllerAnimated:(BOOL)animated
 {

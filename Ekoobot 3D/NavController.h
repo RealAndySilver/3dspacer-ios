@@ -10,9 +10,9 @@
 #import <objc/message.h>
 #import "NavAnimations.h"
 @interface NavController : UINavigationController
-//@property(nonatomic)BOOL orient;
-//@property(nonatomic)int orientationType;
-//-(void)setInterfaceOrientation:(BOOL)orientation;
-//-(void)forceLandscapeMode;
-//-(void)forceLandscapeFromLandscape;
+@property(nonatomic)BOOL orient;
+@property(nonatomic)int orientationType;
+-(void)setInterfaceOrientation:(BOOL)orientation;
+-(void)forceLandscapeMode;
+-(void)forceLandscapeFromLandscape;
 @end

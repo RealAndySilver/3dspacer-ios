@@ -107,6 +107,11 @@
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        NavController *navController = (NavController *)self.navigationController;
+        [navController setInterfaceOrientation:YES];
+    }
+    
     //NSMutableArray *tempArray=proyecto.arrayItemsUrbanismo;
     //ItemUrbanismo *itemUrbanismo=[tempArray objectAtIndex:0];
     Urbanization *urbanization = [self.projectDic[@"urbanizations"] firstObject];

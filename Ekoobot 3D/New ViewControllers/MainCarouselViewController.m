@@ -350,7 +350,7 @@
 - (void)logout{
     FileSaver *fileSaver = [[FileSaver alloc] init];
     [fileSaver setDictionary:@{} withName:@"UserInfoDic"];
-    [self.navigationController popViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)goToProjectsList {

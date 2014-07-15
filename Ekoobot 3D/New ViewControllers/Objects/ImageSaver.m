@@ -23,7 +23,6 @@
         NSLog(@"La imagen no existía en documents directory, así que la guardaré");
         NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:finishImage.imageURL]];
         if (!data) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"ErrorDownloadingNotification" object:nil];
             return;
         }
         
@@ -34,6 +33,11 @@
         } else {
             //JPG Image
             UIImage *image = [UIImage imageWithData:data];
+            if (!image) {
+                //Error downloading
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"ErrorDownloadingNotification" object:nil];
+                return;
+            }
             if ([finishImage.finalSize intValue] != [finishImage.size intValue]) {
                 NSLog(@"Cambiaré el tamaño de la imagen");
                 UIImage *newImage = [UIImage imageWithImage:image scaledToSize:CGSizeMake([finishImage.finalSize intValue], [finishImage.finalSize intValue])];

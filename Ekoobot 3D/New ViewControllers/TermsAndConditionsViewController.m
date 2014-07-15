@@ -58,4 +58,14 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark - Interface Orientations 
+
+-(BOOL)shouldAutorotate {
+    return YES;
+}
+
+-(NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskLandscape;
+}
+
 @end

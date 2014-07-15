@@ -130,6 +130,11 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        NavController *navController = (NavController *)self.navigationController;
+        [navController setInterfaceOrientation:YES];
+    }
+    
     CMMotionManager *motionManager = [CMMotionManager sharedMotionManager];
     if (motionManager.magnetometerAvailable) {
         magnetometerIsAvailable = YES;

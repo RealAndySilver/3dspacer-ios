@@ -111,6 +111,8 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    NavController *navController = (NavController *)self.navigationController;
+    [navController setOrientationType:0];
     downloadWasCancelled = NO;
     connectionError = NO;
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -368,7 +370,8 @@
 - (void)logout{
     FileSaver *fileSaver = [[FileSaver alloc] init];
     [fileSaver setDictionary:@{} withName:@"UserInfoDic"];
-    [self.navigationController popViewControllerAnimated:YES];
+    //[self.navigationController popViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)goToTermsVC {

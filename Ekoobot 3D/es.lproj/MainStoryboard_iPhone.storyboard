@@ -194,7 +194,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kmP-Ts-KG6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-988" y="43"/>
+            <point key="canvasLocation" x="-1392" y="-286"/>
         </scene>
         <!--Home Screen View Controller-->
         <scene sceneID="dPq-Mc-VRd">
@@ -206,10 +206,11 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
+                    <navigationItem key="navigationItem" id="cvb-qF-pPw"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SkZ-9Y-IRQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-90" y="527"/>
+            <point key="canvasLocation" x="-1236" y="625"/>
         </scene>
         <!--Send Info View Controller-->
         <scene sceneID="lDh-kj-m2T">
@@ -618,12 +619,12 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="S4w-zl-OgA" kind="relationship" relationship="rootViewController" id="Ihn-cr-JVo"/>
+                        <segue destination="sAd-y9-faE" kind="relationship" relationship="rootViewController" id="i19-mG-Dc3"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x1g-wg-2Gf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2633" y="447"/>
+            <point key="canvasLocation" x="-1901" y="625"/>
         </scene>
         <!--Loading View Controller-->
         <scene sceneID="nc4-ne-2W6">
@@ -646,6 +647,7 @@
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <connections>
+                        <outlet property="logoImageView" destination="CKz-rI-zAd" id="Q5A-ph-JmJ"/>
                         <outlet property="spinner" destination="Z3f-Hq-M8V" id="yZe-AO-jMh"/>
                     </connections>
                 </viewController>
@@ -776,6 +778,7 @@
                         <outlet property="emailTextfield" destination="vZn-F3-mA8" id="S8V-Zk-RsL"/>
                         <outlet property="enterButton" destination="5y9-js-VUi" id="Wh2-ea-ix3"/>
                         <outlet property="forgotPasswordButton" destination="gIP-Sr-7PF" id="WcT-qN-wNp"/>
+                        <outlet property="logoImageView" destination="LL0-U2-brg" id="fF4-EK-24X"/>
                         <outlet property="passwordTextfield" destination="ptf-3P-MRb" id="JKf-bD-1To"/>
                         <outlet property="sendButton" destination="nMb-sK-AY9" id="mLR-rH-OHY"/>
                         <outlet property="spinner" destination="UgT-z9-eAJ" id="RFM-o8-cwA"/>
@@ -785,7 +788,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lnV-6t-Hpe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1889" y="625"/>
+            <point key="canvasLocation" x="-2503" y="625"/>
         </scene>
         <!--Terms And Conditions View Controller-->
         <scene sceneID="tpn-dN-rje">
@@ -835,7 +838,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZsZ-yw-zuU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-964" y="482"/>
+            <point key="canvasLocation" x="-1368" y="153"/>
         </scene>
         <!--Video Player View Controller-->
         <scene sceneID="xFt-om-or3">
@@ -850,7 +853,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oee-rb-jJR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1197" y="507"/>
+            <point key="canvasLocation" x="1121" y="527"/>
         </scene>
     </scenes>
     <resources>

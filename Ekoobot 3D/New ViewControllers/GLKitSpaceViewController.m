@@ -18,6 +18,7 @@
 #import "FinishImage+AddOns.h"
 #import "Project.h"
 #import "AppDelegate.h"
+#import "NavController.h"
 
 @interface GLKitSpaceViewController () <More3DScenesViewDelegate, UIGestureRecognizerDelegate, CLLocationManagerDelegate, AcabadosViewDelegate>
 @property (strong, nonatomic) GLKTextureInfo *cubemapTexture;
@@ -216,6 +217,8 @@
         isPad = YES;
     } else {
         isPad = NO;
+        NavController *navController = (NavController *)self.navigationController;
+        [navController setInterfaceOrientation:NO];
     }
     [self setupFinishesArray];
     //[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];

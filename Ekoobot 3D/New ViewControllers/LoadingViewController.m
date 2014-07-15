@@ -19,6 +19,7 @@
 #import "HomeScreenViewController.h"
 
 @interface LoadingViewController () <ServerCommunicatorDelegate>
+@property (weak, nonatomic) IBOutlet UIImageView *logoImageView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
 @property (strong, nonatomic) UIManagedDocument *databaseDocument;
 @property (strong, nonatomic) NSArray *userProjectsArray;
@@ -38,7 +39,16 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self performSelector:@selector(checkIfUserExists) withObject:nil afterDelay:1.0];
+    [self performSelector:@selector(checkIfUserExists) withObject:nil afterDelay:0.5];
+}
+
+-(void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    CGRect bounds = self.view.bounds;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        self.logoImageView.frame = CGRectMake(bounds.size.width/2.0 - 147.0/2.0, bounds.size.height/2.0 - 134.0/2.0, 147.0, 134.0);
+        self.spinner.frame = CGRectMake(bounds.size.width/2.0 - 40.0/2.0, self.logoImageView.frame.origin.y + self.logoImageView.frame.size.height, 40.0, 40.0);
+    }
 }
 
 -(void)checkIfUserExists {
@@ -48,9 +58,13 @@
         
         NSLog(@"No había sesión iniciada con usuario");
         //No existe un usuario guardado
-        NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"Nav"];
+        LoginViewController *loginVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Login"];
+        loginVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentViewController:loginVC animated:YES completion:nil];
+        
+        /*NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"Nav"];
         navController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        [self presentViewController:navController animated:YES completion:nil];
+        [self presentViewController:navController animated:YES completion:nil];*/
         
     } else {
         NSLog(@"Ya había sesión iniciada con usuario");
@@ -170,24 +184,66 @@
     [self.spinner stopAnimating];
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        LoginViewController *loginVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Login"];
+        /*LoginViewController *loginVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Login"];
+        loginVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        loginVC.goInmediatlyToCarouselVC = YES;
+        loginVC.savedProjectsArray = projectsArray;
+        [self presentViewController:loginVC animated:YES completion:nil];*/
+        
+        MainCarouselViewController *mainCarousel = [self.storyboard instantiateViewControllerWithIdentifier:@"MainCarousel"];
+        mainCarousel.userProjectsArray = projectsArray;
+        
+        NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"Nav"];
+        [navController setViewControllers:@[mainCarousel] animated:NO];
+        navController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentViewController:navController animated:YES completion:nil];
+
+        /*LoginViewController *loginVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Login"];
         MainCarouselViewController *mainCarousel = [self.storyboard instantiateViewControllerWithIdentifier:@"MainCarousel"];
         mainCarousel.userProjectsArray = projectsArray;
         
         NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"Nav"];
         [navController setViewControllers:@[loginVC, mainCarousel] animated:NO];
         navController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        [self presentViewController:navController animated:YES completion:nil];
+        [self presentViewController:navController animated:YES completion:nil];*/
     
     } else {
-        LoginViewController *loginVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Login"];
+        /*LoginViewController *loginVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Login"];
+        loginVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        loginVC.goInmediatlyToCarouselVC = YES;
+        loginVC.savedProjectsArray = projectsArray;
+        [self presentViewController:loginVC animated:YES completion:nil];*/
+        
+        HomeScreenViewController *homeScreenVC = [self.storyboard instantiateViewControllerWithIdentifier:@"HomeScreen"];
+        homeScreenVC.userProjectsArray = projectsArray;
+        
+        NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"Nav"];
+        [navController setViewControllers:@[homeScreenVC] animated:NO];
+        navController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentViewController:navController animated:YES completion:nil];
+        
+        /*LoginViewController *loginVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Login"];
         HomeScreenViewController *homeScreenVC = [self.storyboard instantiateViewControllerWithIdentifier:@"HomeScreen"];
         homeScreenVC.userProjectsArray = projectsArray;
         
         NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"Nav"];
         [navController setViewControllers:@[loginVC, homeScreenVC] animated:NO];
         navController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        [self presentViewController:navController animated:YES completion:nil];
+        [self presentViewController:navController animated:YES completion:nil];*/
+    }
+}
+
+#pragma mark - Interface Orientations
+
+-(BOOL)shouldAutorotate {
+    return YES;
+}
+
+-(NSUInteger)supportedInterfaceOrientations {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        return UIInterfaceOrientationMaskLandscape;
+    } else {
+        return UIInterfaceOrientationMaskAll;
     }
 }
 

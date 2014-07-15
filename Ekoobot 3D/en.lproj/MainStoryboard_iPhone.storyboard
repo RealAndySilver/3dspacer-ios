@@ -206,10 +206,11 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
+                    <navigationItem key="navigationItem" id="nhZ-aQ-oqA"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rl9-bZ-iGv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-90" y="527"/>
+            <point key="canvasLocation" x="-358" y="527"/>
         </scene>
         <!--Send Info View Controller-->
         <scene sceneID="1WB-Uy-FGh">
@@ -633,12 +634,12 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="swI-0Z-J8y" kind="relationship" relationship="rootViewController" id="bRZ-Yl-DDc"/>
+                        <segue destination="GJ0-ge-Xbm" kind="relationship" relationship="rootViewController" id="2aJ-r6-JMf"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QKP-3g-tcx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1593" y="527"/>
+            <point key="canvasLocation" x="-995" y="519"/>
         </scene>
         <!--Loading View Controller-->
         <scene sceneID="8YM-V3-TPQ">
@@ -661,6 +662,7 @@
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <connections>
+                        <outlet property="logoImageView" destination="8xL-G6-7Gl" id="vuN-1k-4Zd"/>
                         <outlet property="spinner" destination="E5V-tg-evs" id="WhL-vq-mXE"/>
                     </connections>
                 </viewController>
@@ -791,6 +793,7 @@
                         <outlet property="emailTextfield" destination="BNV-lj-F9s" id="ZeQ-Ag-OZn"/>
                         <outlet property="enterButton" destination="iJW-jc-0hs" id="pgp-3k-XX3"/>
                         <outlet property="forgotPasswordButton" destination="QMw-rJ-krf" id="ISG-Te-DRv"/>
+                        <outlet property="logoImageView" destination="rwl-am-5Fb" id="E6U-U6-0r6"/>
                         <outlet property="passwordTextfield" destination="cx8-Hl-7XF" id="FjG-qR-z9X"/>
                         <outlet property="sendButton" destination="P9g-ZA-e3D" id="9Ah-1K-rIr"/>
                         <outlet property="spinner" destination="Nts-Rv-Lzg" id="ky9-yl-JXo"/>
@@ -800,7 +803,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qRr-Wz-gMT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-933" y="527"/>
+            <point key="canvasLocation" x="-1617" y="527"/>
         </scene>
         <!--Terms And Conditions View Controller-->
         <scene sceneID="ZBj-bl-w7L">

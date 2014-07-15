@@ -129,6 +129,7 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     CMMotionManager *motionManager = [CMMotionManager sharedMotionManager];
     if (motionManager.magnetometerAvailable) {
         magnetometerIsAvailable = YES;

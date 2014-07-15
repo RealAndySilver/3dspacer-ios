@@ -59,7 +59,7 @@
 "ActualizacionDetectada" = "Update Available";
 "DetalleActualizacion" = "There's a new update available for this project.";
 
-"ErrorConexionDescarga" = "The download couldn't be completed because a network problem. Please try again.";
+"ErrorConexionDescarga" = "The download couldn't be completed because of a network problem. Please try again.";
 
 "ActionSheetMensaje" = "¿Are you sure you want to delete this project?";
 "ActionSheetConfirmar" = "Delete";

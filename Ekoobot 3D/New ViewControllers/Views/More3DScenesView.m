@@ -20,10 +20,15 @@
 
 #pragma mark - Setters & Getters
 
--(void)setNumberOfScenes:(NSUInteger)numberOfScenes {
-    _numberOfScenes = numberOfScenes;
+-(void)setSelectedSpace:(NSUInteger)selectedSpace {
+    _selectedSpace = selectedSpace;
     [self.collectionView reloadData];
 }
+
+/*-(void)setNumberOfScenes:(NSUInteger)numberOfScenes {
+    _numberOfScenes = numberOfScenes;
+    [self.collectionView reloadData];
+}*/
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -68,6 +73,13 @@
     Space *space = self.espacios3DArray[indexPath.item];
     cell.sceneNameLabel.text = space.name;
     cell.sceneImageView.image = self.thumbsArray[indexPath.item];
+    if (indexPath.item == self.selectedSpace) {
+        cell.layer.borderColor = [UIColor whiteColor].CGColor;
+        cell.layer.borderWidth = 1.0;
+    } else {
+        cell.layer.borderColor = [UIColor clearColor].CGColor;
+        cell.layer.borderWidth = 0.0;
+    }
     return cell;
 }
 

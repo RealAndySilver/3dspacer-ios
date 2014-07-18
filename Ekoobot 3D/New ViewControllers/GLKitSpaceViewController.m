@@ -50,7 +50,7 @@
     GLfloat rotationFactor;
     CGPoint movementVector;
     NSUInteger acabadoSeleccionado;
-    CMMotionManager *motionManager;
+    //CMMotionManager *motionManager;
     BOOL magnetomerIsActive;
     GLfloat skyboxCenter;
     CGFloat fieldOfView;
@@ -59,9 +59,9 @@
     CGFloat northAdjustmentValue;
     BOOL panningInteractionEnabled;
     BOOL isPad;
-    //CGPoint panPrevious;
-    //CGPoint inertialPoint1;
-    //CGPoint inertialPoint2;
+    CGPoint panPrevious;
+    CGPoint inertialPoint1;
+    CGPoint inertialPoint2;
 }
 
 #pragma mark - Lazy Instantiation 
@@ -221,10 +221,6 @@
         [navController setInterfaceOrientation:NO];
     }
     [self setupFinishesArray];
-    //[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-    /*[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification
-                                               object:[UIDevice currentDevice]];*/
-    //UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
     NSUInteger deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     NSLog(@"device orientation: %d", deviceOrientation);
     if (deviceOrientation == 3) {
@@ -269,7 +265,6 @@
         appDelegate.screenIsLandscapeLeftOnly = YES;
         appDelegate.screenIsLandscapeRightOnly = NO;
     }
-  
 }
 
 -(void) landscapeUnlock {
@@ -348,6 +343,7 @@
     self.more3DScenesView = [[More3DScenesView alloc] initWithFrame:more3DScenesRect];
     self.more3DScenesView.delegate = self;
     self.more3DScenesView.espacios3DArray = self.arregloDeEspacios3D;
+    self.more3DScenesView.selectedSpace = self.espacioSeleccionado;
     
     //Get the thumbs images to diaply in the inferior view
     /*NSMutableArray *thumbsArray = [[NSMutableArray alloc] init];
@@ -414,11 +410,10 @@
     
     //Add pinch gesture recognizer
     UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinch:)];
-    
     [self.view addGestureRecognizer:pinchGesture];
     
     //Pan Gesture
-    self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(rotateScene:)];
+    //self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(rotateScene:)];
 }
 
 #pragma mark - OpenGL Stuff
@@ -436,14 +431,12 @@
     //Set GLContext
     self.preferredFramesPerSecond = 60.0;
     GLKView *view = (GLKView *)self.view;
-    view.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888;
-    view.drawableDepthFormat = GLKViewDrawableDepthFormatNone;
     
     view.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     [EAGLContext setCurrentContext:view.context];
     
     glClearColor(1.0, 1.0, 1.0, 1.0);
-    glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_DEPTH_TEST);
     
     
     //[self resizeCubeImages]; //************************ solo para pruebas, quitar éste método *********************//
@@ -469,12 +462,12 @@
     
     NSArray *skyboxArray = @[filePath, filePath, filePath, filePath, filePath, filePath];*/
     
-    /*NSArray *skyboxArray = @[[[NSBundle mainBundle] pathForResource:@"newencoded1" ofType:@"pvr"],
-                             [[NSBundle mainBundle] pathForResource:@"newencoded1" ofType:@"pvr"],
-                             [[NSBundle mainBundle] pathForResource:@"newencoded1" ofType:@"pvr"],
-                             [[NSBundle mainBundle] pathForResource:@"newencoded1" ofType:@"pvr"],
-                             [[NSBundle mainBundle] pathForResource:@"newencoded1" ofType:@"pvr"],
-                             [[NSBundle mainBundle] pathForResource:@"newencoded1" ofType:@"pvr"]];*/
+    /*NSArray *skyboxArray = @[[[NSBundle mainBundle] pathForResource:@"Skybox1Left" ofType:@"png"],
+                             [[NSBundle mainBundle] pathForResource:@"Skybox1Left" ofType:@"png"],
+                             [[NSBundle mainBundle] pathForResource:@"Skybox1Left" ofType:@"png"],
+                             [[NSBundle mainBundle] pathForResource:@"Skybox1Left" ofType:@"png"],
+                             [[NSBundle mainBundle] pathForResource:@"Skybox1Left" ofType:@"png"],
+                             [[NSBundle mainBundle] pathForResource:@"Skybox1Left" ofType:@"png"]];*/
     
     NSError *error;
     NSDictionary *options = @{GLKTextureLoaderOriginBottomLeft: @NO};
@@ -503,13 +496,13 @@
 -(void)update {
     if (magnetomerIsActive) {
         if (deviceIsLeftRotated) {
-            rotXAxis = motionManager.deviceMotion.attitude.roll;
-            rotZAxis = -motionManager.deviceMotion.attitude.yaw - M_PI;
-            rotYAxis = -motionManager.deviceMotion.attitude.pitch;
+            rotXAxis = [CMMotionManager sharedMotionManager].deviceMotion.attitude.roll;
+            rotZAxis = -[CMMotionManager sharedMotionManager].deviceMotion.attitude.yaw - M_PI;
+            rotYAxis = -[CMMotionManager sharedMotionManager].deviceMotion.attitude.pitch;
         } else {
-            rotXAxis = -motionManager.deviceMotion.attitude.roll;
-            rotZAxis = -motionManager.deviceMotion.attitude.yaw;
-            rotYAxis = motionManager.deviceMotion.attitude.pitch;
+            rotXAxis = -[CMMotionManager sharedMotionManager].deviceMotion.attitude.roll;
+            rotZAxis = -[CMMotionManager sharedMotionManager].deviceMotion.attitude.yaw;
+            rotYAxis = [CMMotionManager sharedMotionManager].deviceMotion.attitude.pitch;
             //NSLog(@"Z:%f", rotZAxis);
         }
     }
@@ -542,7 +535,7 @@
     self.skyboxEffect.transform.projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(fieldOfView), screenBounds.size.width/screenBounds.size.height, 1.0, 100.0);
     self.skyboxEffect.transform.modelviewMatrix = modelviewMatrix;
     [self.skyboxEffect prepareToDraw];
-
+    
     [self rotateCompassWithRadians:-rotZAxis + northAdjustmentValue];
 }
 
@@ -583,14 +576,14 @@
     if (!panningInteractionEnabled) {
         //Activate panning interaction
         magnetomerIsActive = NO;
-        [self.view addGestureRecognizer:self.panGesture];
+        //[self.view addGestureRecognizer:self.panGesture];
         rotYAxis = 0;
         [self stopDeviceMotion];
         self.interactionTypeBarButton.title = NSLocalizedString(@"3D", nil);
         panningInteractionEnabled = YES;
     } else {
         magnetomerIsActive = YES;
-        [self.view removeGestureRecognizer:self.panGesture];
+        //[self.view removeGestureRecognizer:self.panGesture];
         [self startDeviceMotion];
         self.interactionTypeBarButton.title = NSLocalizedString(@"Toque", nil);
         panningInteractionEnabled = NO;
@@ -624,50 +617,71 @@
     senderGestureRecognizer.scale = 1.0;
 }
 
-/*-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (panningInteractionEnabled) {
-        NSLog(@"Empezé a tocar");
-        [self.inertiaTimer invalidate];
-        self.inertiaTimer = nil;
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    if ([[event touchesForView:self.view] count] == 1) {
         
-        UITouch *touch = [touches anyObject];
-        panPrevious = [touch locationInView:self.view];
+        if (viewIsZoomed) {
+            if (isPad) {
+                rotationFactor = 0.001;
+            } else {
+                rotationFactor = 0.002;
+            }
+        } else {
+            if (isPad) {
+                rotationFactor = 0.002;
+            } else {
+                rotationFactor = 0.004;
+            }
+        }
+        
+        if (panningInteractionEnabled) {
+            NSLog(@"Empezé a tocar");
+            [self.inertiaTimer invalidate];
+            self.inertiaTimer = nil;
+            
+            UITouch *touch = [touches anyObject];
+            panPrevious = [touch locationInView:self.view];
+        }
     }
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (panningInteractionEnabled) {
-        NSLog(@"Moviendoooo");
-        UITouch *touch = [touches anyObject];
-        CGPoint panLocation = [touch locationInView:self.view];
-        CGPoint panDelta = CGPointMake(panLocation.x - panPrevious.x, panLocation.y - panPrevious.y);
-        rotXAxis -= panDelta.y*rotationFactor;
-        if (rotXAxis < - 2.90) {
-            rotXAxis = -2.90;
-        } else if (rotXAxis > 0) {
-            rotXAxis = 0;
+    if ([[event touchesForView:self.view] count] == 1) {
+        if (panningInteractionEnabled) {
+            NSLog(@"Moviendoooo");
+            UITouch *touch = [touches anyObject];
+            CGPoint panLocation = [touch locationInView:self.view];
+            CGPoint panDelta = CGPointMake(panLocation.x - panPrevious.x, panLocation.y - panPrevious.y);
+            rotXAxis -= panDelta.y*rotationFactor;
+            if (rotXAxis < - 2.90) {
+                rotXAxis = -2.90;
+            } else if (rotXAxis > 0) {
+                rotXAxis = 0;
+            }
+            rotZAxis -= panDelta.x*rotationFactor;
+            NSLog(@"rot x: %f, rot y: %f, rot z: %f", rotXAxis, rotYAxis, rotZAxis);
+            [self rotateCompassWithRadians:-rotZAxis + northAdjustmentValue];
+            inertialPoint1 = panPrevious;
+            panPrevious = panLocation;
         }
-        rotZAxis -= panDelta.x*rotationFactor;
-        NSLog(@"rot x: %f, rot y: %f, rot z: %f", rotXAxis, rotYAxis, rotZAxis);
-        [self rotateCompassWithRadians:-rotZAxis + northAdjustmentValue];
-        inertialPoint1 = panPrevious;
-        panPrevious = panLocation;
     }
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (panningInteractionEnabled) {
-        UITouch *touch = [touches anyObject];
-        inertialPoint2 = [touch locationInView:self.view];
-        NSLog(@"Point 1: %@", NSStringFromCGPoint(inertialPoint1));
-        NSLog(@"Point 2: %@", NSStringFromCGPoint(inertialPoint2));
-        movementVector = CGPointMake(inertialPoint2.x - inertialPoint1.x, inertialPoint2.y - inertialPoint1.y);
-        NSLog(@"Vector: %@", NSStringFromCGPoint(movementVector));
-        [self stopSceneRotationWithInertia];
+    if ([[event touchesForView:self.view] count] == 1) {
+        if (panningInteractionEnabled) {
+            UITouch *touch = [touches anyObject];
+            inertialPoint2 = [touch locationInView:self.view];
+            NSLog(@"Point 1: %@", NSStringFromCGPoint(inertialPoint1));
+            NSLog(@"Point 2: %@", NSStringFromCGPoint(inertialPoint2));
+            movementVector = CGPointMake(inertialPoint2.x - inertialPoint1.x, inertialPoint2.y - inertialPoint1.y);
+            NSLog(@"Vector: %@", NSStringFromCGPoint(movementVector));
+            [self stopSceneRotationWithInertia];
+        }
     }
-}*/
+}
 
--(void)rotateScene:(UIPanGestureRecognizer *)recognizer {
+/*-(void)rotateScene:(UIPanGestureRecognizer *)recognizer {
     if (recognizer.numberOfTouches == 0 || recognizer.numberOfTouches == 1) {
         //NSLog(@"***************************** Entré a rotate sceneeeeee ***************************");
         if (viewIsZoomed) {
@@ -692,7 +706,7 @@
             
             panPrevious = [recognizer locationInView:self.view];
             
-        } else if (recognizer.state != UIGestureRecognizerStateEnded){
+        } else if (recognizer.state == UIGestureRecognizerStateChanged){
             CGPoint panLocation = [recognizer locationInView:self.view];
             CGPoint panDelta = CGPointMake(panLocation.x - panPrevious.x, panLocation.y - panPrevious.y);
             rotXAxis -= panDelta.y*rotationFactor;
@@ -702,7 +716,7 @@
                 rotXAxis = 0;
             }
             rotZAxis -= panDelta.x*rotationFactor;
-            //NSLog(@"rot x: %f, rot y: %f, rot z: %f", rotXAxis, rotYAxis, rotZAxis);
+            NSLog(@"rot x: %f, rot y: %f, rot z: %f", rotXAxis, rotYAxis, rotZAxis);
             [self rotateCompassWithRadians:-rotZAxis + northAdjustmentValue];
             point1 = panPrevious;
             panPrevious = panLocation;
@@ -716,7 +730,7 @@
             [self stopSceneRotationWithInertia];
         }
     }
-}
+}*/
 
 -(void)stopSceneRotationWithInertia {
     self.inertiaTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 target:self selector:@selector(calculateSceneRotationValues) userInfo:nil repeats:YES];
@@ -828,10 +842,10 @@
 
 -(void)startDeviceMotion {
     CMAttitudeReferenceFrame attitude;
-    motionManager = [CMMotionManager sharedMotionManager];
-    motionManager.showsDeviceMovementDisplay = YES;
+    //motionManager = [CMMotionManager sharedMotionManager];
+    [CMMotionManager sharedMotionManager].showsDeviceMovementDisplay = YES;
     
-    if (motionManager.magnetometerAvailable) {
+    if ([CMMotionManager sharedMotionManager].magnetometerAvailable) {
         NSLog(@"*** El magnetómetro está disponible ***");
         attitude = CMAttitudeReferenceFrameXMagneticNorthZVertical;
     } else {
@@ -840,10 +854,10 @@
         [self.compassPlaceholder removeFromSuperview];
     }
     
-    if (motionManager.deviceMotionAvailable) {
+    if ([CMMotionManager sharedMotionManager].deviceMotionAvailable) {
         NSLog(@"** Entré a calcular valores del sensor ***");
-        motionManager.deviceMotionUpdateInterval = 1.0/60.0;
-        [motionManager startDeviceMotionUpdatesUsingReferenceFrame:attitude];
+        [CMMotionManager sharedMotionManager].deviceMotionUpdateInterval = 1.0/60.0;
+        [[CMMotionManager sharedMotionManager] startDeviceMotionUpdatesUsingReferenceFrame:attitude];
        
     } else {
         NSLog(@"*** el sensor no está disponible ***");
@@ -973,6 +987,7 @@
         self.espacioSeleccionado = index;
         Space *space = self.arregloDeEspacios3D[self.espacioSeleccionado];
         self.more3DScenesView.titleLabel.text = space.name;
+        self.more3DScenesView.selectedSpace = self.espacioSeleccionado;
         [self showLoadingOpacityView];
     }
     [self toggleComplementaryViews];

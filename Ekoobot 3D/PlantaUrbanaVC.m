@@ -19,7 +19,7 @@
 #import "CMMotionManager+Shared.h"
 
 @interface PlantaUrbanaVC () <BrujulaViewDelegate>
-@property (strong, nonatomic) CMMotionManager *motionManager;
+//@property (strong, nonatomic) CMMotionManager *motionManager;
 @property (strong, nonatomic) NSMutableArray *commonSpacesArray;
 @property (strong, nonatomic) UIImage *urbanizationImage;
 @end
@@ -95,8 +95,10 @@
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     [spinner stopAnimating];
     [self.view sendSubviewToBack:spinner];
-    self.motionManager.showsDeviceMovementDisplay = NO;
+    //[CMMotionManager sharedMotionManager].showsDeviceMovementDisplay = NO;
+    //[[CMMotionManager sharedMotionManager] stopDeviceMotionUpdates];
     //[self.motionManager stopDeviceMotionUpdates];
+    //self.motionManager = nil;
     [timer invalidate];
     brujula.alpha=0;
     brujula=nil;
@@ -104,6 +106,17 @@
     attitude=nil;
     NavController *navController = (NavController *)self.navigationController;
     //[navController setInterfaceOrientation:YES]; ********************************
+    
+    //Check is the view controller is being popped
+    NSArray *viewControllers = self.navigationController.viewControllers;
+    if (viewControllers.count > 1 && [viewControllers objectAtIndex:viewControllers.count-2] == self) {
+        // View is disappearing because a new view controller was pushed onto the stack
+        NSLog(@"New view controller was pushed");
+    } else if ([viewControllers indexOfObject:self] == NSNotFound) {
+        // View is disappearing because it was popped from the stack
+        NSLog(@"View controller was popped");
+        [[CMMotionManager sharedMotionManager] stopDeviceMotionUpdates];
+    }
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -142,8 +155,8 @@
     timer=[[NSTimer alloc]init];
     timer =[NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(update) userInfo:nil repeats:YES];*/
     
-    self.motionManager = [CMMotionManager sharedMotionManager];
-    if (self.motionManager.magnetometerAvailable) {
+    //self.motionManager = [CMMotionManager sharedMotionManager];
+    if ([CMMotionManager sharedMotionManager].isMagnetometerAvailable) {
         NSLog(@"El magnetómetro está disponible entonces mostraré la brújula");
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             brujula=[[BrujulaView alloc]initWithFrame:CGRectMake(self.view.frame.size.width-90, 80, 70, 70)];
@@ -297,9 +310,10 @@
         NavController *navController = (NavController *)self.navigationController;
         //[navController setInterfaceOrientation:NO]; ******************************
         //_motionManager.showsDeviceMovementDisplay = YES;
-        self.motionManager.showsDeviceMovementDisplay = YES;
+        //self.motionManager.showsDeviceMovementDisplay = YES;
+        [CMMotionManager sharedMotionManager].showsDeviceMovementDisplay = YES;
         //attitude = _motionManager.deviceMotion.attitude;
-        attitude = self.motionManager.deviceMotion.attitude;
+        attitude = [CMMotionManager sharedMotionManager].deviceMotion.attitude;
         CGAffineTransform swingTransform = CGAffineTransformIdentity;
         swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(attitude.yaw)+diferenciaRotacion]-adicionalGrados);
         CGAffineTransform swingTransform2 = CGAffineTransformIdentity;
@@ -311,7 +325,7 @@
         NavController *navController = (NavController *)self.navigationController;
         //[navController setInterfaceOrientation:YES]; ******************************
         //_motionManager.showsDeviceMovementDisplay = NO;
-        self.motionManager.showsDeviceMovementDisplay = NO;
+        [CMMotionManager sharedMotionManager].showsDeviceMovementDisplay = NO;
         CGAffineTransform swingTransform = CGAffineTransformIdentity;
         swingTransform = CGAffineTransformRotate(swingTransform, [self radiansToDegrees:DegreesToRadians(0)]);
         scrollViewUrbanismo.transform = swingTransform;
@@ -398,7 +412,7 @@
 
 -(void)irAEscena3D:(UIButton *)sender {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [self.motionManager stopDeviceMotionUpdates];
+    [[CMMotionManager sharedMotionManager] stopDeviceMotionUpdates];
 
     [self performSelector:@selector(goToGLKView:) withObject:sender afterDelay:0.3];
 }
@@ -416,7 +430,7 @@
 }
 
 -(void)irAlSiguienteViewController:(UIButton*)sender{
-    [self.motionManager stopDeviceMotionUpdates];
+    [[CMMotionManager sharedMotionManager] stopDeviceMotionUpdates];
     
     hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.labelText=NSLocalizedString(@"Cargando", nil);
@@ -628,11 +642,11 @@
 }
 
 -(void)startDeviceMotion {
-    self.motionManager = [CMMotionManager sharedMotionManager];
-    if (self.motionManager.deviceMotionAvailable) {
-        self.motionManager.showsDeviceMovementDisplay = YES;
-        self.motionManager.deviceMotionUpdateInterval = 1.0/60.0;
-        [self.motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXMagneticNorthZVertical toQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motion, NSError *error){
+    //self.motionManager = [CMMotionManager sharedMotionManager];
+    if ([CMMotionManager sharedMotionManager].deviceMotionAvailable) {
+        [CMMotionManager sharedMotionManager].showsDeviceMovementDisplay = YES;
+        [CMMotionManager sharedMotionManager].deviceMotionUpdateInterval = 1.0/60.0;
+        [[CMMotionManager sharedMotionManager] startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXMagneticNorthZVertical toQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motion, NSError *error){
             [self update];
         }];
     }

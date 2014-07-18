@@ -361,8 +361,8 @@
     Floor *floor = self.floorsArray[indexPath.item];
     
     [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];
-    BrujulaViewController *brujulaVC=[[BrujulaViewController alloc]init];
-    brujulaVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Brujula"];
+    //BrujulaViewController *brujulaVC=[[BrujulaViewController alloc]init];
+    BrujulaViewController *brujulaVC=[self.storyboard instantiateViewControllerWithIdentifier:@"Brujula"];
     brujulaVC.externalImageView = [[UIImageView alloc] initWithImage:self.floorsImagesArray[indexPath.item]];
     brujulaVC.gradosExtra = [floor.northDegrees floatValue];
     [self.navigationController pushViewController:brujulaVC animated:NO];

@@ -15,9 +15,9 @@
 
 @interface More3DScenesView : UIView 
 @property (strong, nonatomic) UILabel *titleLabel;
-@property (assign, nonatomic) NSUInteger numberOfScenes;
+//@property (assign, nonatomic) NSUInteger numberOfScenes;
 @property (strong, nonatomic) NSArray *espacios3DArray;
 @property (strong, nonatomic) NSArray *thumbsArray;
-//@property (strong, nonatomic) NSDictionary *projectDic;
+@property (assign, nonatomic) NSUInteger selectedSpace;
 @property (strong, nonatomic) id <More3DScenesViewDelegate> delegate;
 @end

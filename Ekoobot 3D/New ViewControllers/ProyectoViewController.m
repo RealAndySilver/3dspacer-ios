@@ -494,8 +494,8 @@
     
     SlideshowViewController *ssVC=[[SlideshowViewController alloc]init];
     ssVC.imagesArray = tempRendersArray;
-    SlideControlViewController *cVC=[[SlideControlViewController alloc]init];
-    cVC=[self.storyboard instantiateViewControllerWithIdentifier:@"SlideControl"];
+    //SlideControlViewController *cVC=[[SlideControlViewController alloc]init];
+    SlideControlViewController *cVC=[self.storyboard instantiateViewControllerWithIdentifier:@"SlideControl"];
     if ([[UIScreen screens] count] > 1)
     {
         UIScreen *secondScreen = [[UIScreen screens] objectAtIndex:1];
@@ -503,9 +503,9 @@
         
         for (int i = 0; i < secondScreen.availableModes.count; i++)
         {
-            availableModeString = [NSString stringWithFormat:@"%f, %f",
+            /*availableModeString = [NSString stringWithFormat:@"%f, %f",
                                    ((UIScreenMode *)[secondScreen.availableModes objectAtIndex:i]).size.width,
-                                   ((UIScreenMode *)[secondScreen.availableModes objectAtIndex:i]).size.height];
+                                   ((UIScreenMode *)[secondScreen.availableModes objectAtIndex:i]).size.height];**********************/
             
             //[[[UIAlertView alloc] initWithTitle:@"Available Mode" message:availableModeString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
             availableModeString = nil;
@@ -638,8 +638,8 @@
 -(void)irAPlantaUrbanaVC {
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     
-    PlantaUrbanaVC *plantaUrbanaVC = [[PlantaUrbanaVC alloc]init];
-    plantaUrbanaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlantaUrbanaVC"];
+    //PlantaUrbanaVC *plantaUrbanaVC = [[PlantaUrbanaVC alloc]init];
+    PlantaUrbanaVC *plantaUrbanaVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PlantaUrbanaVC"];
     //plantaUrbanaVC.proyecto = self.proyecto;
     plantaUrbanaVC.projectDic = self.projectDic;
     [self.navigationController.view.layer addAnimation:[NavAnimations navAlphaAnimation] forKey:nil];

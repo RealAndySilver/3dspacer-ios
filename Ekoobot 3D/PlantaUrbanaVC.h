@@ -28,7 +28,7 @@
     float maximumZoomScale;
     float minimumZoomScale;
     CMAttitude *attitude;
-    CMMotionManager *_motionManager;
+    //CMMotionManager *_motionManager;
     NSTimer *timer;
     BrujulaView *brujula;
     float diferenciaRotacion;

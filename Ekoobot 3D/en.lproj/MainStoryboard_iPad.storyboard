@@ -362,10 +362,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CarouselBackground.png" id="TXp-Kx-vbB">
-                                <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Terms And Conditions" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="4Iz-Hb-iWd">
                                 <rect key="frame" x="123" y="107" width="294" height="56"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -381,7 +377,7 @@
                                 <rect key="frame" x="246" y="545" width="49" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Accept">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
@@ -391,7 +387,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </webView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.88207509566326525" green="0.88207509566326525" blue="0.88207509566326525" alpha="1" colorSpace="calibratedRGB"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
@@ -725,8 +721,8 @@
                                 <color key="textColor" red="0.20000000300000001" green="0.20000000300000001" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="recomendar.png" id="2nb-Id-S8f">
-                                <rect key="frame" x="755" y="28" width="58" height="58"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NewShareIcon.png" id="TBJ-Qn-tCr">
+                                <rect key="frame" x="755" y="28" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
@@ -1048,17 +1044,16 @@
         </scene>
     </scenes>
     <resources>
-        <image name="CarouselBackground.png" width="1024" height="768"/>
         <image name="ImagenProyectoDefecto.png" width="1024" height="768"/>
         <image name="NewLoginBox.png" width="497" height="108"/>
         <image name="NewLoginToProject.png" width="498" height="846"/>
+        <image name="NewShareIcon.png" width="76" height="76"/>
         <image name="bin.png" width="256" height="256"/>
         <image name="cancel-en.png" width="139" height="53"/>
         <image name="ekoomediaWterMark.png" width="278" height="63"/>
         <image name="fondo.jpeg" width="2048" height="2048"/>
         <image name="loginBtn.png" width="136" height="52"/>
         <image name="logo.png" width="628" height="574"/>
-        <image name="recomendar.png" width="100" height="100"/>
         <image name="send-en.png" width="139" height="53"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

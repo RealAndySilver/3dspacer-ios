@@ -203,8 +203,8 @@
     //cell.planoImageView.image = [plant plantImage];
     cell.planoImageView.image = self.plantImagesArray[indexPath.item];
     cell.showCompass = magnetometerIsAvailable;
-    //[cell removeAllPinsFromArray:self.plantsPinsArray[indexPath.item]];
-    //[cell setEspacios3DButtonsFromArray:self.plantsPinsArray[indexPath.item]];
+    [cell removeAllPinsFromArray:self.plantsPinsArray[indexPath.item]];
+    [cell setEspacios3DButtonsFromArray:self.plantsPinsArray[indexPath.item]];
     
     /*NSMutableArray *pinsArrayForPlant = [[NSMutableArray alloc] init];
     for (int i = 0; i < [self.spacesArray count]; i++) {
@@ -229,14 +229,9 @@
     ((PlanosCollectionViewCell *)cell).zoomScale = 1.0;
 }
 
--(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+/*-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSLog(@"Terminé de acelerarmeeeee");
     [self performSelector:@selector(showPinsForNewDisplayedCell) withObject:nil afterDelay:0.1];
-    /*if (currentCellIndexPath.item != self.previousCellIndexPath.item) {
-        //The user change to other cell
-        //[self.previousCell removeAllPinsFromArray:self.plantsPinsArray[self.previousCellIndexPath.item]];
-        [currentCell setEspacios3DButtonsFromArray:self.plantsPinsArray[currentCellIndexPath.item]];
-    }*/
 }
 
 -(void)showPinsForNewDisplayedCell {
@@ -252,6 +247,7 @@
         self.previousCell = (PlanosCollectionViewCell *)[[self.collectionView visibleCells] firstObject];
         self.previousCellIndexPath = [self.collectionView indexPathForCell:self.previousCell];
         [self.previousCell removeAllPinsFromArray:self.plantsPinsArray[self.previousCellIndexPath.item]];
+        NSLog(@"Removí los pines de la celda %d", self.previousCellIndexPath.item);
         //NSLog(@"****************** index path: %d", self.previousCellIndexPath.item);
     }
 }
@@ -262,17 +258,18 @@
         NSLog(@"Entraré al end descelerating");
     } else {
         NSLog(@"No entraré al descelerating");
-        [self performSelector:@selector(showPinsWhenDesceleratingIsNo) withObject:nil afterDelay:0.2];
+        [self performSelector:@selector(showPinsWhenDesceleratingIsNo) withObject:nil afterDelay:0.1];
     }
 }
 
 -(void)showPinsWhenDesceleratingIsNo {
+    NSLog(@"Mostraré los pins cuando no hubo desaceleracion");
     [self.previousCell setEspacios3DButtonsFromArray:self.plantsPinsArray[self.previousCellIndexPath.item]];
 }
 
 -(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
     NSLog(@"Entré al end scrolliiiinnnggg");
-}
+}*/
 
 #pragma mark - Custom Methods
 

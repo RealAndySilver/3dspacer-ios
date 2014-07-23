@@ -889,24 +889,6 @@
     }
 }
 
-/*-(void)clearCoreDataManagedDocument {
-    NSLog(@"********************** Limpiando el contextoooooooooooooooooooooooooo *******************");
-    for (NSManagedObject *mo in [self.databaseDocument.managedObjectContext registeredObjects]) {
-        [self.databaseDocument.managedObjectContext refreshObject:mo mergeChanges:NO];
-    }
-    
-    [NSTimer scheduledTimerWithTimeInterval:0.0
-                                     target:self
-                                   selector:@selector(resetContext)
-                                   userInfo:nil
-                                    repeats:NO];
-}
-
-- (void)resetContext
-{
-    [self.databaseDocument.managedObjectContext reset];
-}*/
-
 -(void)updateLabel:(NSNumber *)aNumber {
      [[NSNotificationCenter defaultCenter] postNotificationName:@"fileDownloaded" object:nil userInfo:@{@"Progress": aNumber}];
     self.progressLabel.text = [NSString stringWithFormat:@"%f", [aNumber floatValue]];

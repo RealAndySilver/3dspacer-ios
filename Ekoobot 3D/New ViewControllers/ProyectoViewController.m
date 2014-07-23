@@ -207,12 +207,6 @@
         enterButtonFrame = CGRectMake(screenFrame.size.width - 110.0, screenFrame.size.height - 110.0, 100.0, 100.0);
     }
     
-    //ProgressView
-    /*self.progressView=[[ProgressView alloc]initWithFrame:CGRectMake(0, 0, self.navigationController.view.frame.size.height, self.navigationController.view.frame.size.width)];
-    
-    [self.navigationController.view addSubview:self.progressView];
-    [self.view bringSubviewToFront:self.progressView];*/
-    
     //CollectionView
     UICollectionViewFlowLayout *collectionViewFlowLayout = [[UICollectionViewFlowLayout alloc] init];
     collectionViewFlowLayout.itemSize = screenFrame.size;
@@ -335,8 +329,6 @@
     ProyectoCollectionViewCell *cell = (ProyectoCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"CellIdentifier" forIndexPath:indexPath];
     cell.delegate = self;
     cell.imageView.image = self.renderImages[indexPath.item];
-    //Render *render = self.projectDic[@"renders"][indexPath.item];
-    //cell.imageView.image = [render renderImage];
     return cell;
 }
 

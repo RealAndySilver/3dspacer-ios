@@ -107,7 +107,6 @@
     }
     NSLog(@"authstring: %@", authString);
     
-    
     NSLog(@"token sin hash: %@", token);
     NSString *hashToken = [IAmCoder hash256:token];
     
@@ -118,9 +117,18 @@
     NSLog(@"TS70: %@", time);
     NSLog(@"token: %@", hashToken);
     NSLog(@"language: %@", langID);
+    NSString *version =[[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"];
+    NSLog(@"Version Actual del proyecto: %@", version);
+    NSString *currentDevice = [UIDevice currentDevice].model;
+    NSLog(@"Dispositivo: %@", currentDevice);
+    NSString *systemVersion = [UIDevice currentDevice].systemVersion;
+    NSLog(@"Version: %@", systemVersion);
+    NSString *userAgent = [NSString stringWithFormat:@"EKOOBOT3D/%@ (%@; iOS; %@)", version, currentDevice, systemVersion];
+    NSLog(@"User Agent string: %@", userAgent);
     
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
     [theRequest setValue:@"application/json" forHTTPHeaderField:@"accept"];
+    [theRequest setValue:userAgent forHTTPHeaderField:@"User-Agent"];
     [theRequest setValue:authString forHTTPHeaderField:@"auth"];
     [theRequest setValue:time forHTTPHeaderField:@"TS70"];
     [theRequest setValue:hashToken forHTTPHeaderField:@"token"];

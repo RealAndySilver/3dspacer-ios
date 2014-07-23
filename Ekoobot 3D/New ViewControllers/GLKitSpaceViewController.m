@@ -41,6 +41,9 @@
 @property (strong, nonatomic) NSTimer *zoomTimer;
 @end
 
+#define ROTATION_MULTIPLIER_PAD 0.0000266
+#define ROTATION_MULTIPLIER_PHONE 0.0000533
+
 @implementation GLKitSpaceViewController {
     GLfloat x, y, z;
     GLfloat rotXAxis, rotYAxis, rotZAxis;
@@ -246,16 +249,12 @@
     [self createGestureRecognizers];
 }
 
--(void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-}
-
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self landscapeLock];
 }
 
--(void) landscapeLock {
+-(void)landscapeLock {
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSUInteger orientation = [[UIApplication sharedApplication] statusBarOrientation];
     if (orientation == 3) {
@@ -314,7 +313,7 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         more3DScenesRect = CGRectMake(0.0, screenFrame.size.height - 30.0, screenFrame.size.width, 190.0);
         compassFrame = CGRectMake(screenFrame.size.width - 100.0, 70.0, 80.0, 80.0);
-        acabadosViewFrame = CGRectMake(-180.0, 80.0, 150.0, 400.0);
+        acabadosViewFrame = CGRectMake(-180.0, 80.0, 150.0, screenFrame.size.height - 80.0 - more3DScenesRect.size.height - 20.0);
     } else {
         more3DScenesRect = CGRectMake(screenFrame.size.width - 160.0, screenFrame.size.height - 30.0, 160.0, 190.0);
         compassFrame = CGRectMake(screenFrame.size.width - 70.0, 64.0, 50.0, 50.0);
@@ -514,6 +513,7 @@
                 fieldOfView = 35.0;
                 viewIsZooming = NO;
                 viewIsZoomed = YES;
+                [self setNewRotationFactorForZoomedView:YES];
             }
         
         } else {
@@ -522,6 +522,7 @@
                 fieldOfView = 75.0;
                 viewIsZooming = NO;
                 viewIsZoomed = NO;
+                [self setNewRotationFactorForZoomedView:NO];
             }
         }
     }
@@ -545,6 +546,22 @@
 }
 
 #pragma mark - Actions 
+
+-(void)setNewRotationFactorForZoomedView:(BOOL)theViewIsZoomed {
+    if (theViewIsZoomed) {
+        if (isPad) {
+            rotationFactor = 0.001;
+        } else {
+            rotationFactor = 0.002;
+        }
+    } else {
+        if (isPad) {
+            rotationFactor = 0.002;
+        } else {
+            rotationFactor = 0.004;
+        }
+    }
+}
 
 -(void)toggleComplementaryViews {
     static BOOL viewsAreVisible = NO;
@@ -581,7 +598,7 @@
         [self stopDeviceMotion];
         self.interactionTypeBarButton.title = NSLocalizedString(@"3D", nil);
         panningInteractionEnabled = YES;
-    } else {
+    } else {        
         magnetomerIsActive = YES;
         //[self.view removeGestureRecognizer:self.panGesture];
         [self startDeviceMotion];
@@ -615,12 +632,18 @@
     if (fieldOfView <= 35.0) fieldOfView = 35.0;
     else if (fieldOfView >= 75.0) fieldOfView = 75.0;
     senderGestureRecognizer.scale = 1.0;
+    
+    if (isPad) {
+        rotationFactor = fieldOfView * ROTATION_MULTIPLIER_PAD;
+    } else {
+        rotationFactor = fieldOfView * ROTATION_MULTIPLIER_PHONE;
+    }
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     if ([[event touchesForView:self.view] count] == 1) {
         
-        if (viewIsZoomed) {
+        /*if (viewIsZoomed) {
             if (isPad) {
                 rotationFactor = 0.001;
             } else {
@@ -632,7 +655,7 @@
             } else {
                 rotationFactor = 0.004;
             }
-        }
+        }*/
         
         if (panningInteractionEnabled) {
             NSLog(@"Empezé a tocar");
@@ -1037,10 +1060,10 @@
     return NO;
 }
 
-- (NSUInteger) application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
+/*- (NSUInteger) application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
 {
     return UIInterfaceOrientationMaskLandscapeLeft;
-}
+}*/
 
 /*- (NSUInteger)supportedInterfaceOrientations {
     return [[UIApplication sharedApplication] statusBarOrientation];

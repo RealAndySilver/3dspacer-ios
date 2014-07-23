@@ -203,6 +203,8 @@
     //cell.pisoImageView.image = [floor floorImage];
     cell.pisoImageView.image = self.floorsImagesArray[indexPath.item];
     cell.showCompass = magnetometerIsAvailable;
+    [cell removeAllPinsFromArray:self.floorsPinsArray[indexPath.item]];
+    [cell setPinsButtonsFromArray:self.floorsPinsArray[indexPath.item]];
     
     /*NSMutableArray *pinsArrayForFloor = [[NSMutableArray alloc] init];
     for (int i = 0; i < [self.productsArray count]; i++) {
@@ -218,15 +220,10 @@
     return cell;
 }
 
--(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+/*-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSLog(@"Terminé de acelerarmeeeee");
     //Get a reference to the current cell
     [self performSelector:@selector(showPinsForNewDisplayedCell) withObject:nil afterDelay:0.1];
-    /*if (currentCellIndexPath.item != self.previousCellIndexPath.item) {
-        //The user change to other cell
-        [self.previousCell removeAllPinsFromArray:self.floorsPinsArray[self.previousCellIndexPath.item]];
-        [currentCell setPinsButtonsFromArray:self.floorsPinsArray[currentCellIndexPath.item]];
-    }*/
 }
 
 -(void)showPinsForNewDisplayedCell {
@@ -257,7 +254,7 @@
 
 -(void)showPinsWhenDesceleratingIsNo {
     [self.previousCell setPinsButtonsFromArray:self.floorsPinsArray[self.previousCellIndexPath.item]];
-}
+}*/
 
 -(void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     ((PisoCollectionViewCell *)cell).zoomScale = 1.0;

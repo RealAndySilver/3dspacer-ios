@@ -8,6 +8,7 @@
 
 #import "PisoCollectionViewCell.h"
 #import "Product.h"
+#import "ShadowLabel.h"
 
 @interface PisoCollectionViewCell() <UIScrollViewDelegate>
 @property (strong, nonatomic) UIButton *brujulaButton;
@@ -33,8 +34,11 @@
 -(void)removeAllPinsFromArray:(NSArray *)pinsArray {
     for (int i = 0; i < 20; i++) {
         if ([self.contentView viewWithTag:i + 1]) {
+            [[self.pisoImageView viewWithTag:i + 1] removeFromSuperview];
+            [[self.pisoImageView viewWithTag:i + 20] removeFromSuperview];
+            
             //Remove the pin button and it's label
-            [UIView animateWithDuration:0.2
+            /*[UIView animateWithDuration:0.2
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveEaseOut
                              animations:^(){
@@ -43,7 +47,7 @@
                              } completion:^(BOOL finished){
                                  [[self.pisoImageView viewWithTag:i + 1] removeFromSuperview];
                                  [[self.pisoImageView viewWithTag:i + 20] removeFromSuperview];
-                             }];
+                             }];*/
         }
     }
 }
@@ -67,29 +71,30 @@
             pinButton.tag = i + 1;
             [pinButton setImage:[UIImage imageNamed:@"pin.png"] forState:UIControlStateNormal];
             [pinButton addTarget:self action:@selector(pinButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-            pinButton.alpha = 0.0;
+            pinButton.alpha = 1.0;
             [self.pisoImageView addSubview:pinButton];
             
             //Button Label
-            UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(pinButton.frame.origin.x + pinButton.frame.size.width, pinButton.frame.origin.y, 200.0, 30.0)];
+            ShadowLabel *nameLabel = [[ShadowLabel alloc] initWithFrame:CGRectMake(pinButton.frame.origin.x + pinButton.frame.size.width, pinButton.frame.origin.y, 200.0, 30.0)];
             nameLabel.text = product.name;
             nameLabel.tag = i + 20;
             nameLabel.textColor = [UIColor whiteColor];
             nameLabel.font = [UIFont boldSystemFontOfSize:fontSize];
-            nameLabel.layer.shadowColor = [UIColor blackColor].CGColor;
-            nameLabel.layer.shadowOffset = CGSizeMake(1.0, 1.0);
-            nameLabel.layer.shadowOpacity = 1.0;
-            nameLabel.layer.shadowRadius = 1.0;
-            nameLabel.alpha = 0.0;
+            [nameLabel drawTextInRect:nameLabel.frame];
+            //nameLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+            //nameLabel.layer.shadowOffset = CGSizeMake(1.0, 1.0);
+            //nameLabel.layer.shadowOpacity = 1.0;
+            //nameLabel.layer.shadowRadius = 1.0;
+            nameLabel.alpha = 1.0;
             [self.pisoImageView addSubview:nameLabel];
             
-            [UIView animateWithDuration:0.2
+            /*[UIView animateWithDuration:0.2
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveEaseOut
                              animations:^(){
                                  pinButton.alpha = 1.0;
                                  nameLabel.alpha = 1.0;
-                             } completion:^(BOOL finished){}];
+                             } completion:^(BOOL finished){}];*/
         }
     }
 }

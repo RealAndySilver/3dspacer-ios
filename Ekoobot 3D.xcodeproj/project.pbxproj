@@ -149,6 +149,7 @@
 		8B9A41A4194769E00001B53B /* 4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8B9A419E194769E00001B53B /* 4.jpg */; };
 		8B9A41A5194769E00001B53B /* 5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8B9A419F194769E00001B53B /* 5.jpg */; };
 		8B9A41A6194769E00001B53B /* 6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8B9A41A0194769E00001B53B /* 6.jpg */; };
+		8B9C4B5219801C8D0043DB35 /* ShadowLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C4B5119801C8D0043DB35 /* ShadowLabel.m */; };
 		8B9C828119227754008B3055 /* AcabadosView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C828019227754008B3055 /* AcabadosView.m */; };
 		8B9C828419227DC0008B3055 /* AcabadosCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C828319227DC0008B3055 /* AcabadosCollectionViewCell.m */; };
 		8B9C828619228288008B3055 /* Wood.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8B9C828519228288008B3055 /* Wood.jpg */; };
@@ -443,6 +444,8 @@
 		8B9A419E194769E00001B53B /* 4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 4.jpg; sourceTree = "<group>"; };
 		8B9A419F194769E00001B53B /* 5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 5.jpg; sourceTree = "<group>"; };
 		8B9A41A0194769E00001B53B /* 6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 6.jpg; sourceTree = "<group>"; };
+		8B9C4B5019801C8D0043DB35 /* ShadowLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShadowLabel.h; path = "New ViewControllers/Custom Views/ShadowLabel.h"; sourceTree = "<group>"; };
+		8B9C4B5119801C8D0043DB35 /* ShadowLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShadowLabel.m; path = "New ViewControllers/Custom Views/ShadowLabel.m"; sourceTree = "<group>"; };
 		8B9C827F19227754008B3055 /* AcabadosView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AcabadosView.h; path = "New ViewControllers/Views/AcabadosView.h"; sourceTree = "<group>"; };
 		8B9C828019227754008B3055 /* AcabadosView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AcabadosView.m; path = "New ViewControllers/Views/AcabadosView.m"; sourceTree = "<group>"; };
 		8B9C828219227DC0008B3055 /* AcabadosCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AcabadosCollectionViewCell.h; path = "New ViewControllers/Custom Cells/AcabadosCollectionViewCell.h"; sourceTree = "<group>"; };
@@ -804,31 +807,7 @@
 			isa = PBXGroup;
 			children = (
 				8B5C790F1917FB21003941AD /* New ViewControllers */,
-				37E98A51153E0D71001B9BFE /* RootViewController.h */,
-				37E98A52153E0D71001B9BFE /* RootViewController.m */,
-				37E98A58153E0D71001B9BFE /* ListadoDeProyectosVC.h */,
-				37E98A59153E0D71001B9BFE /* ListadoDeProyectosVC.m */,
-				7552410F1677E2DB004BC471 /* ExtraViewControllers */,
-				37F553F41540ED8200BB6A90 /* PlantaUrbanaVC.h */,
-				37F553F51540ED8200BB6A90 /* PlantaUrbanaVC.m */,
-				3766D1131540F33B008B9437 /* TiposDePisosVC.h */,
-				3766D1141540F33B008B9437 /* TiposDePisosVC.m */,
-				3749926C1591464200686C44 /* TiposDePlantasVC.h */,
-				3749926D1591464200686C44 /* TiposDePlantasVC.m */,
-				3791F1FC159395570027D122 /* Espacio3DVC.h */,
-				3791F1FD159395570027D122 /* Espacio3DVC.m */,
-				75E69F72160404F3005907F6 /* EraseViewController.h */,
-				75E69F73160404F3005907F6 /* EraseViewController.m */,
-				751045541627726A00BA12C6 /* VideoViewController.h */,
-				751045551627726B00BA12C6 /* VideoViewController.m */,
-				75550745162F293A00479537 /* SendInfoViewController.h */,
-				75550746162F293A00479537 /* SendInfoViewController.m */,
-				7555074E162F74B700479537 /* TermsViewController.h */,
-				7555074F162F74B700479537 /* TermsViewController.m */,
-				751D398C17AF2382008CD6E9 /* SlideshowViewController.h */,
-				751D398D17AF2382008CD6E9 /* SlideshowViewController.m */,
-				75AAB5F917BC488600C26D70 /* SlideControlViewController.h */,
-				75AAB5FA17BC488600C26D70 /* SlideControlViewController.m */,
+				8B4C0CF6197EFCFC00C2E04E /* Old ViewControllers */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -983,6 +962,38 @@
 				8B2BAFA5194A132C00732D72 /* Video+AddOns.m */,
 			);
 			name = Video;
+			sourceTree = "<group>";
+		};
+		8B4C0CF6197EFCFC00C2E04E /* Old ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				37E98A51153E0D71001B9BFE /* RootViewController.h */,
+				37E98A52153E0D71001B9BFE /* RootViewController.m */,
+				37E98A58153E0D71001B9BFE /* ListadoDeProyectosVC.h */,
+				37E98A59153E0D71001B9BFE /* ListadoDeProyectosVC.m */,
+				7552410F1677E2DB004BC471 /* ExtraViewControllers */,
+				37F553F41540ED8200BB6A90 /* PlantaUrbanaVC.h */,
+				37F553F51540ED8200BB6A90 /* PlantaUrbanaVC.m */,
+				3766D1131540F33B008B9437 /* TiposDePisosVC.h */,
+				3766D1141540F33B008B9437 /* TiposDePisosVC.m */,
+				3749926C1591464200686C44 /* TiposDePlantasVC.h */,
+				3749926D1591464200686C44 /* TiposDePlantasVC.m */,
+				3791F1FC159395570027D122 /* Espacio3DVC.h */,
+				3791F1FD159395570027D122 /* Espacio3DVC.m */,
+				75E69F72160404F3005907F6 /* EraseViewController.h */,
+				75E69F73160404F3005907F6 /* EraseViewController.m */,
+				751045541627726A00BA12C6 /* VideoViewController.h */,
+				751045551627726B00BA12C6 /* VideoViewController.m */,
+				75550745162F293A00479537 /* SendInfoViewController.h */,
+				75550746162F293A00479537 /* SendInfoViewController.m */,
+				7555074E162F74B700479537 /* TermsViewController.h */,
+				7555074F162F74B700479537 /* TermsViewController.m */,
+				751D398C17AF2382008CD6E9 /* SlideshowViewController.h */,
+				751D398D17AF2382008CD6E9 /* SlideshowViewController.m */,
+				75AAB5F917BC488600C26D70 /* SlideControlViewController.h */,
+				75AAB5FA17BC488600C26D70 /* SlideControlViewController.m */,
+			);
+			name = "Old ViewControllers";
 			sourceTree = "<group>";
 		};
 		8B5C790F1917FB21003941AD /* New ViewControllers */ = {
@@ -1264,6 +1275,8 @@
 				A0A0B3C61935250100BB48E0 /* DownloadView.m */,
 				A0D1A5991938D3F5004285A1 /* InfoView.h */,
 				A0D1A59A1938D3F5004285A1 /* InfoView.m */,
+				8B9C4B5019801C8D0043DB35 /* ShadowLabel.h */,
+				8B9C4B5119801C8D0043DB35 /* ShadowLabel.m */,
 			);
 			name = CustomViews;
 			sourceTree = "<group>";
@@ -1625,6 +1638,7 @@
 				A09E57021930001D0099B458 /* TermsAndConditionsViewController.m in Sources */,
 				7589F49E167EBAFF007CA511 /* Analytic.m in Sources */,
 				75A1D2F916BB6C050013B48A /* ProyectoLite.m in Sources */,
+				8B9C4B5219801C8D0043DB35 /* ShadowLabel.m in Sources */,
 				751D398E17AF2382008CD6E9 /* SlideshowViewController.m in Sources */,
 				751D399217AF26FD008CD6E9 /* KASlideShow.m in Sources */,
 				A0A0B3C71935250100BB48E0 /* DownloadView.m in Sources */,

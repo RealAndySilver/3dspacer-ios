@@ -268,13 +268,14 @@
     //Generate date string
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
-    [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
     NSDate *date = [NSDate date];
     NSString *formattedDateString = [dateFormatter stringFromDate:date];
-    
-    NSDictionary *userDic = @{@"id": [UserInfo sharedInstance].userName};
+    NSString *newDateString = [formattedDateString stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
+    NSLog(@"******************* Formatted string: %@", newDateString);
+    NSDictionary *userDic = @{@"username": [UserInfo sharedInstance].userName};
     NSDictionary *productIDDic = @{@"id": floor.identifier};
-    self.productAnalyticsDic = @{@"user": userDic, @"product" : productIDDic, @"date" : formattedDateString};
+    self.productAnalyticsDic = @{@"user": userDic, @"product" : productIDDic, @"date" : newDateString};
     
     FileSaver *fileSaver = [[FileSaver alloc] init];
     if ([fileSaver getDictionary:@"ProductAnalyticsDic"][@"ProductAnalyticsArray"]) {

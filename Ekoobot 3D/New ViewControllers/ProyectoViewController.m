@@ -666,14 +666,15 @@
     //Generate date string
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
-    [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
     NSDate *date = [NSDate date];
     NSString *formattedDateString = [dateFormatter stringFromDate:date];
+    NSString *newDateString = [formattedDateString stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
     
     Project *project = self.projectDic[@"project"];
-    NSDictionary *userDic = @{@"id": [UserInfo sharedInstance].userName};
+    NSDictionary *userDic = @{@"username": [UserInfo sharedInstance].userName};
     NSDictionary *projectIDDic = @{@"id": project.identifier};
-    self.projectAnalyticsDic = @{@"user": userDic, @"project" : projectIDDic, @"date" : formattedDateString};
+    self.projectAnalyticsDic = @{@"user": userDic, @"project" : projectIDDic, @"date" : newDateString};
     
     FileSaver *fileSaver = [[FileSaver alloc] init];
     if ([fileSaver getDictionary:@"ProjectAnalyticsDic"][@"ProjectAnalyticsArray"]) {

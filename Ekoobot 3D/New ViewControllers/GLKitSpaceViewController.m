@@ -61,6 +61,8 @@
     BOOL viewIsZoomed;
     CGFloat northAdjustmentValue;
     BOOL panningInteractionEnabled;
+    BOOL touchWillEndAfterPanning;
+    BOOL touchDown;
     BOOL isPad;
     CGPoint panPrevious;
     CGPoint inertialPoint1;
@@ -401,11 +403,11 @@
     [self.view addGestureRecognizer:doubleTapGesture];
     
     //Add a tap gesture to show the navigation bar and the lower view
-    UITapGestureRecognizer *showViewsTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleComplementaryViews)];
+    /*UITapGestureRecognizer *showViewsTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleComplementaryViews)];
     showViewsTapGesture.cancelsTouchesInView = NO;
     showViewsTapGesture.delegate = self;
     [showViewsTapGesture requireGestureRecognizerToFail:doubleTapGesture];
-    [self.view addGestureRecognizer:showViewsTapGesture];
+    [self.view addGestureRecognizer:showViewsTapGesture];*/
     
     //Add pinch gesture recognizer
     UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinch:)];
@@ -641,34 +643,25 @@
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    if ([[event touchesForView:self.view] count] == 1) {
+    touchWillEndAfterPanning = NO;
+    
+    touchDown = YES;
+    
+    if (panningInteractionEnabled) {
+        NSLog(@"Empezé a tocar");
+        [self.inertiaTimer invalidate];
+        self.inertiaTimer = nil;
         
-        /*if (viewIsZoomed) {
-            if (isPad) {
-                rotationFactor = 0.001;
-            } else {
-                rotationFactor = 0.002;
-            }
-        } else {
-            if (isPad) {
-                rotationFactor = 0.002;
-            } else {
-                rotationFactor = 0.004;
-            }
-        }*/
-        
-        if (panningInteractionEnabled) {
-            NSLog(@"Empezé a tocar");
-            [self.inertiaTimer invalidate];
-            self.inertiaTimer = nil;
-            
-            UITouch *touch = [touches anyObject];
-            panPrevious = [touch locationInView:self.view];
-        }
+        UITouch *touch = [touches anyObject];
+        panPrevious = [touch locationInView:self.view];
+        touchWillEndAfterPanning = NO;
     }
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    touchDown = NO;
+    touchWillEndAfterPanning = NO;
+    
     if ([[event touchesForView:self.view] count] == 1) {
         if (panningInteractionEnabled) {
             NSLog(@"Moviendoooo");
@@ -686,21 +679,27 @@
             [self rotateCompassWithRadians:-rotZAxis + northAdjustmentValue];
             inertialPoint1 = panPrevious;
             panPrevious = panLocation;
+            touchWillEndAfterPanning = YES;
         }
     }
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    if ([[event touchesForView:self.view] count] == 1) {
-        if (panningInteractionEnabled) {
-            UITouch *touch = [touches anyObject];
-            inertialPoint2 = [touch locationInView:self.view];
-            NSLog(@"Point 1: %@", NSStringFromCGPoint(inertialPoint1));
-            NSLog(@"Point 2: %@", NSStringFromCGPoint(inertialPoint2));
-            movementVector = CGPointMake(inertialPoint2.x - inertialPoint1.x, inertialPoint2.y - inertialPoint1.y);
-            NSLog(@"Vector: %@", NSStringFromCGPoint(movementVector));
-            [self stopSceneRotationWithInertia];
-        }
+    NSLog(@"Terminé de tocaaar");
+    
+    if (touchDown) {
+        [self toggleComplementaryViews];
+        return;
+    }
+    
+    if (panningInteractionEnabled && touchWillEndAfterPanning) {
+        UITouch *touch = [touches anyObject];
+        inertialPoint2 = [touch locationInView:self.view];
+        NSLog(@"Point 1: %@", NSStringFromCGPoint(inertialPoint1));
+        NSLog(@"Point 2: %@", NSStringFromCGPoint(inertialPoint2));
+        movementVector = CGPointMake(inertialPoint2.x - inertialPoint1.x, inertialPoint2.y - inertialPoint1.y);
+        NSLog(@"Vector: %@", NSStringFromCGPoint(movementVector));
+        [self stopSceneRotationWithInertia];
     }
 }
 
@@ -756,11 +755,16 @@
 }*/
 
 -(void)stopSceneRotationWithInertia {
+    [self.inertiaTimer invalidate];
+    self.inertiaTimer = nil;
     self.inertiaTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 target:self selector:@selector(calculateSceneRotationValues) userInfo:nil repeats:YES];
 }
 
 -(void)calculateSceneRotationValues {
     NSLog(@"calculando valores de rotacion %@", NSStringFromCGPoint(movementVector));
+    movementVector.x = movementVector.x/1.2;
+    movementVector.y = movementVector.y/1.2;
+    
     rotXAxis -= movementVector.y*rotationFactor;
     rotZAxis -= movementVector.x*rotationFactor;
     
@@ -770,8 +774,7 @@
         rotXAxis = 0;
     }
     
-    movementVector.x = movementVector.x/1.2;
-    movementVector.y = movementVector.y/1.2;
+    
     
     if (fabs(movementVector.x) < 0.1 && fabs(movementVector.y) < 0.1) {
         [self.inertiaTimer invalidate];

@@ -16,6 +16,7 @@
 #import "NavController.h"
 #import "NSArray+NullReplacement.h"
 #import "HomeScreenViewController.h"
+#import "AppDelegate.h"
 
 @interface LoginViewController () <UITextFieldDelegate, ServerCommunicatorDelegate>
 @property (weak, nonatomic) IBOutlet UIView *projectContainerVIew;
@@ -43,6 +44,7 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    //if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) [self unlockAllOrientations];
     CGRect screen = [UIScreen mainScreen].bounds;
     screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
     NSLog(@"screen: %@", NSStringFromCGRect(screenBounds));
@@ -93,6 +95,11 @@
     [self.enterButton addTarget:self action:@selector(login) forControlEvents:UIControlEventTouchUpInside];
 }
 
+/*-(void)unlockAllOrientations {
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.screenIsAllOrientations = YES;
+}*/
+
 -(void)setupGestureRecognizers {
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
     [self.view addGestureRecognizer:tapGesture];
@@ -102,7 +109,24 @@
     [super viewWillLayoutSubviews];
     CGRect bounds = self.view.bounds;
     NSLog(@"Bounds: %@", NSStringFromCGRect(bounds));
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationLandscapeLeft || [[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationLandscapeRight) {
+            NSLog(@"Ladscapeeeeeee");
+            
+        } else {
+            NSLog(@"Portraiiiiit");
+        }
+        self.projectContainerVIew.frame = CGRectMake(bounds.size.width/2.0 - 130.0, bounds.size.height/2.0 - 214.0, 260.0, 428.0);
+        self.logoImageView.frame = CGRectMake(bounds.size.width - 100, 30.0, 72.0, 65.0);
+        self.userInfoContainerView.frame = CGRectMake(bounds.size.width/2.0 - 160.0, bounds.size.height - 140.0, 320.0, 78.0);
+        self.forgotPasswordButton.frame = CGRectMake(self.userInfoContainerView.frame.origin.x, self.userInfoContainerView.frame.origin.y + self.userInfoContainerView.frame.size.height, 155.0, 30.0);
+        self.enterButton.frame = CGRectMake(self.userInfoContainerView.frame.origin.x + self.userInfoContainerView.frame.size.width - 53.0, self.userInfoContainerView.frame.origin.y + self.userInfoContainerView.frame.size.height, 53.0, 30.0);
+        self.emailContainerView.frame = CGRectMake(bounds.size.width/2.0 - 138.0, bounds.size.height - 120.0, 276.0, 44.0);
+        self.cancelButton.frame = CGRectMake(self.emailContainerView.frame.origin.x, self.emailContainerView.frame.origin.y + self.emailContainerView.frame.size.height, 70.0, 30.0);
+        self.sendButton.frame = CGRectMake(self.emailContainerView.frame.origin.x + self.emailContainerView.frame.size.width - 60.0, self.emailContainerView.frame.origin.y + self.emailContainerView.frame.size.height, 60.0, 30.0);
+    }
+    
+    else {
         if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationLandscapeLeft || [[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationLandscapeRight) {
             NSLog(@"Landscapeeeee");
             self.userInfoContainerView.frame = CGRectMake(bounds.size.width/2.0 - 320.0/2.0, 40.0, 320.0, 84.0);
@@ -375,13 +399,17 @@
     [self.navigationController.view.layer addAnimation:transition forKey:nil];
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        appDelegate.screenIsAllOrientations = YES;
+        
         MainCarouselViewController *mainCarousel = [self.storyboard instantiateViewControllerWithIdentifier:@"MainCarousel"];
         mainCarousel.userProjectsArray = projectsArray;
         NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"Nav"];
+        [navController setOrientationType:1];
         [navController setViewControllers:@[mainCarousel] animated:NO];
         navController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [self presentViewController:navController animated:YES completion:nil];
-        
+
         /*MainCarouselViewController *mainCarousel = [self.storyboard instantiateViewControllerWithIdentifier:@"MainCarousel"];
         mainCarousel.userProjectsArray = projectsArray;
         [self.navigationController pushViewController:mainCarousel animated:NO];*/
@@ -416,13 +444,21 @@
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseOut
                          animations:^(){
-                             self.userInfoContainerView.transform = CGAffineTransformMakeTranslation(0.0, yTranslation);
+                             self.userInfoContainerView.center = CGPointMake(self.view.bounds.size.width/2.0, self.view.bounds.size.height/2.0 - 100.0);
+                             self.forgotPasswordButton.center = CGPointMake(self.forgotPasswordButton.center.x, self.userInfoContainerView.frame.origin.y + self.userInfoContainerView.frame.size.height + 20.0);
+                             self.enterButton.center = CGPointMake(self.enterButton.center.x, self.userInfoContainerView.frame.origin.y + self.userInfoContainerView.frame.size.height + 20.0);
+                             self.projectContainerVIew.alpha = 0.0;
+                             
+                             self.emailContainerView.center = CGPointMake(self.emailContainerView.center.x, self.view.bounds.size.height/2.0 - 100.0);
+                             self.cancelButton.center = CGPointMake(self.cancelButton.center.x, self.emailContainerView.frame.origin.y + self.emailContainerView.frame.size.height + 20.0);
+                             self.sendButton.center = CGPointMake(self.sendButton.center.x, self.emailContainerView.frame.origin.y + self.emailContainerView.frame.size.height + 20.0);
+                             /*self.userInfoContainerView.transform = CGAffineTransformMakeTranslation(0.0, yTranslation);
                              self.forgotPasswordButton.transform = CGAffineTransformMakeTranslation(0.0, yTranslation);
                              self.enterButton.transform = CGAffineTransformMakeTranslation(0.0, yTranslation);
                              self.emailContainerView.transform = CGAffineTransformMakeTranslation(0.0, yTranslation);
                              self.cancelButton.transform = CGAffineTransformMakeTranslation(0.0, yTranslation);
                              self.sendButton.transform = CGAffineTransformMakeTranslation(0.0, yTranslation);
-                             self.projectContainerVIew.alpha = 0.0;
+                             self.projectContainerVIew.alpha = 0.0;*/
                          } completion:^(BOOL finished){}];
 
     }
@@ -434,12 +470,13 @@
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseOut
                          animations:^(){
-                             self.userInfoContainerView.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
-                             self.forgotPasswordButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
-                             self.enterButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
-                             self.emailContainerView.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
-                             self.sendButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
-                             self.cancelButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+                             self.userInfoContainerView.center = CGPointMake(self.userInfoContainerView.center.x, self.view.bounds.size.height - 140.0 + self.userInfoContainerView.frame.size.height/2.0);
+                             self.forgotPasswordButton.center = CGPointMake(self.forgotPasswordButton.center.x, self.userInfoContainerView.frame.origin.y + self.userInfoContainerView.frame.size.height + 20.0);
+                             self.enterButton.center = CGPointMake(self.enterButton.center.x, self.userInfoContainerView.frame.origin.y + self.userInfoContainerView.frame.size.height + 20.0);
+                             
+                             self.emailContainerView.center = CGPointMake(self.emailContainerView.center.x, self.view.bounds.size.height - 120.0 + self.emailContainerView.frame.size.height/2.0);
+                             self.cancelButton.center = CGPointMake(self.cancelButton.center.x, self.emailContainerView.frame.origin.y + self.emailContainerView.frame.size.height + 20.0);
+                             self.sendButton.center = CGPointMake(self.sendButton.center.x, self.emailContainerView.frame.origin.y + self.emailContainerView.frame.size.height + 20.0);
                              self.projectContainerVIew.alpha = 1.0;
                          } completion:^(BOOL finished){}];
     }
@@ -465,11 +502,7 @@
 }
 
 -(NSUInteger)supportedInterfaceOrientations {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        return UIInterfaceOrientationMaskLandscape;
-    } else {
-        return UIInterfaceOrientationMaskAll;
-    }
+    return UIInterfaceOrientationMaskAll;
 }
 
 @end

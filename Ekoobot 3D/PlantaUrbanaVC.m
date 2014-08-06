@@ -68,8 +68,9 @@
     self.automaticallyAdjustsScrollViewInsets=NO;
 
     self.navigationItem.title = NSLocalizedString(@"PlantaUrbana", nil);
-    maximumZoomScale=2.0;
-    minimumZoomScale=0.3;
+    Urbanization *urbanization = [self.projectDic[@"urbanizations"] firstObject];
+    maximumZoomScale = [urbanization.zoomMax floatValue];
+    minimumZoomScale = [urbanization.zoomMin floatValue];
     [spinner startAnimating];
     [self loadScrollViewWithMap];
     

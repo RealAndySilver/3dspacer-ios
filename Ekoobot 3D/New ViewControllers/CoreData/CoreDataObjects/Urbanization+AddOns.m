@@ -37,6 +37,8 @@
         urbanization.identifier = urbanizationID;
         urbanization.imageURL = dictionary[@"image"];
         urbanization.miniURL = dictionary[@"mini"];
+        urbanization.zoomMin = dictionary[@"zoom_min"];
+        urbanization.zoomMax = dictionary[@"zoom_max"];
         
         if ([dictionary[@"image_width"] isKindOfClass:[NSString class]]) {
             if ([dictionary[@"image_width"] isEqualToString:@""]) {
@@ -69,6 +71,9 @@
         urbanization.identifier = urbanizationID;
         urbanization.imageURL = dictionary[@"image"];
         urbanization.miniURL = dictionary[@"mini"];
+        urbanization.zoomMin = dictionary[@"zoom_min"];
+        urbanization.zoomMax = dictionary[@"zoom_max"];
+        
         if ([dictionary[@"image_width"] isKindOfClass:[NSString class]]) {
             if ([dictionary[@"image_width"] isEqualToString:@""]) {
                 urbanization.imageWidth = @(0);

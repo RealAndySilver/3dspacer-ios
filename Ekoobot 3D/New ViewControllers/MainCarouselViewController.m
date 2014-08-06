@@ -46,6 +46,7 @@
 @property (strong, nonatomic) UIButton *messageButton;
 @property (strong, nonatomic) UIButton *deleteButton;
 @property (strong, nonatomic) UIButton *logoutButton;
+@property (strong, nonatomic) UIImageView *backgroundImageView;
 @property (strong, nonatomic) UIManagedDocument *databaseDocument;
 @property (strong, nonatomic) NSURL *databaseDocumentURL;
 
@@ -172,7 +173,6 @@
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     NSLog(@"************************ Desapareceréeeeeeeee ************************");
-    //self.databaseDocument = nil;
 }
 
 -(void)setupUI {
@@ -181,9 +181,9 @@
     CGRect screenRect = CGRectMake(0.0, 0.0, 1024.0, 768.0);
     
     //Background ImageView
-    UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 1024.0, 768.0)];
-    backgroundImageView.image = [UIImage imageNamed:@"NewBackground.jpg"];
-    [self.view addSubview:backgroundImageView];
+    self.backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 1024.0, 768.0)];
+    self.backgroundImageView.image = [UIImage imageNamed:@"NewBackground.jpg"];
+    [self.view addSubview:self.backgroundImageView];
     
     //Setup Carousel
     self.carousel = [[iCarousel alloc] init];
@@ -238,8 +238,15 @@
 -(void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     self.carousel.frame = CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height);
-    self.projectNameLabel.frame = CGRectMake(self.view.bounds.size.width/2.0 - 200.0, 65.0, 400.0, 30.0);
+    self.projectNameLabel.frame = CGRectMake(self.view.bounds.size.width/2.0 - 200.0, self.view.bounds.size.height/11.81, 400.0, 30.0);
     self.pageControl.frame = CGRectMake(self.view.bounds.size.width/2.0 - 150.0, self.view.bounds.size.height - 60.0, 300.0, 30.0);
+    self.backgroundImageView.frame = CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height);
+    self.messageButton.frame = CGRectMake(self.view.bounds.size.width/2.0 - 15.0 - 40.0 - 30.0 - 40.0, self.view.bounds.size.height - 110.0, 35.0, 35.0);
+    self.slideShowButton.frame = CGRectMake(self.view.bounds.size.width/2.0 - 15.0 - 40.0, self.view.bounds.size.height - 110.0, 35.0, 35.0);
+    self.logoutButton.frame = CGRectMake(self.view.bounds.size.width/2.0 - 15.0 + 40.0 + 30.0 + 40.0, self.view.bounds.size.height - 110.0, 35.0, 35.0);
+    self.deleteButton.frame = CGRectMake(self.view.bounds.size.width/2.0 - 15.0 + 40.0, self.view.bounds.size.height - 110.0, 35.0, 35.0);
+    self.opacityView.frame = self.view.bounds;
+    self.downloadView.frame = CGRectMake(self.view.bounds.size.width/2.0 - 350.0/2.0, self.view.bounds.size.height/2.0 - 250.0/2.0, 350.0, 250.0);
 }
 
 #pragma mark - Custom methods 
@@ -261,7 +268,11 @@
 }
 
 -(void)startSlideshowProcess {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    getProjectFromTheDatabase = YES;
+    fetchOnlyRenders = YES;
+    [self startSavingProcessInCoreData];
+    
+    /*[MBProgressHUD showHUDAddedTo:self.view animated:YES];
   
     BOOL userCanPassToSlideshowDirectly = [self userHasDownloadProjectAtIndex:self.carousel.currentItemIndex];
     if (userCanPassToSlideshowDirectly) {
@@ -270,7 +281,7 @@
         [self startSavingProcessInCoreData];
     } else {
         [self getRendersFromServer];
-    }
+    }*/
 }
 
 -(void)goToSlideshow {
@@ -448,7 +459,7 @@
                 [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Error en el servidor. Por favor intenta de nuevo en un momento." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
                 
             } else {
-                NSLog(@"Respuesta del getProjectByID: %@", dictionary);
+                //NSLog(@"Respuesta del getProjectByID: %@", dictionary);
                 if (!downloadEntireProject) {
                     //Download only the renders for the slideshow
                     NSArray *arrayWithNulls = dictionary[@"renders"];
@@ -476,7 +487,7 @@
         }
     } else if ([methodName isEqualToString:@"getProjectsByUser"]) {
         if (dictionary) {
-            NSLog(@"Llegó correctamente la respuesta del getProjectsByUser: %@", dictionary);
+            //NSLog(@"Llegó correctamente la respuesta del getProjectsByUser: %@", dictionary);
             self.currentUserName = dictionary[@"user"][@"username"];
             NSLog(@"*** current user: %@", self.currentUserName);
             self.referenceProjectsArray = [dictionary[@"projects"] arrayByReplacingNullsWithBlanks];
@@ -525,7 +536,8 @@
     FileSaver *fileSaver = [[FileSaver alloc] init];
     if ([fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"]) {
         NSMutableArray *savedProjectIDs = [fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"];
-        if ([savedProjectIDs containsObject:project.identifier]) {
+        NSArray *outdatedProjectIDs = [fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"];
+        if ([savedProjectIDs containsObject:project.identifier] || [outdatedProjectIDs containsObject:project.identifier]) {
             NSLog(@"El proyecto con id %@ esta descargado", project.identifier);
             
             //Check if the project is updated
@@ -555,12 +567,14 @@
                     //The dic with the outdated projects ids exist
                     NSMutableArray *outdatedIDsArray = [NSMutableArray arrayWithArray:[fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"]];
                     if (![outdatedIDsArray containsObject:project.identifier]) {
+                        NSLog(@"Guardé el proyecto %d en el listado existente de desactualizados", [project.identifier intValue]);
                         [outdatedIDsArray addObject:project.identifier];
                     }
                     [fileSaver setDictionary:@{@"OutdatedProjectIDsarray": outdatedIDsArray} withName:@"OutdatedProjectIDsDic"];
                     
                 } else {
                     //The dic doenst exist, so create a new one
+                    NSLog(@"Guardé el proyecto %d en el listado de desactualizados por primera vez", [project.identifier intValue]);
                     NSMutableArray *outdatedIDsArray = [[NSMutableArray alloc] init];
                     [outdatedIDsArray addObject:project.identifier];
                     [fileSaver setDictionary:@{@"OutdatedProjectIDsarray": outdatedIDsArray} withName:@"OutdatedProjectIDsDic"];
@@ -568,7 +582,6 @@
                 
                 [self carouselDidEndScrollingAnimation:self.carousel];
                 [self startUpdatingProjectProcessInCoreDataUsingProjectDic:referenceProjectDic];
-                
             }
             
         } else {
@@ -1220,6 +1233,10 @@
     
     ProyectoViewController *proyectoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Proyecto"];
     proyectoVC.projectDic = dictionary;
+    
+    NavController *navController = (NavController *)self.navigationController;
+    [navController setOrientationType:0];
+    [navController forceLandscapeMode];
     [self.navigationController pushViewController:proyectoVC animated:YES];
 }
 
@@ -1273,8 +1290,26 @@
         
     }
     else{
-        
+        NavController *navController = (NavController *)self.navigationController;
+        [navController setOrientationType:0];
+        [navController forceLandscapeMode];
         [self.navigationController pushViewController:ssVC animated:YES];
+    }
+}
+
+-(BOOL)isProjectOutdatedAtIndex:(NSUInteger)index {
+    Project *project = self.userProjectsArray[index];
+    
+    FileSaver *fileSaver = [[FileSaver alloc] init];
+    if ([fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"]) {
+        NSArray *outdatedProjectsIDs = [fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"];
+        if ([outdatedProjectsIDs containsObject:project.identifier]) {
+            return YES;
+        } else {
+            return NO;
+        }
+    } else {
+        return NO;
     }
 }
 
@@ -1297,6 +1332,7 @@
             if ([fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"]) {
                 NSArray *outdatedProjectIDs = [fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"];
                 if ([outdatedProjectIDs containsObject:project.identifier]) {
+                    NSLog(@"El proyecto está dentro de los OutdateProjectIds");
                     return YES;
                 }
                 /*for (int i = 0; i < [outdatedProjectIDs count]; i++) {
@@ -1461,29 +1497,52 @@
     projectToDownloadIndex = self.carousel.currentItemIndex;
     
     BOOL projectIsDownloaded = [self userHasDownloadProjectAtIndex:carousel.currentItemIndex];
+    BOOL projectIsOutdated = [self isProjectOutdatedAtIndex:carousel.currentItemIndex];
     NSLog(@"%hhd", projectIsDownloaded);
     if (projectIsDownloaded) {
+        NSLog(@"El proyecto está descargado sin actualizaciones");
+        //The project is download and doesn't have updated
         [UIView animateWithDuration:0.3
                               delay:0.0
                             options:UIViewAnimationOptionCurveLinear
                          animations:^(){
                              self.deleteButton.alpha = 1.0;
                              self.slideShowButton.alpha = 1.0;
-                             self.messageButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
-                             self.logoutButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+                             self.messageButton.center = CGPointMake(self.view.bounds.size.width/2.0 - 15.0 - 40.0 - 30.0 - 40.0 + 17.5, self.messageButton.center.y);
+                             self.logoutButton.center = CGPointMake(self.view.bounds.size.width/2.0 - 15.0 + 40.0 + 30.0 + 40.0 + 17.5, self.logoutButton.center.y);
+                             //self.messageButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+                             //self.logoutButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
                              [carousel.currentItemView viewWithTag:1000 + carousel.currentItemIndex].alpha = 0.0;
                              [carousel.currentItemView viewWithTag:2000 + carousel.currentItemIndex].alpha = 1.0;
                          } completion:^(BOOL finished){}];
         
-    } else {
+    } else if (!projectIsOutdated) {
+        NSLog(@"El projecto no se ha descargado");
+        //The project has not been downloaded
         [UIView animateWithDuration:0.3
                               delay:0.0
                             options:UIViewAnimationOptionCurveLinear
                          animations:^(){
                              self.deleteButton.alpha = 0.0;
                              self.slideShowButton.alpha = 0.0;
-                             self.messageButton.transform = CGAffineTransformMakeTranslation(30.0 + 48.0, 0.0);
-                             self.logoutButton.transform = CGAffineTransformMakeTranslation(-15.0-48.0, 0.0);
+                             self.messageButton.center = CGPointMake(self.view.bounds.size.width/2.0 - 15.0 - 40.0 + 17.5, self.messageButton.center.y);
+                             self.logoutButton.center = CGPointMake(self.view.bounds.size.width/2.0 + 15.0 + 17.5, self.logoutButton.center.y);
+                             //self.messageButton.transform = CGAffineTransformMakeTranslation(30.0 + 48.0, 0.0);
+                             //self.logoutButton.transform = CGAffineTransformMakeTranslation(-15.0-48.0, 0.0);
+                             [carousel.currentItemView viewWithTag:1000 + carousel.currentItemIndex].alpha = 1.0;
+                             [carousel.currentItemView viewWithTag:2000 + carousel.currentItemIndex].alpha = 0.0;
+                         } completion:^(BOOL finished){}];
+    } else {
+        NSLog(@"El proyecto se ha descargado pero tiene actualizaciones");
+        //The project is downloaded but has updates
+        [UIView animateWithDuration:0.3
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^(){
+                             self.deleteButton.alpha = 1.0;
+                             self.slideShowButton.alpha = 1.0;
+                             self.messageButton.center = CGPointMake(self.view.bounds.size.width/2.0 - 15.0 - 40.0 - 30.0 - 40.0 + 17.5, self.messageButton.center.y);
+                             self.logoutButton.center = CGPointMake(self.view.bounds.size.width/2.0 - 15.0 + 40.0 + 30.0 + 40.0 + 17.5, self.logoutButton.center.y);
                              [carousel.currentItemView viewWithTag:1000 + carousel.currentItemIndex].alpha = 1.0;
                              [carousel.currentItemView viewWithTag:2000 + carousel.currentItemIndex].alpha = 0.0;
                          } completion:^(BOOL finished){}];
@@ -1510,6 +1569,12 @@
 }
 
 -(void)downloadViewDidDisappear:(DownloadView *)downloadView {
+    //self.opacityView.hidden = YES;
+    //self.downloadView.hidden = YES;
+    //self.downloadView.progress = 0;
+}
+
+-(void)downloadWasCompletedInDownloadView:(DownloadView *)downloadView {
     self.opacityView.hidden = YES;
     self.downloadView.hidden = YES;
     self.downloadView.progress = 0;

@@ -799,10 +799,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="NewBackground.jpg" id="gsa-p6-uSg">
-                                <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo.png" id="HzD-ti-rVb">
                                 <rect key="frame" x="916" y="10" width="71" height="64"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -933,6 +929,7 @@
                         <outlet property="emailTextfield" destination="eMF-tB-MZS" id="TG6-fJ-qsd"/>
                         <outlet property="enterButton" destination="vRj-p8-gBD" id="zOA-al-ich"/>
                         <outlet property="forgotPasswordButton" destination="Dqw-qc-pRt" id="SaN-Jg-XaB"/>
+                        <outlet property="logoImageView" destination="HzD-ti-rVb" id="Mju-KQ-8vm"/>
                         <outlet property="passwordTextfield" destination="x1M-p3-sPv" id="HRt-13-Am1"/>
                         <outlet property="projectContainerVIew" destination="2QA-2a-Ym0" id="UU0-GL-OWV"/>
                         <outlet property="sendButton" destination="ZTP-u7-CGB" id="ym7-Wc-WH1"/>
@@ -966,6 +963,7 @@
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <connections>
+                        <outlet property="logoImageView" destination="Qsy-7f-29a" id="lFl-Yf-gnr"/>
                         <outlet property="spinner" destination="d7Q-lH-UYs" id="iWH-om-Vlj"/>
                     </connections>
                 </viewController>
@@ -1038,7 +1036,6 @@
     </scenes>
     <resources>
         <image name="ImagenProyectoDefecto.png" width="1024" height="768"/>
-        <image name="NewBackground.jpg" width="2048" height="1536"/>
         <image name="NewLoginBox.png" width="497" height="108"/>
         <image name="NewLoginToProtectEspanol.png" width="498" height="846"/>
         <image name="NewShareIcon.png" width="76" height="76"/>

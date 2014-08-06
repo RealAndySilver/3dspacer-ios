@@ -7,6 +7,8 @@
 //
 
 #import "SlideshowViewController.h"
+#import "NavController.h"
+#import "AppDelegate.h"
 
 @interface SlideshowViewController ()
 
@@ -14,9 +16,18 @@
 
 @implementation SlideshowViewController
 @synthesize imagePathArray,window;
+
+-(void)lockScreenToLandscape {
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.screenIsAllOrientations = NO;
+    appDelegate.screenIsLandscapeLeftOnly = NO;
+    appDelegate.screenIsLandscapeRightOnly = NO;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) [self lockScreenToLandscape];
     self.navigationController.navigationBarHidden = NO;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(play:) name:@"play" object:nil];
@@ -58,6 +69,21 @@
     [window removeFromSuperview];
     window=nil;
 }
+
+-(void)unlockScreenToAllOrientations {
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.screenIsAllOrientations = YES;
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    NavController *navController = (NavController *)self.navigationController;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [self unlockScreenToAllOrientations];
+        [navController setOrientationType:1];
+    }
+}
+
 -(void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
 }

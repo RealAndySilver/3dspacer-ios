@@ -422,6 +422,22 @@
     [self presentViewController:termsAndConditionsVC animated:YES completion:nil];
 }
 
+-(BOOL)isProjectOutdatedAtIndex:(NSUInteger)index {
+    Project *project = self.userProjectsArray[index];
+    
+    FileSaver *fileSaver = [[FileSaver alloc] init];
+    if ([fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"]) {
+        NSArray *outdatedProjectsIDs = [fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"];
+        if ([outdatedProjectsIDs containsObject:project.identifier]) {
+            return YES;
+        } else {
+            return NO;
+        }
+    } else {
+        return NO;
+    }
+}
+
 -(BOOL)userHasDownloadProjectAtIndex:(NSUInteger)index {
     /*Project *project = self.userProjectsArray[index];
     
@@ -654,7 +670,8 @@
     FileSaver *fileSaver = [[FileSaver alloc] init];
     if ([fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"]) {
         NSMutableArray *savedProjectIDs = [fileSaver getDictionary:@"downloadedProjectsIDs"][@"projectIDsArray"];
-        if ([savedProjectIDs containsObject:project.identifier]) {
+        NSArray *outdatedProjectIDs = [fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"];
+        if ([savedProjectIDs containsObject:project.identifier] || [outdatedProjectIDs containsObject:project.identifier]) {
             NSLog(@"El proyecto con id %@ esta descargado", project.identifier);
             
             //Check if the project is updated
@@ -676,6 +693,27 @@
                 //Remove the project id from fileSaver
                 [savedProjectIDs removeObject:project.identifier];
                 [fileSaver setDictionary:@{@"projectIDsArray": savedProjectIDs} withName:@"downloadedProjectsIDs"];
+                
+                //Save a file with FileSaver indicating that the project is donwloaded, but outdated
+                //This is neccesary because a user with "Seller" role can enter the project, even
+                //if it is outdated.
+                if ([fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"]) {
+                    //The dic with the outdated projects ids exist
+                    NSMutableArray *outdatedIDsArray = [NSMutableArray arrayWithArray:[fileSaver getDictionary:@"OutdatedProjectIDsDic"][@"OutdatedProjectIDsarray"]];
+                    if (![outdatedIDsArray containsObject:project.identifier]) {
+                        NSLog(@"Guardé el proyecto %d en el listado existente de desactualizados", [project.identifier intValue]);
+                        [outdatedIDsArray addObject:project.identifier];
+                    }
+                    [fileSaver setDictionary:@{@"OutdatedProjectIDsarray": outdatedIDsArray} withName:@"OutdatedProjectIDsDic"];
+                    
+                } else {
+                    //The dic doenst exist, so create a new one
+                    NSLog(@"Guardé el proyecto %d en el listado de desactualizados por primera vez", [project.identifier intValue]);
+                    NSMutableArray *outdatedIDsArray = [[NSMutableArray alloc] init];
+                    [outdatedIDsArray addObject:project.identifier];
+                    [fileSaver setDictionary:@{@"OutdatedProjectIDsarray": outdatedIDsArray} withName:@"OutdatedProjectIDsDic"];
+                }
+                
                 [self carouselDidEndScrollingAnimation:self.carousel];
                 [self startUpdatingProjectProcessInCoreDataUsingProjectDic:referenceProjectDic];
             }
@@ -1423,6 +1461,8 @@
 
 -(void)carouselDidEndScrollingAnimation:(iCarousel *)carousel {
     BOOL projectIsDownloaded = [self userHasDownloadProjectAtIndex:carousel.currentItemIndex];
+    BOOL projectIsOutdated = [self isProjectOutdatedAtIndex:carousel.currentItemIndex];
+
     NSLog(@"%hhd", projectIsDownloaded);
     if (projectIsDownloaded) {
         [UIView animateWithDuration:0.3
@@ -1437,7 +1477,7 @@
                              [carousel.currentItemView viewWithTag:2000 + carousel.currentItemIndex].alpha = 1.0;
                          } completion:^(BOOL finished){}];
         
-    } else {
+    } else if (!projectIsOutdated) {
         [UIView animateWithDuration:0.3
                               delay:0.0
                             options:UIViewAnimationOptionCurveLinear
@@ -1449,6 +1489,19 @@
                              [carousel.currentItemView viewWithTag:1000 + carousel.currentItemIndex].alpha = 1.0;
                              [carousel.currentItemView viewWithTag:2000 + carousel.currentItemIndex].alpha = 0.0;
                          } completion:^(BOOL finished){}];
+    } else {
+        [UIView animateWithDuration:0.3
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^(){
+                             self.deleteButton.alpha = 0.0;
+                             self.slideShowButton.alpha = 0.0;
+                             self.messageButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+                             self.logoutButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+                             [carousel.currentItemView viewWithTag:1000 + carousel.currentItemIndex].alpha = 1.0;
+                             [carousel.currentItemView viewWithTag:2000 + carousel.currentItemIndex].alpha = 0.0;
+                         } completion:^(BOOL finished){}];
+
     }
 }
 
@@ -1531,6 +1584,12 @@
 }
 
 -(void)downloadViewDidDisappear:(DownloadView *)downloadView {
+    //self.opacityView.hidden = YES;
+    //self.downloadView.hidden = YES;
+    //self.downloadView.progress = 0;
+}
+
+-(void)downloadWasCompletedInDownloadView:(DownloadView *)downloadView {
     self.opacityView.hidden = YES;
     self.downloadView.hidden = YES;
     self.downloadView.progress = 0;

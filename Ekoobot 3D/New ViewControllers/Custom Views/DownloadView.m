@@ -109,7 +109,9 @@
                      animations:^(){
                          self.downloadVideoButton.alpha = 0.0;
                          self.cancelButton.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
-                     } completion:^(BOOL finished){}];
+                     } completion:^(BOOL finished){
+                         //[self.delegate downloadViewDidDisappear:self];
+                     }];
 }
 
 /*-(void)animateOpacity {
@@ -156,7 +158,8 @@
 -(void)downloadCompleteNotificationReceived:(NSNotification *)notification {
     NSLog(@"Se completó la descarga");
     //[self closeView];
-    [self.delegate downloadViewDidDisappear:self];
+    //[self.delegate downloadViewDidDisappear:self];
+    [self.delegate downloadWasCompletedInDownloadView:self];
 }
 
 @end

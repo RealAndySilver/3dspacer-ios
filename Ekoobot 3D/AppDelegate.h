@@ -19,6 +19,7 @@
 
 @property (assign, nonatomic) BOOL screenIsLandscapeLeftOnly;
 @property (assign, nonatomic) BOOL screenIsLandscapeRightOnly;
+@property (assign, nonatomic) BOOL screenIsAllOrientations;
 @property (strong, nonatomic) UIWindow *window;
 
 @end

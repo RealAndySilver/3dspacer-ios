@@ -173,6 +173,8 @@
             return UIInterfaceOrientationMaskLandscapeLeft;
         } else if (self.screenIsLandscapeRightOnly) {
             return UIInterfaceOrientationMaskLandscapeRight;
+        } else if (self.screenIsAllOrientations){
+            return UIInterfaceOrientationMaskAll;
         } else {
             return UIInterfaceOrientationMaskLandscape;
         }

@@ -14,6 +14,7 @@
 -(void)downloadVideoButtonWasTappedInDownloadView:(DownloadView *)downloadView;
 -(void)downloadViewWillDisappear:(DownloadView *)downloadView;
 -(void)downloadViewDidDisappear:(DownloadView *)downloadView;
+-(void)downloadWasCompletedInDownloadView:(DownloadView *)downloadView;
 
 @end
 

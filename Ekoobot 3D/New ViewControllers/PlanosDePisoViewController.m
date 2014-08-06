@@ -172,6 +172,7 @@
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.contentInset = UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0);
     [self.collectionView registerClass:[PisoCollectionViewCell class] forCellWithReuseIdentifier:@"CellIdentifier"];
+    [self.collectionView setContentOffset:CGPointMake(([self.group.startFloor intValue] - 1)*screenBounds.size.width, 0.0) animated:NO];
     [self.view addSubview:self.collectionView];
     
     //PageControl Setup
@@ -179,6 +180,9 @@
     self.pageControl.numberOfPages = [self.floorsArray count];
     //self.pageControl.numberOfPages = [self.grupo.arrayTiposDePiso count];
     [self.view addSubview:self.pageControl];
+    
+    //Call the delegate to set the correct page of the PageControl
+    [self scrollViewDidScroll:self.collectionView];
 }
 
 -(void)viewWillLayoutSubviews {

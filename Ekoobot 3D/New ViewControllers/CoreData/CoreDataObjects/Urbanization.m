@@ -2,7 +2,7 @@
 //  Urbanization.m
 //  Ekoobot 3D
 //
-//  Created by Developer on 14/07/14.
+//  Created by Developer on 29/07/14.
 //  Copyright (c) 2014 Ekoomedia. All rights reserved.
 //
 
@@ -15,12 +15,14 @@
 @dynamic identifier;
 @dynamic imageData;
 @dynamic imageHeight;
+@dynamic imagePath;
 @dynamic imageURL;
 @dynamic imageWidth;
 @dynamic lastUpdate;
 @dynamic miniURL;
 @dynamic northDegrees;
 @dynamic project;
-@dynamic imagePath;
+@dynamic zoomMin;
+@dynamic zoomMax;
 
 @end

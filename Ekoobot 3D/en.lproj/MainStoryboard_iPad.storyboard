@@ -26,6 +26,7 @@
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <connections>
+                        <outlet property="logoImageView" destination="eLe-Y2-8Py" id="MwZ-NG-iWA"/>
                         <outlet property="spinner" destination="wio-2W-Q4b" id="Xze-25-X6T"/>
                     </connections>
                 </viewController>
@@ -189,6 +190,7 @@
                         <outlet property="emailTextfield" destination="Q7P-vV-amq" id="9QF-bx-JYo"/>
                         <outlet property="enterButton" destination="E7C-NH-FYJ" id="kuf-ws-rDH"/>
                         <outlet property="forgotPasswordButton" destination="rDh-sN-hFc" id="1Wt-kF-anp"/>
+                        <outlet property="logoImageView" destination="4b6-ae-O97" id="Bdm-IA-e5M"/>
                         <outlet property="passwordTextfield" destination="qSo-id-lUj" id="dPk-gA-rkc"/>
                         <outlet property="projectContainerVIew" destination="0fO-PJ-hCX" id="Rhn-uW-peE"/>
                         <outlet property="sendButton" destination="GR0-5T-c2j" id="uXB-nl-7Kw"/>

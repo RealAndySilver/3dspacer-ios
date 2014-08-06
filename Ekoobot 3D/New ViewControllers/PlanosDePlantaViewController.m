@@ -172,6 +172,7 @@
     self.collectionView.backgroundColor = [UIColor colorWithWhite:0.1 alpha:1.0];
     self.collectionView.contentInset = UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0);
     self.collectionView.pagingEnabled = YES;
+    [self.collectionView setContentOffset:CGPointMake(([self.product.startPlant intValue] - 1)*screenBounds.size.width, 0.0) animated:NO];
     [self.collectionView registerClass:[PlanosCollectionViewCell class] forCellWithReuseIdentifier:@"CellIdentifier"];
     [self.view addSubview:self.collectionView];
     
@@ -179,6 +180,9 @@
     self.pageControl = [[UIPageControl alloc] init];
     self.pageControl.numberOfPages = [self.plantsArray count];
     [self.view addSubview:self.pageControl];
+    
+    //Call the delegate to set the correct page of the PageControl
+    [self scrollViewDidScroll:self.collectionView];
 }
 
 -(void)viewWillLayoutSubviews {

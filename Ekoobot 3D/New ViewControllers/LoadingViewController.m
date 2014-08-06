@@ -17,6 +17,7 @@
 #import "LoginViewController.h"
 #import "MainCarouselViewController.h"
 #import "HomeScreenViewController.h"
+#import "AppDelegate.h"
 
 @interface LoadingViewController () <ServerCommunicatorDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *logoImageView;
@@ -30,6 +31,7 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) [self unlockAllOrientations];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -42,10 +44,20 @@
     [self performSelector:@selector(checkIfUserExists) withObject:nil afterDelay:0.5];
 }
 
+-(void)unlockAllOrientations {
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.screenIsAllOrientations = YES;
+}
+
 -(void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     CGRect bounds = self.view.bounds;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        self.logoImageView.frame = CGRectMake(bounds.size.width/2.0 - 127.0, bounds.size.height/2.0 - 117.0, 257.0, 234.0);
+        self.spinner.frame = CGRectMake(bounds.size.width/2.0 - 10.0, self.logoImageView.frame.origin.y + self.logoImageView.frame.size.height + 50.0, 20.0, 20.0);
+    }
+    
+    else {
         self.logoImageView.frame = CGRectMake(bounds.size.width/2.0 - 147.0/2.0, bounds.size.height/2.0 - 134.0/2.0, 147.0, 134.0);
         self.spinner.frame = CGRectMake(bounds.size.width/2.0 - 40.0/2.0, self.logoImageView.frame.origin.y + self.logoImageView.frame.size.height, 40.0, 40.0);
     }
@@ -61,10 +73,6 @@
         LoginViewController *loginVC = [self.storyboard instantiateViewControllerWithIdentifier:@"Login"];
         loginVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [self presentViewController:loginVC animated:YES completion:nil];
-        
-        /*NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"Nav"];
-        navController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        [self presentViewController:navController animated:YES completion:nil];*/
         
     } else {
         NSLog(@"Ya había sesión iniciada con usuario");
@@ -194,6 +202,7 @@
         mainCarousel.userProjectsArray = projectsArray;
         
         NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"Nav"];
+        [navController setOrientationType:1];
         [navController setViewControllers:@[mainCarousel] animated:NO];
         navController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [self presentViewController:navController animated:YES completion:nil];
@@ -240,11 +249,7 @@
 }
 
 -(NSUInteger)supportedInterfaceOrientations {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        return UIInterfaceOrientationMaskLandscape;
-    } else {
-        return UIInterfaceOrientationMaskAll;
-    }
+    return UIInterfaceOrientationMaskAll;
 }
 
 @end

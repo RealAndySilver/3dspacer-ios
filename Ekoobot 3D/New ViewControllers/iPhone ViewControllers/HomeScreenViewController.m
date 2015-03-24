@@ -128,6 +128,7 @@
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertViewAppear) name:@"alert" object:nil];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
     CGRect screen = [UIScreen mainScreen].bounds;
+    NSLog(@"UIScreen: %@", NSStringFromCGRect(screen));
     screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
     NSLog(@"screen boundsss:%@", NSStringFromCGRect(screenBounds));
     self.view.backgroundColor = [UIColor whiteColor];
@@ -142,11 +143,6 @@
 }
 
 -(void)setupUI {
-    //Background ImageView
-    /*UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:screenBounds];
-    backgroundImageView.image = [UIImage imageNamed:@"CarouselBackground.png"];
-    [self.view addSubview:backgroundImageView];*/
-    
     //Carousel
     self.carousel = [[iCarousel alloc] initWithFrame:screenBounds];
     self.carousel.delegate = self;

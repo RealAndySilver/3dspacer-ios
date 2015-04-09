@@ -39,6 +39,8 @@
 @property (strong, nonatomic) NSMutableDictionary *carasIds;
 @property (strong, nonatomic) NSMutableDictionary *finishImagesPathNames;
 @property (strong, nonatomic) NSTimer *zoomTimer;
+
+@property (assign, nonatomic) BOOL firstTimeViewAppears;
 @end
 
 #define ROTATION_MULTIPLIER_PAD 0.0000266
@@ -218,6 +220,7 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    self.firstTimeViewAppears = YES;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         isPad = YES;
     } else {
@@ -234,8 +237,6 @@
         deviceIsLeftRotated = NO;
     }
     
-    CGRect screen = [UIScreen mainScreen].bounds;
-    screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         rotationFactor = 0.002;
     } else {
@@ -245,10 +246,20 @@
     self.navigationItem.title = NSLocalizedString(@"Espacio3D", nil);
     self.navigationController.navigationBarHidden = YES;
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-    [self setupUI];
-    [self startDeviceMotion];
-    [self setupGL];
-    [self createGestureRecognizers];
+}
+
+-(void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    CGRect screen = [UIScreen mainScreen].bounds;
+    screenBounds = CGRectMake(0.0, 0.0, screen.size.width, screen.size.height);
+    
+    if (self.firstTimeViewAppears) {
+        [self setupUI];
+        [self startDeviceMotion];
+        [self setupGL];
+        [self createGestureRecognizers];
+        self.firstTimeViewAppears = NO;
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated {

@@ -37,6 +37,7 @@
 #import "UIImage+Resize.h"
 #import "Video+AddOns.h"
 #import "ImageSaver.h"
+#import "AppDelegate.h"
 
 @interface HomeScreenViewController () <iCarouselDataSource, iCarouselDelegate, TermsAndConditionsDelegate, ServerCommunicatorDelegate, UIAlertViewDelegate, UIActionSheetDelegate, DownloadViewDelegate>
 @property (strong, nonatomic) iCarousel *carousel;
@@ -77,6 +78,7 @@
     BOOL downloadWasCancelled;
     BOOL searchingForUpdates;
     BOOL connectionError;
+    BOOL firstTimeViewAppears;
 }
 
 #pragma mark - Lazy Instantiation
@@ -109,8 +111,22 @@
     return _projectNamesArray;
 }
 
+-(void)lockScreenToLandscape {
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.screenIsAllOrientations = NO;
+    appDelegate.screenIsLandscapeLeftOnly = NO;
+    appDelegate.screenIsLandscapeRightOnly = NO;
+}
+
+-(void)unlockScreenToAllOrientations {
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.screenIsAllOrientations = YES;
+}
+
 -(void)viewDidLoad {
     [super viewDidLoad];
+    firstTimeViewAppears = YES;
+    //[self lockScreenToLandscape];
     NavController *navController = (NavController *)self.navigationController;
     [navController setOrientationType:0];
     downloadWasCancelled = NO;
@@ -127,19 +143,44 @@
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFinished:) name:@"updates" object:nil];
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertViewAppear) name:@"alert" object:nil];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
-    CGRect screen = [UIScreen mainScreen].bounds;
-    NSLog(@"UIScreen: %@", NSStringFromCGRect(screen));
-    screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
     NSLog(@"screen boundsss:%@", NSStringFromCGRect(screenBounds));
     self.view.backgroundColor = [UIColor whiteColor];
     //[self startMainProjectImagesSavingProcess];
-    [self setupUI];
     [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(searchForUpdatesInServer) userInfo:nil repeats:YES];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = YES;
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    NSArray *viewControllers = self.navigationController.viewControllers;
+    if (viewControllers.count > 1 && [viewControllers objectAtIndex:viewControllers.count-2] == self) {
+        // View is disappearing because a new view controller was pushed onto the stack
+        NSLog(@"New view controller was pushed");
+    } else if ([viewControllers indexOfObject:self] == NSNotFound) {
+        // View is disappearing because it was popped from the stack
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        [self unlockScreenToAllOrientations];
+            
+        NavController *navController = (NavController *)self.navigationController;
+        [navController setOrientationType:1];
+        
+        NSLog(@"View controller was popped");
+    }
+}
+
+-(void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    CGRect screen = [UIScreen mainScreen].bounds;
+    NSLog(@"UIScreen: %@", NSStringFromCGRect(screen));
+    screenBounds = CGRectMake(0.0, 0.0, screen.size.width, screen.size.height);
+    if (firstTimeViewAppears) {
+        [self setupUI];
+        firstTimeViewAppears = NO;
+    }
 }
 
 -(void)setupUI {

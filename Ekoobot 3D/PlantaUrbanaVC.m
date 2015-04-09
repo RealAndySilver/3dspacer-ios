@@ -264,7 +264,7 @@
     [imageViewUrbanismo setUserInteractionEnabled:YES];
     
     //imageViewUrbanismo.center=CGPointMake(self.view.frame.size.height/2, self.view.frame.size.width/2);
-    scrollViewUrbanismo.frame=CGRectMake(0, 20, self.view.frame.size.height, self.view.frame.size.width-44);
+    scrollViewUrbanismo.frame=CGRectMake(0, 20, self.view.bounds.size.width, self.view.bounds.size.height-44);
     scrollViewUrbanismo.contentSize=CGSizeMake(imageViewUrbanismo.frame.size.width, imageViewUrbanismo.frame.size.height);
     //[self layoutScrollView];
     [self.view addSubview:scrollViewUrbanismo];

@@ -249,7 +249,11 @@
 }
 
 -(NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskAll;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        return UIInterfaceOrientationMaskAll;
+    } else {
+        return UIInterfaceOrientationMaskLandscape;
+    }
 }
 
 @end

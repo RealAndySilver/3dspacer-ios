@@ -11,7 +11,7 @@
 #import "AppDelegate.h"
 
 @interface SlideshowViewController ()
-
+@property (assign, nonatomic) BOOL firsTimeViewAppears;
 @end
 
 @implementation SlideshowViewController
@@ -27,6 +27,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.firsTimeViewAppears = YES;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) [self lockScreenToLandscape];
     self.navigationController.navigationBarHidden = NO;
     
@@ -41,27 +42,36 @@
 
     
     NSLog(@"Window bounds %fx%f",window.bounds.size.width,window.bounds.size.height);
-    if (window.bounds.size.width>0)
-        slideshow = [[KASlideShow alloc] initWithFrame:CGRectMake(0,0,window.bounds.size.width,window.bounds.size.height)];
-    else{
-        slideshow = [[KASlideShow alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.height,self.view.bounds.size.width)];
-    }
-    [slideshow setDelay:2]; // Delay between transitions
-    [slideshow setTransitionDuration:2]; // Transition duration
-    [slideshow setTransitionType:KASlideShowTransitionFade]; // Choose a transition type (fade or slide)
-    [slideshow setImagesContentMode:UIViewContentModeScaleAspectFill]; // Choose a content mode for images to display
-    /*for (NSString *path in imagePathArray) {
-        [slideshow addImage:[UIImage imageWithContentsOfFile:path]];
-    }*/
-    
-    for (UIImage *renderImage in self.imagesArray) {
-        [slideshow addImage:renderImage];
-    }
-    if(!window.bounds.size.width>0){
-        [slideshow start];
-    }
-    [self.view addSubview:slideshow];
 }
+
+-(void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    if (self.firsTimeViewAppears) {
+        if (window.bounds.size.width>0)
+            slideshow = [[KASlideShow alloc] initWithFrame:CGRectMake(0,0,window.bounds.size.width,window.bounds.size.height)];
+        else{
+            slideshow = [[KASlideShow alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,self.view.bounds.size.height)];
+        }
+        [slideshow setDelay:2]; // Delay between transitions
+        [slideshow setTransitionDuration:2]; // Transition duration
+        [slideshow setTransitionType:KASlideShowTransitionFade]; // Choose a transition type (fade or slide)
+        [slideshow setImagesContentMode:UIViewContentModeScaleAspectFill]; // Choose a content mode for images to display
+        /*for (NSString *path in imagePathArray) {
+         [slideshow addImage:[UIImage imageWithContentsOfFile:path]];
+         }*/
+        
+        for (UIImage *renderImage in self.imagesArray) {
+            [slideshow addImage:renderImage];
+        }
+        if(!window.bounds.size.width>0){
+            [slideshow start];
+        }
+        [self.view addSubview:slideshow];
+        
+        self.firsTimeViewAppears = NO;
+    }
+}
+
 -(void)dismissWindow{
     window.screen=nil;
     [window resignKeyWindow];

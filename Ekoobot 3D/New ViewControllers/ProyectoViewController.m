@@ -77,6 +77,8 @@
 @property (strong, nonatomic) NSDictionary *projectAnalyticsDic;
 @property (strong, nonatomic) NSMutableData *receivedVideoData;
 @property (strong, nonatomic) NSURLSessionDataTask *dataTask;
+
+@property (assign, nonatomic) BOOL firstTimeViewAppears;
 @end
 
 @implementation ProyectoViewController {
@@ -146,6 +148,7 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    self.firstTimeViewAppears = YES;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) [self lockScreenToLandscape];
     downloadWasCancelled = NO;
     [self getRenderImages];
@@ -155,11 +158,19 @@
                                                  name:@"OutdatedProjectNotification"
                                                object:nil];
     
-    CGRect screen = [UIScreen mainScreen].bounds;
-    screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.view.backgroundColor = [UIColor blackColor];
-    [self setupUI];
+    //[self setupUI];
+}
+
+-(void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    CGRect screen = [UIScreen mainScreen].bounds;
+    screenBounds = CGRectMake(0.0, 0.0, screen.size.width, screen.size.height);
+    if (self.firstTimeViewAppears) {
+        [self setupUI];
+        self.firstTimeViewAppears = NO;
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated {

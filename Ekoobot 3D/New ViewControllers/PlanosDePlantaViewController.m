@@ -29,6 +29,7 @@
 @property (strong, nonatomic) PlanosCollectionViewCell *previousCell;
 @property (strong, nonatomic) NSIndexPath *previousCellIndexPath;
 @property (strong, nonatomic) NSMutableArray *plantImagesArray;
+@property (assign, nonatomic) BOOL firstTimeViewAppears;
 @end
 
 @implementation PlanosDePlantaViewController {
@@ -119,13 +120,22 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    self.firstTimeViewAppears = YES;
     //[self initializePlantImagesArray];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    CGRect screen = [UIScreen mainScreen].bounds;
-    screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
     self.view.backgroundColor = [UIColor colorWithWhite:0.15 alpha:1.0];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-    [self setupUI];
+}
+
+-(void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    CGRect screen = [UIScreen mainScreen].bounds;
+    screenBounds = CGRectMake(0.0, 0.0, screen.size.width, screen.size.height);
+
+    if (self.firstTimeViewAppears) {
+        [self setupUI];
+        self.firstTimeViewAppears = NO;
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated {

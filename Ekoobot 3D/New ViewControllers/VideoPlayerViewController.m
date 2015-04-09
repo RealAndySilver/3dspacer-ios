@@ -11,6 +11,7 @@
 
 @interface VideoPlayerViewController ()
 @property (strong, nonatomic) MPMoviePlayerController *moviePlayerController;
+@property (assign, nonatomic) BOOL firstTimeViewAppears;
 @end
 
 @implementation VideoPlayerViewController {
@@ -19,8 +20,12 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    self.firstTimeViewAppears = YES;
+}
+
+-(void)setupUI {
     CGRect screen = [UIScreen mainScreen].bounds;
-    screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
+    screenBounds = CGRectMake(0.0, 0.0, screen.size.width, screen.size.height);
     NSLog(@"video file path: %@", self.videoFilePath);
     self.moviePlayerController = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:self.videoFilePath]];
     [self.moviePlayerController prepareToPlay];
@@ -29,6 +34,14 @@
     self.moviePlayerController.scalingMode = MPMovieScalingModeAspectFill;
     self.moviePlayerController.movieSourceType = MPMovieSourceTypeFile;
     [self.moviePlayerController play];
+}
+
+-(void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    if (self.firstTimeViewAppears) {
+        [self setupUI];
+        self.firstTimeViewAppears = NO;
+    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated {

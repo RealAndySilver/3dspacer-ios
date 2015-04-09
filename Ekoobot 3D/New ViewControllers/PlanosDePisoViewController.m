@@ -34,6 +34,8 @@
 @property (strong, nonatomic) NSIndexPath *previousCellIndexPath;
 @property (strong, nonatomic) NSMutableArray *floorsPinsArray;
 @property (strong, nonatomic) NSMutableArray *floorsImagesArray;
+
+@property (assign, nonatomic) BOOL firstTimeViewAppears;
 @end
 
 @implementation PlanosDePisoViewController {
@@ -118,13 +120,11 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    self.firstTimeViewAppears = YES;
     [self initializeFloorsArray];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    CGRect screen = [UIScreen mainScreen].bounds;
-    screenBounds = CGRectMake(0.0, 0.0, screen.size.height, screen.size.width);
     self.view.backgroundColor = [UIColor colorWithWhite:0.1 alpha:1.0];
     self.navigationItem.title = self.arrayNombresPiso[0];
-    [self setupUI];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -135,6 +135,17 @@
         magnetometerIsAvailable = YES;
     } else {
         magnetometerIsAvailable = NO;
+    }
+}
+
+-(void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    CGRect screen = [UIScreen mainScreen].bounds;
+    screenBounds = CGRectMake(0.0, 0.0, screen.size.width, screen.size.height);
+
+    if (self.firstTimeViewAppears) {
+        [self setupUI];
+        self.firstTimeViewAppears = NO;
     }
 }
 
